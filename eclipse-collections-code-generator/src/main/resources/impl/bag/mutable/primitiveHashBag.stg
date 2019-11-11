@@ -667,7 +667,7 @@ public class <name>HashBag
     @Override
     public \<V> MutableBag\<V> collect(<name>ToObjectFunction\<? extends V> function)
     {
-        HashBag\<V> result = HashBag.newBag(this.items.size());
+        MutableBag\<V> result = HashBag.newBag(this.items.size());
         this.forEachWithOccurrences((<type> each, int occurrences) ->
                 result.addOccurrences(function.valueOf(each), occurrences));
         return result;

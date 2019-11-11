@@ -470,7 +470,7 @@ public class FJIterateTest
     @Test
     public void groupBy()
     {
-        FastList<String> source = FastList.newListWith("Ted", "Sally", "Mary", "Bob", "Sara");
+        MutableList<String> source = FastList.newListWith("Ted", "Sally", "Mary", "Bob", "Sara");
         Multimap<Character, String> result1 = FJIterate.groupBy(source, StringFunctions.firstLetter(), 1);
         Multimap<Character, String> result2 = FJIterate.groupBy(Collections.synchronizedList(source), StringFunctions.firstLetter(), 1);
         Multimap<Character, String> result3 = FJIterate.groupBy(Collections.synchronizedCollection(source), StringFunctions.firstLetter(), 1);

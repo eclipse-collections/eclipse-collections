@@ -19,6 +19,7 @@ import java.util.concurrent.ForkJoinTask;
 
 import org.eclipse.collections.api.block.function.Function;
 import org.eclipse.collections.api.block.procedure.Procedure;
+import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.parallel.BatchIterable;
 import org.eclipse.collections.impl.parallel.Combiner;
@@ -40,9 +41,9 @@ public class FJBatchIterableProcedureRunner<T, PT extends Procedure<? super T>> 
         this.outputQueue = this.combiner.useCombineOne() ? new ArrayBlockingQueue<>(taskCount) : null;
     }
 
-    private FastList<ForkJoinTask<PT>> createAndExecuteTasks(ForkJoinPool executor, ProcedureFactory<PT> procedureFactory, BatchIterable<T> iterable)
+    private MutableList<ForkJoinTask<PT>> createAndExecuteTasks(ForkJoinPool executor, ProcedureFactory<PT> procedureFactory, BatchIterable<T> iterable)
     {
-        FastList<ForkJoinTask<PT>> tasks = FastList.newList(this.taskCount);
+        MutableList<ForkJoinTask<PT>> tasks = FastList.newList(this.taskCount);
         for (int index = 0; index < this.taskCount; index++)
         {
             ForkJoinTask<PT> voidBlockFJTask = new FJBatchIterableProcedureTask<>(this, procedureFactory, iterable, index, this.taskCount);
@@ -67,7 +68,7 @@ public class FJBatchIterableProcedureRunner<T, PT extends Procedure<? super T>> 
 
     public void executeAndCombine(ForkJoinPool executor, ProcedureFactory<PT> procedureFactory, BatchIterable<T> list)
     {
-        FastList<ForkJoinTask<PT>> tasks = this.createAndExecuteTasks(executor, procedureFactory, list);
+        MutableList<ForkJoinTask<PT>> tasks = this.createAndExecuteTasks(executor, procedureFactory, list);
         if (this.combiner.useCombineOne())
         {
             this.join();

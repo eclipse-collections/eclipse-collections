@@ -1636,15 +1636,15 @@ public abstract class Abstract<name>ObjectMapTestCase
         <name>ObjectMap\<String> map1 = this.newWithKeysValues(<(literal.(type))("0")>, "zero", <(literal.(type))("9")>, "nine");
         <name>ObjectMap\<String> map2 = this.newWithKeysValues(<(literal.(type))("1")>, "one");
 
-        Function\<String, UnifiedSet\<Character>\> toChars = (String object) ->
+        Function\<String, MutableSet\<Character>\> toChars = (String object) ->
         {
-            UnifiedSet\<Character> list = UnifiedSet.newSet();
+            MutableSet\<Character> set = UnifiedSet.newSet();
             char[] chars = object.toCharArray();
             for (char aChar : chars)
             {
-                list.add(aChar);
+                set.add(aChar);
             }
-            return list;
+            return set;
         };
 
         FastListMultimap\<Character, String> expected = FastListMultimap.newMultimap(Tuples.pair('z', "zero"), Tuples.pair('e', "zero"), Tuples.pair('r', "zero"), Tuples.pair('o', "zero"), Tuples.pair('n', "nine"), Tuples.pair('i', "nine"), Tuples.pair('e', "nine"));
