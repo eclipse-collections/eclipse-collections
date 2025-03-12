@@ -39,10 +39,12 @@ jobs:
       - run: ./mvnw --color=always install -DskipTests=true
         env:
           MAVEN_OPTS: '-Xmx1g'
+          DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_API_TOKEN }}
       - name: Mutation Test
         run: mvn eu.stamp-project:pitmp-maven-plugin:run -DwithHistory -DtimeoutConstant=8000
         env:
           MAVEN_OPTS: '-Xmx1g'
+          DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_API_TOKEN }}
       - name: Archive pitest reports
         uses: actions/upload-artifact@v4
         with:
