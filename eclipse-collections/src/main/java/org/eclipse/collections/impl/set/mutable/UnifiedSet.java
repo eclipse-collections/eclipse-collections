@@ -334,54 +334,54 @@ public class UnifiedSet<T>
     }
 
     @Override
-    protected void rehash(int newCapacity)
-    {
-        int oldLength = this.table.length;
-        Object[] old = this.table;
-        this.allocate(newCapacity);
-        this.occupied = 0;
+protected void rehash(int newCapacity)
+{
+    int oldLength = this.table.length;
+    Object[] old = this.table;
+    this.allocate(newCapacity);
+    this.occupied = 0;
 
-        for (int i = 0; i < oldLength; i++)
+    for (int i = 0; i < oldLength; i++)
+    {
+        Object oldKey = old[i];
+        if (oldKey instanceof ChainedBucket)
         {
-            Object oldKey = old[i];
-            if (oldKey instanceof ChainedBucket)
+            ChainedBucket bucket = (ChainedBucket) oldKey;
+            do
             {
-                ChainedBucket bucket = (ChainedBucket) oldKey;
-                do
+                if (bucket.zero != null)
                 {
-                    if (bucket.zero != null)
-                    {
-                        this.add(this.nonSentinel(bucket.zero));
-                    }
-                    if (bucket.one == null)
-                    {
-                        break;
-                    }
-                    this.add(this.nonSentinel(bucket.one));
-                    if (bucket.two == null)
-                    {
-                        break;
-                    }
-                    this.add(this.nonSentinel(bucket.two));
-                    if (bucket.three != null)
-                    {
-                        if (bucket.three instanceof ChainedBucket)
-                        {
-                            bucket = (ChainedBucket) bucket.three;
-                            continue;
-                        }
-                        this.add(this.nonSentinel(bucket.three));
-                    }
+                    this.add(this.nonSentinel(bucket.zero));
+                }
+                if (bucket.one == null)
+                {
                     break;
                 }
-                while (true);
+                this.add(this.nonSentinel(bucket.one));
+                if (bucket.two == null)
+                {
+                    break;
+                }
+                this.add(this.nonSentinel(bucket.two));
+                if (bucket.three != null)
+                {
+                    if (bucket.three instanceof ChainedBucket)
+                    {
+                        bucket = (ChainedBucket) bucket.three;
+                        continue;
+                    }
+                    this.add(this.nonSentinel(bucket.three));
+                }
+                break;
             }
-            else if (oldKey != null)
-            {
-                this.add(this.nonSentinel(oldKey));
-            }
+            while (true);
+        }
+        else if (oldKey != null)
+        {
+            this.add(this.nonSentinel(oldKey));
         }
     }
+}
 
     @Override
     public boolean contains(Object key)
