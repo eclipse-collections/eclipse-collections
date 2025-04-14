@@ -1,6 +1,8 @@
 import "copyrightAndOthers.stg"
 import "primitiveLiteral.stg"
 
+skipBoolean() ::= "true"
+
 isTest() ::= "true"
 
 targetPath() ::= "org/eclipse/collections/impl/set/mutable/primitive"
