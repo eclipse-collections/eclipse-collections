@@ -10,8 +10,14 @@
 
 package org.eclipse.collections.api;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.RandomAccess;
+import java.util.stream.Collectors;
 
+import org.eclipse.collections.api.bag.ImmutableBag;
 import org.eclipse.collections.api.block.function.Function;
 import org.eclipse.collections.api.block.function.Function2;
 import org.eclipse.collections.api.block.function.primitive.BooleanFunction;
@@ -25,7 +31,15 @@ import org.eclipse.collections.api.block.function.primitive.ShortFunction;
 import org.eclipse.collections.api.block.predicate.Predicate;
 import org.eclipse.collections.api.block.predicate.Predicate2;
 import org.eclipse.collections.api.block.procedure.Procedure;
+import org.eclipse.collections.api.factory.Bags;
+import org.eclipse.collections.api.factory.Lists;
+import org.eclipse.collections.api.factory.Sets;
+import org.eclipse.collections.api.factory.list.ImmutableListFactory;
+import org.eclipse.collections.api.list.ImmutableList;
+import org.eclipse.collections.api.list.ListIterable;
+import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.ordered.OrderedIterable;
+import org.eclipse.collections.api.set.ImmutableSet;
 import org.eclipse.collections.api.tuple.Pair;
 
 /**
@@ -154,6 +168,39 @@ public interface LazyIterable<T>
      */
     @Override
     <R extends Collection<T>> R into(R target);
+
+    /**
+     * Converts the LazyIterable to the default ImmutableList implementation.
+     */
+    @Override
+    default ImmutableList<T> toImmutableList()
+    {
+        MutableList<T> list = this.collect(item -> item, Lists.mutable.empty());
+
+        return Lists.immutable.withAll(list);
+    }
+
+    /**
+     * Converts the LazyIterable to the default ImmutableSet implementation.
+     */
+    @Override
+    default ImmutableSet<T> toImmutableSet()
+    {
+        MutableList<T> list = this.collect(item -> item, Lists.mutable.empty());
+
+        return Sets.immutable.withAll(list);
+    }
+
+    /**
+     * Converts the LazyIterable to the default ImmutableBag implementation.
+     */
+    @Override
+    default ImmutableBag<T> toImmutableBag()
+    {
+        MutableList<T> list = this.collect(item -> item, Lists.mutable.empty());
+
+        return Bags.immutable.withAll(list);
+    }
 
     /**
      * Returns a lazy BooleanIterable which will transform the underlying iterable data to boolean values based on the booleanFunction.
