@@ -306,7 +306,7 @@ Arrays, Maps or Strings. The iteration protocol was inspired by the Smalltalk co
 
                 <plugin>
                     <artifactId>maven-dependency-plugin</artifactId>
-                    <version>3.1.2</version>
+                    <version>3.8.1</version>
                 </plugin>
 
                 <plugin>
@@ -1164,7 +1164,7 @@ Arrays, Maps or Strings. The iteration protocol was inspired by the Smalltalk co
                     <plugins>
                         <plugin>
                             <artifactId>maven-dependency-plugin</artifactId>
-                            <version>3.1.2</version>
+                            <version>3.8.1</version>
                             <configuration>
                                 <failOnWarning>true</failOnWarning>
                                 <ignoredUnusedDeclaredDependencies>
