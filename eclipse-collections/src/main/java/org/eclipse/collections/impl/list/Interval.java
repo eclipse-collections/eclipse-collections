@@ -776,6 +776,12 @@ public final class Interval
         return result;
     }
 
+    @Override
+    public <E> E[] toArray(E[] array)
+    {
+        return super.toArray(array);
+    }
+
     /**
      * Converts the interval to an Integer array.
      */

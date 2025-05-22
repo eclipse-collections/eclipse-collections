@@ -83,6 +83,18 @@ public abstract class AbstractBag<T>
         implements Collection<T>, Bag<T>
 {
     @Override
+    public Object[] toArray()
+    {
+        return super.toArray();
+    }
+
+    @Override
+    public <E> E[] toArray(E[] array)
+    {
+        return super.toArray(array);
+    }
+
+    @Override
     public <R extends Collection<T>> R select(Predicate<? super T> predicate, R target)
     {
         if (target instanceof MutableBagIterable<?>)

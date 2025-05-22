@@ -69,6 +69,18 @@ import org.eclipse.collections.api.tuple.Twin;
 public interface MutableCollection<T>
         extends Collection<T>, RichIterable<T>
 {
+    @Override
+    default Object[] toArray()
+    {
+        return RichIterable.super.toArray();
+    }
+
+    @Override
+    default <T1> T1[] toArray(T1[] a)
+    {
+        return RichIterable.super.toArray(a);
+    }
+
     /**
      * This method allows mutable and fixed size collections the ability to add elements to their existing elements.
      * In order to support fixed size a new instance of a collection would have to be returned taking the elements of

@@ -11,7 +11,6 @@
 package org.eclipse.collections.impl;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Optional;
@@ -111,30 +110,6 @@ public abstract class AbstractRichIterable<T> implements RichIterable<T>
     public boolean containsAllArguments(Object... elements)
     {
         return ArrayIterate.allSatisfyWith(elements, Predicates2.in(), this);
-    }
-
-    @Override
-    public Object[] toArray()
-    {
-        Object[] result = new Object[this.size()];
-        this.forEachWithIndex((each, index) -> result[index] = each);
-        return result;
-    }
-
-    @Override
-    public <E> E[] toArray(E[] array)
-    {
-        int size = this.size();
-        E[] result = array.length < size
-                ? (E[]) Array.newInstance(array.getClass().getComponentType(), size)
-                : array;
-
-        this.forEachWithIndex((each, index) -> result[index] = (E) each);
-        if (result.length > size)
-        {
-            result[size] = null;
-        }
-        return result;
     }
 
     @Override
