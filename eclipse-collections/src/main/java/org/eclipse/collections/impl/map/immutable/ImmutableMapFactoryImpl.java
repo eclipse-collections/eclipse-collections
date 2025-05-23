@@ -13,8 +13,12 @@ package org.eclipse.collections.impl.map.immutable;
 import java.util.Map;
 import java.util.Objects;
 
+import org.eclipse.collections.api.factory.Maps;
 import org.eclipse.collections.api.factory.map.ImmutableMapFactory;
 import org.eclipse.collections.api.map.ImmutableMap;
+import org.eclipse.collections.api.map.MapIterable;
+import org.eclipse.collections.api.map.MutableMap;
+import org.eclipse.collections.impl.map.mutable.UnifiedMap;
 
 @aQute.bnd.annotation.spi.ServiceProvider(ImmutableMapFactory.class)
 public class ImmutableMapFactoryImpl implements ImmutableMapFactory
@@ -184,5 +188,25 @@ public class ImmutableMapFactoryImpl implements ImmutableMapFactory
             default:
                 throw new AssertionError();
         }
+    }
+
+    @Override
+    public <K, V> MutableMap<K, V> withMap(Map<? extends K, ? extends V> map)
+    {
+        return UnifiedMap.newMap(map);
+    }
+
+    @Override
+    public <K, V> MutableMap<K, V> withMapIterable(MapIterable<? extends K, ? extends V> mapIterable)
+    {
+        MutableMap<K, V> output = Maps.mutable.withInitialCapacity(mapIterable.size());
+        mapIterable.forEachKeyValue(output::put);
+        return output;
+    }
+
+    @Override
+    public <K, V> MutableMap<K, V> ofMapIterable(MapIterable<? extends K, ? extends V> mapIterable)
+    {
+        return this.withMapIterable(mapIterable);
     }
 }

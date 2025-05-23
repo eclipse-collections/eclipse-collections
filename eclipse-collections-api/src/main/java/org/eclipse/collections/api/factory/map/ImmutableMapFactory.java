@@ -13,6 +13,8 @@ package org.eclipse.collections.api.factory.map;
 import java.util.Map;
 
 import org.eclipse.collections.api.map.ImmutableMap;
+import org.eclipse.collections.api.map.MapIterable;
+import org.eclipse.collections.api.map.MutableMap;
 
 public interface ImmutableMapFactory
 {
@@ -67,4 +69,12 @@ public interface ImmutableMapFactory
     <K, V> ImmutableMap<K, V> ofAll(Map<? extends K, ? extends V> map);
 
     <K, V> ImmutableMap<K, V> withAll(Map<? extends K, ? extends V> map);
+
+    <K, V> MutableMap<K, V> withMap(Map<? extends K, ? extends V> map);
+
+    <K, V> MutableMap<K, V> ofMapIterable(MapIterable<? extends K, ? extends V> mapIterable);
+
+    <K, V> MutableMap<K, V> withMapIterable(MapIterable<? extends K, ? extends V> mapIterable);
+
+
 }
