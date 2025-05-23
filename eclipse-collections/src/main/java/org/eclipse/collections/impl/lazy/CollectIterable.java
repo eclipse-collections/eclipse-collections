@@ -86,12 +86,6 @@ public class CollectIterable<T, V>
     }
 
     @Override
-    public Object[] toArray()
-    {
-        return this.toList().toArray();
-    }
-
-    @Override
     public boolean anySatisfy(Predicate<? super V> predicate)
     {
         return Iterate.anySatisfy(this.adapted, Predicates.attributePredicate(this.function, predicate));

@@ -97,12 +97,6 @@ public abstract class AbstractLazyIterable<T>
     }
 
     @Override
-    public <E> E[] toArray(E[] array)
-    {
-        return this.toList().toArray(array);
-    }
-
-    @Override
     public int size()
     {
         return this.count(Predicates.alwaysTrue());

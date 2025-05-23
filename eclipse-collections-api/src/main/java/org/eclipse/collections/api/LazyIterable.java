@@ -73,6 +73,22 @@ public interface LazyIterable<T>
         return mutableBag.toImmutable();
     }
 
+    @Override
+    default Object[] toArray()
+    {
+        MutableList<T> mutableList = Lists.mutable.empty();
+        this.forEach(mutableList::add);
+        return mutableList.toArray();
+    }
+
+    @Override
+    default <E> E[] toArray(E[] array)
+    {
+        MutableList<T> mutableList = Lists.mutable.empty();
+        this.forEach(mutableList::add);
+        return mutableList.toArray(array);
+    }
+
     /**
      * Creates a deferred iterable for selecting elements from the current iterable.
      */

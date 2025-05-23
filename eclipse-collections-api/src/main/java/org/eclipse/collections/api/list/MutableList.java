@@ -60,6 +60,18 @@ import org.eclipse.collections.api.tuple.Pair;
 public interface MutableList<T>
         extends MutableCollection<T>, List<T>, Cloneable, ListIterable<T>
 {
+    @Override
+    default Object[] toArray()
+    {
+        return MutableCollection.super.toArray();
+    }
+
+    @Override
+    default <T1> T1[] toArray(T1[] a)
+    {
+        return MutableCollection.super.toArray(a);
+    }
+
     /**
      * This default override exists because java.util.List added a default getFirst() method in Java 21.
      * @since 12.0

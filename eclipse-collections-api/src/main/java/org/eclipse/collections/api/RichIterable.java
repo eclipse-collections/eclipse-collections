@@ -10,6 +10,7 @@
 
 package org.eclipse.collections.api;
 
+import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.DoubleSummaryStatistics;
@@ -2444,7 +2445,12 @@ public interface RichIterable<T>
      * @see Collection#toArray()
      * @since 1.0
      */
-    Object[] toArray();
+    default Object[] toArray()
+    {
+        Object[] result = new Object[this.size()];
+        this.forEachWithIndex((each, index) -> result[index] = each);
+        return result;
+    }
 
     /**
      * Converts this iterable to an array using the specified target array, assuming the target array is as long
@@ -2453,7 +2459,20 @@ public interface RichIterable<T>
      * @see Collection#toArray(Object[])
      * @since 1.0
      */
-    <E> E[] toArray(E[] array);
+    default <E> E[] toArray(E[] array)
+    {
+        int size = this.size();
+        E[] result = array.length < size
+                ? (E[]) Array.newInstance(array.getClass().getComponentType(), size)
+                : array;
+
+        this.forEachWithIndex((each, index) -> result[index] = (E) each);
+        if (result.length > size)
+        {
+            result[size] = null;
+        }
+        return result;
+    }
 
     /**
      * Returns a string with the elements of this iterable separated by commas with spaces and

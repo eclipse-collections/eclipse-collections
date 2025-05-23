@@ -54,6 +54,18 @@ public abstract class AbstractImmutableCollection<T>
     protected abstract MutableCollection<T> newMutable(int size);
 
     @Override
+    public Object[] toArray()
+    {
+        return super.toArray();
+    }
+
+    @Override
+    public <E> E[] toArray(E[] array)
+    {
+        return super.toArray(array);
+    }
+
+    @Override
     public Optional<T> reduce(BinaryOperator<T> accumulator)
     {
         if (this.isEmpty())

@@ -20,8 +20,9 @@ import org.eclipse.collections.api.factory.Bags;
 import org.eclipse.collections.api.list.ImmutableList;
 import org.eclipse.collections.api.set.ImmutableSet;
 import org.eclipse.collections.impl.list.Interval;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ToImmutableTest
 {
@@ -29,7 +30,7 @@ public class ToImmutableTest
     public void perfIssueInLazyIterableToImmutableList()
     {
         MutableBag<Integer> visited = Bags.mutable.empty();
-        LazyIterable<Integer> integers = Interval.oneTo(10);
+        LazyIterable<Integer> integers = Interval.oneTo(10).toBag().asLazy();
         LazyIterable<Integer> select =
                 integers.select(i -> i > 3)
                         .tap(visited::add)
@@ -37,9 +38,9 @@ public class ToImmutableTest
                         .tap(visited::add);
         ImmutableList<Integer> immutableList = select.toImmutableList();
 
-        Assertions.assertEquals(List.of(4, 5, 6), immutableList);
+        assertEquals(List.of(4, 5, 6), immutableList);
 
-        Assertions.assertEquals(Bags.mutable.of(4, 4, 5, 5, 6, 6, 7, 8, 9, 10), visited);
+        assertEquals(Bags.mutable.of(4, 4, 5, 5, 6, 6, 7, 8, 9, 10), visited);
     }
 
     @Test
@@ -54,9 +55,9 @@ public class ToImmutableTest
                         .tap(visited::add);
         Bag<Integer> immutableBag = select.toImmutableBag();
 
-        Assertions.assertEquals(Bags.mutable.of(4, 5, 6), immutableBag);
+        assertEquals(Bags.mutable.of(4, 5, 6), immutableBag);
 
-        Assertions.assertEquals(Bags.mutable.of(4, 4, 5, 5, 6, 6, 7, 8, 9, 10), visited);
+        assertEquals(Bags.mutable.of(4, 4, 5, 5, 6, 6, 7, 8, 9, 10), visited);
     }
 
     @Test
@@ -71,8 +72,44 @@ public class ToImmutableTest
                         .tap(visited::add);
         ImmutableSet<Integer> immutableBag = select.toImmutableSet();
 
-        Assertions.assertEquals(Set.of(4, 5, 6), immutableBag);
+        assertEquals(Set.of(4, 5, 6), immutableBag);
 
-        Assertions.assertEquals(Bags.mutable.of(4, 4, 5, 5, 6, 6, 7, 8, 9, 10), visited);
+        assertEquals(Bags.mutable.of(4, 4, 5, 5, 6, 6, 7, 8, 9, 10), visited);
+    }
+
+    @Test
+    public void perfIssueInLazyIterableToArray()
+    {
+        MutableBag<Integer> visited = Bags.mutable.empty();
+        LazyIterable<Integer> integers = Interval.oneTo(10).toBag().asLazy();
+        LazyIterable<Integer> select =
+                integers.select(i -> i > 3)
+                        .tap(visited::add)
+                        .select(i -> i < 7)
+                        .tap(visited::add);
+        Object[] array = select.toArray();
+
+        assertArrayEquals(new Object[]{4, 5, 6}, array);
+
+        assertEquals(Bags.mutable.of(4, 4, 5, 5, 6, 6, 7, 8, 9, 10), visited);
+    }
+
+    @Test
+    public void perfIssueInLazyIterableToArrayWithTarget()
+    {
+        MutableBag<Integer> visited = Bags.mutable.empty();
+        LazyIterable<Integer> integers = Interval.oneTo(10).toBag().asLazy();
+        LazyIterable<Integer> select =
+                integers.select(i -> i > 3)
+                        .tap(visited::add)
+                        .select(i -> i < 7)
+                        .tap(visited::add);
+        Integer[] targetArray = new Integer[10];
+        Integer[] result = select.toArray(targetArray);
+
+        assertEquals(targetArray, result);
+        assertArrayEquals(new Integer[]{4, 5, 6, null, null, null, null, null, null, null}, result);
+
+        assertEquals(Bags.mutable.of(4, 4, 5, 5, 6, 6, 7, 8, 9, 10), visited);
     }
 }
