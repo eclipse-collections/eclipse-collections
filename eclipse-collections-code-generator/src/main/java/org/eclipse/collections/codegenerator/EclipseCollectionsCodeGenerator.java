@@ -17,6 +17,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.Pattern;
 import java.util.zip.CRC32;
 
 import org.eclipse.collections.codegenerator.model.Primitive;
@@ -28,8 +29,7 @@ import org.stringtemplate.v4.STGroupFile;
 
 public class EclipseCollectionsCodeGenerator
 {
-    private final String templateDirectory;
-    private final List<URL> classPathURLs;
+    private final Pattern resourcePattern;
     private final ErrorListener errorListener;
     private final File outputDirectory;
     private final String fileExtension;
@@ -38,13 +38,12 @@ public class EclipseCollectionsCodeGenerator
 
     public EclipseCollectionsCodeGenerator(
             String templateDirectory,
-            List<URL> classPathURLs,
             ErrorListener errorListener,
             File outputDirectory,
             String fileExtension)
     {
-        this.templateDirectory = Objects.requireNonNull(templateDirectory);
-        this.classPathURLs = Objects.requireNonNull(classPathURLs);
+        Objects.requireNonNull(templateDirectory);
+        this.resourcePattern = Pattern.compile(templateDirectory + "/.*\\.stg");
         this.errorListener = Objects.requireNonNull(errorListener);
         this.outputDirectory = Objects.requireNonNull(outputDirectory);
         this.fileExtension = Objects.requireNonNull(fileExtension);
@@ -57,10 +56,9 @@ public class EclipseCollectionsCodeGenerator
      */
     public int generateFiles()
     {
-        List<URL> allTemplateFilesFromClassPath =
-                FileUtils.getAllTemplateFilesFromClasspath(this.templateDirectory, this.classPathURLs);
+        List<URL> templateFiles = FileUtils.findTemplateFiles(this.resourcePattern);
 
-        for (URL url : allTemplateFilesFromClassPath)
+        for (URL url : templateFiles)
         {
             STGroupFile templateFile = new STGroupFile(url, "UTF-8", '<', '>');
             if (!templateFile.isDefined("fileName"))
