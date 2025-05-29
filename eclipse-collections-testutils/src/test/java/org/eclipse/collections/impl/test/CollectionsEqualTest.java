@@ -16,12 +16,12 @@ import java.util.Set;
 
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.set.MutableSet;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.eclipse.collections.impl.factory.Iterables.mList;
 import static org.eclipse.collections.impl.factory.Iterables.mMap;
 import static org.eclipse.collections.impl.factory.Iterables.mSet;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * JUnit test to make sure that the methods {@link Verify#assertListsEqual(String, List, List)},
@@ -65,7 +65,7 @@ public class CollectionsEqualTest
         }
         catch (AssertionError e)
         {
-            Verify.assertContains(CollectionsEqualTest.class.getName(), e.getStackTrace()[5].toString());
+            Verify.assertContains(CollectionsEqualTest.class.getName(), e.getStackTrace()[7].toString());
         }
 
         try
@@ -75,7 +75,7 @@ public class CollectionsEqualTest
         }
         catch (AssertionError e)
         {
-            Verify.assertContains(CollectionsEqualTest.class.getName(), e.getStackTrace()[6].toString());
+            Verify.assertContains(CollectionsEqualTest.class.getName(), e.getStackTrace()[8].toString());
         }
 
         try
@@ -85,7 +85,7 @@ public class CollectionsEqualTest
         }
         catch (AssertionError e)
         {
-            Verify.assertContains(CollectionsEqualTest.class.getName(), e.getStackTrace()[5].toString());
+            Verify.assertContains(CollectionsEqualTest.class.getName(), e.getStackTrace()[7].toString());
         }
 
         try
@@ -95,7 +95,7 @@ public class CollectionsEqualTest
         }
         catch (AssertionError e)
         {
-            Verify.assertContains(CollectionsEqualTest.class.getName(), e.getStackTrace()[6].toString());
+            Verify.assertContains(CollectionsEqualTest.class.getName(), e.getStackTrace()[8].toString());
         }
     }
 
@@ -117,7 +117,7 @@ public class CollectionsEqualTest
         }
         catch (AssertionError e)
         {
-            Verify.assertContains(CollectionsEqualTest.class.getName(), e.getStackTrace()[4].toString());
+            Verify.assertContains(CollectionsEqualTest.class.getName(), e.getStackTrace()[6].toString());
         }
 
         try
@@ -127,7 +127,7 @@ public class CollectionsEqualTest
         }
         catch (AssertionError e)
         {
-            Verify.assertContains(CollectionsEqualTest.class.getName(), e.getStackTrace()[5].toString());
+            Verify.assertContains(CollectionsEqualTest.class.getName(), e.getStackTrace()[7].toString());
         }
 
         try
@@ -137,7 +137,7 @@ public class CollectionsEqualTest
         }
         catch (AssertionError e)
         {
-            Verify.assertContains(CollectionsEqualTest.class.getName(), e.getStackTrace()[5].toString());
+            Verify.assertContains(CollectionsEqualTest.class.getName(), e.getStackTrace()[7].toString());
         }
 
         try
@@ -147,7 +147,7 @@ public class CollectionsEqualTest
         }
         catch (AssertionError e)
         {
-            Verify.assertContains(CollectionsEqualTest.class.getName(), e.getStackTrace()[6].toString());
+            Verify.assertContains(CollectionsEqualTest.class.getName(), e.getStackTrace()[8].toString());
         }
     }
 
@@ -169,7 +169,7 @@ public class CollectionsEqualTest
         }
         catch (AssertionError e)
         {
-            Verify.assertContains(CollectionsEqualTest.class.getName(), e.getStackTrace()[4].toString());
+            Verify.assertContains(CollectionsEqualTest.class.getName(), e.getStackTrace()[6].toString());
         }
 
         try
@@ -179,7 +179,7 @@ public class CollectionsEqualTest
         }
         catch (AssertionError e)
         {
-            Verify.assertContains(CollectionsEqualTest.class.getName(), e.getStackTrace()[5].toString());
+            Verify.assertContains(CollectionsEqualTest.class.getName(), e.getStackTrace()[7].toString());
         }
 
         try
@@ -189,7 +189,7 @@ public class CollectionsEqualTest
         }
         catch (AssertionError e)
         {
-            Verify.assertContains(CollectionsEqualTest.class.getName(), e.getStackTrace()[4].toString());
+            Verify.assertContains(CollectionsEqualTest.class.getName(), e.getStackTrace()[6].toString());
         }
 
         try
@@ -199,7 +199,7 @@ public class CollectionsEqualTest
         }
         catch (AssertionError e)
         {
-            Verify.assertContains(CollectionsEqualTest.class.getName(), e.getStackTrace()[5].toString());
+            Verify.assertContains(CollectionsEqualTest.class.getName(), e.getStackTrace()[7].toString());
         }
     }
 
@@ -213,7 +213,7 @@ public class CollectionsEqualTest
         }
         catch (AssertionError e)
         {
-            Verify.assertContains(CollectionsEqualTest.class.getName(), e.getStackTrace()[4].toString());
+            Verify.assertContains(CollectionsEqualTest.class.getName(), e.getStackTrace()[6].toString());
         }
 
         try
@@ -223,7 +223,7 @@ public class CollectionsEqualTest
         }
         catch (AssertionError e)
         {
-            Verify.assertContains(CollectionsEqualTest.class.getName(), e.getStackTrace()[5].toString());
+            Verify.assertContains(CollectionsEqualTest.class.getName(), e.getStackTrace()[7].toString());
         }
     }
 
@@ -237,7 +237,7 @@ public class CollectionsEqualTest
         }
         catch (AssertionError e)
         {
-            Verify.assertContains(CollectionsEqualTest.class.getName(), e.getStackTrace()[3].toString());
+            Verify.assertContains(CollectionsEqualTest.class.getName(), e.getStackTrace()[6].toString());
         }
 
         try
@@ -247,7 +247,7 @@ public class CollectionsEqualTest
         }
         catch (AssertionError e)
         {
-            Verify.assertContains(CollectionsEqualTest.class.getName(), e.getStackTrace()[4].toString());
+            Verify.assertContains(CollectionsEqualTest.class.getName(), e.getStackTrace()[7].toString());
         }
     }
 
@@ -261,7 +261,7 @@ public class CollectionsEqualTest
         }
         catch (AssertionError e)
         {
-            Verify.assertContains(CollectionsEqualTest.class.getName(), e.getStackTrace()[3].toString());
+            Verify.assertContains(CollectionsEqualTest.class.getName(), e.getStackTrace()[6].toString());
         }
 
         try
@@ -271,7 +271,7 @@ public class CollectionsEqualTest
         }
         catch (AssertionError e)
         {
-            Verify.assertContains(CollectionsEqualTest.class.getName(), e.getStackTrace()[4].toString());
+            Verify.assertContains(CollectionsEqualTest.class.getName(), e.getStackTrace()[7].toString());
         }
     }
 
@@ -285,7 +285,7 @@ public class CollectionsEqualTest
         }
         catch (AssertionError e)
         {
-            Verify.assertContains(CollectionsEqualTest.class.getName(), e.getStackTrace()[3].toString());
+            Verify.assertContains(CollectionsEqualTest.class.getName(), e.getStackTrace()[4].toString());
         }
 
         try
@@ -295,7 +295,7 @@ public class CollectionsEqualTest
         }
         catch (AssertionError e)
         {
-            Verify.assertContains(CollectionsEqualTest.class.getName(), e.getStackTrace()[4].toString());
+            Verify.assertContains(CollectionsEqualTest.class.getName(), e.getStackTrace()[5].toString());
         }
     }
 
@@ -309,7 +309,7 @@ public class CollectionsEqualTest
         }
         catch (AssertionError e)
         {
-            Verify.assertContains(CollectionsEqualTest.class.getName(), e.getStackTrace()[5].toString());
+            Verify.assertContains(CollectionsEqualTest.class.getName(), e.getStackTrace()[6].toString());
         }
 
         try
@@ -319,7 +319,7 @@ public class CollectionsEqualTest
         }
         catch (AssertionError e)
         {
-            Verify.assertContains(CollectionsEqualTest.class.getName(), e.getStackTrace()[6].toString());
+            Verify.assertContains(CollectionsEqualTest.class.getName(), e.getStackTrace()[7].toString());
         }
     }
 
@@ -333,7 +333,7 @@ public class CollectionsEqualTest
         }
         catch (AssertionError e)
         {
-            Verify.assertContains(CollectionsEqualTest.class.getName(), e.getStackTrace()[5].toString());
+            Verify.assertContains(CollectionsEqualTest.class.getName(), e.getStackTrace()[6].toString());
         }
         try
 
@@ -343,7 +343,7 @@ public class CollectionsEqualTest
         }
         catch (AssertionError e)
         {
-            Verify.assertContains(CollectionsEqualTest.class.getName(), e.getStackTrace()[6].toString());
+            Verify.assertContains(CollectionsEqualTest.class.getName(), e.getStackTrace()[7].toString());
         }
     }
 
@@ -357,7 +357,7 @@ public class CollectionsEqualTest
         }
         catch (AssertionError e)
         {
-            Verify.assertContains(CollectionsEqualTest.class.getName(), e.getStackTrace()[5].toString());
+            Verify.assertContains(CollectionsEqualTest.class.getName(), e.getStackTrace()[6].toString());
         }
 
         try
@@ -367,7 +367,7 @@ public class CollectionsEqualTest
         }
         catch (AssertionError e)
         {
-            Verify.assertContains(CollectionsEqualTest.class.getName(), e.getStackTrace()[6].toString());
+            Verify.assertContains(CollectionsEqualTest.class.getName(), e.getStackTrace()[7].toString());
         }
     }
 
@@ -381,7 +381,7 @@ public class CollectionsEqualTest
         }
         catch (AssertionError e)
         {
-            Verify.assertContains(CollectionsEqualTest.class.getName(), e.getStackTrace()[5].toString());
+            Verify.assertContains(CollectionsEqualTest.class.getName(), e.getStackTrace()[6].toString());
         }
 
         try
@@ -391,7 +391,7 @@ public class CollectionsEqualTest
         }
         catch (AssertionError e)
         {
-            Verify.assertContains(CollectionsEqualTest.class.getName(), e.getStackTrace()[6].toString());
+            Verify.assertContains(CollectionsEqualTest.class.getName(), e.getStackTrace()[7].toString());
         }
     }
 
@@ -405,7 +405,7 @@ public class CollectionsEqualTest
         }
         catch (AssertionError e)
         {
-            Verify.assertContains(CollectionsEqualTest.class.getName(), e.getStackTrace()[3].toString());
+            Verify.assertContains(CollectionsEqualTest.class.getName(), e.getStackTrace()[4].toString());
         }
     }
 }
