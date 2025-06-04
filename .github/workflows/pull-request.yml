@@ -29,6 +29,7 @@ jobs:
       - run: ./mvnw --threads 2C --color=always verify
         env:
           MAVEN_OPTS: '-Xmx1g'
+          DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_API_TOKEN }}
 
       - name: 'Clean Maven cache'
         run: rm -rf ~/.m2/repository/org/eclipse/collections
@@ -57,6 +58,7 @@ jobs:
         run: ./mvnw --threads 2C --color=always verify --activate-profiles maven-enforcer-plugin -DskipTests
         env:
           MAVEN_OPTS: '-Xmx1g'
+          DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_API_TOKEN }}
 
       - name: 'Clean Maven cache'
         run: rm -rf ~/.m2/repository/org/eclipse/collections
@@ -85,6 +87,7 @@ jobs:
         run: ./mvnw --threads 2C --color=always verify --activate-profiles maven-dependency-plugin -DskipTests
         env:
           MAVEN_OPTS: '-Xmx1g'
+          DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_API_TOKEN }}
 
       - name: 'Clean Maven cache'
         run: rm -rf ~/.m2/repository/org/eclipse/collections
@@ -117,6 +120,7 @@ jobs:
         run: ./mvnw --color=always verify
         env:
           MAVEN_OPTS: '-Xmx1g'
+          DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_API_TOKEN }}
 
       - name: 'Clean Maven cache'
         run: rm -rf ~/.m2/repository/org/eclipse/collections
@@ -154,6 +158,7 @@ jobs:
         run: ./mvnw --color=always verify
         env:
           MAVEN_OPTS: '-Xmx2g'
+          DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_API_TOKEN }}
 
   acceptance-tests:
     name: Acceptance Tests
@@ -179,6 +184,7 @@ jobs:
       - run: ./mvnw --color=always install --projects acceptance-tests --also-make --activate-profiles all
         env:
           MAVEN_OPTS: '-Xmx1g'
+          DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_API_TOKEN }}
 
       - name: 'Clean Maven cache'
         run: rm -rf ~/.m2/repository/org/eclipse/collections
@@ -207,6 +213,7 @@ jobs:
       - run: ./mvnw --color=always install --projects performance-tests --also-make --activate-profiles all -DskipTests=true
         env:
           MAVEN_OPTS: '-Xmx1g'
+          DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_API_TOKEN }}
 
       - name: 'Clean Maven cache'
         run: rm -rf ~/.m2/repository/org/eclipse/collections
@@ -226,6 +233,7 @@ jobs:
         run: ./mvnw --color=always verify checkstyle:check --activate-profiles all -DskipTests=true
         env:
           MAVEN_OPTS: '-Xmx1g'
+          DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_API_TOKEN }}
 
   javadoc:
     name: Javadoc 11
@@ -249,14 +257,18 @@ jobs:
           java-version: 11
       - name: Build Generator
         run: ./mvnw --color=always -Dsurefire.useFile=false -DskipTests -Denforcer.skip=true clean install --projects 'eclipse-collections-code-generator,eclipse-collections-code-generator-maven-plugin'
+        env:
+          DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_API_TOKEN }}
       - name: JavaDoc Aggregate
         run: ./mvnw --color=always --activate-profiles maven-javadoc-plugin -DskipTests -Denforcer.skip=true clean javadoc:aggregate verify --projects '!unit-tests,!serialization-tests,!jcstress-tests,!unit-tests-java8,!test-coverage'
         env:
           MAVEN_OPTS: '-Xmx1g'
+          DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_API_TOKEN }}
       - name: JavaDoc Jar
         run: ./mvnw --color=always --activate-profiles maven-javadoc-plugin -DskipTests -Denforcer.skip=true clean verify javadoc:jar --projects '!unit-tests,!serialization-tests,!jcstress-tests,!unit-tests-java8,!test-coverage'
         env:
           MAVEN_OPTS: '-Xmx1g'
+          DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_API_TOKEN }}
 
       - name: 'Clean Maven cache'
         run: rm -rf ~/.m2/repository/org/eclipse/collections
@@ -292,10 +304,13 @@ jobs:
       - run: java --version
       - name: Build Generator
         run: ./mvnw --threads 2C --color=always -DskipTests install --projects 'eclipse-collections-code-generator,eclipse-collections-code-generator-maven-plugin'
+        env:
+          DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_API_TOKEN }}
       - name: Javadoc
         run: ./mvnw --threads 2C --color=always --activate-profiles maven-javadoc-plugin -DskipTests javadoc:aggregate verify --projects '!unit-tests,!serialization-tests,!jcstress-tests,!unit-tests-java8,!test-coverage'
         env:
           MAVEN_OPTS: '-Xmx2g'
+          DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_API_TOKEN }}
       - name: 'Clean Maven cache'
         run: rm -rf ~/.m2/repository/org/eclipse/collections
 
