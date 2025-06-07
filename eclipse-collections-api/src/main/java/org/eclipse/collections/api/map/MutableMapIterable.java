@@ -351,7 +351,27 @@ public interface MutableMapIterable<K, V> extends MapIterable<K, V>, Map<K, V>
     PartitionMutableCollection<V> partition(Predicate<? super V> predicate);
 
     @Override
+    <P> PartitionMutableCollection<V> partitionWith(Predicate2<? super V, ? super P> predicate, P parameter);
+
+    @Override
     <S> MutableCollection<S> selectInstancesOf(Class<S> clazz);
+
+    @Override
+    <V1> MutableCollection<V1> collect(Function<? super V, ? extends V1> function);
+
+    @Override
+    <P, V1> MutableCollection<V1> collectWith(Function2<? super V, ? super P, ? extends V1> function, P parameter);
+
+    @Override
+    <V1> MutableCollection<V1> collectIf(Predicate<? super V> predicate, Function<? super V, ? extends V1> function);
+
+    @Override
+    <V1> MutableCollection<V1> flatCollect(Function<? super V, ? extends Iterable<V1>> function);
+
+    @Override
+    <P, V1> MutableCollection<V1> flatCollectWith(
+            Function2<? super V, ? super P, ? extends Iterable<V1>> function,
+            P parameter);
 
     @Override
     <V1> MutableObjectLongMap<V1> sumByInt(Function<? super V, ? extends V1> groupBy, IntFunction<? super V> function);
