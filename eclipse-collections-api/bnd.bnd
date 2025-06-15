@@ -2,6 +2,9 @@ package-version=${versionmask;===;${Bundle-Version}}
 
 -jpms-module-info: org.eclipse.collections.api;version="${package-version}"
 Bundle-SymbolicName: org.eclipse.collections.api
+# explicitly set bundle-developers to avoid bnd-maven-plugin raising warnings for missing ids in the developers section of pom.xml
+Bundle-Developers: Eclipse Collections
+
 Export-Package: \
   org.eclipse.collections.api.*;version="${package-version}"
 Import-Package: \

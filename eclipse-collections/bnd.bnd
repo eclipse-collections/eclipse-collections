@@ -4,6 +4,14 @@ package-version=${versionmask;===;${Bundle-Version}}
 Bundle-SymbolicName: org.eclipse.collections.impl
 Bundle-ActivationPolicy: lazy
 
+# explicitly set bundle-developers to avoid bnd-maven-plugin raising warnings for missing ids in the developers section of pom.xml
+Bundle-Developers: Eclipse Collections
+
+# explicitly set bundle-description to avoid the XML indentation whitespace from the pom.xml <description> tag appearing here
+Bundle-Description: Eclipse Collections is a collections framework for Java. It has JDK-compatible List, Set and Map\
+ implementations with a rich API and set of utility classes that work with any JDK compatible Collections,\
+ Arrays, Maps or Strings. The iteration protocol was inspired by the Smalltalk collection framework.
+
 Export-Package: \
 	org.eclipse.collections.impl.*;version="${package-version}"
 

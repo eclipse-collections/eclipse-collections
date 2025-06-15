@@ -1,6 +1,4 @@
-package-version=${version;===;${Bundle-Version}}
-eclipse-collections-api-version=${version;===;8.1.0}
-jcip-annotations-version=${version;===;1.0}
+package-version=${versionmask;===;${Bundle-Version}}
 
 Export-Package: \
  !about.html,!about_files, \
