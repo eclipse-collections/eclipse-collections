@@ -114,6 +114,7 @@ The Eclipse Collections team gives a huge thank you to everyone who participated
 * Removed anonymous inner class examples from RichIterable and Iterate JavaDoc.
 * Updated 2-Collection_Containers.adoc file for adding IntInterval Documentation.
 * Updated 2-Collection_Containers.adoc file for Primitive sets documentation.
+* Fixed dead links in CONTRIBUTING.MD
 
 
 # Build Changes
