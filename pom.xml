@@ -708,6 +708,10 @@ Arrays, Maps or Strings. The iteration protocol was inspired by the Smalltalk co
                     <value>true</value>
                 </property>
             </activation>
+            
+            <modules>
+            	<module>p2-site</module>
+            </modules>
             <build>
                 <plugins>
                     <plugin>
