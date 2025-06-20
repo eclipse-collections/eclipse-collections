@@ -38,7 +38,7 @@
         <dependency>
             <groupId>biz.aQute.bnd</groupId>
             <artifactId>biz.aQute.bnd.annotation</artifactId>
-            <version>6.4.1</version>
+            <version>7.1.0</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
