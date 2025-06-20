@@ -142,12 +142,12 @@
                     <plugin>
                         <artifactId>maven-javadoc-plugin</artifactId>
                         <configuration>
-                            <source>11</source>
+                            <source>17</source>
                             <doctitle>Eclipse Collections - ${project.version}</doctitle>
                             <windowtitle>Eclipse Collections - ${project.version}</windowtitle>
                             <show>public</show>
                             <links>
-                                <link>https://docs.oracle.com/en/java/javase/11/docs/api</link>
+                                <link>https://docs.oracle.com/en/java/javase/17/docs/api</link>
                             </links>
                             <destDir>${project.version}</destDir>
                             <doclint>none</doclint>

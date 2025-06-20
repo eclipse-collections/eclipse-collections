@@ -21,11 +21,11 @@ jobs:
             maven-
 
       - run: mvn --non-recursive wrapper:wrapper -Dmaven=3.9.6
-      - name: Set up Java 11
+      - name: Set up Java 17
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
-          java-version: 11
+          java-version: 17
       - run: ./mvnw --threads 2C --color=always verify
         env:
           MAVEN_OPTS: '-Xmx1g'
@@ -47,11 +47,11 @@ jobs:
             maven-
 
       - run: mvn --non-recursive wrapper:wrapper -Dmaven=3.9.6
-      - name: Set up Java 11
+      - name: Set up Java 17
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
-          java-version: 11
+          java-version: 17
 
       - name: Run maven-enforcer-plugin
         run: ./mvnw --threads 2C --color=always verify --activate-profiles maven-enforcer-plugin -DskipTests
@@ -75,11 +75,11 @@ jobs:
             maven-
 
       - run: mvn --non-recursive wrapper:wrapper -Dmaven=3.9.6
-      - name: Set up Java 11
+      - name: Set up Java 17
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
-          java-version: 11
+          java-version: 17
 
       - name: Run maven-dependency-plugin
         run: ./mvnw --threads 2C --color=always verify --activate-profiles maven-dependency-plugin -DskipTests
@@ -171,11 +171,11 @@ jobs:
             maven-
 
       - run: mvn --non-recursive wrapper:wrapper -Dmaven=3.9.6
-      - name: Set up Java 11
+      - name: Set up Java 17
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
-          java-version: 11
+          java-version: 17
       - run: ./mvnw --color=always install --projects acceptance-tests --also-make --activate-profiles all
         env:
           MAVEN_OPTS: '-Xmx1g'
@@ -199,11 +199,11 @@ jobs:
             maven-
 
       - run: mvn --non-recursive wrapper:wrapper -Dmaven=3.9.6
-      - name: Set up Java 11
+      - name: Set up Java 17
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
-          java-version: 11
+          java-version: 17
       - run: ./mvnw --color=always install --projects performance-tests --also-make --activate-profiles all -DskipTests=true
         env:
           MAVEN_OPTS: '-Xmx1g'
@@ -217,18 +217,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: mvn --non-recursive wrapper:wrapper -Dmaven=3.9.6
-      - name: Set up Java 11
+      - name: Set up Java 17
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
-          java-version: 11
+          java-version: 17
       - name: Checkstyle
         run: ./mvnw --color=always verify checkstyle:check --activate-profiles all -DskipTests=true
         env:
           MAVEN_OPTS: '-Xmx1g'
 
   javadoc:
-    name: Javadoc 11
+    name: Javadoc 17
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -242,11 +242,11 @@ jobs:
             maven-
 
       - run: mvn --non-recursive wrapper:wrapper -Dmaven=3.9.6
-      - name: Set up Java 11
+      - name: Set up Java 17
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
-          java-version: 11
+          java-version: 17
       - name: Build Generator
         run: ./mvnw --color=always -Dsurefire.useFile=false -DskipTests -Denforcer.skip=true clean install --projects 'eclipse-collections-code-generator,eclipse-collections-code-generator-maven-plugin'
       - name: JavaDoc Aggregate
