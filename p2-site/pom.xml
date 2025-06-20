@@ -1,0 +1,60 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <!--
+  ~ Copyright (c) 2021 Zoltan Ujhelyi and Eclipse Collections project.
+  ~ All rights reserved. This program and the accompanying materials
+  ~ are made available under the terms of the Eclipse Public License v1.0
+  ~ and Eclipse Distribution License v. 1.0 which accompany this distribution.
+  ~ The Eclipse Public License is available at http://www.eclipse.org/legal/epl-v10.html
+  ~ and the Eclipse Distribution License is available at
+  ~ http://www.eclipse.org/org/documents/edl-v10.php.
+  -->
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.eclipse.collections</groupId>
+    <version>12.0.0</version>
+    <artifactId>p2-site</artifactId>
+    <packaging>p2-maven-repository</packaging>
+
+    <name>Eclipse Collections p2 update site</name>
+
+    <properties>
+        <!-- project defaults -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- versions used for plug-ins below -->
+        <!-- From Tycho 3.0 Java 17 is required as runtime VM -->
+        <tycho-version>4.0.13</tycho-version>
+    </properties>
+    
+    <build>
+        <plugins>
+			<!-- configure default plug-ins -->
+
+			<!-- enable Tycho -->
+            <plugin>
+                <groupId>org.eclipse.tycho</groupId>
+                <artifactId>tycho-maven-plugin</artifactId>
+                <version>${tycho-version}</version>
+                <extensions>true</extensions>
+            </plugin>
+            <!-- See https://tycho.eclipseprojects.io/doc/latest/tycho-p2-repository-plugin/assemble-maven-repository-mojo.html -->
+            <plugin>
+            	<groupId>org.eclipse.tycho</groupId>
+                <artifactId>tycho-p2-repository-plugin</artifactId>
+                <version>${tycho-version}</version>
+                <configuration>
+                	<includeReactor>true</includeReactor>
+                	<categoryName>Eclipse Collections</categoryName>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>cbi-releases</id>
+            <url>https://repo.eclipse.org/content/repositories/cbi-releases/</url>
+        </pluginRepository>
+    </pluginRepositories>
+
+</project>
