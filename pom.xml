@@ -110,6 +110,7 @@ Arrays, Maps or Strings. The iteration protocol was inspired by the Smalltalk co
         <module>jcstress-tests</module>
         <module>unit-tests-java8</module>
         <module>test-coverage</module>
+        <module>p2-site</module>
     </modules>
 
     <properties>
@@ -226,8 +227,6 @@ Arrays, Maps or Strings. The iteration protocol was inspired by the Smalltalk co
                         <skippedModules>
                             <param>eclipse-collections-code-generator</param>
                             <param>eclipse-collections-code-generator-maven-plugin</param>
-                            <param>p2-feature</param>
-                            <param>p2-repository</param>
                         </skippedModules>
                         <avoidCallsTo>
                             <avoidCallsTo>java.util.logging</avoidCallsTo>
@@ -708,10 +707,7 @@ Arrays, Maps or Strings. The iteration protocol was inspired by the Smalltalk co
                     <value>true</value>
                 </property>
             </activation>
-            
-            <modules>
-            	<module>p2-site</module>
-            </modules>
+
             <build>
                 <plugins>
                     <plugin>
