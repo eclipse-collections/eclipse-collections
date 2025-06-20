@@ -78,7 +78,7 @@ Commit messages
 
 - [Use the imperative mood][imperative-mood] as in "Fix bug" or "Add feature" rather than "Fixed bug" or "Added feature"
 - [Mention the GitHub issue][github-issue] when relevant
-- It's a good idea to follow the [advice in Pro Git](https://git-scm.com/book/ch5-2.html)
+- It's a good idea to follow the [advice in Pro Git](https://git-scm.com/book/en/v2/Distributed-Git-Contributing-to-a-Project)
 
 Pull requests
 -------------
@@ -102,7 +102,7 @@ That's it! Thanks for contributing to Eclipse Collections!
 [jmh]:             http://openjdk.java.net/projects/code-tools/jmh/
 [semver]:          http://semver.org/
 [style-guide]:     https://google.github.io/styleguide/javaguide.html
-[rebase]:          https://github.com/edx/edx-platform/wiki/How-to-Rebase-a-Pull-Request
+[rebase]:          https://github.com/edx/edx-solutions-edx-platform/wiki/How-to-Rebase-a-Pull-Request
 [github]:          https://github.com/eclipse/eclipse-collections/actions
 [imperative-mood]: https://github.com/git/git/blob/master/Documentation/SubmittingPatches
 [github-issue]:    https://help.github.com/articles/closing-issues-via-commit-messages/
