@@ -3,6 +3,8 @@ import "primitiveEquals.stg"
 import "primitiveHashCode.stg"
 import "primitiveLiteral.stg"
 
+skipBoolean() ::= "true"
+
 isTest() ::= "true"
 
 targetPath() ::= "org/eclipse/collections/impl/bag/immutable/primitive"
