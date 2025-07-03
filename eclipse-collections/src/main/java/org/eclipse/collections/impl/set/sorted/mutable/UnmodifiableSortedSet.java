@@ -64,7 +64,7 @@ public class UnmodifiableSortedSet<T>
         extends AbstractUnmodifiableMutableCollection<T>
         implements MutableSortedSet<T>, Serializable
 {
-    UnmodifiableSortedSet(MutableSortedSet<? extends T> sortedSet)
+    protected UnmodifiableSortedSet(MutableSortedSet<? extends T> sortedSet)
     {
         super(sortedSet);
     }
