@@ -36,23 +36,23 @@ The current GA release of Eclipse Collections (11.1.0) is compatible with Java 8
   * [Rich][RichIterable], functional, and fluent APIs with eager methods available directly on collection types
   * Provides [`List`][ListIterable], [`Set`][SetIterable], [`Bag`][Bag], [`Stack`][StackIterable], [`Map`][MapIterable], [`Multimap`][Multimap], [`BiMap`][BiMap], [`Interval`][Interval] object container types
   * [Readable][RichIterable], [`Mutable`][MutableCollection], and [`Immutable`][ImmutableCollection] interfaces for each collection type with covariant return types
-    * [Blog: Rich, Lazy, Mutable, Immutable interfaces in Eclipse collections][BlogRichLazyMutableImmutable] 
+    * [Blog: Rich, Lazy, Mutable, Immutable interfaces in Eclipse collections][BlogRichLazyMutableImmutable]
   * Mutable and Immutable Collection [Factories][Factories]
-    * [Blog series: As a matter of Factory][BlogAsAMatterOfFactory] 
+    * [Blog series: As a matter of Factory][BlogAsAMatterOfFactory]
   * [Adapters][Adapters] and [Utility][Utilities] classes for JCF Types
-    * [Blog: Iterate over any Iterable in Java][BlogIterateOverAnyIterableInJava] 
+    * [Blog: Iterate over any Iterable in Java][BlogIterateOverAnyIterableInJava]
 * Performance
     * Memory Efficient Containers
       * [Blog: UnifiedMap: How it works?][BlogUnifiedMapHowItWorks]
       * [Blog: UnifiedSet - The Memory Saver][BlogUnifiedSetTheMemorySaver]
     * Optimized Eager, [`Lazy`][LazyIterable] and [`Parallel`][ParallelIterable] APIs
-      * [Blog: The unparalleled design of Eclipse Collections][BlogUnparalleledDesignOfEclipseCollections] 
+      * [Blog: The unparalleled design of Eclipse Collections][BlogUnparalleledDesignOfEclipseCollections]
     * [Primitive][PrimitiveIterable] Collections for all primitive types
       * Provides `List`, `Set`, `Bag`, `Stack`, `Map`, `Interval` primitive container types
 * Maturity
     * Eclipse Collections has been actively developed and used in financial services applications since 2004
     * Eclipse Collections existed for a decade before concise lambda expressions were added in Java 8
-      * [Blog: My ten-year quest for concise lambda expressions in Java][BlogLambdaExpressionsInJava] 
+      * [Blog: My ten-year quest for concise lambda expressions in Java][BlogLambdaExpressionsInJava]
 
 ## Learn Eclipse Collections
 

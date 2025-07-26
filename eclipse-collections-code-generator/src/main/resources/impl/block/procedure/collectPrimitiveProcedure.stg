@@ -5,7 +5,7 @@ skipBoolean() ::= "false"
 targetPath() ::= "org/eclipse/collections/impl/block/procedure/primitive"
 
 fileName(primitive) ::= "Collect<primitive.name>Procedure"
- 
+
 class(primitive) ::= <<
 <body(primitive.type, primitive.name)>
 >>
