@@ -73,45 +73,49 @@ The current GA release of Eclipse Collections (11.1.0) is compatible with Java 8
 
 ## Eclipse Collections and JDK Compatibility Matrix
 
-| EC     | JDK 5 - 7 | JDK 8   | JDK 9 - 10 | JDK 11 - 14 | JDK 15 - 21 |
-|--------|-----------|---------|------------|-------------|-------------|
+| EC     | JDK 5 - 7 | JDK 8   | JDK 9 - 10 | JDK 11 - 14 | JDK 15 - 17 | JDK 17 - 21 
+|--------|-----------|---------|------------|-------------|-------------|-------------
 | 7.x.x  | &check;   | &check; |            |             |             |
 | 8.x.x  |           | &check; |            |             |             |
 | 9.x.x  |           | &check; | &check;    | &check;     |             |
 | 10.x.x |           | &check; | &check;    | &check;     |             |
-| 10.4.0 |           | &check; | &check;    | &check;     | &check;     |
-| 11.x.x |           | &check; | &check;    | &check;     | &check;     |
-| 12.x.x |           |         |            | &check;     | &check;     |
+| 10.4.0 |           | &check; | &check;    | &check;     | &check;     | &check;
+| 11.x.x |           | &check; | &check;    | &check;     | &check;     | &check;
+| 12.x.x |           |         |            | &check;     | &check;     | &check;
+| 13.x.x |           |         |            |             |             | &check;
 
-**Note:** Eclipse Collections 12.x will be compatible with Java 11+. EC 12.0 has not been released as GA yet, but there are a few milestone releases available to test with.  
+**Please Note:** 
+1. Eclipse Collections 13.x requires minimum Java 17 and is compatible with Java 17+.
+2. Eclipse Collections 12.x requires minimum Java 11 and is compatible with Java 11+. 
+
 
 ## Acquiring Eclipse Collections
 
 ### Maven
 ```xml
 <dependency>
-  <groupId>org.eclipse.collections</groupId>
-  <artifactId>eclipse-collections-api</artifactId>
-  <version>11.1.0</version>
+    <groupId>org.eclipse.collections</groupId>
+    <artifactId>eclipse-collections-api</artifactId>
+    <version>13.0.0</version>
 </dependency>
 
 <dependency>
-  <groupId>org.eclipse.collections</groupId>
-  <artifactId>eclipse-collections</artifactId>
-  <version>11.1.0</version>
+    <groupId>org.eclipse.collections</groupId>
+    <artifactId>eclipse-collections</artifactId>
+    <version>13.0.0</version>
 </dependency>
 ```
 
 ### Gradle
 
 ```groovy
-implementation 'org.eclipse.collections:eclipse-collections-api:11.1.0'
-implementation 'org.eclipse.collections:eclipse-collections:11.1.0'
+implementation 'org.eclipse.collections:eclipse-collections-api:13.0.0'
+implementation 'org.eclipse.collections:eclipse-collections:13.0.0'
 ```
 
 ### OSGi Bundle
-Eclipse software repository location: https://download.eclipse.org/collections/11.1.0/repository
-
+- p2 update site: https://download.eclipse.org/tools/orbit/simrel/orbit-aggregation/nightly/latest/
+- Maven: https://central.sonatype.com/artifact/org.eclipse.collections/p2-site
 
 ## How to Contribute
 
