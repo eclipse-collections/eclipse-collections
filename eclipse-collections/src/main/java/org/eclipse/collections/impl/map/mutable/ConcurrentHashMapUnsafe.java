@@ -2487,7 +2487,7 @@ public class ConcurrentHashMapUnsafe<K, V>
                     if (candidate.equals(key))
                     {
                         V oldValue = e.getValue();
-                        V newValue = remappingFunction.apply(oldValue, value);
+                        V newValue = oldValue == null ? value : remappingFunction.apply(oldValue, value);
                         Entry<K, V> replacementChainForRemoval = this.createReplacementChainForRemoval((Entry<K, V>) o, e);
                         Entry<K, V> newEntry = newValue == null
                                 ? replacementChainForRemoval
