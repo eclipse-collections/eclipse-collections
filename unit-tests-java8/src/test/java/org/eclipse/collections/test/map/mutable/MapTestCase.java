@@ -297,6 +297,17 @@ public interface MapTestCase
             throw new IllegalArgumentException();
         }));
         assertIterablesEqual(this.newWithKeysValues(1, "1", 2, "2Two", 4, "4", 5, "5"), map);
+
+        // existing key with null value, remapping function is not called and new value is used
+        if (this.supportsNullValues())
+        {
+            map.put(2, null);
+            String value5 = map.merge(2, "Two", (oldValue, newValue) -> {
+                fail("Should not be called for null value key. But was invoked for old value: " + oldValue + ", new value: " + newValue);
+                return null;
+            });
+            assertEquals("Two", value5);
+        }
     }
 
     class AlwaysEqual

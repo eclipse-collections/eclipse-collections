@@ -38,6 +38,7 @@ import org.eclipse.collections.impl.tuple.Tuples;
 import org.eclipse.collections.impl.utility.ArrayIterate;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -877,6 +878,28 @@ public class UnifiedMapTest extends UnifiedMapTestCase
         assertNull(merge);
         MutableMap<Integer, Integer> expectedMap = MORE_COLLISIONS.subList(1, 8).toMap(k -> k, v -> v);
         assertEquals(expectedMap, actualMap);
+    }
+
+    @Test
+    public void mergeNullValue()
+    {
+        UnifiedMap<String, String> map = UnifiedMap.newMap();
+        map.put("nullKey", null);
+        assertDoesNotThrow(() -> map.merge("nullKey", "newValue", (oldValue, newValue) -> {
+            throw new IllegalStateException("Should not be called for null value key. But was invoked for old value: " + oldValue + ", new value: " + newValue);
+        }));
+        assertEquals("newValue", map.get("nullKey"));
+    }
+
+    @Test
+    public void mergeNullValueInMapWithCollisions()
+    {
+        MutableMap<Integer, Integer> map = this.mapWithCollisionsOfSize(8);
+        map.replaceAll((integer, integer2) -> null);
+        map.forEachKey(key -> map.merge(key, 42, (oldValue, newValue) -> {
+            throw new IllegalStateException("Should not be called for null value key. But was invoked for old value: " + oldValue + ", new value: " + newValue);
+        }));
+        map.forEachKey(key -> assertEquals(42, map.get(key)));
     }
 
     @Override

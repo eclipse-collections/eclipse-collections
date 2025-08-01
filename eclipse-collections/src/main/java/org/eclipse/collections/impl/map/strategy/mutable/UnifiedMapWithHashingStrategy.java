@@ -641,7 +641,7 @@ public class UnifiedMapWithHashingStrategy<K, V> extends AbstractMutableMap<K, V
         if (cur != CHAINED_KEY && this.nonNullTableObjectEquals(cur, key))
         {
             V oldValue = (V) this.table[index + 1];
-            V newValue = remappingFunction.apply(oldValue, value);
+            V newValue = oldValue == null ? value : remappingFunction.apply(oldValue, value);
             this.table[index + 1] = newValue;
             if (newValue == null)
             {
@@ -673,7 +673,7 @@ public class UnifiedMapWithHashingStrategy<K, V> extends AbstractMutableMap<K, V
                 if (this.nonNullTableObjectEquals(chain[i], key))
                 {
                     V oldValue = (V) chain[i + 1];
-                    V newValue = remappingFunction.apply(oldValue, value);
+                    V newValue = oldValue == null ? value : remappingFunction.apply(oldValue, value);
                     if (newValue == null)
                     {
                         this.overwriteWithLastElementFromChain(chain, index, i);
