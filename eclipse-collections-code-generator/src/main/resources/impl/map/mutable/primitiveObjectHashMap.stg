@@ -2454,8 +2454,8 @@ public class <name>ObjectHashMap\<V> implements Mutable<name>ObjectMap\<V>, Exte
             if (this.sentinelValues == null)
             {
                 this.sentinelValues = new SentinelValues\<>();
-                this.sentinelValues.containsZeroKey = true;
                 this.sentinelValues.zeroValue = function.valueOf(factory.value());
+                this.sentinelValues.containsZeroKey = true;
             }
             else if (this.sentinelValues.containsZeroKey)
             {
@@ -2463,8 +2463,9 @@ public class <name>ObjectHashMap\<V> implements Mutable<name>ObjectMap\<V>, Exte
             }
             else
             {
+                V newValue = function.valueOf(factory.value());
                 this.sentinelValues.containsZeroKey = true;
-                this.sentinelValues.zeroValue = function.valueOf(factory.value());
+                this.sentinelValues.zeroValue = newValue;
             }
             return this.sentinelValues.zeroValue;
         }
@@ -2473,8 +2474,8 @@ public class <name>ObjectHashMap\<V> implements Mutable<name>ObjectMap\<V>, Exte
             if (this.sentinelValues == null)
             {
                 this.sentinelValues = new SentinelValues\<>();
-                this.sentinelValues.containsOneKey = true;
                 this.sentinelValues.oneValue = function.valueOf(factory.value());
+                this.sentinelValues.containsOneKey = true;
             }
             else if (this.sentinelValues.containsOneKey)
             {
@@ -2482,8 +2483,9 @@ public class <name>ObjectHashMap\<V> implements Mutable<name>ObjectMap\<V>, Exte
             }
             else
             {
+                V newValue = function.valueOf(factory.value());
                 this.sentinelValues.containsOneKey = true;
-                this.sentinelValues.oneValue = function.valueOf(factory.value());
+                this.sentinelValues.oneValue = newValue;
             }
             return this.sentinelValues.oneValue;
         }
@@ -2506,8 +2508,8 @@ public class <name>ObjectHashMap\<V> implements Mutable<name>ObjectMap\<V>, Exte
             if (this.sentinelValues == null)
             {
                 this.sentinelValues = new SentinelValues\<>();
-                this.sentinelValues.containsZeroKey = true;
                 this.sentinelValues.zeroValue = function.value(factory.value(), parameter);
+                this.sentinelValues.containsZeroKey = true;
             }
             else if (this.sentinelValues.containsZeroKey)
             {
@@ -2515,8 +2517,9 @@ public class <name>ObjectHashMap\<V> implements Mutable<name>ObjectMap\<V>, Exte
             }
             else
             {
+                V newValue = function.value(factory.value(), parameter);
                 this.sentinelValues.containsZeroKey = true;
-                this.sentinelValues.zeroValue = function.value(factory.value(), parameter);
+                this.sentinelValues.zeroValue = newValue;
             }
             return this.sentinelValues.zeroValue;
         }
@@ -2525,8 +2528,8 @@ public class <name>ObjectHashMap\<V> implements Mutable<name>ObjectMap\<V>, Exte
             if (this.sentinelValues == null)
             {
                 this.sentinelValues = new SentinelValues\<>();
-                this.sentinelValues.containsOneKey = true;
                 this.sentinelValues.oneValue = function.value(factory.value(), parameter);
+                this.sentinelValues.containsOneKey = true;
             }
             else if (this.sentinelValues.containsOneKey)
             {
@@ -2534,8 +2537,9 @@ public class <name>ObjectHashMap\<V> implements Mutable<name>ObjectMap\<V>, Exte
             }
             else
             {
+                V newValue = function.value(factory.value(), parameter);
                 this.sentinelValues.containsOneKey = true;
-                this.sentinelValues.oneValue = function.value(factory.value(), parameter);
+                this.sentinelValues.oneValue = newValue;
             }
             return this.sentinelValues.oneValue;
         }
