@@ -122,12 +122,19 @@ public interface Mutable<name>ObjectMap\<V> extends <name>ObjectMap\<V>, Mutable
     /**
      * Look up the value associated with {@code key}, apply the {@code function} to it, and replace the value. If there
      * is no value associated with {@code key}, start it off with a value supplied by {@code factory}.
+     *
+     * This method guarantees that if either the factory or the function throws an exception,
+     * the map will be left in the same state as prior to the method invocation.
      */
     V updateValue(<type> key, Function0\<? extends V> factory, Function\<? super V, ? extends V> function);
 
     /**
      * Updates or sets the value associated with the key by applying the function to the
      * existing value, if one exists, or the initial value supplied by the factory if one does not.
+     *
+     * This method guarantees that if either the factory or the function throws an exception,
+     * the map will be left in the same state as prior to the method invocation.
+     *
      * @param key the key
      * @param factory the supplier providing the initial value to the function if no
      * mapping exists for the key
