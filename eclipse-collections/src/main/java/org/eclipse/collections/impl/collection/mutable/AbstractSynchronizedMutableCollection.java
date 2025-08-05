@@ -40,6 +40,7 @@ import org.eclipse.collections.api.collection.primitive.MutableLongCollection;
 import org.eclipse.collections.api.collection.primitive.MutableShortCollection;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.map.MutableMap;
+import org.eclipse.collections.api.map.MutableMapIterable;
 import org.eclipse.collections.api.map.primitive.MutableObjectDoubleMap;
 import org.eclipse.collections.api.map.primitive.MutableObjectLongMap;
 import org.eclipse.collections.api.multimap.MutableMultimap;
@@ -462,6 +463,17 @@ public abstract class AbstractSynchronizedMutableCollection<T>
         synchronized (this.getLock())
         {
             return this.getDelegate().aggregateBy(groupBy, zeroValueFactory, nonMutatingAggregator);
+        }
+    }
+
+    @Override
+    public <K> MutableMapIterable<K, T> reduceBy(
+            Function<? super T, ? extends K> groupBy,
+            Function2<? super T, ? super T, ? extends T> reduceFunction)
+    {
+        synchronized (this.lock)
+        {
+            return this.getDelegate().reduceBy(groupBy, reduceFunction);
         }
     }
 

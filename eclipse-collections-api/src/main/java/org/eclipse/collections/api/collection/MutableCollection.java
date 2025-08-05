@@ -49,6 +49,7 @@ import org.eclipse.collections.api.factory.primitive.LongLists;
 import org.eclipse.collections.api.factory.primitive.ShortLists;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.map.MutableMap;
+import org.eclipse.collections.api.map.MutableMapIterable;
 import org.eclipse.collections.api.map.primitive.MutableObjectDoubleMap;
 import org.eclipse.collections.api.map.primitive.MutableObjectLongMap;
 import org.eclipse.collections.api.multimap.MutableMultimap;
@@ -634,5 +635,13 @@ public interface MutableCollection<T>
                 zeroValueFactory,
                 nonMutatingAggregator,
                 Maps.mutable.empty());
+    }
+
+    @Override
+    default <K> MutableMapIterable<K, T> reduceBy(
+            Function<? super T, ? extends K> groupBy,
+            Function2<? super T, ? super T, ? extends T> reduceFunction)
+    {
+        return this.reduceBy(groupBy, reduceFunction, Maps.mutable.empty());
     }
 }

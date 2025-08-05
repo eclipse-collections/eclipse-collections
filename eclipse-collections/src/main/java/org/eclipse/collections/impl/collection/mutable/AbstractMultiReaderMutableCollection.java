@@ -71,7 +71,6 @@ import org.eclipse.collections.api.factory.primitive.ObjectDoubleMaps;
 import org.eclipse.collections.api.factory.primitive.ObjectLongMaps;
 import org.eclipse.collections.api.list.ImmutableList;
 import org.eclipse.collections.api.list.MutableList;
-import org.eclipse.collections.api.map.MapIterable;
 import org.eclipse.collections.api.map.MutableMap;
 import org.eclipse.collections.api.map.MutableMapIterable;
 import org.eclipse.collections.api.map.primitive.MutableObjectDoubleMap;
@@ -1440,7 +1439,7 @@ public abstract class AbstractMultiReaderMutableCollection<T> implements Mutable
     }
 
     @Override
-    public <K> MapIterable<K, T> reduceBy(
+    public <K> MutableMapIterable<K, T> reduceBy(
             Function<? super T, ? extends K> groupBy,
             Function2<? super T, ? super T, ? extends T> reduceFunction)
     {
