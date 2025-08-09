@@ -75,3 +75,6 @@ fabric.properties
 .project
 .settings/
 .classpath
+
+# Develocity
+.mvn/.develocity/develocity-workspace-id
