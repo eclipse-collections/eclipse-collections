@@ -587,6 +587,62 @@ public class <name>ObjectHashMapTest extends AbstractMutable<name>ObjectMapTestC
     }
 
     @Test
+    public void updateValue_withExceptionInFactory()
+    {
+        // Test for issue #1517 - updateValue should not mark key as present if factory throws
+        Mutable<name>ObjectMap\<String> hashMap = this.getEmptyMap();
+
+        assertThrows(
+                RuntimeException.class, () ->
+                        hashMap.updateValue(
+                                <(literal.(type))("0")>,
+                                () -> { throw new RuntimeException("Factory failed"); },
+                                Functions.getPassThru()));
+
+        assertTrue(!hashMap.containsKey(<(literal.(type))("0")>));
+        assertNull(hashMap.get(<(literal.(type))("0")>));
+
+        assertThrows(
+                RuntimeException.class, () ->
+                        hashMap.updateValue(
+                                <(literal.(type))("1")>,
+                                () -> { throw new RuntimeException("Factory failed"); },
+                                Functions.getPassThru()));
+
+        assertTrue(!hashMap.containsKey(<(literal.(type))("1")>));
+        assertNull(hashMap.get(<(literal.(type))("1")>));
+    }
+
+    @Test
+    public void updateValueWith_withExceptionInFactory()
+    {
+        // Test for issue #1517 - updateValueWith should not mark key as present if factory throws
+        Mutable<name>ObjectMap\<String> hashMap = this.getEmptyMap();
+
+        assertThrows(
+                RuntimeException.class, () ->
+                        hashMap.updateValueWith(
+                                <(literal.(type))("0")>,
+                                () -> { throw new RuntimeException("Factory failed"); },
+                                Functions2.fromFunction(Functions.\<String>getPassThru()),
+                                "parameter"));
+
+        assertTrue(!hashMap.containsKey(<(literal.(type))("0")>));
+        assertNull(hashMap.get(<(literal.(type))("0")>));
+
+        assertThrows(
+                RuntimeException.class, () ->
+                        hashMap.updateValueWith(
+                                <(literal.(type))("1")>,
+                                () -> { throw new RuntimeException("Factory failed"); },
+                                Functions2.fromFunction(Functions.\<String>getPassThru()),
+                                "parameter"));
+
+        assertTrue(!hashMap.containsKey(<(literal.(type))("1")>));
+        assertNull(hashMap.get(<(literal.(type))("1")>));
+    }
+
+    @Test
     public void classIsNonInstantiable()
     {
         Verify.assertClassNonInstantiable(<name>ObjectMaps.class);
