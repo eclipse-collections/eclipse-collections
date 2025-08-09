@@ -333,6 +333,52 @@ public class UnifiedSet<T>
         return true;
     }
 
+    private void rehashAdd(T key)
+    {
+        int index = this.index(key);
+        Object keyForTable = UnifiedSet.toSentinelIfNull(key);
+
+        Object current = this.table[index];
+        if (current == null)
+        {
+            this.table[index] = keyForTable;
+        }
+        else if (current instanceof ChainedBucket)
+        {
+            ChainedBucket bucket = (ChainedBucket) current;
+            while (true)
+            {
+                if (bucket.one == null)
+                {
+                    bucket.one = keyForTable;
+                    break;
+                }
+                if (bucket.two == null)
+                {
+                    bucket.two = keyForTable;
+                    break;
+                }
+                if (bucket.three instanceof ChainedBucket)
+                {
+                    bucket = (ChainedBucket) bucket.three;
+                    continue;
+                }
+                if (bucket.three == null)
+                {
+                    bucket.three = keyForTable;
+                    break;
+                }
+                bucket.three = new ChainedBucket(bucket.three, keyForTable);
+                break;
+            }
+        }
+        else
+        {
+            this.table[index] = new ChainedBucket(current, keyForTable);
+        }
+        this.occupied++;
+    }
+
     @Override
     protected void rehash(int newCapacity)
     {
@@ -351,18 +397,18 @@ public class UnifiedSet<T>
                 {
                     if (bucket.zero != null)
                     {
-                        this.add(this.nonSentinel(bucket.zero));
+                        this.rehashAdd(this.nonSentinel(bucket.zero));
                     }
                     if (bucket.one == null)
                     {
                         break;
                     }
-                    this.add(this.nonSentinel(bucket.one));
+                    this.rehashAdd(this.nonSentinel(bucket.one));
                     if (bucket.two == null)
                     {
                         break;
                     }
-                    this.add(this.nonSentinel(bucket.two));
+                    this.rehashAdd(this.nonSentinel(bucket.two));
                     if (bucket.three != null)
                     {
                         if (bucket.three instanceof ChainedBucket)
@@ -370,7 +416,7 @@ public class UnifiedSet<T>
                             bucket = (ChainedBucket) bucket.three;
                             continue;
                         }
-                        this.add(this.nonSentinel(bucket.three));
+                        this.rehashAdd(this.nonSentinel(bucket.three));
                     }
                     break;
                 }
@@ -378,7 +424,7 @@ public class UnifiedSet<T>
             }
             else if (oldKey != null)
             {
-                this.add(this.nonSentinel(oldKey));
+                this.rehashAdd(this.nonSentinel(oldKey));
             }
         }
     }
