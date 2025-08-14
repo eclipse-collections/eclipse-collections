@@ -579,20 +579,6 @@ public class UnmodifiableTreeMapTest extends MutableSortedMapTestCase
         assertThrows(UnsupportedOperationException.class, () -> map.with(Tuples.pair(1, "1")));
     }
 
-    @Override
-    @Test
-    public void getIfAbsentPut_block_throws()
-    {
-        // Not applicable for unmodifiable adapter
-    }
-
-    @Override
-    @Test
-    public void getIfAbsentPutWith_block_throws()
-    {
-        // Not applicable for unmodifiable adapter
-    }
-
     @Test
     @Override
     public void updateValue()

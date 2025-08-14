@@ -104,6 +104,9 @@ public interface MutableMapIterable<K, V> extends MapIterable<K, V>, Map<K, V>
     /**
      * Get and return the value in the Map at the specified key. Alternatively, if there is no value in the map at the key,
      * return the result of evaluating the specified Function0, and put that value in the map at the specified key.
+     *
+     * This method guarantees that if the factory function throws an exception,
+     * the map will be left in the same state as prior to the method invocation.
      */
     V getIfAbsentPut(K key, Function0<? extends V> function);
 
@@ -119,6 +122,9 @@ public interface MutableMapIterable<K, V> extends MapIterable<K, V>, Map<K, V>
      * Get and return the value in the Map at the specified key. Alternatively, if there is no value in the map for that key
      * return the result of evaluating the specified Function using the specified key, and put that value in the
      * map at the specified key.
+     *
+     * This method guarantees that if the function throws an exception,
+     * the map will be left in the same state as prior to the method invocation.
      */
     V getIfAbsentPutWithKey(K key, Function<? super K, ? extends V> function);
 
@@ -126,18 +132,27 @@ public interface MutableMapIterable<K, V> extends MapIterable<K, V>, Map<K, V>
      * Get and return the value in the Map at the specified key. Alternatively, if there is no value in the map for that key
      * return the result of evaluating the specified Function using the specified parameter, and put that value in the
      * map at the specified key.
+     *
+     * This method guarantees that if the function throws an exception,
+     * the map will be left in the same state as prior to the method invocation.
      */
     <P> V getIfAbsentPutWith(K key, Function<? super P, ? extends V> function, P parameter);
 
     /**
      * Looks up the value associated with {@code key}, applies the {@code function} to it, and replaces the value. If there
      * is no value associated with {@code key}, starts it off with a value supplied by {@code factory}.
+     *
+     * This method guarantees that if either the factory or the function throws an exception,
+     * the map will be left in the same state as prior to the method invocation.
      */
     V updateValue(K key, Function0<? extends V> factory, Function<? super V, ? extends V> function);
 
     /**
      * Same as {@link #updateValue(Object, Function0, Function)} with a Function2 and specified parameter which is
      * passed to the function.
+     *
+     * This method guarantees that if either the factory or the function throws an exception,
+     * the map will be left in the same state as prior to the method invocation.
      */
     <P> V updateValueWith(K key, Function0<? extends V> factory, Function2<? super V, ? super P, ? extends V> function, P parameter);
 

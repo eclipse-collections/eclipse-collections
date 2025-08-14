@@ -535,20 +535,6 @@ public class UnmodifiableBiMapTest extends AbstractMutableBiMapTestCase
     }
 
     @Override
-    @Test
-    public void getIfAbsentPut_block_throws()
-    {
-        // Not applicable for unmodifiable maps
-    }
-
-    @Override
-    @Test
-    public void getIfAbsentPutWith_block_throws()
-    {
-        // Not applicable for unmodifiable maps
-    }
-
-    @Override
     public void retainAllFromKeySet_null_collision()
     {
         // Not applicable for unmodifiable maps
