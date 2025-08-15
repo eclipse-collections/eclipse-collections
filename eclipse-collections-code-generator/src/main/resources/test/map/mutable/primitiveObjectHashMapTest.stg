@@ -587,6 +587,114 @@ public class <name>ObjectHashMapTest extends AbstractMutable<name>ObjectMapTestC
     }
 
     @Test
+    public void updateValue_withExceptionInFactory()
+    {
+        // Test for issue #1517 - updateValue should not mark key as present if factory throws
+
+        Mutable<name>ObjectMap\<String> hashMap = this.getEmptyMap();
+
+        this.assertUpdateValueThrowsAndLeavesMapUnchanged(hashMap, <(literal.(type))("0")>, 0);
+        this.assertUpdateValueThrowsAndLeavesMapUnchanged(hashMap, <(literal.(type))("1")>, 0);
+        this.assertUpdateValueThrowsAndLeavesMapUnchanged(hashMap, <(literal.(type))("2")>, 0);
+
+        hashMap.put(<(literal.(type))("3")>, "three");
+        hashMap.put(<(literal.(type))("4")>, "four");
+
+        this.assertUpdateValueThrowsAndLeavesMapUnchanged(hashMap, <(literal.(type))("0")>, 2);
+        this.assertUpdateValueThrowsAndLeavesMapUnchanged(hashMap, <(literal.(type))("5")>, 2);
+    }
+
+    @Test
+    public void updateValueWith_withExceptionInFactory()
+    {
+        // Test for issue #1517 - updateValueWith should not mark key as present if factory throws
+
+        Mutable<name>ObjectMap\<String> hashMap = this.getEmptyMap();
+
+        this.assertUpdateValueWithThrowsAndLeavesMapUnchanged(hashMap, <(literal.(type))("0")>, 0);
+        this.assertUpdateValueWithThrowsAndLeavesMapUnchanged(hashMap, <(literal.(type))("1")>, 0);
+        this.assertUpdateValueWithThrowsAndLeavesMapUnchanged(hashMap, <(literal.(type))("2")>, 0);
+
+        hashMap.put(<(literal.(type))("3")>, "three");
+        hashMap.put(<(literal.(type))("4")>, "four");
+
+        this.assertUpdateValueWithThrowsAndLeavesMapUnchanged(hashMap, <(literal.(type))("0")>, 2);
+        this.assertUpdateValueWithThrowsAndLeavesMapUnchanged(hashMap, <(literal.(type))("5")>, 2);
+    }
+
+    private void assertUpdateValueThrowsAndLeavesMapUnchanged(
+            Mutable<name>ObjectMap\<String> map,
+            <type> key,
+            int expectedSize)
+    {
+        RuntimeException factoryException = new RuntimeException("Factory exception");
+        RuntimeException functionException = new RuntimeException("Function exception");
+
+        RuntimeException actualException1 = assertThrows(
+                RuntimeException.class, () ->
+                        map.updateValue(
+                                key,
+                                () -> { throw factoryException; },
+                                v -> { throw functionException; }));
+
+        assertSame(factoryException, actualException1);
+        assertTrue(!map.containsKey(key));
+        assertNull(map.get(key));
+        assertEquals(expectedSize, map.size());
+
+        map.put(key, "temp");
+        RuntimeException actualException2 = assertThrows(
+                RuntimeException.class, () ->
+                        map.updateValue(
+                                key,
+                                () -> { throw factoryException; },
+                                v -> { throw functionException; }));
+
+        assertSame(functionException, actualException2);
+        assertTrue(map.containsKey(key));
+        assertEquals("temp", map.get(key));
+        map.remove(key);
+        assertEquals(expectedSize, map.size());
+    }
+
+    private void assertUpdateValueWithThrowsAndLeavesMapUnchanged(
+            Mutable<name>ObjectMap\<String> map,
+            <type> key,
+            int expectedSize)
+    {
+        RuntimeException factoryException = new RuntimeException("Factory exception");
+        RuntimeException functionException = new RuntimeException("Function exception");
+
+        RuntimeException actualException1 = assertThrows(
+                RuntimeException.class, () ->
+                        map.updateValueWith(
+                                key,
+                                () -> { throw factoryException; },
+                                (v, p) -> { throw functionException; },
+                                "parameter"));
+
+        assertSame(factoryException, actualException1);
+        assertTrue(!map.containsKey(key));
+        assertNull(map.get(key));
+        assertEquals(expectedSize, map.size());
+
+        map.put(key, "temp");
+        RuntimeException actualException2 = assertThrows(
+                RuntimeException.class, () ->
+                        map.updateValueWith(
+                                key,
+                                () -> { throw factoryException; },
+                                (v, p) -> { throw functionException; },
+                                "parameter"));
+
+        assertSame(functionException, actualException2);
+        assertTrue(map.containsKey(key));
+        assertEquals("temp", map.get(key));
+        map.remove(key);
+        assertEquals(expectedSize, map.size());
+    }
+
+    @Test
     public void classIsNonInstantiable()
     {
         Verify.assertClassNonInstantiable(<name>ObjectMaps.class);
