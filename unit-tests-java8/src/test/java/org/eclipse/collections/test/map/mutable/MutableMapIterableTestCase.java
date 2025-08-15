@@ -33,6 +33,7 @@ import static org.hamcrest.Matchers.isOneOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -195,6 +196,33 @@ public interface MutableMapIterableTestCase extends MapIterableTestCase, MapTest
 
         assertEquals(Integer.valueOf(14), map4.getIfAbsentPutWith("4", x -> x + 10, 4));
         assertIterablesEqual(this.newWithKeysValues("3", 3, "2", 2, "1", 1, "4", 14), map4);
+
+        MutableMapIterable<String, Integer> map5 = this.newWithKeysValues("1", 1, "2", 2, "3", 3);
+        RuntimeException factoryException = new RuntimeException("Factory exception");
+
+        RuntimeException actualException1 = assertThrows(
+                RuntimeException.class,
+                () -> map5.getIfAbsentPut("4", () -> { throw factoryException; }));
+        assertSame(factoryException, actualException1);
+        assertIterablesEqual(this.newWithKeysValues("1", 1, "2", 2, "3", 3), map5);
+        assertFalse(map5.containsKey("4"));
+        assertEquals(3, map5.size());
+
+        RuntimeException actualException2 = assertThrows(
+                RuntimeException.class,
+                () -> map5.getIfAbsentPutWithKey("4", k -> { throw factoryException; }));
+        assertSame(factoryException, actualException2);
+        assertIterablesEqual(this.newWithKeysValues("1", 1, "2", 2, "3", 3), map5);
+        assertFalse(map5.containsKey("4"));
+        assertEquals(3, map5.size());
+
+        RuntimeException actualException3 = assertThrows(
+                RuntimeException.class,
+                () -> map5.getIfAbsentPutWith("4", p -> { throw factoryException; }, "param"));
+        assertSame(factoryException, actualException3);
+        assertIterablesEqual(this.newWithKeysValues("1", 1, "2", 2, "3", 3), map5);
+        assertFalse(map5.containsKey("4"));
+        assertEquals(3, map5.size());
     }
 
     @Test

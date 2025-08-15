@@ -413,6 +413,24 @@ public abstract class AbstractMutableObject<name>MapTestCase extends AbstractObj
         assertEquals(<(literal.(type))("100")>, map3.getIfAbsentPut(null, factory)<delta.(type)>);
         assertEquals(<(literal.(type))("100")>, map3.getIfAbsentPut(null, factoryThrows)<delta.(type)>);
         assertEquals(Object<name>HashMap.newWithKeysValues(null, <(literal.(type))("100")>), map3);
+
+        MutableObject<name>Map\<Integer> map4 = this.newWithKeysValues(1, <(literal.(type))("1")>, 2, <(literal.(type))("2")>);
+        RuntimeException factoryException = new RuntimeException("Factory exception");
+        RuntimeException actualException = assertThrows(
+                RuntimeException.class,
+                () -> map4.getIfAbsentPut(3, () -> { throw factoryException; }));
+        assertSame(factoryException, actualException);
+        assertEquals(Object<name>HashMap.newWithKeysValues(1, <(literal.(type))("1")>, 2, <(literal.(type))("2")>), map4);
+        assertFalse(map4.containsKey(3));
+        assertEquals(<(literal.(type))("0")>, map4.get(3)<delta.(type)>);
+        assertEquals(2, map4.size());
+
+        MutableObject<name>Map\<Integer> emptyMap = this.getEmptyMap();
+        RuntimeException emptyMapException = assertThrows(
+                RuntimeException.class,
+                () -> emptyMap.getIfAbsentPut(1, () -> { throw factoryException; }));
+        assertSame(factoryException, emptyMapException);
+        assertTrue(emptyMap.isEmpty());
     }
 
     @Test
@@ -444,6 +462,24 @@ public abstract class AbstractMutableObject<name>MapTestCase extends AbstractObj
         assertEquals(<(literal.(type))("9")>, map3.getIfAbsentPutWith(null, functionLength, "123456789")<delta.(type)>);
         assertEquals(<(literal.(type))("9")>, map3.getIfAbsentPutWith(null, functionThrows, "unused")<delta.(type)>);
         assertEquals(Object<name>HashMap.newWithKeysValues(null, <(literal.(type))("9")>), map3);
+
+        MutableObject<name>Map\<Integer> map4 = this.newWithKeysValues(1, <(literal.(type))("1")>, 2, <(literal.(type))("2")>);
+        RuntimeException functionException = new RuntimeException("Function exception");
+        RuntimeException actualException = assertThrows(
+                RuntimeException.class,
+                () -> map4.getIfAbsentPutWith(3, p -> { throw functionException; }, "param"));
+        assertSame(functionException, actualException);
+        assertEquals(Object<name>HashMap.newWithKeysValues(1, <(literal.(type))("1")>, 2, <(literal.(type))("2")>), map4);
+        assertFalse(map4.containsKey(3));
+        assertEquals(<(literal.(type))("0")>, map4.get(3)<delta.(type)>);
+        assertEquals(2, map4.size());
+
+        MutableObject<name>Map\<Integer> emptyMap = this.getEmptyMap();
+        RuntimeException emptyMapException = assertThrows(
+                RuntimeException.class,
+                () -> emptyMap.getIfAbsentPutWith(1, p -> { throw functionException; }, "param"));
+        assertSame(functionException, emptyMapException);
+        assertTrue(emptyMap.isEmpty());
     }
 
     @Test
@@ -475,6 +511,24 @@ public abstract class AbstractMutableObject<name>MapTestCase extends AbstractObj
         assertEquals(<(literal.(type))("32")>, map3.getIfAbsentPutWithKey(null, function)<delta.(type)>);
         assertEquals(<(literal.(type))("32")>, map3.getIfAbsentPutWithKey(null, functionThrows)<delta.(type)>);
         assertEquals(Object<name>HashMap.newWithKeysValues(null, <(literal.(type))("32")>), map3);
+
+        MutableObject<name>Map\<Integer> map4 = this.newWithKeysValues(1, <(literal.(type))("1")>, 2, <(literal.(type))("2")>);
+        RuntimeException functionException = new RuntimeException("Function exception");
+        RuntimeException actualException = assertThrows(
+                RuntimeException.class,
+                () -> map4.getIfAbsentPutWithKey(3, k -> { throw functionException; }));
+        assertSame(functionException, actualException);
+        assertEquals(Object<name>HashMap.newWithKeysValues(1, <(literal.(type))("1")>, 2, <(literal.(type))("2")>), map4);
+        assertFalse(map4.containsKey(3));
+        assertEquals(<(literal.(type))("0")>, map4.get(3)<delta.(type)>);
+        assertEquals(2, map4.size());
+
+        MutableObject<name>Map\<Integer> emptyMap = this.getEmptyMap();
+        RuntimeException emptyMapException = assertThrows(
+                RuntimeException.class,
+                () -> emptyMap.getIfAbsentPutWithKey(1, k -> { throw functionException; }));
+        assertSame(functionException, emptyMapException);
+        assertTrue(emptyMap.isEmpty());
     }
 
     @Test

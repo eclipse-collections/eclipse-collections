@@ -42,6 +42,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -513,24 +514,21 @@ public class UnifiedMapTest extends UnifiedMapTestCase
         UnifiedMap<Integer, Integer> map3 = UnifiedMap.<Integer, Integer>newMap(2, 0.75f).withKeysValues(1, COLLISION_1, 2, COLLISION_2, 3, COLLISION_3);
         assertEquals(COLLISION_4, map3.getIfAbsentPut(4, new PassThruFunction0<>(COLLISION_4)));
         assertNull(map3.getIfAbsentPut(5, new PassThruFunction0<>(null)));
-    }
-
-    @Override
-    @Test
-    public void getIfAbsentPut_block_throws()
-    {
-        super.getIfAbsentPut_block_throws();
 
         // this map is deliberately small to force a rehash to occur from the put method, in a map with a chained bucket
-        UnifiedMap<Integer, Integer> map = UnifiedMap.newMap(2, 0.75f);
+        UnifiedMap<Integer, Integer> map4 = UnifiedMap.newMap(2, 0.75f);
+        RuntimeException expectedException = new RuntimeException();
         COLLISIONS.subList(0, 5).forEach(Procedures.cast(each -> {
-            assertThrows(RuntimeException.class, () -> map.getIfAbsentPut(each, () -> {
-                throw new RuntimeException();
-            }));
-            map.put(each, each);
+            RuntimeException actualException = assertThrows(
+                    RuntimeException.class, () -> map4.getIfAbsentPut(
+                            each, () -> {
+                                throw expectedException;
+                            }));
+            assertSame(expectedException, actualException);
+            map4.put(each, each);
         }));
 
-        assertEquals(this.mapWithCollisionsOfSize(5), map);
+        assertEquals(this.mapWithCollisionsOfSize(5), map4);
     }
 
     @Test

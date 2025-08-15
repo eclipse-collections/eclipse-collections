@@ -387,6 +387,28 @@ public abstract class MutableMapIterableTestCase extends MapIterableTestCase
         assertEquals("4", map.getIfAbsentPut(4, new PassThruFunction0<>("4")));
         assertEquals("3", map.getIfAbsentPut(3, new PassThruFunction0<>("3")));
         Verify.assertContainsKeyValue(4, "4", map);
+
+        MutableMapIterable<Integer, String> map2 = this.newMapWithKeysValues(1, "1", 2, "2", 3, "3");
+        RuntimeException factoryException = new RuntimeException("Factory exception");
+        RuntimeException actualException = assertThrows(
+                RuntimeException.class,
+                () -> map2.getIfAbsentPut(5, () -> { throw factoryException; }));
+        assertSame(factoryException, actualException);
+        assertEquals(UnifiedMap.newWithKeysValues(1, "1", 2, "2", 3, "3"), map2);
+        assertFalse(map2.containsKey(5));
+        assertNull(map2.get(5));
+        assertEquals(3, map2.size());
+
+        MutableMapIterable<Integer, String> emptyMap = this.newMap();
+        RuntimeException emptyMapException = assertThrows(
+                RuntimeException.class,
+                () -> emptyMap.getIfAbsentPut(1, () -> { throw factoryException; }));
+        assertSame(factoryException, emptyMapException);
+        assertTrue(emptyMap.isEmpty());
+
+        String result = map2.getIfAbsentPut(1, () -> { throw new RuntimeException("Should not be called"); });
+        assertEquals("1", result);
+        assertEquals(3, map2.size());
     }
 
     @Test
@@ -410,6 +432,28 @@ public abstract class MutableMapIterableTestCase extends MapIterableTestCase
         assertEquals(Integer.valueOf(4), map.getIfAbsentPutWithKey(4, Functions.getIntegerPassThru()));
         assertEquals(Integer.valueOf(3), map.getIfAbsentPutWithKey(3, Functions.getIntegerPassThru()));
         Verify.assertContainsKeyValue(Integer.valueOf(4), Integer.valueOf(4), map);
+
+        MutableMapIterable<Integer, Integer> map2 = this.newMapWithKeysValues(1, 1, 2, 2, 3, 3);
+        RuntimeException functionException = new RuntimeException("Function exception");
+        RuntimeException actualException = assertThrows(
+                RuntimeException.class,
+                () -> map2.getIfAbsentPutWithKey(5, k -> { throw functionException; }));
+        assertSame(functionException, actualException);
+        assertEquals(UnifiedMap.newWithKeysValues(1, 1, 2, 2, 3, 3), map2);
+        assertFalse(map2.containsKey(5));
+        assertNull(map2.get(5));
+        assertEquals(3, map2.size());
+
+        MutableMapIterable<Integer, Integer> emptyMap = this.newMap();
+        RuntimeException emptyMapException = assertThrows(
+                RuntimeException.class,
+                () -> emptyMap.getIfAbsentPutWithKey(1, k -> { throw functionException; }));
+        assertSame(functionException, emptyMapException);
+        assertTrue(emptyMap.isEmpty());
+
+        Integer result = map2.getIfAbsentPutWithKey(1, k -> { throw new RuntimeException("Should not be called"); });
+        assertEquals(Integer.valueOf(1), result);
+        assertEquals(3, map2.size());
     }
 
     @Test
@@ -420,28 +464,28 @@ public abstract class MutableMapIterableTestCase extends MapIterableTestCase
         assertEquals("4", map.getIfAbsentPutWith(4, String::valueOf, 4));
         assertEquals("3", map.getIfAbsentPutWith(3, String::valueOf, 3));
         Verify.assertContainsKeyValue(4, "4", map);
-    }
 
-    @Test
-    public void getIfAbsentPut_block_throws()
-    {
-        MutableMapIterable<Integer, String> map = this.newMapWithKeysValues(1, "1", 2, "2", 3, "3");
-        assertThrows(RuntimeException.class, () -> map.getIfAbsentPut(4, () ->
-        {
-            throw new RuntimeException();
-        }));
-        assertEquals(UnifiedMap.newWithKeysValues(1, "1", 2, "2", 3, "3"), map);
-    }
+        MutableMapIterable<Integer, String> map2 = this.newMapWithKeysValues(1, "1", 2, "2", 3, "3");
+        RuntimeException functionException = new RuntimeException("Function exception");
+        RuntimeException actualException = assertThrows(
+                RuntimeException.class,
+                () -> map2.getIfAbsentPutWith(5, p -> { throw functionException; }, "param"));
+        assertSame(functionException, actualException);
+        assertEquals(UnifiedMap.newWithKeysValues(1, "1", 2, "2", 3, "3"), map2);
+        assertFalse(map2.containsKey(5));
+        assertNull(map2.get(5));
+        assertEquals(3, map2.size());
 
-    @Test
-    public void getIfAbsentPutWith_block_throws()
-    {
-        MutableMapIterable<Integer, String> map = this.newMapWithKeysValues(1, "1", 2, "2", 3, "3");
-        assertThrows(RuntimeException.class, () -> map.getIfAbsentPutWith(4, object ->
-        {
-            throw new RuntimeException();
-        }, null));
-        assertEquals(UnifiedMap.newWithKeysValues(1, "1", 2, "2", 3, "3"), map);
+        MutableMapIterable<Integer, String> emptyMap = this.newMap();
+        RuntimeException emptyMapException = assertThrows(
+                RuntimeException.class,
+                () -> emptyMap.getIfAbsentPutWith(1, p -> { throw functionException; }, "param"));
+        assertSame(functionException, emptyMapException);
+        assertTrue(emptyMap.isEmpty());
+
+        String result = map2.getIfAbsentPutWith(1, p -> { throw new RuntimeException("Should not be called"); }, "param");
+        assertEquals("1", result);
+        assertEquals(3, map2.size());
     }
 
     @Test
