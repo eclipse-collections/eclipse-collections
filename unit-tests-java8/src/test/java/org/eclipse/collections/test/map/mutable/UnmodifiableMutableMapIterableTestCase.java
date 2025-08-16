@@ -49,6 +49,7 @@ public interface UnmodifiableMutableMapIterableTestCase
     {
         MutableMapIterable<Object, Object> map1 = this.newWith();
         assertThrows(UnsupportedOperationException.class, () -> map1.removeIf(null));
+        assertThrows(UnsupportedOperationException.class, () -> map1.removeIf(Predicates2.alwaysFalse()));
 
         MutableMapIterable<Object, String> map2 = this.newWith("Three", "Two", "One");
         assertThrows(UnsupportedOperationException.class, () -> map2.removeIf(Predicates2.alwaysFalse()));
