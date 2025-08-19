@@ -24,6 +24,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.eclipse.collections.test.IterableTestCase.assertIterablesEqual;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -146,6 +147,67 @@ public class ImmutableOrderedMapTest
         assertThrows(UnsupportedOperationException.class, () -> map.merge(4, "4", (v1, v2) -> {
             fail("Expected lambda not to be called on unmodifiable map");
             return null;
+        }));
+        assertEquals(this.newWithKeysValues(1, "1", 2, "2", 3, "3"), map);
+    }
+
+    @Override
+    public void Map_compute()
+    {
+        Map<Integer, String> map = this.newWithKeysValues(1, "1", 2, "2", 3, "3");
+        assertThrows(UnsupportedOperationException.class, () -> map.compute(1, (k, v) -> {
+            assertEquals(Integer.valueOf(1), k);
+            assertEquals("1", v);
+            return "modified";
+        }));
+        assertThrows(UnsupportedOperationException.class, () -> map.compute(4, (k, v) -> {
+            assertEquals(Integer.valueOf(4), k);
+            assertNull(v);
+            return "new";
+        }));
+        assertThrows(UnsupportedOperationException.class, () -> map.compute(2, (k, v) -> null));
+        assertEquals(this.newWithKeysValues(1, "1", 2, "2", 3, "3"), map);
+    }
+
+    @Override
+    public void Map_computeIfAbsent()
+    {
+        Map<Integer, String> map = this.newWithKeysValues(1, "1", 2, "2", 3, "3");
+        assertEquals("1", map.computeIfAbsent(1, k -> {
+            fail("Expected lambda not to be called for existing key");
+            return "modified";
+        }));
+        assertThrows(UnsupportedOperationException.class, () -> map.computeIfAbsent(4, k -> "new"));
+        assertEquals(this.newWithKeysValues(1, "1", 2, "2", 3, "3"), map);
+    }
+
+    @Override
+    public void Map_computeIfPresent()
+    {
+        Map<Integer, String> map = this.newWithKeysValues(1, "1", 2, "2", 3, "3");
+        assertThrows(UnsupportedOperationException.class, () -> map.computeIfPresent(1, (k, v) -> {
+            assertEquals(Integer.valueOf(1), k);
+            assertEquals("1", v);
+            return "modified";
+        }));
+        assertNull(map.computeIfPresent(4, (k, v) -> {
+            fail("Expected lambda not to be called for non-existing key");
+            return "new";
+        }));
+        assertThrows(UnsupportedOperationException.class, () -> map.computeIfPresent(2, (k, v) -> null));
+        assertEquals(this.newWithKeysValues(1, "1", 2, "2", 3, "3"), map);
+    }
+
+    @Override
+    public void Map_replaceAll()
+    {
+        Map<Integer, String> map = this.newWithKeysValues(1, "1", 2, "2", 3, "3");
+        // Note: replaceAll may call the lambda for at least one entry before attempting setValue
+        assertThrows(UnsupportedOperationException.class, () -> map.replaceAll((k, v) -> {
+            // Lambda may be called for first entry before UnsupportedOperationException is thrown
+            assertNotNull(k);
+            assertNotNull(v);
+            return v + "modified";
         }));
         assertEquals(this.newWithKeysValues(1, "1", 2, "2", 3, "3"), map);
     }
