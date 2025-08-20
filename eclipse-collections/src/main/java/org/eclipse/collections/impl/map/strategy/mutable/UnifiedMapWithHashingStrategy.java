@@ -473,8 +473,8 @@ public class UnifiedMapWithHashingStrategy<K, V> extends AbstractMutableMap<K, V
         Object cur = this.table[index];
         if (cur == null)
         {
-            this.table[index] = UnifiedMapWithHashingStrategy.toSentinelIfNull(key);
             V result = function.valueOf(factory.value());
+            this.table[index] = UnifiedMapWithHashingStrategy.toSentinelIfNull(key);
             this.table[index + 1] = result;
             ++this.occupied;
             return result;
@@ -498,8 +498,8 @@ public class UnifiedMapWithHashingStrategy<K, V> extends AbstractMutableMap<K, V
             {
                 if (chain[i] == null)
                 {
-                    chain[i] = UnifiedMapWithHashingStrategy.toSentinelIfNull(key);
                     V result = function.valueOf(factory.value());
+                    chain[i] = UnifiedMapWithHashingStrategy.toSentinelIfNull(key);
                     chain[i + 1] = result;
                     if (++this.occupied > this.maxSize)
                     {
@@ -517,9 +517,9 @@ public class UnifiedMapWithHashingStrategy<K, V> extends AbstractMutableMap<K, V
             }
             Object[] newChain = new Object[chain.length + 4];
             System.arraycopy(chain, 0, newChain, 0, chain.length);
+            V result = function.valueOf(factory.value());
             this.table[index + 1] = newChain;
             newChain[chain.length] = UnifiedMapWithHashingStrategy.toSentinelIfNull(key);
-            V result = function.valueOf(factory.value());
             newChain[chain.length + 1] = result;
             if (++this.occupied > this.maxSize)
             {
@@ -530,8 +530,8 @@ public class UnifiedMapWithHashingStrategy<K, V> extends AbstractMutableMap<K, V
         Object[] newChain = new Object[4];
         newChain[0] = this.table[index];
         newChain[1] = this.table[index + 1];
-        newChain[2] = UnifiedMapWithHashingStrategy.toSentinelIfNull(key);
         V result = function.valueOf(factory.value());
+        newChain[2] = UnifiedMapWithHashingStrategy.toSentinelIfNull(key);
         newChain[3] = result;
         this.table[index] = CHAINED_KEY;
         this.table[index + 1] = newChain;
@@ -549,8 +549,8 @@ public class UnifiedMapWithHashingStrategy<K, V> extends AbstractMutableMap<K, V
         Object cur = this.table[index];
         if (cur == null)
         {
-            this.table[index] = UnifiedMapWithHashingStrategy.toSentinelIfNull(key);
             V result = function.value(factory.value(), parameter);
+            this.table[index] = UnifiedMapWithHashingStrategy.toSentinelIfNull(key);
             this.table[index + 1] = result;
             ++this.occupied;
             return result;
@@ -579,8 +579,8 @@ public class UnifiedMapWithHashingStrategy<K, V> extends AbstractMutableMap<K, V
             {
                 if (chain[i] == null)
                 {
-                    chain[i] = UnifiedMapWithHashingStrategy.toSentinelIfNull(key);
                     V result = function.value(factory.value(), parameter);
+                    chain[i] = UnifiedMapWithHashingStrategy.toSentinelIfNull(key);
                     chain[i + 1] = result;
                     if (++this.occupied > this.maxSize)
                     {
@@ -598,9 +598,9 @@ public class UnifiedMapWithHashingStrategy<K, V> extends AbstractMutableMap<K, V
             }
             Object[] newChain = new Object[chain.length + 4];
             System.arraycopy(chain, 0, newChain, 0, chain.length);
+            V result = function.value(factory.value(), parameter);
             this.table[index + 1] = newChain;
             newChain[chain.length] = UnifiedMapWithHashingStrategy.toSentinelIfNull(key);
-            V result = function.value(factory.value(), parameter);
             newChain[chain.length + 1] = result;
             if (++this.occupied > this.maxSize)
             {
@@ -611,8 +611,8 @@ public class UnifiedMapWithHashingStrategy<K, V> extends AbstractMutableMap<K, V
         Object[] newChain = new Object[4];
         newChain[0] = this.table[index];
         newChain[1] = this.table[index + 1];
-        newChain[2] = UnifiedMapWithHashingStrategy.toSentinelIfNull(key);
         V result = function.value(factory.value(), parameter);
+        newChain[2] = UnifiedMapWithHashingStrategy.toSentinelIfNull(key);
         newChain[3] = result;
         this.table[index] = CHAINED_KEY;
         this.table[index + 1] = newChain;
