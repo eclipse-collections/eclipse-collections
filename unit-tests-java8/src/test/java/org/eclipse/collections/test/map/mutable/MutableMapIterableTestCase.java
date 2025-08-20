@@ -260,6 +260,43 @@ public interface MutableMapIterableTestCase extends MapIterableTestCase, MapTest
                 Bags.mutable.withAll(map4.values()).toStringOfItemToCount(),
                 Collections.nCopies(1000, 2),
                 map4.values());
+
+        MutableMapIterable<Integer, Integer> map5 = this.newWithKeysValues(1, 1, 2, 2, 3, 3);
+        RuntimeException factoryException = new RuntimeException("Factory exception");
+        RuntimeException functionException = new RuntimeException("Function exception");
+
+        RuntimeException actualException1 = assertThrows(
+                RuntimeException.class,
+                () -> map5.updateValue(4, () -> { throw factoryException; }, v -> v + 1));
+        assertSame(factoryException, actualException1);
+        assertIterablesEqual(this.newWithKeysValues(1, 1, 2, 2, 3, 3), map5);
+        assertFalse(map5.containsKey(4));
+        assertEquals(3, map5.size());
+
+        RuntimeException actualException2 = assertThrows(
+                RuntimeException.class,
+                () -> map5.updateValue(2, () -> 0, v -> { throw functionException; }));
+        assertSame(functionException, actualException2);
+        assertIterablesEqual(this.newWithKeysValues(1, 1, 2, 2, 3, 3), map5);
+        assertEquals(Integer.valueOf(2), map5.get(2));
+        assertEquals(3, map5.size());
+
+        MutableMapIterable<Integer, Integer> map6 = this.newWithKeysValues(1, 1, 2, 2, 3, 3);
+        RuntimeException actualException3 = assertThrows(
+                RuntimeException.class,
+                () -> map6.updateValueWith(4, () -> { throw factoryException; }, (v, p) -> v + 1, "param"));
+        assertSame(factoryException, actualException3);
+        assertIterablesEqual(this.newWithKeysValues(1, 1, 2, 2, 3, 3), map6);
+        assertFalse(map6.containsKey(4));
+        assertEquals(3, map6.size());
+
+        RuntimeException actualException4 = assertThrows(
+                RuntimeException.class,
+                () -> map6.updateValueWith(2, () -> 0, (v, p) -> { throw functionException; }, "param"));
+        assertSame(functionException, actualException4);
+        assertIterablesEqual(this.newWithKeysValues(1, 1, 2, 2, 3, 3), map6);
+        assertEquals(Integer.valueOf(2), map6.get(2));
+        assertEquals(3, map6.size());
     }
 
     @Test

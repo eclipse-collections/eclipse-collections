@@ -319,6 +319,17 @@ public class UnmodifiableBiMapTest extends AbstractMutableBiMapTestCase
     public void updateValue()
     {
         assertThrows(UnsupportedOperationException.class, () -> this.newMapWithKeysValues("key1", "value1", "key2", "value2").updateValue("key1", () -> "value3", String::toUpperCase));
+
+        MutableMapIterable<Integer, Integer> map = this.newMapWithKeysValues(1, 1, 2, 2, 3, 3);
+        assertThrows(UnsupportedOperationException.class, () -> map.updateValue(4, () -> 4, v -> v + 1));
+        assertEquals(this.newMapWithKeysValues(1, 1, 2, 2, 3, 3), map);
+        assertFalse(map.containsKey(4));
+        assertEquals(3, map.size());
+
+        assertThrows(UnsupportedOperationException.class, () -> map.updateValue(2, () -> 0, v -> v + 1));
+        assertEquals(this.newMapWithKeysValues(1, 1, 2, 2, 3, 3), map);
+        assertEquals(Integer.valueOf(2), map.get(2));
+        assertEquals(3, map.size());
     }
 
     @Override
@@ -330,6 +341,17 @@ public class UnmodifiableBiMapTest extends AbstractMutableBiMapTestCase
                 ? Character.toUpperCase(character)
                 : Character.toLowerCase(character);
         assertThrows(UnsupportedOperationException.class, () -> biMap.updateValueWith(4, () -> 'd', toUpperOrLowerCase, true));
+
+        MutableMapIterable<Integer, Integer> map = this.newMapWithKeysValues(1, 1, 2, 2, 3, 3);
+        assertThrows(UnsupportedOperationException.class, () -> map.updateValueWith(4, () -> 4, (v, p) -> v + 1, "param"));
+        assertEquals(this.newMapWithKeysValues(1, 1, 2, 2, 3, 3), map);
+        assertFalse(map.containsKey(4));
+        assertEquals(3, map.size());
+
+        assertThrows(UnsupportedOperationException.class, () -> map.updateValueWith(2, () -> 0, (v, p) -> v + 1, "param"));
+        assertEquals(this.newMapWithKeysValues(1, 1, 2, 2, 3, 3), map);
+        assertEquals(Integer.valueOf(2), map.get(2));
+        assertEquals(3, map.size());
     }
 
     @Override

@@ -804,6 +804,26 @@ public abstract class MutableMapIterableTestCase extends MapIterableTestCase
         Iterate.forEach(Interval.oneTo(1000), each -> map.updateValue(each % 10, () -> 0, integer -> integer + 1));
         assertEquals(Interval.zeroTo(9).toSet(), map.keySet());
         assertEquals(FastList.newList(Collections.nCopies(10, 100)), FastList.newList(map.values()));
+
+        MutableMapIterable<Integer, Integer> map2 = this.newMapWithKeysValues(1, 1, 2, 2, 3, 3);
+        RuntimeException factoryException = new RuntimeException("Factory exception");
+        RuntimeException functionException = new RuntimeException("Function exception");
+
+        RuntimeException actualException1 = assertThrows(
+                RuntimeException.class,
+                () -> map2.updateValue(4, () -> { throw factoryException; }, v -> v + 1));
+        assertSame(factoryException, actualException1);
+        assertEquals(this.newMapWithKeysValues(1, 1, 2, 2, 3, 3), map2);
+        assertFalse(map2.containsKey(4));
+        assertEquals(3, map2.size());
+
+        RuntimeException actualException2 = assertThrows(
+                RuntimeException.class,
+                () -> map2.updateValue(2, () -> 0, v -> { throw functionException; }));
+        assertSame(functionException, actualException2);
+        assertEquals(this.newMapWithKeysValues(1, 1, 2, 2, 3, 3), map2);
+        assertEquals(Integer.valueOf(2), map2.get(2));
+        assertEquals(3, map2.size());
     }
 
     @Test
@@ -830,6 +850,26 @@ public abstract class MutableMapIterableTestCase extends MapIterableTestCase
         }, "test"));
         assertEquals(Interval.zeroTo(9).toSet(), map.keySet());
         assertEquals(FastList.newList(Collections.nCopies(10, 100)), FastList.newList(map.values()));
+
+        MutableMapIterable<Integer, Integer> map2 = this.newMapWithKeysValues(1, 1, 2, 2, 3, 3);
+        RuntimeException factoryException = new RuntimeException("Factory exception");
+        RuntimeException functionException = new RuntimeException("Function exception");
+
+        RuntimeException actualException1 = assertThrows(
+                RuntimeException.class,
+                () -> map2.updateValueWith(4, () -> { throw factoryException; }, (v, p) -> v + 1, "param"));
+        assertSame(factoryException, actualException1);
+        assertEquals(this.newMapWithKeysValues(1, 1, 2, 2, 3, 3), map2);
+        assertFalse(map2.containsKey(4));
+        assertEquals(3, map2.size());
+
+        RuntimeException actualException2 = assertThrows(
+                RuntimeException.class,
+                () -> map2.updateValueWith(2, () -> 0, (v, p) -> { throw functionException; }, "param"));
+        assertSame(functionException, actualException2);
+        assertEquals(this.newMapWithKeysValues(1, 1, 2, 2, 3, 3), map2);
+        assertEquals(Integer.valueOf(2), map2.get(2));
+        assertEquals(3, map2.size());
     }
 
     @Test

@@ -14,6 +14,7 @@ import org.eclipse.collections.api.block.function.Function0;
 import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.factory.Maps;
 import org.eclipse.collections.api.map.MutableMap;
+import org.eclipse.collections.api.map.MutableMapIterable;
 import org.eclipse.collections.impl.block.factory.Functions;
 import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.tuple.ImmutableEntry;
@@ -22,6 +23,7 @@ import org.eclipse.collections.impl.utility.Iterate;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -457,6 +459,17 @@ public class UnmodifiableMutableMapTest extends MutableMapTestCase
     public void updateValue()
     {
         assertThrows(UnsupportedOperationException.class, () -> this.<Integer, Integer>newMap().updateValue(0, () -> 0, Functions.identity()));
+
+        MutableMapIterable<Integer, Integer> map = this.newMapWithKeysValues(1, 1, 2, 2, 3, 3);
+        assertThrows(UnsupportedOperationException.class, () -> map.updateValue(4, () -> 4, v -> v + 1));
+        assertEquals(this.newMapWithKeysValues(1, 1, 2, 2, 3, 3), map);
+        assertFalse(map.containsKey(4));
+        assertEquals(3, map.size());
+
+        assertThrows(UnsupportedOperationException.class, () -> map.updateValue(2, () -> 0, v -> v + 1));
+        assertEquals(this.newMapWithKeysValues(1, 1, 2, 2, 3, 3), map);
+        assertEquals(Integer.valueOf(2), map.get(2));
+        assertEquals(3, map.size());
     }
 
     @Test
@@ -471,6 +484,17 @@ public class UnmodifiableMutableMapTest extends MutableMapTestCase
     public void updateValueWith()
     {
         assertThrows(UnsupportedOperationException.class, () -> this.<Integer, Integer>newMap().updateValueWith(0, () -> 0, (integer, parameter) -> 0, "test"));
+
+        MutableMapIterable<Integer, Integer> map = this.newMapWithKeysValues(1, 1, 2, 2, 3, 3);
+        assertThrows(UnsupportedOperationException.class, () -> map.updateValueWith(4, () -> 4, (v, p) -> v + 1, "param"));
+        assertEquals(this.newMapWithKeysValues(1, 1, 2, 2, 3, 3), map);
+        assertFalse(map.containsKey(4));
+        assertEquals(3, map.size());
+
+        assertThrows(UnsupportedOperationException.class, () -> map.updateValueWith(2, () -> 0, (v, p) -> v + 1, "param"));
+        assertEquals(this.newMapWithKeysValues(1, 1, 2, 2, 3, 3), map);
+        assertEquals(Integer.valueOf(2), map.get(2));
+        assertEquals(3, map.size());
     }
 
     @Test
