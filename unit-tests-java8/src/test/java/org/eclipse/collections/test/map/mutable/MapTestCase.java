@@ -295,10 +295,36 @@ public interface MapTestCase
         assertIterablesEqual(this.newWithKeysValues(1, "1", 2, "2Two", 4, "4", 5, "5"), map);
 
         // existing key, remapping function throws exception
-        assertThrows(IllegalArgumentException.class, () -> map.merge(4, "Four", (v1, v2) -> {
-            throw new IllegalArgumentException();
+        RuntimeException exception = new RuntimeException("Test exception");
+        RuntimeException actualException1 = assertThrows(RuntimeException.class, () -> map.merge(4, "Four", (v1, v2) -> {
+            assertEquals("4", v1);
+            assertEquals("Four", v2);
+            throw exception;
         }));
+        assertSame(exception, actualException1);
         assertIterablesEqual(this.newWithKeysValues(1, "1", 2, "2Two", 4, "4", 5, "5"), map);
+
+        Map<Integer, String> freshMap = this.newWithKeysValues(10, "10", 20, "20", 30, "30");
+        RuntimeException actualException2 = assertThrows(RuntimeException.class, () -> freshMap.merge(20, "Twenty", (v1, v2) -> {
+            assertEquals("20", v1);
+            assertEquals("Twenty", v2);
+            throw exception;
+        }));
+        assertSame(exception, actualException2);
+        assertIterablesEqual(this.newWithKeysValues(10, "10", 20, "20", 30, "30"), freshMap);
+
+        Map<Integer, String> removeMap = this.newWithKeysValues(7, "7", 8, "8", 9, "9");
+        RuntimeException actualException3 = assertThrows(RuntimeException.class, () -> removeMap.merge(8, "Eight", (v1, v2) -> {
+            assertEquals("8", v1);
+            assertEquals("Eight", v2);
+            if (v1.equals("8"))
+            {
+                throw exception;
+            }
+            return null;
+        }));
+        assertSame(exception, actualException3);
+        assertIterablesEqual(this.newWithKeysValues(7, "7", 8, "8", 9, "9"), removeMap);
 
         // existing key with null value, remapping function is not called and new value is used
         if (this.supportsNullValues())
