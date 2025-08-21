@@ -295,9 +295,13 @@ public interface MapTestCase
         assertIterablesEqual(this.newWithKeysValues(1, "1", 2, "2Two", 4, "4", 5, "5"), map);
 
         // existing key, remapping function throws exception
-        assertThrows(IllegalArgumentException.class, () -> map.merge(4, "Four", (v1, v2) -> {
-            throw new IllegalArgumentException();
+        RuntimeException exception = new RuntimeException("Test exception");
+        RuntimeException actualException1 = assertThrows(RuntimeException.class, () -> map.merge(4, "Four", (v1, v2) -> {
+            assertEquals("4", v1);
+            assertEquals("Four", v2);
+            throw exception;
         }));
+        assertSame(exception, actualException1);
         assertIterablesEqual(this.newWithKeysValues(1, "1", 2, "2Two", 4, "4", 5, "5"), map);
 
         // existing key with null value, remapping function is not called and new value is used
