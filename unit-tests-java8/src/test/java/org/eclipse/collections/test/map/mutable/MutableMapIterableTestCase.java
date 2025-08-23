@@ -160,6 +160,37 @@ public interface MutableMapIterableTestCase extends MapIterableTestCase, MapTest
         MutableMapIterable<Integer, String> map5 = this.newWithKeysValues(CollisionsTestCase.COLLISION_1, "0", CollisionsTestCase.COLLISION_2, "17", CollisionsTestCase.COLLISION_3, "34", 100, "100");
         assertTrue(map5.removeIf((key, value) -> CollisionsTestCase.COLLISION_1.equals(key) || CollisionsTestCase.COLLISION_3.equals(key)));
         assertIterablesEqual(this.newWithKeysValues(CollisionsTestCase.COLLISION_2, "17", 100, "100"), map5);
+
+        MutableMapIterable<Integer, String> map6 = this.newWithKeysValues(1, "One", 2, "Two", 3, "Three", 4, "Four");
+        RuntimeException predicateException = new RuntimeException("Predicate exception");
+        RuntimeException actualException = assertThrows(
+                RuntimeException.class,
+                () -> map6.removeIf((key, value) ->
+                {
+                    if (key == 3)
+                    {
+                        throw predicateException;
+                    }
+                    return key % 2 == 0;
+                }));
+        assertSame(predicateException, actualException);
+        assertIterablesEqual(this.newWithKeysValues(1, "One", 3, "Three", 4, "Four"), map6);
+        assertEquals(3, map6.size());
+
+        MutableMapIterable<Integer, String> map7 = this.newWithKeysValues();
+        RuntimeException emptyMapException = new RuntimeException("Empty map exception");
+        assertFalse(map7.removeIf((key, value) -> { throw emptyMapException; }));
+        assertIterablesEqual(this.newWithKeysValues(), map7);
+        assertEquals(0, map7.size());
+
+        MutableMapIterable<Integer, String> map8 = this.newWithKeysValues(1, "One", 2, "Two");
+        RuntimeException immediateException = new RuntimeException("Immediate exception");
+        RuntimeException actualException2 = assertThrows(
+                RuntimeException.class,
+                () -> map8.removeIf((key, value) -> { throw immediateException; }));
+        assertSame(immediateException, actualException2);
+        assertIterablesEqual(this.newWithKeysValues(1, "One", 2, "Two"), map8);
+        assertEquals(2, map8.size());
     }
 
     @Test

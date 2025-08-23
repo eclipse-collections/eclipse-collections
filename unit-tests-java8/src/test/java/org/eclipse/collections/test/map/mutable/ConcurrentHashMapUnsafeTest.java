@@ -10,6 +10,7 @@
 
 package org.eclipse.collections.test.map.mutable;
 
+import java.util.Map;
 import java.util.Random;
 
 import org.eclipse.collections.api.map.MutableMap;
@@ -76,5 +77,19 @@ public class ConcurrentHashMapUnsafeTest implements MutableMapTestCase
         MutableMapIterable<String, Integer> map = this.newWithKeysValues("3", 3, "2", 2, "1", 1);
         map.entrySet().forEach(each -> assertThrows(RuntimeException.class, () -> each.setValue(each.getValue() + 1)));
         assertIterablesEqual(this.newWithKeysValues("3", 3, "2", 2, "1", 1), map);
+    }
+
+    /**
+     * TODO: Implement {@link java.util.Map.Entry#setValue(Object)} in {@link ConcurrentHashMapUnsafe}
+     * or provide a custom {@link Map#replaceAll(java.util.function.BiFunction)} implementation.
+     * Currently, {@link ConcurrentHashMapUnsafe}'s Entry.setValue() throws {@link RuntimeException} "not implemented",
+     * so replaceAll (which uses setValue internally) cannot work.
+     */
+    @Override
+    public void Map_replaceAll()
+    {
+        Map<Integer, String> map = this.newWithKeysValues(1, "1", 2, "2", 3, "3");
+        assertThrows(RuntimeException.class, () -> map.replaceAll((k, v) -> v + k));
+        assertIterablesEqual(this.newWithKeysValues(1, "1", 2, "2", 3, "3"), map);
     }
 }
