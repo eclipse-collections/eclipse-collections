@@ -223,6 +223,12 @@ public abstract class AbstractImmutableBiMap<K, V> extends AbstractBiMap<K, V> i
     }
 
     @Override
+    public void replaceAll(BiFunction<? super K, ? super V, ? extends V> function)
+    {
+        throw new UnsupportedOperationException("Cannot call replaceAll() on " + this.getClass().getSimpleName());
+    }
+
+    @Override
     public Set<K> keySet()
     {
         return this.delegate.castToMap().keySet();

@@ -21,7 +21,6 @@ import org.junit.jupiter.api.Test;
 
 import static org.eclipse.collections.test.IterableTestCase.assertIterablesEqual;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -278,25 +277,19 @@ public interface UnmodifiableMutableMapIterableTestCase
     {
         Map<Integer, String> map = this.newWithKeysValues(1, "1", 2, "2", 3, "3");
 
-        assertThrows(NullPointerException.class, () -> map.replaceAll(null));
+        assertThrows(UnsupportedOperationException.class, () -> map.replaceAll(null));
 
         assertThrows(UnsupportedOperationException.class, () -> map.replaceAll((k, v) -> {
-            // TODO This should not call the lambda for existing key, but currently does.
-            // fail("Expected lambda not to be called for existing key");
-            // return "Should not be returned";
-
-            assertNotNull(k);
-            assertNotNull(v);
-            return v + "modified";
+            fail("Expected lambda not to be called for existing key");
+            return "Should not be returned";
         }));
         assertEquals(this.newWithKeysValues(1, "1", 2, "2", 3, "3"), map);
 
         Map<Integer, String> emptyMap = this.newWithKeysValues();
-        // TODO: This should throw UnsupportedOperationException but currently does not.
-        emptyMap.replaceAll((k, v) -> {
+        assertThrows(UnsupportedOperationException.class, () -> emptyMap.replaceAll((k, v) -> {
             fail("Expected lambda not to be called for empty map");
             return "Should not be returned";
-        });
+        }));
         assertEquals(this.newWithKeysValues(), emptyMap);
     }
 }

@@ -131,6 +131,12 @@ public abstract class AbstractImmutableMap<K, V>
     }
 
     @Override
+    public void replaceAll(BiFunction<? super K, ? super V, ? extends V> function)
+    {
+        throw new UnsupportedOperationException("Cannot call replaceAll() on " + this.getClass().getSimpleName());
+    }
+
+    @Override
     public ImmutableSetMultimap<V, K> flip()
     {
         return MapIterate.flip(this).toImmutable();

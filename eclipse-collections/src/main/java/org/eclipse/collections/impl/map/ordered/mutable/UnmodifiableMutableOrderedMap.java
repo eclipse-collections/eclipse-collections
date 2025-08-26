@@ -275,6 +275,12 @@ public class UnmodifiableMutableOrderedMap<K, V>
     }
 
     @Override
+    public void replaceAll(BiFunction<? super K, ? super V, ? extends V> function)
+    {
+        throw new UnsupportedOperationException("Cannot call replaceAll() on " + this.getClass().getSimpleName());
+    }
+
+    @Override
     public V getIfAbsentPut(K key, Function0<? extends V> function)
     {
         V result = this.get(key);

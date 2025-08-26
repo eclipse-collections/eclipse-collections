@@ -146,6 +146,12 @@ public abstract class AbstractImmutableSortedMap<K, V>
     }
 
     @Override
+    public void replaceAll(BiFunction<? super K, ? super V, ? extends V> function)
+    {
+        throw new UnsupportedOperationException("Cannot call replaceAll() on " + this.getClass().getSimpleName());
+    }
+
+    @Override
     public ImmutableSortedMap<K, V> newWithKeyValue(K key, V value)
     {
         TreeSortedMap<K, V> sortedMap = TreeSortedMap.newMap(this);
