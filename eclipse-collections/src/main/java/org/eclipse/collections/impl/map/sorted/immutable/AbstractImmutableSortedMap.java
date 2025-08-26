@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.SortedMap;
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 
 import org.eclipse.collections.api.bag.ImmutableBag;
 import org.eclipse.collections.api.block.function.Function;
@@ -219,6 +220,24 @@ public abstract class AbstractImmutableSortedMap<K, V>
     public V remove(Object key)
     {
         throw new UnsupportedOperationException("Cannot call remove() on " + this.getClass().getSimpleName());
+    }
+
+    @Override
+    public V compute(K key, BiFunction<? super K, ? super V, ? extends V> remappingFunction)
+    {
+        throw new UnsupportedOperationException("Cannot call compute() on " + this.getClass().getSimpleName());
+    }
+
+    @Override
+    public V computeIfAbsent(K key, java.util.function.Function<? super K, ? extends V> mappingFunction)
+    {
+        throw new UnsupportedOperationException("Cannot call computeIfAbsent() on " + this.getClass().getSimpleName());
+    }
+
+    @Override
+    public V computeIfPresent(K key, BiFunction<? super K, ? super V, ? extends V> remappingFunction)
+    {
+        throw new UnsupportedOperationException("Cannot call computeIfPresent() on " + this.getClass().getSimpleName());
     }
 
     @Override

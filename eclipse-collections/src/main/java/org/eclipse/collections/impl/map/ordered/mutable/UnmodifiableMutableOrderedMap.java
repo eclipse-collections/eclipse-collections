@@ -257,6 +257,24 @@ public class UnmodifiableMutableOrderedMap<K, V>
     }
 
     @Override
+    public V compute(K key, BiFunction<? super K, ? super V, ? extends V> remappingFunction)
+    {
+        throw new UnsupportedOperationException("Cannot call compute() on " + this.getClass().getSimpleName());
+    }
+
+    @Override
+    public V computeIfAbsent(K key, java.util.function.Function<? super K, ? extends V> mappingFunction)
+    {
+        throw new UnsupportedOperationException("Cannot call computeIfAbsent() on " + this.getClass().getSimpleName());
+    }
+
+    @Override
+    public V computeIfPresent(K key, BiFunction<? super K, ? super V, ? extends V> remappingFunction)
+    {
+        throw new UnsupportedOperationException("Cannot call computeIfPresent() on " + this.getClass().getSimpleName());
+    }
+
+    @Override
     public V getIfAbsentPut(K key, Function0<? extends V> function)
     {
         V result = this.get(key);
