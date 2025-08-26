@@ -132,6 +132,7 @@ public interface MutableMapIterableTestCase extends MapIterableTestCase, MapTest
     default void MutableMapIterable_removeIf()
     {
         MutableMapIterable<Integer, String> map1 = this.newWithKeysValues(1, "1", 2, "Two", 3, "Three");
+        assertThrows(NullPointerException.class, () -> map1.removeIf(null));
 
         assertFalse(map1.removeIf(Predicates2.alwaysFalse()));
         assertIterablesEqual(this.newWithKeysValues(1, "1", 2, "Two", 3, "Three"), map1);
@@ -160,6 +161,34 @@ public interface MutableMapIterableTestCase extends MapIterableTestCase, MapTest
         MutableMapIterable<Integer, String> map5 = this.newWithKeysValues(CollisionsTestCase.COLLISION_1, "0", CollisionsTestCase.COLLISION_2, "17", CollisionsTestCase.COLLISION_3, "34", 100, "100");
         assertTrue(map5.removeIf((key, value) -> CollisionsTestCase.COLLISION_1.equals(key) || CollisionsTestCase.COLLISION_3.equals(key)));
         assertIterablesEqual(this.newWithKeysValues(CollisionsTestCase.COLLISION_2, "17", 100, "100"), map5);
+
+        MutableMapIterable<Integer, String> map6 = this.newWithKeysValues(1, "One", 2, "Two", 3, "Three", 4, "Four");
+        RuntimeException predicateException = new RuntimeException("Predicate exception");
+        RuntimeException actualException = assertThrows(
+                RuntimeException.class,
+                () -> map6.removeIf((key, value) ->
+                {
+                    if (map6.size() > 1)
+                    {
+                        return true;
+                    }
+                    throw predicateException;
+                }));
+        assertSame(predicateException, actualException);
+        assertEquals(1, map6.size());
+
+        MutableMapIterable<Integer, String> map7 = this.newWithKeysValues();
+        assertFalse(map7.removeIf((key, value) -> { throw predicateException; }));
+        assertIterablesEqual(this.newWithKeysValues(), map7);
+        assertEquals(0, map7.size());
+
+        MutableMapIterable<Integer, String> map8 = this.newWithKeysValues(1, "One", 2, "Two");
+        RuntimeException actualException2 = assertThrows(
+                RuntimeException.class,
+                () -> map8.removeIf((key, value) -> { throw predicateException; }));
+        assertSame(predicateException, actualException2);
+        assertIterablesEqual(this.newWithKeysValues(1, "One", 2, "Two"), map8);
+        assertEquals(2, map8.size());
     }
 
     @Test

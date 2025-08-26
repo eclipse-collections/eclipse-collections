@@ -153,14 +153,6 @@ public class UnifiedMapNoIteratorTest implements MutableMapTestCase, NoIteratorT
          */
     }
 
-    @Override
-    public void MutableMapIterable_removeIf()
-    {
-        /**
-         * TODO: {@link UnifiedMap#removeIf(org.eclipse.collections.api.block.predicate.Predicate2)} should be optimized to not use an iterator
-         */
-    }
-
     public static class UnifiedMapNoIterator<K, V> extends UnifiedMap<K, V>
     {
         @Override

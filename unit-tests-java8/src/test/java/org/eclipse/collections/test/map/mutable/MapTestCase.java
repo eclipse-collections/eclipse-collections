@@ -21,9 +21,11 @@ import org.eclipse.collections.api.set.MutableSet;
 import org.eclipse.collections.impl.tuple.ImmutableEntry;
 import org.junit.jupiter.api.Test;
 
+import static org.eclipse.collections.impl.test.Verify.assertSize;
 import static org.eclipse.collections.test.IterableTestCase.assertIterablesEqual;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -293,9 +295,13 @@ public interface MapTestCase
         assertIterablesEqual(this.newWithKeysValues(1, "1", 2, "2Two", 4, "4", 5, "5"), map);
 
         // existing key, remapping function throws exception
-        assertThrows(IllegalArgumentException.class, () -> map.merge(4, "Four", (v1, v2) -> {
-            throw new IllegalArgumentException();
+        RuntimeException exception = new RuntimeException("Test exception");
+        RuntimeException actualException1 = assertThrows(RuntimeException.class, () -> map.merge(4, "Four", (v1, v2) -> {
+            assertEquals("4", v1);
+            assertEquals("Four", v2);
+            throw exception;
         }));
+        assertSame(exception, actualException1);
         assertIterablesEqual(this.newWithKeysValues(1, "1", 2, "2Two", 4, "4", 5, "5"), map);
 
         // existing key with null value, remapping function is not called and new value is used
@@ -308,6 +314,167 @@ public interface MapTestCase
             });
             assertEquals("Two", value5);
         }
+    }
+
+    @Test
+    default void Map_compute()
+    {
+        Map<Integer, String> map = this.newWithKeysValues(1, "1", 2, "2", 3, "3");
+
+        assertThrows(NullPointerException.class, () -> map.compute(1, null));
+        assertIterablesEqual(this.newWithKeysValues(1, "1", 2, "2", 3, "3"), map);
+
+        String value1 = map.compute(4, (k, v) -> {
+            assertEquals(Integer.valueOf(4), k);
+            assertNull(v);
+            return "4";
+        });
+        assertEquals("4", value1);
+        assertIterablesEqual(this.newWithKeysValues(1, "1", 2, "2", 3, "3", 4, "4"), map);
+
+        String value2 = map.compute(2, (k, v) -> {
+            assertEquals(Integer.valueOf(2), k);
+            assertEquals("2", v);
+            return v + "Modified";
+        });
+        assertEquals("2Modified", value2);
+        assertIterablesEqual(this.newWithKeysValues(1, "1", 2, "2Modified", 3, "3", 4, "4"), map);
+
+        String value3 = map.compute(3, (k, v) -> null);
+        assertNull(value3);
+        assertIterablesEqual(this.newWithKeysValues(1, "1", 2, "2Modified", 4, "4"), map);
+
+        String value4 = map.compute(5, (k, v) -> null);
+        assertNull(value4);
+        assertIterablesEqual(this.newWithKeysValues(1, "1", 2, "2Modified", 4, "4"), map);
+
+        RuntimeException exception = new RuntimeException("Test exception");
+        RuntimeException actualException = assertThrows(RuntimeException.class, () -> map.compute(4, (k, v) -> {
+            throw exception;
+        }));
+        assertSame(exception, actualException);
+        assertIterablesEqual(this.newWithKeysValues(1, "1", 2, "2Modified", 4, "4"), map);
+
+        RuntimeException actualException2 = assertThrows(RuntimeException.class, () -> map.compute(6, (k, v) -> {
+            throw exception;
+        }));
+        assertSame(exception, actualException2);
+        assertIterablesEqual(this.newWithKeysValues(1, "1", 2, "2Modified", 4, "4"), map);
+    }
+
+    @Test
+    default void Map_computeIfAbsent()
+    {
+        Map<Integer, String> map = this.newWithKeysValues(1, "1", 2, "2", 3, "3");
+
+        assertThrows(NullPointerException.class, () -> map.computeIfAbsent(1, null));
+        assertIterablesEqual(this.newWithKeysValues(1, "1", 2, "2", 3, "3"), map);
+
+        String value1 = map.computeIfAbsent(2, k -> {
+            fail("Expected mapping function not to be called for existing key");
+            return "Should not be returned";
+        });
+        assertEquals("2", value1);
+        assertIterablesEqual(this.newWithKeysValues(1, "1", 2, "2", 3, "3"), map);
+
+        String value2 = map.computeIfAbsent(4, k -> {
+            assertEquals(Integer.valueOf(4), k);
+            return "4";
+        });
+        assertEquals("4", value2);
+        assertIterablesEqual(this.newWithKeysValues(1, "1", 2, "2", 3, "3", 4, "4"), map);
+
+        String value3 = map.computeIfAbsent(5, k -> null);
+        assertNull(value3);
+        assertIterablesEqual(this.newWithKeysValues(1, "1", 2, "2", 3, "3", 4, "4"), map);
+
+        RuntimeException exception = new RuntimeException("Test exception");
+        RuntimeException actualException = assertThrows(RuntimeException.class, () -> map.computeIfAbsent(6, k -> {
+            throw exception;
+        }));
+        assertSame(exception, actualException);
+        assertIterablesEqual(this.newWithKeysValues(1, "1", 2, "2", 3, "3", 4, "4"), map);
+    }
+
+    @Test
+    default void Map_computeIfPresent()
+    {
+        Map<Integer, String> map = this.newWithKeysValues(1, "1", 2, "2", 3, "3");
+
+        assertThrows(NullPointerException.class, () -> map.computeIfPresent(1, null));
+        assertIterablesEqual(this.newWithKeysValues(1, "1", 2, "2", 3, "3"), map);
+
+        String value1 = map.computeIfPresent(4, (k, v) -> {
+            fail("Expected remapping function not to be called for non-existing key");
+            return "Should not be returned";
+        });
+        assertNull(value1);
+        assertIterablesEqual(this.newWithKeysValues(1, "1", 2, "2", 3, "3"), map);
+
+        String value2 = map.computeIfPresent(2, (k, v) -> {
+            assertEquals(Integer.valueOf(2), k);
+            assertEquals("2", v);
+            return v + "Modified";
+        });
+        assertEquals("2Modified", value2);
+        assertIterablesEqual(this.newWithKeysValues(1, "1", 2, "2Modified", 3, "3"), map);
+
+        String value3 = map.computeIfPresent(3, (k, v) -> null);
+        assertNull(value3);
+        assertIterablesEqual(this.newWithKeysValues(1, "1", 2, "2Modified"), map);
+
+        map.put(3, "3");
+        RuntimeException exception = new RuntimeException("Test exception");
+        RuntimeException actualException = assertThrows(RuntimeException.class, () -> map.computeIfPresent(3, (k, v) -> {
+            assertEquals(Integer.valueOf(3), k);
+            assertEquals("3", v);
+            throw exception;
+        }));
+        assertSame(exception, actualException);
+        assertIterablesEqual(this.newWithKeysValues(1, "1", 2, "2Modified", 3, "3"), map);
+    }
+
+    @Test
+    default void Map_replaceAll()
+    {
+        Map<Integer, String> map = this.newWithKeysValues(1, "1", 2, "2", 3, "3");
+
+        assertThrows(NullPointerException.class, () -> map.replaceAll(null));
+        assertIterablesEqual(this.newWithKeysValues(1, "1", 2, "2", 3, "3"), map);
+
+        map.replaceAll((k, v) -> {
+            assertNotNull(k);
+            assertNotNull(v);
+            return v + k;
+        });
+        assertIterablesEqual(this.newWithKeysValues(1, "11", 2, "22", 3, "33"), map);
+
+        if (this.supportsNullValues())
+        {
+            Map<Integer, String> map2 = this.newWithKeysValues(1, "1", 2, "2");
+            map2.replaceAll((k, v) -> null);
+            assertEquals(2, map2.size());
+            assertNull(map2.get(1));
+            assertTrue(map2.containsKey(1));
+            assertNull(map2.get(2));
+            assertTrue(map2.containsKey(2));
+        }
+
+        Map<Integer, String> map3 = this.newWithKeysValues(1, "1", 2, "2", 3, "3");
+        RuntimeException exception = new RuntimeException("Test exception");
+        RuntimeException actualException = assertThrows(RuntimeException.class, () -> map3.replaceAll((k, v) -> {
+            if (k.equals(2))
+            {
+                throw exception;
+            }
+            return v + "Modified";
+        }));
+        assertSame(exception, actualException);
+        assertTrue(map3.containsKey(1));
+        assertTrue(map3.containsKey(2));
+        assertTrue(map3.containsKey(3));
+        assertEquals("2", map3.get(2));
+        assertSize(3, map3);
     }
 
     class AlwaysEqual
