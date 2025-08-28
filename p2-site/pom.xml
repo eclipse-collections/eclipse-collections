@@ -93,6 +93,9 @@
                                     <ignoredUnusedDeclaredDependency>
                                         org.eclipse.collections:unit-tests-java8:jar
                                     </ignoredUnusedDeclaredDependency>
+                                    <ignoredUnusedDeclaredDependency>
+                                        org.eclipse.collections:unit-tests-thread-safety:jar
+                                    </ignoredUnusedDeclaredDependency>
                                 </ignoredUnusedDeclaredDependencies>
                             </configuration>
                             <executions>

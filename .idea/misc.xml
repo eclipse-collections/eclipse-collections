@@ -11,20 +11,7 @@
     </writeAnnotations>
   </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />
-  <component name="FacetAutodetectingManager">
-    <autodetection-disabled>
-      <facet-type id="Scala">
-        <modules>
-          <module name="unit-tests" />
-        </modules>
-      </facet-type>
-      <facet-type id="scala">
-        <modules>
-          <module name="scala-unit-tests" />
-        </modules>
-      </facet-type>
-    </autodetection-disabled>
-  </component>
+  
   <component name="IdProvider" IDEtalkID="E479977A55D2FFACBB467B5E6C1F97CB" />
   <component name="JavadocGenerationManager">
     <option name="OTHER_OPTIONS" value="" />

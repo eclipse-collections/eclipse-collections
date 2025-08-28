@@ -106,6 +106,7 @@ Arrays, Maps or Strings. The iteration protocol was inspired by the Smalltalk co
         <module>eclipse-collections-testutils</module>
         <module>eclipse-collections-forkjoin</module>
         <module>unit-tests</module>
+        <module>unit-tests-thread-safety</module>
         <module>serialization-tests</module>
         <module>jcstress-tests</module>
         <module>unit-tests-java8</module>
@@ -603,7 +604,6 @@ Arrays, Maps or Strings. The iteration protocol was inspired by the Smalltalk co
             </activation>
 
             <modules>
-                <module>scala-unit-tests</module>
                 <module>jmh-scala-tests</module>
                 <module>jmh-tests</module>
             </modules>

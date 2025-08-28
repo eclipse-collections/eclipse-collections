@@ -47,9 +47,9 @@
     <file url="file://$PROJECT_DIR$/performance-tests" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/performance-tests/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/performance-tests/src/main/resources" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/scala-unit-tests" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/scala-unit-tests/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/scala-unit-tests/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/unit-tests-thread-safety" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/unit-tests-thread-safety/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/unit-tests-thread-safety/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/serialization-tests" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/serialization-tests/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/serialization-tests/src/main/resources" charset="UTF-8" />
