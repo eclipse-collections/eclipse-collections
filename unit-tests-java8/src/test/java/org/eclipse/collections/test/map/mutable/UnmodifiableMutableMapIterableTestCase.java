@@ -21,8 +21,6 @@ import org.junit.jupiter.api.Test;
 
 import static org.eclipse.collections.test.IterableTestCase.assertIterablesEqual;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -216,31 +214,18 @@ public interface UnmodifiableMutableMapIterableTestCase
     {
         Map<Integer, String> map = this.newWithKeysValues(1, "1", 2, "2", 3, "3");
 
-        assertThrows(NullPointerException.class, () -> map.compute(1, null));
+        assertThrows(UnsupportedOperationException.class, () -> map.compute(1, null));
 
         assertThrows(UnsupportedOperationException.class, () -> map.compute(1, (k, v) -> {
-            // TODO This should not call the lambda for existing key, but currently does.
-            // fail("Expected lambda not to be called for absent key");
-            // return "Should not be returned";
-
-            assertEquals(Integer.valueOf(1), k);
-            assertEquals("1", v);
-            return "modified";
+            fail("Expected lambda not to be called for existing key");
+            return "Should not be returned";
         }));
         assertEquals(this.newWithKeysValues(1, "1", 2, "2", 3, "3"), map);
 
         assertThrows(UnsupportedOperationException.class, () -> map.compute(4, (k, v) -> {
-            // TODO This should not call the lambda for existing key, but currently does.
-            // fail("Expected lambda not to be called for absent key");
-            // return "Should not be returned";
-
-            assertEquals(Integer.valueOf(4), k);
-            assertNull(v);
-            return "new";
+            fail("Expected lambda not to be called for non-existing key");
+            return "Should not be returned";
         }));
-        assertEquals(this.newWithKeysValues(1, "1", 2, "2", 3, "3"), map);
-
-        assertThrows(UnsupportedOperationException.class, () -> map.compute(2, (k, v) -> null));
         assertEquals(this.newWithKeysValues(1, "1", 2, "2", 3, "3"), map);
     }
 
@@ -250,26 +235,18 @@ public interface UnmodifiableMutableMapIterableTestCase
     {
         Map<Integer, String> map = this.newWithKeysValues(1, "1", 2, "2", 3, "3");
 
-        assertThrows(NullPointerException.class, () -> map.computeIfAbsent(1, null));
+        assertThrows(UnsupportedOperationException.class, () -> map.computeIfAbsent(1, null));
 
-        assertEquals("1", map.computeIfAbsent(1, k -> {
+        assertThrows(UnsupportedOperationException.class, () -> map.computeIfAbsent(1, k -> {
             fail("Expected lambda not to be called for existing key");
-            return "modified";
+            return "Should not be returned";
         }));
         assertEquals(this.newWithKeysValues(1, "1", 2, "2", 3, "3"), map);
 
         assertThrows(UnsupportedOperationException.class, () -> map.computeIfAbsent(4, k -> {
-            // TODO This should not call the lambda for existing key, but currently does.
-            // fail("Expected lambda not to be called for absent key");
-            // return "Should not be returned";
-            assertEquals(Integer.valueOf(4), k);
-            return "new";
+            fail("Expected lambda not to be called for non-existing key");
+            return "Should not be returned";
         }));
-        assertEquals(this.newWithKeysValues(1, "1", 2, "2", 3, "3"), map);
-
-        // TODO 2025-08-24: This should throw UnsupportedOperationException but currently does not.
-        String value = map.computeIfAbsent(4, k -> null);
-        assertNull(value);
         assertEquals(this.newWithKeysValues(1, "1", 2, "2", 3, "3"), map);
     }
 
@@ -279,31 +256,18 @@ public interface UnmodifiableMutableMapIterableTestCase
     {
         Map<Integer, String> map = this.newWithKeysValues(1, "1", 2, "2", 3, "3");
 
-        assertThrows(NullPointerException.class, () -> map.computeIfPresent(1, null));
+        assertThrows(UnsupportedOperationException.class, () -> map.computeIfPresent(1, null));
 
         assertThrows(UnsupportedOperationException.class, () -> map.computeIfPresent(1, (k, v) -> {
-            // TODO This should not call the lambda for existing key, but currently does.
-            // fail("Expected lambda not to be called for existing key");
-            // return "Should not be returned";
-            assertEquals(Integer.valueOf(1), k);
-            assertEquals("1", v);
-            return "modified";
-        }));
-        assertEquals(this.newWithKeysValues(1, "1", 2, "2", 3, "3"), map);
-
-        assertThrows(UnsupportedOperationException.class, () -> map.computeIfPresent(1, (k, v) -> {
-            // TODO This should not call the lambda for existing key, but currently does.
-            return v;
-        }));
-        assertEquals(this.newWithKeysValues(1, "1", 2, "2", 3, "3"), map);
-
-        assertNull(map.computeIfPresent(4, (k, v) -> {
-            fail("Expected lambda not to be called for non-existing key");
+            fail("Expected lambda not to be called for existing key");
             return "Should not be returned";
         }));
         assertEquals(this.newWithKeysValues(1, "1", 2, "2", 3, "3"), map);
 
-        assertThrows(UnsupportedOperationException.class, () -> map.computeIfPresent(2, (k, v) -> null));
+        assertThrows(UnsupportedOperationException.class, () -> map.computeIfPresent(4, (k, v) -> {
+            fail("Expected lambda not to be called for non-existing key");
+            return "Should not be returned";
+        }));
         assertEquals(this.newWithKeysValues(1, "1", 2, "2", 3, "3"), map);
     }
 
@@ -313,25 +277,19 @@ public interface UnmodifiableMutableMapIterableTestCase
     {
         Map<Integer, String> map = this.newWithKeysValues(1, "1", 2, "2", 3, "3");
 
-        assertThrows(NullPointerException.class, () -> map.replaceAll(null));
+        assertThrows(UnsupportedOperationException.class, () -> map.replaceAll(null));
 
         assertThrows(UnsupportedOperationException.class, () -> map.replaceAll((k, v) -> {
-            // TODO This should not call the lambda for existing key, but currently does.
-            // fail("Expected lambda not to be called for existing key");
-            // return "Should not be returned";
-
-            assertNotNull(k);
-            assertNotNull(v);
-            return v + "modified";
+            fail("Expected lambda not to be called for existing key");
+            return "Should not be returned";
         }));
         assertEquals(this.newWithKeysValues(1, "1", 2, "2", 3, "3"), map);
 
         Map<Integer, String> emptyMap = this.newWithKeysValues();
-        // TODO: This should throw UnsupportedOperationException but currently does not.
-        emptyMap.replaceAll((k, v) -> {
+        assertThrows(UnsupportedOperationException.class, () -> emptyMap.replaceAll((k, v) -> {
             fail("Expected lambda not to be called for empty map");
             return "Should not be returned";
-        });
+        }));
         assertEquals(this.newWithKeysValues(), emptyMap);
     }
 }
