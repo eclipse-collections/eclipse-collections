@@ -573,8 +573,9 @@ public class Object<name>HashMap\<K> implements MutableObject<name>Map\<K>, Exte
         int index = this.probe(key);
         if (isNonSentinel(this.keys[index]) && nullSafeEquals(this.toNonSentinel(this.keys[index]), key))
         {
-            this.values[index] = function.valueOf(this.values[index]);
-            return this.values[index];
+            <type> newValue = function.valueOf(this.values[index]);
+            this.values[index] = newValue;
+            return newValue;
         }
         <type> value = function.valueOf(initialValueIfAbsent);
         this.addKeyValueAtIndex(key, value, index);

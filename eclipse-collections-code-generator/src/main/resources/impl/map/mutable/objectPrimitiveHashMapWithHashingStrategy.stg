@@ -596,8 +596,9 @@ public class Object<name>HashMapWithHashingStrategy\<K> implements MutableObject
         int index = this.probe(key);
         if (isNonSentinel(this.keys[index]) && this.nullSafeEquals(this.toNonSentinel(this.keys[index]), key))
         {
-            this.values[index] = function.valueOf(this.values[index]);
-            return this.values[index];
+            <type> newValue = function.valueOf(this.values[index]);
+            this.values[index] = newValue;
+            return newValue;
         }
         <type> value = function.valueOf(initialValueIfAbsent);
         this.addKeyValueAtIndex(key, value, index);
