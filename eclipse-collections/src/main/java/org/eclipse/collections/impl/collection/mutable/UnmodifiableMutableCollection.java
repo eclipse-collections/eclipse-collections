@@ -24,7 +24,7 @@ public class UnmodifiableMutableCollection<T>
         extends AbstractUnmodifiableMutableCollection<T>
         implements Serializable
 {
-    UnmodifiableMutableCollection(MutableCollection<? extends T> collection)
+    protected UnmodifiableMutableCollection(MutableCollection<? extends T> collection)
     {
         super(collection);
     }
