@@ -164,8 +164,8 @@ We welcome contributions! We accept contributions via pull requests here in GitH
 [license-edl]:LICENSE-EDL-1.0.txt
 [license-edl img]:https://img.shields.io/badge/License-EDL-blue.svg
 
-[snyk-badge]:https://snyk.io/vuln/maven:org.eclipse.collections:eclipse-collections@11.1.0?utm_medium=referral&utm_source=badge&utm_campaign=snyk-widget
-[snyk-badge img]:https://snyk-widget.herokuapp.com/badge/mvn/org.eclipse.collections/eclipse-collections/11.1.0/badge.svg
+[snyk-badge]:https://snyk.io/vuln/maven:org.eclipse.collections:eclipse-collections?utm_medium=referral&utm_source=badge&utm_campaign=snyk-widget
+[snyk-badge img]:https://snyk-widget.herokuapp.com/badge/mvn/org.eclipse.collections/eclipse-collections/badge.svg
 
 [RichIterable]: https://eclipse.dev/collections/javadoc/11.1.0/org/eclipse/collections/api/RichIterable.html
 [ListIterable]: https://eclipse.dev/collections/javadoc/11.1.0/org/eclipse/collections/api/list/ListIterable.html
