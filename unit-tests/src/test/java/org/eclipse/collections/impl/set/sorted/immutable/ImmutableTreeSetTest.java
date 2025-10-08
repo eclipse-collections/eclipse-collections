@@ -13,9 +13,11 @@ package org.eclipse.collections.impl.set.sorted.immutable;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.TreeSet;
 
 import org.eclipse.collections.api.factory.Sets;
+import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.set.sorted.ImmutableSortedSet;
 import org.eclipse.collections.api.set.sorted.SortedSetIterable;
 import org.eclipse.collections.impl.block.factory.Comparators;
@@ -36,7 +38,10 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ImmutableTreeSetTest
         extends AbstractImmutableSortedSetTestCase
@@ -95,21 +100,27 @@ public class ImmutableTreeSetTest
     @Test
     public void subSet()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.classUnderTest().castToSortedSet().subSet(1, 4));
+        ImmutableSortedSet<Integer> set = this.classUnderTest();
+        assertEquals(FastList.newListWith(2, 3), set.subSet(2, 4).toList());
+        assertEquals(FastList.newListWith(1, 2, 3), set.subSet(1, 4).toList());
     }
 
     @Override
     @Test
     public void headSet()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.classUnderTest().castToSortedSet().headSet(4));
+        ImmutableSortedSet<Integer> set = this.classUnderTest();
+        assertEquals(FastList.newListWith(1, 2, 3), set.headSet(4).toList());
+        assertEquals(FastList.newListWith(1, 2), set.headSet(3).toList());
     }
 
     @Override
     @Test
     public void tailSet()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.classUnderTest().castToSortedSet().tailSet(1));
+        ImmutableSortedSet<Integer> set = this.classUnderTest();
+        assertEquals(FastList.newListWith(1, 2, 3, 4), set.tailSet(1).toList());
+        assertEquals(FastList.newListWith(2, 3, 4), set.tailSet(2).toList());
     }
 
     @Override
@@ -204,5 +215,180 @@ public class ImmutableTreeSetTest
     {
         ImmutableSortedSet<Integer> integers = this.classUnderTest(Collections.reverseOrder());
         assertEquals(ShortArrayList.newListWith((short) 4, (short) 3, (short) 2, (short) 1), integers.collectShort(PrimitiveFunctions.unboxIntegerToShort()));
+    }
+
+    @Test
+    public void testNavigationMethods()
+    {
+        ImmutableSortedSet<Integer> set = SortedSets.immutable.of(1, 3, 5, 7, 9);
+
+        // lower
+        assertNull(set.lower(1));
+        assertEquals(Integer.valueOf(1), set.lower(2));
+        assertEquals(Integer.valueOf(1), set.lower(3));
+        assertEquals(Integer.valueOf(7), set.lower(9));
+
+        // floor
+        assertEquals(Integer.valueOf(1), set.floor(1));
+        assertEquals(Integer.valueOf(1), set.floor(2));
+        assertEquals(Integer.valueOf(3), set.floor(3));
+        assertEquals(Integer.valueOf(9), set.floor(9));
+        assertEquals(Integer.valueOf(9), set.floor(10));
+
+        // ceiling
+        assertEquals(Integer.valueOf(1), set.ceiling(0));
+        assertEquals(Integer.valueOf(1), set.ceiling(1));
+        assertEquals(Integer.valueOf(3), set.ceiling(2));
+        assertEquals(Integer.valueOf(9), set.ceiling(9));
+        assertNull(set.ceiling(10));
+
+        // higher
+        assertEquals(Integer.valueOf(1), set.higher(0));
+        assertEquals(Integer.valueOf(3), set.higher(1));
+        assertEquals(Integer.valueOf(3), set.higher(2));
+        assertNull(set.higher(9));
+    }
+
+    @Test
+    public void testDescendingIterator()
+    {
+        ImmutableSortedSet<Integer> set = SortedSets.immutable.of(1, 2, 3, 4, 5);
+        Iterator<Integer> desc = set.descendingIterator();
+
+        MutableList<Integer> result = FastList.newList();
+        desc.forEachRemaining(result::add);
+        assertEquals(FastList.newListWith(5, 4, 3, 2, 1), result);
+    }
+
+    @Test
+    public void testDescendingSet()
+    {
+        ImmutableSortedSet<Integer> set = SortedSets.immutable.of(1, 2, 3, 4, 5);
+        ImmutableSortedSet<Integer> descending = set.descendingSet();
+
+        assertEquals(FastList.newListWith(5, 4, 3, 2, 1), descending.toList());
+        assertEquals(5, descending.size());
+    }
+
+    @Test
+    public void testDoubleDescendingSet()
+    {
+        ImmutableSortedSet<Integer> set = SortedSets.immutable.of(1, 2, 3, 4, 5);
+        ImmutableSortedSet<Integer> descending = set.descendingSet();
+        ImmutableSortedSet<Integer> doubleDescending = descending.descendingSet();
+
+        assertEquals(FastList.newListWith(1, 2, 3, 4, 5), doubleDescending.toList());
+        assertEquals(set.toList(), doubleDescending.toList());
+    }
+
+    @Test
+    public void testSubSetWithBooleans()
+    {
+        ImmutableSortedSet<Integer> set = SortedSets.immutable.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+
+        // Inclusive both
+        ImmutableSortedSet<Integer> sub1 = set.subSet(3, true, 7, true);
+        assertEquals(FastList.newListWith(3, 4, 5, 6, 7), sub1.toList());
+
+        // Exclusive from
+        ImmutableSortedSet<Integer> sub2 = set.subSet(3, false, 7, true);
+        assertEquals(FastList.newListWith(4, 5, 6, 7), sub2.toList());
+
+        // Exclusive to
+        ImmutableSortedSet<Integer> sub3 = set.subSet(3, true, 7, false);
+        assertEquals(FastList.newListWith(3, 4, 5, 6), sub3.toList());
+
+        // Exclusive both
+        ImmutableSortedSet<Integer> sub4 = set.subSet(3, false, 7, false);
+        assertEquals(FastList.newListWith(4, 5, 6), sub4.toList());
+    }
+
+    @Test
+    public void testHeadSetWithBoolean()
+    {
+        ImmutableSortedSet<Integer> set = SortedSets.immutable.of(1, 2, 3, 4, 5);
+
+        // Exclusive (default)
+        ImmutableSortedSet<Integer> head1 = set.headSet(3, false);
+        assertEquals(FastList.newListWith(1, 2), head1.toList());
+
+        // Inclusive
+        ImmutableSortedSet<Integer> head2 = set.headSet(3, true);
+        assertEquals(FastList.newListWith(1, 2, 3), head2.toList());
+    }
+
+    @Test
+    public void testTailSetWithBoolean()
+    {
+        ImmutableSortedSet<Integer> set = SortedSets.immutable.of(1, 2, 3, 4, 5);
+
+        // Inclusive (default)
+        ImmutableSortedSet<Integer> tail1 = set.tailSet(3, true);
+        assertEquals(FastList.newListWith(3, 4, 5), tail1.toList());
+
+        // Exclusive
+        ImmutableSortedSet<Integer> tail2 = set.tailSet(3, false);
+        assertEquals(FastList.newListWith(4, 5), tail2.toList());
+    }
+
+    @Test
+    public void testEmptySetNavigableOperations()
+    {
+        ImmutableSortedSet<Integer> empty = SortedSets.immutable.empty();
+
+        assertNull(empty.lower(5));
+        assertNull(empty.floor(5));
+        assertNull(empty.ceiling(5));
+        assertNull(empty.higher(5));
+
+        assertSame(empty, empty.descendingSet());
+        assertSame(empty, empty.subSet(1, true, 5, true));
+        assertSame(empty, empty.headSet(5, true));
+        assertSame(empty, empty.tailSet(1, true));
+    }
+
+    @Test
+    public void testToReversed()
+    {
+        ImmutableSortedSet<Integer> set = SortedSets.immutable.of(1, 2, 3, 4, 5);
+        ImmutableSortedSet<Integer> reversed = set.toReversed();
+        assertEquals(FastList.newListWith(5, 4, 3, 2, 1), reversed.toList());
+
+        // Test with custom comparator
+        ImmutableSortedSet<Integer> reverseSet = SortedSets.immutable.of(Comparators.reverseNaturalOrder(), 1, 2, 3, 4, 5);
+        ImmutableSortedSet<Integer> doubleReversed = reverseSet.toReversed();
+        assertEquals(FastList.newListWith(1, 2, 3, 4, 5), doubleReversed.toList());
+    }
+
+    @Test
+    public void testDoubleToReversed()
+    {
+        ImmutableSortedSet<Integer> set = SortedSets.immutable.of(1, 2, 3, 4, 5);
+        ImmutableSortedSet<Integer> reversed = set.toReversed();
+        ImmutableSortedSet<Integer> doubleReversed = reversed.toReversed();
+
+        assertEquals(FastList.newListWith(5, 4, 3, 2, 1), reversed.toList());
+        assertEquals(FastList.newListWith(1, 2, 3, 4, 5), doubleReversed.toList());
+
+        // Verify the order is correct
+        assertEquals(Integer.valueOf(1), doubleReversed.getFirst());
+        assertEquals(Integer.valueOf(5), doubleReversed.getLast());
+    }
+
+    @Test
+    public void testToReversedOperations()
+    {
+        ImmutableSortedSet<Integer> set = SortedSets.immutable.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        ImmutableSortedSet<Integer> reversed = set.toReversed();
+
+        // Verify reversed order
+        assertEquals(FastList.newListWith(10, 9, 8, 7, 6, 5, 4, 3, 2, 1), reversed.toList());
+
+        // Test basic operations on reversed set
+        assertEquals(10, reversed.size());
+        assertTrue(reversed.contains(5));
+
+        // Verify iteration order is correct
+        assertEquals(Integer.valueOf(10), reversed.iterator().next());
     }
 }

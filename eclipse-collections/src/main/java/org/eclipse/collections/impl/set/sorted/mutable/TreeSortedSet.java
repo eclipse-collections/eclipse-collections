@@ -614,6 +614,24 @@ public class TreeSortedSet<T> extends AbstractMutableCollection<T>
     }
 
     @Override
+    public MutableSortedSet<T> subSet(T fromElement, boolean fromInclusive, T toElement, boolean toInclusive)
+    {
+        return SortedSetAdapter.adapt(this.treeSet.subSet(fromElement, fromInclusive, toElement, toInclusive));
+    }
+
+    @Override
+    public MutableSortedSet<T> headSet(T toElement, boolean inclusive)
+    {
+        return SortedSetAdapter.adapt(this.treeSet.headSet(toElement, inclusive));
+    }
+
+    @Override
+    public MutableSortedSet<T> tailSet(T fromElement, boolean inclusive)
+    {
+        return SortedSetAdapter.adapt(this.treeSet.tailSet(fromElement, inclusive));
+    }
+
+    @Override
     public T first()
     {
         return this.treeSet.first();
@@ -651,6 +669,54 @@ public class TreeSortedSet<T> extends AbstractMutableCollection<T>
     public MutableSortedSet<SortedSetIterable<T>> powerSet()
     {
         return (MutableSortedSet<SortedSetIterable<T>>) (MutableSortedSet<?>) SortedSetIterables.powerSet(this);
+    }
+
+    @Override
+    public Iterator<T> descendingIterator()
+    {
+        return this.treeSet.descendingIterator();
+    }
+
+    @Override
+    public MutableSortedSet<T> descendingSet()
+    {
+        return SortedSetAdapter.adapt(this.treeSet.descendingSet());
+    }
+
+    @Override
+    public T lower(T e)
+    {
+        return this.treeSet.lower(e);
+    }
+
+    @Override
+    public T floor(T e)
+    {
+        return this.treeSet.floor(e);
+    }
+
+    @Override
+    public T ceiling(T e)
+    {
+        return this.treeSet.ceiling(e);
+    }
+
+    @Override
+    public T higher(T e)
+    {
+        return this.treeSet.higher(e);
+    }
+
+    @Override
+    public T pollFirst()
+    {
+        return this.treeSet.pollFirst();
+    }
+
+    @Override
+    public T pollLast()
+    {
+        return this.treeSet.pollLast();
     }
 
     @Override
@@ -732,12 +798,6 @@ public class TreeSortedSet<T> extends AbstractMutableCollection<T>
     }
 
     @Override
-    public MutableSortedSet<T> toReversed()
-    {
-        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".toReversed() not implemented yet");
-    }
-
-    @Override
     public MutableSortedSet<T> take(int count)
     {
         return IterableIterate.take(this, Math.min(this.size(), count), this.newEmpty());
@@ -747,24 +807,6 @@ public class TreeSortedSet<T> extends AbstractMutableCollection<T>
     public MutableSortedSet<T> drop(int count)
     {
         return IterableIterate.drop(this, count, this.newEmpty());
-    }
-
-    @Override
-    public void reverseForEach(Procedure<? super T> procedure)
-    {
-        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".reverseForEach() not implemented yet");
-    }
-
-    @Override
-    public void reverseForEachWithIndex(ObjectIntProcedure<? super T> procedure)
-    {
-        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".reverseForEachWithIndex() not implemented yet");
-    }
-
-    @Override
-    public int detectLastIndex(Predicate<? super T> predicate)
-    {
-        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".detectLastIndex() not implemented yet");
     }
 
     @Override

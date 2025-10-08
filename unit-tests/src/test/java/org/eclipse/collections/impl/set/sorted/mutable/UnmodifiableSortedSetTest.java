@@ -14,6 +14,7 @@ import java.util.Comparator;
 import java.util.NoSuchElementException;
 
 import org.eclipse.collections.api.collection.MutableCollection;
+import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.set.sorted.MutableSortedSet;
 import org.eclipse.collections.impl.block.factory.Functions;
 import org.eclipse.collections.impl.list.mutable.FastList;
@@ -360,27 +361,35 @@ public class UnmodifiableSortedSetTest extends AbstractSortedSetTestCase
     @Test
     public void detectLastIndex()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.newWith(1, 2, 3).detectLastIndex(each -> each % 2 == 0));
+        assertEquals(1, this.newWith(1, 2, 3).detectLastIndex(each -> each % 2 == 0));
+        assertEquals(3, this.newWith(1, 2, 3, 4).detectLastIndex(each -> each % 2 == 0));
+        assertEquals(-1, this.newWith(1, 3, 5).detectLastIndex(each -> each % 2 == 0));
     }
 
     @Override
     @Test
     public void reverseForEach()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.newWith(1, 2, 3).reverseForEach(each -> fail("Should not be evaluated")));
+        MutableList<Integer> result = FastList.newList();
+        this.newWith(1, 2, 3).reverseForEach(result::add);
+        assertEquals(FastList.newListWith(3, 2, 1), result);
     }
 
     @Override
     @Test
     public void reverseForEachWithIndex()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.newWith(1, 2, 3).reverseForEachWithIndex((each, index) -> fail("Should not be evaluated")));
+        MutableList<String> result = FastList.newList();
+        this.newWith(1, 2, 3).reverseForEachWithIndex((each, index) -> result.add(each + ":" + index));
+        assertEquals(FastList.newListWith("3:0", "2:1", "1:2"), result);
     }
 
     @Override
     @Test
     public void toReversed()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.newWith(1, 2, 3).toReversed());
+        MutableSortedSet<Integer> set = this.newWith(1, 2, 3, 4, 5);
+        MutableSortedSet<Integer> reversed = set.toReversed();
+        assertEquals(FastList.newListWith(5, 4, 3, 2, 1), reversed.toList());
     }
 }

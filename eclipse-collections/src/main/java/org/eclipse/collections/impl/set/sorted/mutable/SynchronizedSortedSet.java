@@ -14,6 +14,7 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.Optional;
 import java.util.Set;
 import java.util.SortedSet;
@@ -580,9 +581,81 @@ public class SynchronizedSortedSet<T>
     }
 
     @Override
+    public T pollFirst()
+    {
+        synchronized (this.getLock())
+        {
+            return this.getDelegate().pollFirst();
+        }
+    }
+
+    @Override
+    public T pollLast()
+    {
+        synchronized (this.getLock())
+        {
+            return this.getDelegate().pollLast();
+        }
+    }
+
+    @Override
+    public MutableSortedSet<T> descendingSet()
+    {
+        synchronized (this.getLock())
+        {
+            return SynchronizedSortedSet.of(this.getDelegate().descendingSet(), this.getLock());
+        }
+    }
+
+    @Override
     public ParallelSortedSetIterable<T> asParallel(ExecutorService executorService, int batchSize)
     {
         return new SynchronizedParallelSortedSetIterable<>(this.getDelegate().asParallel(executorService, batchSize), this);
+    }
+
+    @Override
+    public T lower(T e)
+    {
+        synchronized (this.getLock())
+        {
+            return this.getDelegate().lower(e);
+        }
+    }
+
+    @Override
+    public T floor(T e)
+    {
+        synchronized (this.getLock())
+        {
+            return this.getDelegate().floor(e);
+        }
+    }
+
+    @Override
+    public T ceiling(T e)
+    {
+        synchronized (this.getLock())
+        {
+            return this.getDelegate().ceiling(e);
+        }
+    }
+
+    @Override
+    public T higher(T e)
+    {
+        synchronized (this.getLock())
+        {
+            return this.getDelegate().higher(e);
+        }
+    }
+
+    @Override
+    public Iterator<T> descendingIterator()
+    {
+        synchronized (this.getLock())
+        {
+            return this.getDelegate().descendingIterator();
+        }
     }
 
     @Override
@@ -633,6 +706,33 @@ public class SynchronizedSortedSet<T>
         synchronized (this.getLock())
         {
             return SynchronizedSortedSet.of(this.getDelegate().tailSet(fromElement), this.getLock());
+        }
+    }
+
+    @Override
+    public MutableSortedSet<T> subSet(T fromElement, boolean fromInclusive, T toElement, boolean toInclusive)
+    {
+        synchronized (this.getLock())
+        {
+            return SynchronizedSortedSet.of(this.getDelegate().subSet(fromElement, fromInclusive, toElement, toInclusive), this.getLock());
+        }
+    }
+
+    @Override
+    public MutableSortedSet<T> headSet(T toElement, boolean inclusive)
+    {
+        synchronized (this.getLock())
+        {
+            return SynchronizedSortedSet.of(this.getDelegate().headSet(toElement, inclusive), this.getLock());
+        }
+    }
+
+    @Override
+    public MutableSortedSet<T> tailSet(T fromElement, boolean inclusive)
+    {
+        synchronized (this.getLock())
+        {
+            return SynchronizedSortedSet.of(this.getDelegate().tailSet(fromElement, inclusive), this.getLock());
         }
     }
 

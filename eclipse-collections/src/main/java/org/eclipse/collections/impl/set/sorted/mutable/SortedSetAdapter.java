@@ -14,6 +14,7 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.NavigableSet;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.SortedSet;
@@ -559,6 +560,94 @@ public final class SortedSetAdapter<T>
     }
 
     @Override
+    public Iterator<T> descendingIterator()
+    {
+        if (!(this.delegate instanceof NavigableSet))
+        {
+            throw new UnsupportedOperationException(".descendingIterator() not supported on delegate " + this.delegate.getClass().getSimpleName());
+        }
+        NavigableSet<T> navigable = (NavigableSet<T>) this.delegate;
+        return navigable.descendingIterator();
+    }
+
+    @Override
+    public MutableSortedSet<T> descendingSet()
+    {
+        if (!(this.delegate instanceof NavigableSet))
+        {
+            throw new UnsupportedOperationException(".descendingSet() not supported on delegate " + this.delegate.getClass().getSimpleName());
+        }
+        NavigableSet<T> navigable = (NavigableSet<T>) this.delegate;
+        return SortedSetAdapter.adapt(navigable.descendingSet());
+    }
+
+    @Override
+    public T lower(T e)
+    {
+        if (!(this.delegate instanceof NavigableSet))
+        {
+            throw new UnsupportedOperationException(".lower() not supported on delegate " + this.delegate.getClass().getSimpleName());
+        }
+        NavigableSet<T> navigable = (NavigableSet<T>) this.delegate;
+        return navigable.lower(e);
+    }
+
+    @Override
+    public T floor(T e)
+    {
+        if (!(this.delegate instanceof NavigableSet))
+        {
+            throw new UnsupportedOperationException(".floor() not supported on delegate " + this.delegate.getClass().getSimpleName());
+        }
+        NavigableSet<T> navigable = (NavigableSet<T>) this.delegate;
+        return navigable.floor(e);
+    }
+
+    @Override
+    public T ceiling(T e)
+    {
+        if (!(this.delegate instanceof NavigableSet))
+        {
+            throw new UnsupportedOperationException(".ceiling() not supported on delegate " + this.delegate.getClass().getSimpleName());
+        }
+        NavigableSet<T> navigable = (NavigableSet<T>) this.delegate;
+        return navigable.ceiling(e);
+    }
+
+    @Override
+    public T higher(T e)
+    {
+        if (!(this.delegate instanceof NavigableSet))
+        {
+            throw new UnsupportedOperationException(".higher() not supported on delegate " + this.delegate.getClass().getSimpleName());
+        }
+        NavigableSet<T> navigable = (NavigableSet<T>) this.delegate;
+        return navigable.higher(e);
+    }
+
+    @Override
+    public T pollFirst()
+    {
+        if (!(this.delegate instanceof NavigableSet))
+        {
+            throw new UnsupportedOperationException(".pollFirst() not supported on delegate " + this.delegate.getClass().getSimpleName());
+        }
+        NavigableSet<T> navigable = (NavigableSet<T>) this.delegate;
+        return navigable.pollFirst();
+    }
+
+    @Override
+    public T pollLast()
+    {
+        if (!(this.delegate instanceof NavigableSet))
+        {
+            throw new UnsupportedOperationException(".pollLast() not supported on delegate " + this.delegate.getClass().getSimpleName());
+        }
+        NavigableSet<T> navigable = (NavigableSet<T>) this.delegate;
+        return navigable.pollLast();
+    }
+
+    @Override
     public <B> LazyIterable<Pair<T, B>> cartesianProduct(SetIterable<B> set)
     {
         return SetIterables.cartesianProduct(this, set);
@@ -580,6 +669,39 @@ public final class SortedSetAdapter<T>
     public MutableSortedSet<T> tailSet(T fromElement)
     {
         return SortedSetAdapter.adapt(this.delegate.tailSet(fromElement));
+    }
+
+    @Override
+    public MutableSortedSet<T> subSet(T fromElement, boolean fromInclusive, T toElement, boolean toInclusive)
+    {
+        if (!(this.delegate instanceof NavigableSet))
+        {
+            throw new UnsupportedOperationException(".subSet() not supported on delegate " + this.delegate.getClass().getSimpleName());
+        }
+        NavigableSet<T> navigable = (NavigableSet<T>) this.delegate;
+        return SortedSetAdapter.adapt(navigable.subSet(fromElement, fromInclusive, toElement, toInclusive));
+    }
+
+    @Override
+    public MutableSortedSet<T> headSet(T toElement, boolean inclusive)
+    {
+        if (!(this.delegate instanceof NavigableSet))
+        {
+            throw new UnsupportedOperationException(".headSet() not supported on delegate " + this.delegate.getClass().getSimpleName());
+        }
+        NavigableSet<T> navigable = (NavigableSet<T>) this.delegate;
+        return SortedSetAdapter.adapt(navigable.headSet(toElement, inclusive));
+    }
+
+    @Override
+    public MutableSortedSet<T> tailSet(T fromElement, boolean inclusive)
+    {
+        if (!(this.delegate instanceof NavigableSet))
+        {
+            throw new UnsupportedOperationException(".tailSet() not supported on delegate " + this.delegate.getClass().getSimpleName());
+        }
+        NavigableSet<T> navigable = (NavigableSet<T>) this.delegate;
+        return SortedSetAdapter.adapt(navigable.tailSet(fromElement, inclusive));
     }
 
     @Override
@@ -645,12 +767,6 @@ public final class SortedSetAdapter<T>
     }
 
     @Override
-    public MutableSortedSet<T> toReversed()
-    {
-        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".toReversed() not implemented yet");
-    }
-
-    @Override
     public MutableSortedSet<T> take(int count)
     {
         return IterableIterate.take(this.getDelegate(), Math.min(this.size(), count), TreeSortedSet.newSet(this.comparator()));
@@ -660,18 +776,6 @@ public final class SortedSetAdapter<T>
     public MutableSortedSet<T> drop(int count)
     {
         return IterableIterate.drop(this.getDelegate(), count, TreeSortedSet.newSet(this.comparator()));
-    }
-
-    @Override
-    public void reverseForEach(Procedure<? super T> procedure)
-    {
-        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".reverseForEach() not implemented yet");
-    }
-
-    @Override
-    public void reverseForEachWithIndex(ObjectIntProcedure<? super T> procedure)
-    {
-        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".reverseForEachWithIndex() not implemented yet");
     }
 
     @Override

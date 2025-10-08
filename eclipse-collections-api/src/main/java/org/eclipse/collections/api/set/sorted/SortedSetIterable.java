@@ -11,6 +11,7 @@
 package org.eclipse.collections.api.set.sorted;
 
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.concurrent.ExecutorService;
 
 import org.eclipse.collections.api.annotation.Beta;
@@ -28,6 +29,7 @@ import org.eclipse.collections.api.block.function.primitive.ShortFunction;
 import org.eclipse.collections.api.block.predicate.Predicate;
 import org.eclipse.collections.api.block.predicate.Predicate2;
 import org.eclipse.collections.api.block.procedure.Procedure;
+import org.eclipse.collections.api.block.procedure.primitive.ObjectIntProcedure;
 import org.eclipse.collections.api.list.ListIterable;
 import org.eclipse.collections.api.list.primitive.BooleanList;
 import org.eclipse.collections.api.list.primitive.ByteList;
@@ -222,4 +224,51 @@ public interface SortedSetIterable<T>
     @Override
     @Beta
     ParallelSortedSetIterable<T> asParallel(ExecutorService executorService, int batchSize);
+
+    T lower(T e);
+
+    T floor(T e);
+
+    T ceiling(T e);
+
+    T higher(T e);
+
+    Iterator<T> descendingIterator();
+
+    SortedSetIterable<T> descendingSet();
+
+    SortedSetIterable<T> subSet(T fromElement, T toElement);
+
+    SortedSetIterable<T> subSet(T fromElement, boolean fromInclusive, T toElement, boolean toInclusive);
+
+    SortedSetIterable<T> headSet(T toElement);
+
+    SortedSetIterable<T> headSet(T toElement, boolean inclusive);
+
+    SortedSetIterable<T> tailSet(T fromElement);
+
+    SortedSetIterable<T> tailSet(T fromElement, boolean inclusive);
+
+    @Override
+    default void reverseForEach(Procedure<? super T> procedure)
+    {
+        this.descendingSet().forEach(procedure);
+    }
+
+    @Override
+    default void reverseForEachWithIndex(ObjectIntProcedure<? super T> procedure)
+    {
+        this.descendingSet().forEachWithIndex(procedure);
+    }
+
+    @Override
+    default int detectLastIndex(Predicate<? super T> predicate)
+    {
+        int index = this.descendingSet().detectIndex(predicate);
+        if (index < 0)
+        {
+            return -1;
+        }
+        return this.size() - 1 - index;
+    }
 }

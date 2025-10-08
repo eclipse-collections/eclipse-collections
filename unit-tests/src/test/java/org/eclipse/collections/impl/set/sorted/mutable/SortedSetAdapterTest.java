@@ -90,21 +90,27 @@ public class SortedSetAdapterTest extends AbstractSortedSetTestCase
     @Test
     public void reverseForEach()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.newWith(1, 2, 3).reverseForEach(each -> fail("Should not be evaluated")));
+        MutableList<Integer> result = FastList.newList();
+        this.newWith(1, 2, 3).reverseForEach(result::add);
+        assertEquals(FastList.newListWith(3, 2, 1), result);
     }
 
     @Override
     @Test
     public void reverseForEachWithIndex()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.newWith(1, 2, 3).reverseForEachWithIndex((each, index) -> fail("Should not be evaluated")));
+        MutableList<String> result = FastList.newList();
+        this.newWith(1, 2, 3).reverseForEachWithIndex((each, index) -> result.add(each + ":" + index));
+        assertEquals(FastList.newListWith("3:0", "2:1", "1:2"), result);
     }
 
     @Override
     @Test
     public void toReversed()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.newWith(1, 2, 3).toReversed());
+        MutableSortedSet<Integer> set = this.newWith(1, 2, 3, 4, 5);
+        MutableSortedSet<Integer> reversed = set.toReversed();
+        assertEquals(FastList.newListWith(5, 4, 3, 2, 1), reversed.toList());
     }
 
     @Test
