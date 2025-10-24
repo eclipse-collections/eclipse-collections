@@ -16,39 +16,36 @@ import org.eclipse.collections.api.factory.set.MultiReaderSetFactory;
 import org.eclipse.collections.api.factory.set.MutableSetFactory;
 
 /**
- * This class should be used to create instances of MutableSet, ImmutableSet and FixedSizeSet
+ * A factory class providing convenient static access to create various
+ * types of {@link org.eclipse.collections.api.set.Set} and related set factories.
  * <p>
- * Mutable Examples:
+ * This class serves as the main entry point for creating instances of:
+ * <ul>
+ * <li>{@link org.eclipse.collections.api.set.MutableSet} (via {@link #mutable})</li>
+ * <li>{@link org.eclipse.collections.api.set.ImmutableSet} (via {@link #immutable})</li>
+ * <li>Fixed-size sets (via {@link #fixedSize})</li>
+ * <li>Multi-reader sets (via {@link #multiReader})</li>
+ * </ul>
+ * <p>
+ * The factories support creating empty sets, singleton sets, and pre-populated sets
+ * with optimized data structures from the Eclipse Collections framework.
+ * </p>
  *
- * <pre>
- * MutableSet&lt;String&gt; emptySet = Sets.mutable.empty();
- * MutableSet&lt;String&gt; setWith = Sets.mutable.with("a", "b", "c");
- * MutableSet&lt;String&gt; setOf = Sets.mutable.of("a", "b", "c");
- * </pre>
+ * Example Usage:
+ * <pre>{@code
+ * // Creating a mutable set
+ * MutableSet<String> names = Sets.mutable.with("Alice", "Bob", "Charlie");
  *
- * Immutable Examples:
+ * // Creating an immutable set
+ * ImmutableSet<Integer> numbers = Sets.immutable.of(1, 2, 3);
+ * }</pre>
  *
- * <pre>
- * ImmutableSet&lt;String&gt; emptySet = Sets.immutable.empty();
- * ImmutableSet&lt;String&gt; setWith = Sets.immutable.with("a", "b", "c");
- * ImmutableSet&lt;String&gt; setOf = Sets.immutable.of("a", "b", "c");
- * </pre>
+ * @see org.eclipse.collections.api.factory.set.MutableSetFactory
+ * @see org.eclipse.collections.api.factory.set.ImmutableSetFactory
+ * @see org.eclipse.collections.api.factory.set.FixedSizeSetFactory
+ * @see org.eclipse.collections.api.factory.set.MultiReaderSetFactory
  *
- * FixedSize Examples:
- *
- * <pre>
- * FixedSizeSet&lt;String&gt; emptySet = Sets.fixedSize.empty();
- * FixedSizeSet&lt;String&gt; setWith = Sets.fixedSize.with("a", "b", "c");
- * FixedSizeSet&lt;String&gt; setOf = Sets.fixedSize.of("a", "b", "c");
- * </pre>
- *
- * MultiReader Examples:
- *
- * <pre>
- * MultiReaderSet&lt;String&gt; emptySet = Sets.multiReader.empty();
- * MultiReaderSet&lt;String&gt; setWith = Sets.multiReader.with("a", "b", "c");
- * MultiReaderSet&lt;String&gt; setOf = Sets.multiReader.of("a", "b", "c");
- * </pre>
+ * @since 1.0
  */
 @SuppressWarnings("ConstantNamingConvention")
 @aQute.bnd.annotation.spi.ServiceConsumer(value = ImmutableSetFactory.class)
