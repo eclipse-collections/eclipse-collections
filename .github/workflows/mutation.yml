@@ -44,7 +44,7 @@ jobs:
         env:
           MAVEN_OPTS: '-Xmx1g'
       - name: Archive pitest reports
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: pit-reports
           path: unit-tests/target/pit-reports
