@@ -33,8 +33,21 @@ import org.eclipse.collections.api.set.ImmutableSet;
 import org.eclipse.collections.api.tuple.Pair;
 
 /**
- * A {@link BiMap} whose contents cannot be altered after initialization.
+ * A {@link BiMap} whose contents cannot be altered after initialization. ImmutableBiMap enforces uniqueness
+ * on both keys and values, and all operations that would modify the map return new immutable instances instead.
+ * The inverse view is also immutable.
  *
+ * <p><b>Usage Examples:</b></p>
+ * <pre>{@code
+ * ImmutableBiMap<String, Integer> biMap = BiMaps.immutable.of("A", 1, "B", 2, "C", 3);
+ * ImmutableBiMap<Integer, String> inverse = biMap.inverse();
+ * String key = inverse.get(2); // Returns "B"
+ * ImmutableBiMap<String, Integer> updated = biMap.newWithKeyValue("D", 4);
+ * // Original biMap is unchanged
+ * }</pre>
+ *
+ * @param <K> the type of keys in the map
+ * @param <V> the type of values in the map
  * @since 4.2
  */
 public interface ImmutableBiMap<K, V> extends BiMap<K, V>, ImmutableMapIterable<K, V>

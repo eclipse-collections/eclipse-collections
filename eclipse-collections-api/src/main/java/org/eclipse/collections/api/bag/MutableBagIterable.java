@@ -26,6 +26,21 @@ import org.eclipse.collections.api.set.MutableSetIterable;
 import org.eclipse.collections.api.tuple.Pair;
 import org.eclipse.collections.api.tuple.primitive.ObjectIntPair;
 
+/**
+ * MutableBagIterable is the common parent interface for MutableBag and MutableSortedBag.
+ * It combines Bag with MutableCollection, providing mutating operations for managing element
+ * occurrences in a bag. All modifications alter the bag in place.
+ *
+ * <p><b>Usage Examples:</b></p>
+ * <pre>{@code
+ * MutableBagIterable<String> bag = Bags.mutable.empty();
+ * bag.add("A");
+ * bag.addOccurrences("A", 2); // "A" now has 3 occurrences
+ * bag.removeOccurrences("A", 1); // "A" now has 2 occurrences
+ * }</pre>
+ *
+ * @param <T> the type of elements in the bag
+ */
 public interface MutableBagIterable<T> extends Bag<T>, MutableCollection<T>
 {
     /**

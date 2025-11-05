@@ -44,6 +44,20 @@ import org.eclipse.collections.api.tuple.Pair;
 import org.eclipse.collections.api.tuple.primitive.ObjectIntPair;
 
 /**
+ * ImmutableBag is an unordered collection that allows duplicates and tracks the count of each element.
+ * Unlike MutableBag, all operations that would modify the bag return new immutable instances instead,
+ * preserving the original bag.
+ *
+ * <p><b>Usage Examples:</b></p>
+ * <pre>{@code
+ * ImmutableBag<String> bag = Bags.immutable.of("A", "B", "A", "C", "A");
+ * ImmutableBag<String> updated = bag.newWith("D");
+ * // Original bag is unchanged
+ * int countOfA = bag.occurrencesOf("A"); // Returns 3
+ * ImmutableBag<String> filtered = bag.select(s -> s.compareTo("B") >= 0);
+ * }</pre>
+ *
+ * @param <T> the type of elements in the bag
  * @since 1.0
  */
 public interface ImmutableBag<T> extends UnsortedBag<T>, ImmutableBagIterable<T>

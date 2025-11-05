@@ -80,11 +80,43 @@ import org.eclipse.collections.api.tuple.Pair;
 import org.eclipse.collections.impl.map.mutable.UnifiedMap;
 import org.eclipse.collections.impl.utility.LazyIterate;
 
+/**
+ * AbstractSynchronizedRichIterable provides a thread-safe wrapper around RichIterable implementations.
+ * All operations are synchronized using the provided lock object to ensure thread-safety for concurrent access.
+ * <p>
+ * This abstract base class delegates all RichIterable operations to an underlying delegate while
+ * synchronizing on a lock object. Subclasses should extend this class to create synchronized versions
+ * of specific RichIterable implementations.
+ * </p>
+ * <p><b>Thread Safety:</b> This class is thread-safe. All operations are synchronized.</p>
+ * <p><b>Performance:</b> Synchronization overhead applies to all operations. For better concurrent
+ * performance with high contention, consider using concurrent collections instead.</p>
+ * <p><b>Usage Examples:</b></p>
+ * <pre>{@code
+ * RichIterable<String> unsafeIterable = FastList.newListWith("a", "b", "c");
+ * Object lock = new Object();
+ * // Wrap with synchronized version
+ * AbstractSynchronizedRichIterable<String> syncIterable = new SynchronizedMutableCollection<>(unsafeIterable, lock);
+ *
+ * // All operations are now thread-safe
+ * syncIterable.forEach(System.out::println);
+ * }</pre>
+ *
+ * @param <T> the type of elements in this iterable
+ * @since 1.0
+ */
 public abstract class AbstractSynchronizedRichIterable<T> implements RichIterable<T>
 {
     protected final Object lock;
     protected final RichIterable<T> delegate;
 
+    /**
+     * Constructs a new AbstractSynchronizedRichIterable wrapping the specified delegate with the given lock.
+     *
+     * @param delegate the RichIterable to wrap and synchronize
+     * @param lock the object to use for synchronization; if null, this instance is used as the lock
+     * @throws IllegalArgumentException if delegate is null
+     */
     protected AbstractSynchronizedRichIterable(RichIterable<T> delegate, Object lock)
     {
         if (delegate == null)
@@ -96,16 +128,35 @@ public abstract class AbstractSynchronizedRichIterable<T> implements RichIterabl
         this.lock = lock == null ? this : lock;
     }
 
+    /**
+     * Returns the underlying delegate RichIterable.
+     *
+     * @return the delegate iterable being synchronized
+     */
     protected RichIterable<T> getDelegate()
     {
         return this.delegate;
     }
 
+    /**
+     * Returns the lock object used for synchronization.
+     *
+     * @return the lock object
+     */
     protected Object getLock()
     {
         return this.lock;
     }
 
+    /**
+     * Compares the specified object with this synchronized iterable for equality.
+     * Returns true if the specified object is this instance, the delegate instance,
+     * or is equal to the delegate according to its equals method.
+     * <p>This method is synchronized to ensure thread-safe access to the delegate.</p>
+     *
+     * @param obj the object to be compared for equality with this synchronized iterable
+     * @return {@code true} if the specified object is equal to this synchronized iterable
+     */
     @Override
     public boolean equals(Object obj)
     {

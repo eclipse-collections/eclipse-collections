@@ -28,6 +28,16 @@ import org.eclipse.collections.api.tuple.Pair;
  * ordering if {@code comparator()} returns {@code null}. Operations that would sort the collection can be faster than
  * O(n log n). For example {@link #toSortedList()} takes O(n) time.
  *
+ * <p><b>Usage Examples:</b></p>
+ * <pre>{@code
+ * SortedIterable<String> sorted = SortedSets.mutable.of("C", "A", "B");
+ * // Iteration order is A, B, C (sorted)
+ * String min = sorted.min(); // Returns "A" in O(1) time
+ * SortedIterable<String> headSet = sorted.takeWhile(s -> s.compareTo("B") < 0);
+ * // headSet contains ["A"]
+ * }</pre>
+ *
+ * @param <T> the type of elements in the iterable
  * @since 5.0
  */
 public interface SortedIterable<T> extends OrderedIterable<T>

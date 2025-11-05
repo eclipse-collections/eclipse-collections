@@ -23,6 +23,20 @@ import org.eclipse.collections.api.partition.bag.PartitionImmutableBagIterable;
 import org.eclipse.collections.api.set.ImmutableSetIterable;
 import org.eclipse.collections.api.tuple.Pair;
 
+/**
+ * ImmutableBagIterable is the common parent interface for ImmutableBag and ImmutableSortedBag.
+ * It combines the Bag interface with ImmutableCollection, providing read-only access to bag operations
+ * with methods that return new immutable instances when modifications would normally occur.
+ *
+ * <p><b>Usage Examples:</b></p>
+ * <pre>{@code
+ * ImmutableBagIterable<String> bag = Bags.immutable.of("A", "B", "A", "C");
+ * ImmutableBagIterable<String> filtered = bag.select(s -> s.compareTo("B") >= 0);
+ * int count = bag.occurrencesOf("A"); // Returns 2
+ * }</pre>
+ *
+ * @param <T> the type of elements in the bag
+ */
 public interface ImmutableBagIterable<T> extends Bag<T>, ImmutableCollection<T>
 {
     @Override

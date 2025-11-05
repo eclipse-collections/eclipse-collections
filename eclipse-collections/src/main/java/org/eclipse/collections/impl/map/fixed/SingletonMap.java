@@ -35,6 +35,26 @@ import org.eclipse.collections.api.tuple.Pair;
 import org.eclipse.collections.impl.tuple.ImmutableEntry;
 import org.eclipse.collections.impl.tuple.Tuples;
 
+/**
+ * SingletonMap is a memory-efficient implementation of a fixed-size map with exactly one entry.
+ * <p>
+ * This class uses minimal memory by storing the single key-value pair directly as fields,
+ * avoiding the overhead of hash table structures. It follows copy-on-write semantics for modifications.
+ * <p>
+ * <b>Key Characteristics:</b>
+ * <ul>
+ *   <li>Size is always 1</li>
+ *   <li>Stores one key-value pair directly as fields</li>
+ *   <li>O(1) lookup, always comparing against the single key</li>
+ *   <li>withKeyValue replaces the value if key matches, otherwise returns DoubletonMap</li>
+ *   <li>withoutKey returns EmptyMap if key matches, otherwise returns this</li>
+ *   <li>Supports null keys and values</li>
+ *   <li>Externalizable for efficient serialization</li>
+ * </ul>
+ *
+ * @param <K> the type of the key
+ * @param <V> the type of the value
+ */
 final class SingletonMap<K, V>
         extends AbstractMemoryEfficientMutableMap<K, V>
         implements Externalizable

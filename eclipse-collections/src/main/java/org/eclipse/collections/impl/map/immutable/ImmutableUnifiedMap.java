@@ -29,7 +29,42 @@ import org.eclipse.collections.impl.parallel.BatchIterable;
 import org.eclipse.collections.impl.set.mutable.UnmodifiableMutableSet;
 
 /**
+ * ImmutableUnifiedMap is an immutable hash table-based implementation of {@link ImmutableMap}.
+ * <p>
+ * This implementation uses a {@link UnifiedMap} as its underlying data structure, providing
+ * excellent performance for larger maps (5+ entries). It is optimized for memory efficiency
+ * and fast lookups.
+ * <p>
+ * <b>Key Characteristics:</b>
+ * <ul>
+ *   <li>Immutable - cannot be modified after creation</li>
+ *   <li>Thread-safe - safe for concurrent access</li>
+ *   <li>O(1) average case lookup, insert (during creation), and removal operations</li>
+ *   <li>Uses open addressing with quadratic probing</li>
+ *   <li>Supports batch iteration for parallel processing</li>
+ *   <li>Serializable for persistence</li>
+ *   <li>Null-safe - supports null keys and values</li>
+ * </ul>
+ * <p>
+ * For maps with 0-4 entries, consider using the specialized implementations (ImmutableSingletonMap,
+ * ImmutableDoubletonMap, etc.) which are more memory-efficient.
+ * <p><b>Usage Examples:</b></p>
+ * <pre>{@code
+ * ImmutableMap<String, Integer> map = new ImmutableUnifiedMap<>(
+ *     Tuples.pair("a", 1),
+ *     Tuples.pair("b", 2),
+ *     Tuples.pair("c", 3),
+ *     Tuples.pair("d", 4),
+ *     Tuples.pair("e", 5)
+ * );
+ *
+ * ImmutableMap<String, Integer> fromExisting = new ImmutableUnifiedMap<>(existingMap);
+ * }</pre>
+ *
+ * @param <K> the type of keys maintained by this map
+ * @param <V> the type of mapped values
  * @see ImmutableMap
+ * @see UnifiedMap
  */
 public class ImmutableUnifiedMap<K, V>
         extends AbstractImmutableMap<K, V> implements BatchIterable<V>, Serializable

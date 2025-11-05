@@ -19,6 +19,18 @@ import org.eclipse.collections.api.block.procedure.primitive.ObjectIntProcedure;
 import org.eclipse.collections.api.multimap.bag.BagMultimap;
 
 /**
+ * ParallelBag provides parallel iteration capabilities for Bag data structures. Operations on
+ * ParallelBag are executed in parallel across multiple threads for improved performance on
+ * large data sets. Element occurrences are maintained during parallel operations.
+ *
+ * <p><b>Usage Examples:</b></p>
+ * <pre>{@code
+ * ParallelBag<String> parallelBag = bag.asParallel(executor, batchSize);
+ * parallelBag.forEachWithOccurrences((element, count) ->
+ *     System.out.println(element + ": " + count));
+ * }</pre>
+ *
+ * @param <T> the type of elements in the bag
  * @since 5.0
  */
 @Beta

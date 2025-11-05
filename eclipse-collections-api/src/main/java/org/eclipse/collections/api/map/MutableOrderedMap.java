@@ -40,6 +40,21 @@ import org.eclipse.collections.api.multimap.list.MutableListMultimap;
 import org.eclipse.collections.api.partition.list.PartitionMutableList;
 import org.eclipse.collections.api.tuple.Pair;
 
+/**
+ * A MutableOrderedMap is a mutable map that maintains the insertion order of its keys.
+ * It provides all the functionality of OrderedMap with mutating operations that modify the map in place.
+ * Common implementations include LinkedHashMap.
+ *
+ * <p><b>Usage Examples:</b></p>
+ * <pre>{@code
+ * MutableOrderedMap<String, Integer> map = OrderedMaps.mutable.empty();
+ * map.put("A", 1);
+ * map.put("B", 2);
+ * map.put("C", 3);
+ * MutableOrderedMap<String, Integer> filtered = map.select((k, v) -> v > 1);
+ * // filtered maintains insertion order: "B" -> 2, "C" -> 3
+ * }</pre>
+ */
 public interface MutableOrderedMap<K, V> extends OrderedMap<K, V>, MutableMapIterable<K, V>
 {
     /**

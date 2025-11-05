@@ -16,9 +16,31 @@ import java.util.Collection;
 import org.eclipse.collections.api.collection.MutableCollection;
 
 /**
- * An unmodifiable view of a collection.
+ * UnmodifiableMutableCollection is a concrete implementation that provides an unmodifiable
+ * view of a collection. It prevents any modifications to the wrapped collection.
+ * <p>
+ * This class extends AbstractUnmodifiableMutableCollection and adds serialization support.
+ * Use the {@link #of(Collection)} factory method to create instances, which will adapt
+ * JDK collections or wrap Eclipse Collections appropriately.
+ * </p>
+ * <p><b>Thread Safety:</b> Not inherently thread-safe. Thread-safety depends on the wrapped collection.</p>
+ * <p><b>Serialization:</b> Serializable. Uses a custom serialization proxy.</p>
+ * <p><b>Usage Examples:</b></p>
+ * <pre>{@code
+ * List<String> jdkList = new ArrayList<>(Arrays.asList("a", "b", "c"));
+ * MutableCollection<String> unmodifiable = UnmodifiableMutableCollection.of(jdkList);
  *
+ * // Read operations work normally
+ * unmodifiable.forEach(System.out::println);
+ * int size = unmodifiable.size();
+ *
+ * // Modification attempts throw UnsupportedOperationException
+ * // unmodifiable.add("d"); // Throws UnsupportedOperationException
+ * }</pre>
+ *
+ * @param <T> the type of elements in this collection
  * @see MutableCollection#asUnmodifiable()
+ * @since 1.0
  */
 public class UnmodifiableMutableCollection<T>
         extends AbstractUnmodifiableMutableCollection<T>

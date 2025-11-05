@@ -20,6 +20,27 @@ import org.eclipse.collections.impl.parallel.ObjectIntProcedureFactory;
 import org.eclipse.collections.impl.utility.ArrayListIterate;
 import org.eclipse.collections.impl.utility.ListIterate;
 
+/**
+ * A ForkJoinTask implementation that executes an ObjectIntProcedure on a section of a List.
+ * <p>
+ * This task processes a contiguous range of list elements, applying an {@link ObjectIntProcedure}
+ * that receives both the element and its index. This is useful for parallel operations that need
+ * index information, such as indexed transformations or position-aware processing.
+ * </p>
+ * <p>
+ * The task optimizes execution based on the list type:
+ * <ul>
+ * <li>For {@link ListIterable}: Uses the optimized forEachWithIndex method</li>
+ * <li>For {@link ArrayList}: Uses ArrayListIterate.forEachWithIndex for efficient random access</li>
+ * <li>For other List types: Uses ListIterate.forEachWithIndex</li>
+ * </ul>
+ * </p>
+ *
+ * @param <T> the type of elements in the list
+ * @param <PT> the type of ObjectIntProcedure that processes elements with their indices
+ * @see FJListObjectIntProcedureRunner
+ * @see ObjectIntProcedure
+ */
 public class FJListObjectIntProcedureTask<T, PT extends ObjectIntProcedure<? super T>> extends ForkJoinTask<PT>
 {
     private final ObjectIntProcedureFactory<PT> procedureFactory;
@@ -30,7 +51,19 @@ public class FJListObjectIntProcedureTask<T, PT extends ObjectIntProcedure<? sup
     private final FJListObjectIntProcedureRunner<T, PT> taskRunner;
 
     /**
-     * Creates an array of VoidBlockFJTasks wrapping VoidBlocks created by the specified VoidBlockFactory.
+     * Creates a ForkJoinTask for executing an ObjectIntProcedure on a specific section of a List.
+     * <p>
+     * The task processes elements from the calculated start index to the end index.
+     * If this is the last task (isLast = true), it processes all remaining elements
+     * to ensure complete coverage of the list.
+     * </p>
+     *
+     * @param newFJTaskRunner the runner that coordinates this task with other parallel tasks
+     * @param newBlockFactory the factory that creates the ObjectIntProcedure instance for this task
+     * @param list the list containing elements to process
+     * @param index the section index this task will process (0-based)
+     * @param sectionSize the number of elements per section
+     * @param isLast true if this is the last task, which should process all remaining elements
      */
     public FJListObjectIntProcedureTask(
             FJListObjectIntProcedureRunner<T, PT> newFJTaskRunner, ObjectIntProcedureFactory<PT> newBlockFactory,
@@ -43,6 +76,24 @@ public class FJListObjectIntProcedureTask<T, PT extends ObjectIntProcedure<? sup
         this.end = isLast ? this.list.size() - 1 : this.start + sectionSize - 1;
     }
 
+    /**
+     * Executes the task by creating an ObjectIntProcedure instance and applying it to the assigned
+     * section of the list. This method is called by the ForkJoin framework to perform the actual work.
+     * <p>
+     * The execution performs the following steps:
+     * <ol>
+     * <li>Creates a new ObjectIntProcedure instance using the procedure factory</li>
+     * <li>Processes the assigned range of elements using the most efficient iteration method for the list type</li>
+     * <li>Notifies the task runner upon completion or failure</li>
+     * </ol>
+     * </p>
+     * <p>
+     * The procedure receives both the element and its index for each element in the range [start, end].
+     * Any exceptions thrown during execution are caught and reported to the task runner.
+     * </p>
+     *
+     * @return true to indicate the task has completed
+     */
     @Override
     protected boolean exec()
     {
@@ -73,12 +124,32 @@ public class FJListObjectIntProcedureTask<T, PT extends ObjectIntProcedure<? sup
         return true;
     }
 
+    /**
+     * Returns the ObjectIntProcedure instance created and executed by this task.
+     * <p>
+     * This method is called after the task completes to retrieve the procedure,
+     * which may contain accumulated state from processing its section of elements.
+     * The procedure can then be combined with results from other tasks.
+     * </p>
+     *
+     * @return the procedure instance, or null if the task has not yet executed
+     */
     @Override
     public PT getRawResult()
     {
         return this.procedure;
     }
 
+    /**
+     * This operation is not supported for this task type.
+     * <p>
+     * The result (procedure) is created internally during task execution and cannot be
+     * set externally.
+     * </p>
+     *
+     * @param value the value to set (ignored)
+     * @throws UnsupportedOperationException always thrown as this operation is not supported
+     */
     @Override
     protected void setRawResult(PT value)
     {

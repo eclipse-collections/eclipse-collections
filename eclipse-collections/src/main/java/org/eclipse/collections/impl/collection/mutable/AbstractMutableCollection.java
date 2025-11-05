@@ -45,6 +45,33 @@ import org.eclipse.collections.impl.block.factory.Procedures2;
 import org.eclipse.collections.impl.utility.Iterate;
 import org.eclipse.collections.impl.utility.internal.IterableIterate;
 
+/**
+ * AbstractMutableCollection is an abstract base class for mutable collection implementations
+ * in Eclipse Collections. It provides default implementations of common MutableCollection methods.
+ * <p>
+ * This class extends AbstractRichIterable and implements MutableCollection, providing reusable
+ * implementations for operations like removeIf, addAll, removeAll, chunk, and various aggregation
+ * methods. Subclasses can inherit these implementations to reduce code duplication.
+ * </p>
+ * <p><b>Thread Safety:</b> Not thread-safe. Subclasses are responsible for their own synchronization if needed.</p>
+ * <p><b>Performance:</b> Uses optimized iteration patterns from Eclipse Collections utilities.
+ * Operations delegate to efficient internal implementations when possible.</p>
+ * <p><b>Usage Examples:</b></p>
+ * <pre>{@code
+ * // Typically extended by concrete collection classes
+ * public class MyCollection<T> extends AbstractMutableCollection<T> {
+ *     // Implement required abstract methods
+ *     // Inherit default implementations for many operations
+ * }
+ *
+ * MutableCollection<Integer> numbers = new MyCollection<>();
+ * numbers.addAll(Lists.mutable.with(1, 2, 3, 4, 5));
+ * numbers.removeIf(n -> n % 2 == 0); // Uses inherited implementation
+ * }</pre>
+ *
+ * @param <T> the type of elements in this collection
+ * @since 1.0
+ */
 public abstract class AbstractMutableCollection<T>
         extends AbstractRichIterable<T>
         implements MutableCollection<T>

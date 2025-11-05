@@ -80,14 +80,34 @@ public final class FJIterate
     }
 
     /**
-     * Iterate over the collection specified, in parallel batches using default runtime parameter values. The
-     * {@code ObjectIntProcedure} used must be stateless, or use concurrent aware objects if they are to be shared.
+     * Iterates over the collection in parallel batches, passing each element and its index to the procedure.
      * <p>
-     * e.g.
-     * <pre>
-     * Map&lt;Integer, Object&gt; chm = new ConcurrentHashMap&lt;Integer, Object&gt;();
-     * FJIterate.<b>forEachWithIndex</b>(collection, (each, index) -&gt; chm.put(index, each));
-     * </pre>
+     * This method divides the collection into batches and processes them in parallel using the default
+     * ForkJoin pool. The {@code ObjectIntProcedure} receives both the element and its index position.
+     * </p>
+     * <p>
+     * The procedure must be either stateless or use thread-safe data structures if state is shared
+     * across parallel executions.
+     * </p>
+     * <p><b>Usage Examples:</b></p>
+     * <pre>{@code
+     * // Example 1: Build an index-to-element map in parallel
+     * MutableList<String> names = Lists.mutable.with("Alice", "Bob", "Charlie", "David");
+     * ConcurrentHashMap<Integer, String> indexMap = new ConcurrentHashMap<>();
+     * FJIterate.forEachWithIndex(names, (name, index) -> indexMap.put(index, name));
+     *
+     * // Example 2: Perform indexed updates to a thread-safe collection
+     * ConcurrentHashMap<Integer, Integer> squaresMap = new ConcurrentHashMap<>();
+     * FJIterate.forEachWithIndex(
+     *     IntInterval.oneTo(1000).toList(),
+     *     (num, index) -> squaresMap.put(index, num * num)
+     * );
+     * }</pre>
+     *
+     * @param <T> the type of elements in the iterable
+     * @param iterable the collection to iterate over
+     * @param procedure the procedure to apply to each element with its index
+     * @see #forEachWithIndex(Iterable, ObjectIntProcedure, ForkJoinPool)
      */
     public static <T> void forEachWithIndex(Iterable<T> iterable, ObjectIntProcedure<? super T> procedure)
     {
@@ -222,14 +242,38 @@ public final class FJIterate
     }
 
     /**
-     * Iterate over the collection specified in parallel batches using default runtime parameter values. The
-     * {@code Procedure} used must be stateless, or use concurrent aware objects if they are to be shared.
+     * Iterates over the collection in parallel batches, applying the procedure to each element.
      * <p>
-     * e.g.
-     * <pre>
-     * Map&lt;Object, Boolean&gt; chm = new ConcurrentHashMap&lt;Object, Boolean&gt;();
-     * FJIterate.<b>forEach</b>(collection, each -&gt; chm.put(each, Boolean.TRUE));
-     * </pre>
+     * This method divides the collection into batches and processes them in parallel using the default
+     * ForkJoin pool with default batch size (5000 elements) and task count. This is the primary method
+     * for parallel iteration and provides good performance for most use cases.
+     * </p>
+     * <p>
+     * The procedure must be either stateless or use thread-safe data structures if state is shared
+     * across parallel executions. For stateful operations, consider using thread-safe collections
+     * like ConcurrentHashMap or atomic variables.
+     * </p>
+     * <p><b>Usage Examples:</b></p>
+     * <pre>{@code
+     * // Example 1: Populate a concurrent map in parallel
+     * MutableList<Person> people = getLargeListOfPeople(); // 10,000+ people
+     * ConcurrentHashMap<String, Person> nameMap = new ConcurrentHashMap<>();
+     * FJIterate.forEach(people, person -> nameMap.put(person.getName(), person));
+     *
+     * // Example 2: Parallel processing with side effects to a thread-safe counter
+     * AtomicLong totalAge = new AtomicLong(0);
+     * FJIterate.forEach(people, person -> totalAge.addAndGet(person.getAge()));
+     *
+     * // Example 3: Send notifications in parallel
+     * MutableList<Customer> customers = getCustomers();
+     * FJIterate.forEach(customers, customer -> emailService.send(customer));
+     * }</pre>
+     *
+     * @param <T> the type of elements in the iterable
+     * @param iterable the collection to iterate over
+     * @param procedure the procedure to apply to each element
+     * @see #forEach(Iterable, Procedure, int, int)
+     * @see #forEach(Iterable, Procedure, ForkJoinPool)
      */
     public static <T> void forEach(Iterable<T> iterable, Procedure<? super T> procedure)
     {
@@ -463,11 +507,45 @@ public final class FJIterate
     }
 
     /**
-     * Same effect as {@link Iterate#select(Iterable, Predicate)}, but executed in parallel batches.
+     * Filters elements from the collection in parallel, returning those that satisfy the predicate.
+     * <p>
+     * This method processes the collection in parallel batches, testing each element against the predicate.
+     * Elements that satisfy the predicate are collected into a result collection of the same type as the
+     * input (List or Set). The order is preserved for ordered collections.
+     * </p>
+     * <p>
+     * This variant maintains ordering by default. For potentially better performance when order doesn't
+     * matter, use {@link #select(Iterable, Predicate, boolean)} with allowReorderedResult=true.
+     * </p>
+     * <p><b>Usage Examples:</b></p>
+     * <pre>{@code
+     * // Example 1: Filter a large list of products by price
+     * MutableList<Product> products = getProducts(); // 50,000+ products
+     * Collection<Product> expensiveProducts = FJIterate.select(
+     *     products,
+     *     product -> product.getPrice() > 100.0
+     * );
      *
-     * @return The selected elements. The Collection will be of the same type as the input (List or Set)
-     * and will be in the same order as the input (if it is an ordered collection).
-     * @see FJIterate#select(Iterable, Predicate, boolean)
+     * // Example 2: Find active users in a large dataset
+     * MutableList<User> users = getAllUsers();
+     * Collection<User> activeUsers = FJIterate.select(
+     *     users,
+     *     user -> user.isActive() && user.getLastLoginDate().isAfter(cutoffDate)
+     * );
+     *
+     * // Example 3: Filter with complex predicate
+     * Collection<Order> largeOrders = FJIterate.select(
+     *     orders,
+     *     order -> order.getTotalAmount() > 1000 && order.getItemCount() > 5
+     * );
+     * }</pre>
+     *
+     * @param <T> the type of elements in the iterable
+     * @param iterable the collection to filter
+     * @param predicate the condition elements must satisfy to be selected
+     * @return the selected elements in a collection of the same type as the input
+     * @see Iterate#select(Iterable, Predicate)
+     * @see #select(Iterable, Predicate, boolean)
      */
     public static <T> Collection<T> select(
             Iterable<T> iterable,
@@ -554,11 +632,34 @@ public final class FJIterate
     }
 
     /**
-     * Same effect as {@link Iterate#reject(Iterable, Predicate)}, but executed in parallel batches.
+     * Filters elements from the collection in parallel, returning those that do NOT satisfy the predicate.
+     * <p>
+     * This is the inverse of {@link #select(Iterable, Predicate)}. Elements that fail the predicate test
+     * are collected into a result collection of the same type as the input. The order is preserved for
+     * ordered collections.
+     * </p>
+     * <p><b>Usage Examples:</b></p>
+     * <pre>{@code
+     * // Example 1: Remove invalid entries from a large dataset
+     * MutableList<Record> records = getRecords(); // 100,000+ records
+     * Collection<Record> validRecords = FJIterate.reject(
+     *     records,
+     *     record -> record.hasErrors() || record.isExpired()
+     * );
      *
-     * @return The rejected elements. The Collection will be of the same type as the input (List or Set)
-     * and will be in the same order as the input (if it is an ordered collection).
-     * @see FJIterate#reject(Iterable, Predicate, boolean)
+     * // Example 2: Filter out inactive accounts
+     * Collection<Account> activeAccounts = FJIterate.reject(
+     *     allAccounts,
+     *     account -> account.getStatus() == Status.INACTIVE
+     * );
+     * }</pre>
+     *
+     * @param <T> the type of elements in the iterable
+     * @param iterable the collection to filter
+     * @param predicate the condition elements must NOT satisfy to be included
+     * @return the rejected elements in a collection of the same type as the input
+     * @see Iterate#reject(Iterable, Predicate)
+     * @see #reject(Iterable, Predicate, boolean)
      */
     public static <T> Collection<T> reject(
             Iterable<T> iterable,
@@ -617,9 +718,39 @@ public final class FJIterate
     }
 
     /**
-     * Same effect as {@link Iterate#count(Iterable, Predicate)}, but executed in parallel batches.
+     * Counts the number of elements in the collection that satisfy the predicate, processing in parallel.
+     * <p>
+     * This method evaluates the predicate for each element in parallel batches and returns the total
+     * count of elements that satisfy the condition. The counting is performed concurrently across
+     * multiple threads and the results are combined efficiently.
+     * </p>
+     * <p><b>Usage Examples:</b></p>
+     * <pre>{@code
+     * // Example 1: Count premium customers in a large dataset
+     * MutableList<Customer> customers = getAllCustomers(); // 500,000+ customers
+     * int premiumCount = FJIterate.count(
+     *     customers,
+     *     customer -> customer.getMembershipLevel() == Level.PREMIUM
+     * );
      *
-     * @return The number of elements which satisfy the Predicate.
+     * // Example 2: Count orders above threshold
+     * int largeOrderCount = FJIterate.count(
+     *     orders,
+     *     order -> order.getTotalAmount() > 1000.0
+     * );
+     *
+     * // Example 3: Count valid entries with complex condition
+     * int validCount = FJIterate.count(
+     *     records,
+     *     record -> record.isValid() && record.getTimestamp().isAfter(cutoff)
+     * );
+     * }</pre>
+     *
+     * @param <T> the type of elements in the iterable
+     * @param iterable the collection to count elements from
+     * @param predicate the condition elements must satisfy to be counted
+     * @return the number of elements that satisfy the predicate
+     * @see Iterate#count(Iterable, Predicate)
      */
     public static <T> int count(Iterable<T> iterable, Predicate<? super T> predicate)
     {
@@ -640,12 +771,47 @@ public final class FJIterate
     }
 
     /**
-     * Same effect as {@link Iterate#collect(Iterable, Function)},
-     * but executed in parallel batches.
+     * Transforms each element in the collection using the function, processing in parallel.
+     * <p>
+     * This method applies the transformation function to each element in parallel batches and collects
+     * the results into a new collection of the same type as the input (List or Set). The order is
+     * preserved for ordered collections.
+     * </p>
+     * <p>
+     * This is the parallel equivalent of {@link Iterate#collect(Iterable, Function)} and is highly
+     * effective for CPU-intensive transformations on large datasets.
+     * </p>
+     * <p><b>Usage Examples:</b></p>
+     * <pre>{@code
+     * // Example 1: Extract names from a large list of people
+     * MutableList<Person> people = getPeople(); // 100,000+ people
+     * Collection<String> names = FJIterate.collect(
+     *     people,
+     *     Person::getName
+     * );
      *
-     * @return The collected elements. The Collection will be of the same type as the input (List or Set)
-     * and will be in the same order as the input (if it is an ordered collection).
-     * @see FJIterate#collect(Iterable, Function, boolean)
+     * // Example 2: Transform objects with computation
+     * Collection<AnalysisResult> results = FJIterate.collect(
+     *     dataPoints,
+     *     point -> performComplexAnalysis(point)
+     * );
+     *
+     * // Example 3: Extract and transform nested properties
+     * Collection<BigDecimal> totalSales = FJIterate.collect(
+     *     customers,
+     *     customer -> customer.getOrders()
+     *         .collect(Order::getAmount)
+     *         .reduce(BigDecimal.ZERO, BigDecimal::add)
+     * );
+     * }</pre>
+     *
+     * @param <T> the type of elements in the input iterable
+     * @param <V> the type of elements in the result collection
+     * @param iterable the collection to transform
+     * @param function the transformation function to apply to each element
+     * @return a collection of transformed elements, same type as input
+     * @see Iterate#collect(Iterable, Function)
+     * @see #collect(Iterable, Function, boolean)
      */
     public static <T, V> Collection<V> collect(
             Iterable<T> iterable,
@@ -846,6 +1012,51 @@ public final class FJIterate
         return (R) combiner.getResult();
     }
 
+    /**
+     * Aggregates elements by key in parallel, applying a non-mutating aggregation function.
+     * <p>
+     * This method groups elements by the result of the groupBy function and aggregates values for each
+     * group using the provided aggregation function. The aggregator is non-mutating, meaning it returns
+     * a new value rather than modifying the existing one. A {@link ConcurrentHashMap} is used to safely
+     * handle concurrent updates during parallel processing.
+     * </p>
+     * <p><b>Usage Examples:</b></p>
+     * <pre>{@code
+     * // Example 1: Sum order totals by customer ID
+     * MutableList<Order> orders = getOrders(); // 1,000,000+ orders
+     * MutableMap<String, BigDecimal> salesByCustomer = FJIterate.aggregateBy(
+     *     orders,
+     *     Order::getCustomerId,
+     *     () -> BigDecimal.ZERO,
+     *     (sum, order) -> sum.add(order.getAmount())
+     * );
+     *
+     * // Example 2: Count items by category
+     * MutableMap<String, Integer> countsByCategory = FJIterate.aggregateBy(
+     *     products,
+     *     Product::getCategory,
+     *     () -> 0,
+     *     (count, product) -> count + 1
+     * );
+     *
+     * // Example 3: Collect maximum values by group
+     * MutableMap<Department, Integer> maxSalaries = FJIterate.aggregateBy(
+     *     employees,
+     *     Employee::getDepartment,
+     *     () -> 0,
+     *     (max, emp) -> Math.max(max, emp.getSalary())
+     * );
+     * }</pre>
+     *
+     * @param <T> the type of elements in the input iterable
+     * @param <K> the type of keys for grouping
+     * @param <V> the type of aggregated values
+     * @param iterable the collection to aggregate
+     * @param groupBy the function to determine the grouping key for each element
+     * @param zeroValueFactory factory to create the initial value for each key
+     * @param nonMutatingAggregator function that combines the current aggregated value with a new element
+     * @return a map with aggregated values for each key
+     */
     public static <T, K, V> MutableMap<K, V> aggregateBy(
             Iterable<T> iterable,
             Function<? super T, ? extends K> groupBy,
@@ -1053,8 +1264,45 @@ public final class FJIterate
     }
 
     /**
-     * Same effect as {@link Iterate#groupBy(Iterable, Function)},
-     * but executed in parallel batches, and writing output into a SynchronizedPutFastListMultimap.
+     * Groups elements from the collection by the result of applying the function, processing in parallel.
+     * <p>
+     * This method applies the grouping function to each element in parallel and collects them into a
+     * {@link SynchronizedPutFastListMultimap}. Elements with the same key are grouped together in lists.
+     * The multimap is thread-safe for concurrent writes during parallel processing.
+     * </p>
+     * <p><b>Usage Examples:</b></p>
+     * <pre>{@code
+     * // Example 1: Group customers by country
+     * MutableList<Customer> customers = getCustomers(); // 200,000+ customers
+     * MutableMultimap<String, Customer> byCountry = FJIterate.groupBy(
+     *     customers,
+     *     Customer::getCountry
+     * );
+     *
+     * // Example 2: Group orders by status
+     * MutableMultimap<OrderStatus, Order> ordersByStatus = FJIterate.groupBy(
+     *     orders,
+     *     Order::getStatus
+     * );
+     *
+     * // Example 3: Group products by price range
+     * MutableMultimap<String, Product> byPriceRange = FJIterate.groupBy(
+     *     products,
+     *     product -> {
+     *         double price = product.getPrice();
+     *         if (price < 50) return "Budget";
+     *         if (price < 200) return "Mid-Range";
+     *         return "Premium";
+     *     }
+     * );
+     * }</pre>
+     *
+     * @param <K> the type of keys in the resulting multimap
+     * @param <V> the type of values in the input and resulting multimap
+     * @param iterable the collection to group
+     * @param function the function to determine the grouping key for each element
+     * @return a multimap with elements grouped by their keys
+     * @see Iterate#groupBy(Iterable, Function)
      */
     public static <K, V> MutableMultimap<K, V> groupBy(
             Iterable<V> iterable,

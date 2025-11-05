@@ -47,8 +47,20 @@ import org.eclipse.collections.api.tuple.primitive.ObjectIntPair;
 /**
  * A Bag is a Collection whose elements are unordered and may contain duplicate entries. It varies from
  * MutableCollection in that it adds a protocol for determining, adding, and removing the number of occurrences for an
- * item.
+ * item. Bags are also known as multisets in some programming contexts.
  *
+ * <p>The defining characteristic of a Bag is that it tracks the count of each element. Multiple occurrences of
+ * equal elements are maintained separately.</p>
+ *
+ * <p><b>Usage Examples:</b></p>
+ * <pre>{@code
+ * Bag<String> bag = Bags.mutable.of("A", "B", "A", "C", "A");
+ * int countOfA = bag.occurrencesOf("A"); // Returns 3
+ * bag.forEachWithOccurrences((element, count) ->
+ *     System.out.println(element + ": " + count));
+ * }</pre>
+ *
+ * @param <T> the type of elements in the bag
  * @since 1.0
  */
 public interface Bag<T>

@@ -51,7 +51,18 @@ import org.eclipse.collections.api.tuple.Pair;
 
 /**
  * An ImmutableSortedMap is different from a JCF SortedMap because it has no mutating methods. It provides
- * the read-only protocol of a SortedMap.
+ * the read-only protocol of a SortedMap. Keys are maintained in sorted order according to a comparator.
+ * All operations that would mutate the map return new immutable instances instead, preserving both
+ * immutability and sort order.
+ *
+ * <p><b>Usage Examples:</b></p>
+ * <pre>{@code
+ * ImmutableSortedMap<String, Integer> map = SortedMaps.immutable.of("C", 3, "A", 1, "B", 2);
+ * // Iteration order is A, B, C (sorted by keys)
+ * ImmutableSortedMap<String, Integer> updated = map.newWithKeyValue("D", 4);
+ * ImmutableSortedMap<String, Integer> filtered = map.select((k, v) -> v > 1);
+ * // Original map is unchanged
+ * }</pre>
  */
 public interface ImmutableSortedMap<K, V>
         extends SortedMapIterable<K, V>, ImmutableMapIterable<K, V>

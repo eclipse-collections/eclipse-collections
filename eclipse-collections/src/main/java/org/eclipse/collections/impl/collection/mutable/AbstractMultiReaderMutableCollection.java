@@ -88,8 +88,46 @@ import org.eclipse.collections.impl.block.procedure.MutatingAggregationProcedure
 import org.eclipse.collections.impl.utility.LazyIterate;
 
 /**
- * AbstractMultiReaderMutableCollection is an abstraction that provides thread-safe collection behaviors.
- * Subclasses of this class must provide implementations of getDelegate() and getLock().
+ * AbstractMultiReaderMutableCollection provides thread-safe collection operations using a
+ * {@link ReadWriteLock} for concurrent access patterns with multiple readers and occasional writers.
+ * <p>
+ * This abstraction uses read-write locking to allow multiple concurrent readers while ensuring
+ * exclusive access for write operations. This provides better performance than traditional
+ * synchronized collections when reads significantly outnumber writes.
+ * </p>
+ * <p>
+ * Subclasses must implement {@code getDelegate()} to provide the underlying collection being protected.
+ * Operations are automatically wrapped with appropriate read or write locks using try-with-resources.
+ * </p>
+ * <p><b>Thread Safety:</b> This class is thread-safe. Read operations acquire a read lock allowing
+ * concurrent access, while write operations acquire a write lock for exclusive access.</p>
+ * <p><b>Performance:</b> Better performance than synchronized collections for read-heavy workloads.
+ * Multiple threads can read concurrently. Write operations block all other access.</p>
+ * <p><b>Important:</b> {@link #iterator()}, {@link #stream()}, {@link #parallelStream()}, and
+ * {@link #spliterator()} are not supported directly. Use {@code withReadLockAndDelegate()} or
+ * {@code withWriteLockAndDelegate()} methods instead to safely access these operations.</p>
+ * <p><b>Usage Examples:</b></p>
+ * <pre>{@code
+ * MultiReaderFastList<String> names = MultiReaderFastList.newListWith("Alice", "Bob");
+ *
+ * // Multiple threads can read concurrently
+ * int size = names.size(); // Acquires read lock
+ * boolean contains = names.contains("Alice"); // Acquires read lock
+ *
+ * // Write operations acquire exclusive write lock
+ * names.add("Charlie"); // Acquires write lock
+ *
+ * // For iterator access, use withReadLockAndDelegate
+ * names.withReadLockAndDelegate(delegate -> {
+ *     Iterator<String> it = delegate.iterator();
+ *     while (it.hasNext()) {
+ *         System.out.println(it.next());
+ *     }
+ * });
+ * }</pre>
+ *
+ * @param <T> the type of elements in this collection
+ * @since 1.0
  */
 @SuppressWarnings({"unused", "TransientFieldInNonSerializableClass"})
 public abstract class AbstractMultiReaderMutableCollection<T> implements MutableCollection<T>

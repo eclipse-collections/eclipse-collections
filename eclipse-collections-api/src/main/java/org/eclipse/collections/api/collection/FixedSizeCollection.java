@@ -18,7 +18,22 @@ import org.eclipse.collections.api.block.procedure.Procedure;
 
 /**
  * A FixedSizeCollection is a collection that may be mutated, but cannot grow or shrink in size. It is up to
- * the underlying implementation to decide which mutations are allowable.
+ * the underlying implementation to decide which mutations are allowable. Elements can be replaced but the
+ * collection's size remains fixed. Any operations that would change the size will throw an
+ * {@link UnsupportedOperationException}.
+ *
+ * <p><b>Usage Examples:</b></p>
+ * <pre>{@code
+ * FixedSizeCollection<String> collection = FixedSizeList.newListWith("A", "B", "C");
+ *
+ * // Creating new instances with modified elements (size remains same)
+ * MutableCollection<String> withNew = collection.with("D");     // Returns new collection
+ * MutableCollection<String> withoutOld = collection.without("A"); // Returns new collection
+ *
+ * // Operations that would change size throw UnsupportedOperationException
+ * // collection.add("D");      // Throws UnsupportedOperationException
+ * // collection.remove("A");   // Throws UnsupportedOperationException
+ * }</pre>
  */
 public interface FixedSizeCollection<T>
         extends MutableCollection<T>
@@ -36,6 +51,8 @@ public interface FixedSizeCollection<T>
      * return list;
      * </pre>
      *
+     * @param element the element to add to the new collection
+     * @return a new MutableCollection containing all elements from this collection plus the new element
      * @see #add(Object)
      */
     @Override
@@ -55,6 +72,8 @@ public interface FixedSizeCollection<T>
      * return list;
      * </pre>
      *
+     * @param element the element to remove from the new collection
+     * @return a new MutableCollection containing all elements from this collection except the specified element
      * @see #remove(Object)
      */
     @Override
@@ -73,6 +92,8 @@ public interface FixedSizeCollection<T>
      * return list;
      * </pre>
      *
+     * @param elements the elements to add to the new collection
+     * @return a new MutableCollection containing all elements from this collection plus all the new elements
      * @see #addAll(Collection)
      */
     @Override
@@ -91,6 +112,8 @@ public interface FixedSizeCollection<T>
      * return list;
      * </pre>
      *
+     * @param elements the elements to remove from the new collection
+     * @return a new MutableCollection containing all elements from this collection except the specified elements
      * @see #removeAll(Collection)
      */
     @Override
@@ -162,6 +185,13 @@ public interface FixedSizeCollection<T>
     @Override
     void clear();
 
+    /**
+     * Executes the given procedure on each element in this collection and returns this collection.
+     * This method is useful for performing side effects while chaining method calls.
+     *
+     * @param procedure the procedure to execute on each element
+     * @return this FixedSizeCollection to allow method chaining
+     */
     @Override
     FixedSizeCollection<T> tap(Procedure<? super T> procedure);
 }

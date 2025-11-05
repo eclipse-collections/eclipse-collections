@@ -49,6 +49,31 @@ import org.eclipse.collections.api.tuple.Pair;
 import org.eclipse.collections.api.tuple.Twin;
 import org.eclipse.collections.impl.collection.AbstractSynchronizedRichIterable;
 
+/**
+ * AbstractSynchronizedMutableCollection extends AbstractSynchronizedRichIterable to provide
+ * synchronized wrappers for mutable collection operations.
+ * <p>
+ * This class adds synchronization for mutating operations (add, remove, clear, etc.) while
+ * inheriting synchronized behavior for read operations from the parent class. All operations
+ * synchronize on the lock object to ensure thread-safe access.
+ * </p>
+ * <p><b>Thread Safety:</b> This class is thread-safe. All operations are synchronized on the lock object.</p>
+ * <p><b>Performance:</b> Synchronization overhead applies to all operations. Consider using
+ * concurrent collections or multi-reader collections for better performance in highly concurrent scenarios.</p>
+ * <p><b>Usage Examples:</b></p>
+ * <pre>{@code
+ * MutableList<String> unsafeList = FastList.newListWith("a", "b", "c");
+ * MutableCollection<String> syncList = SynchronizedMutableList.of(unsafeList);
+ *
+ * // All operations are now thread-safe
+ * syncList.add("d"); // Synchronized
+ * syncList.remove("a"); // Synchronized
+ * syncList.select(s -> s.length() > 1); // Synchronized
+ * }</pre>
+ *
+ * @param <T> the type of elements in this collection
+ * @since 1.0
+ */
 public abstract class AbstractSynchronizedMutableCollection<T>
         extends AbstractSynchronizedRichIterable<T> implements MutableCollection<T>
 {

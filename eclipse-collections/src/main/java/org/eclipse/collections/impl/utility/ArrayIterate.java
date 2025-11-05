@@ -86,7 +86,41 @@ import org.eclipse.collections.impl.tuple.Tuples;
 import org.eclipse.collections.impl.utility.internal.InternalArrayIterate;
 
 /**
- * This utility class provides iteration pattern implementations that work with Java arrays.
+ * ArrayIterate provides optimized iteration patterns for Java arrays.
+ * This utility class offers functional-style operations (map, filter, reduce, etc.) on arrays
+ * without the overhead of converting to collections first.
+ * <p>
+ * All methods in this class are static and operate directly on arrays, providing high-performance
+ * alternatives to Stream API or collection-based approaches. Operations include filtering (select/reject),
+ * transformation (collect), aggregation (injectInto), and element search (detect).
+ * </p>
+ * <p><b>Thread Safety:</b> Methods are not thread-safe unless the array itself is thread-safe.
+ * Operations do not modify the input array.</p>
+ * <p><b>Performance:</b> Optimized for array iteration. Significantly faster than Stream API
+ * for simple operations. Uses low-level array access for maximum performance.</p>
+ * <p><b>Usage Examples:</b></p>
+ * <pre>{@code
+ * String[] names = {"Alice", "Bob", "Charlie", "David"};
+ *
+ * // Filter elements
+ * MutableList<String> longNames = ArrayIterate.select(names, name -> name.length() > 4);
+ * // Result: ["Alice", "Charlie", "David"]
+ *
+ * // Transform elements
+ * MutableList<Integer> lengths = ArrayIterate.collect(names, String::length);
+ * // Result: [5, 3, 7, 5]
+ *
+ * // Find first match
+ * String found = ArrayIterate.detect(names, name -> name.startsWith("C"));
+ * // Result: "Charlie"
+ *
+ * // Count matches
+ * int count = ArrayIterate.count(names, name -> name.length() > 4);
+ * // Result: 3
+ *
+ * // Apply procedure to each element
+ * ArrayIterate.forEach(names, System.out::println);
+ * }</pre>
  *
  * @since 1.0
  */

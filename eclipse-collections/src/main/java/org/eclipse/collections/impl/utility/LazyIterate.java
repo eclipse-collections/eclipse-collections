@@ -37,10 +37,53 @@ import org.eclipse.collections.impl.lazy.ZipWithIndexIterable;
 import org.eclipse.collections.impl.tuple.Tuples;
 
 /**
- * LazyIterate is a factory class which creates "deferred" iterables around the specified iterables. A "deferred"
- * iterable performs some operation, such as filtering or transforming, when the result iterable is iterated over. This
- * makes the operation very memory efficient, because you don't have to create intermediate collections during the
- * operation.
+ * LazyIterate is a factory class that creates lazy (deferred) iterables for memory-efficient operations.
+ * Operations like select, collect, and flatCollect are not executed immediately but are deferred until
+ * the resulting iterable is actually iterated over.
+ * <p>
+ * Lazy evaluation provides significant benefits:
+ * </p>
+ * <ul>
+ * <li><b>Memory Efficiency:</b> No intermediate collections are created</li>
+ * <li><b>Performance:</b> Operations can short-circuit (e.g., finding first match)</li>
+ * <li><b>Composability:</b> Chain multiple operations without multiple passes over data</li>
+ * <li><b>Infinite Sequences:</b> Work with potentially infinite iterables</li>
+ * </ul>
+ * <p>
+ * All operations return LazyIterable instances that compute values on-demand during iteration.
+ * To materialize results into a collection, call toList(), toSet(), or similar terminal operations.
+ * </p>
+ * <p><b>Thread Safety:</b> Lazy iterables are not thread-safe. Each iteration creates a new iterator.</p>
+ * <p><b>Performance:</b> Excellent for chained operations and large datasets. No memory overhead
+ * for intermediate collections. Operations are performed in a single pass during iteration.</p>
+ * <p><b>Usage Examples:</b></p>
+ * <pre>{@code
+ * List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+ *
+ * // Create a lazy iterable (no computation yet)
+ * LazyIterable<Integer> lazy = LazyIterate.select(numbers, n -> n % 2 == 0)
+ *                                         .collect(n -> n * n);
+ *
+ * // Computation happens only during iteration
+ * MutableList<Integer> result = lazy.toList();
+ * // Result: [4, 16, 36, 64, 100]
+ *
+ * // Chain multiple operations efficiently
+ * LazyIterable<String> transformed =
+ *     LazyIterate.select(numbers, n -> n > 3)
+ *                .collect(Object::toString)
+ *                .select(s -> s.length() == 1);
+ *
+ * // Take first 3 elements (short-circuits, doesn't process all)
+ * LazyIterable<Integer> firstThree = LazyIterate.adapt(numbers).take(3);
+ *
+ * // Flatten nested iterables
+ * List<List<Integer>> nested = Arrays.asList(
+ *     Arrays.asList(1, 2),
+ *     Arrays.asList(3, 4)
+ * );
+ * LazyIterable<Integer> flattened = LazyIterate.flatCollect(nested, list -> list);
+ * }</pre>
  *
  * @since 1.0
  */

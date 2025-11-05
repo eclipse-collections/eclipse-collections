@@ -26,22 +26,70 @@ import org.eclipse.collections.api.block.procedure.Procedure;
 
 /**
  * A MultiReaderList provides thread-safe iteration for a list through methods {@code withReadLockAndDelegate()} and {@code withWriteLockAndDelegate()}.
+ * This interface uses a read-write lock to allow multiple concurrent readers or a single writer, providing better performance
+ * than simple synchronization when reads are more frequent than writes.
+ *
+ * <p><b>Usage Examples:</b></p>
+ * <pre>{@code
+ * MultiReaderList<String> list = MultiReaderFastList.newListWith("A", "B", "C");
+ *
+ * // Safe read access - multiple threads can read concurrently
+ * list.withReadLockAndDelegate(delegate -> {
+ *     delegate.forEach(System.out::println);
+ *     int size = delegate.size();
+ * });
+ *
+ * // Safe write access - exclusive lock for modifications
+ * list.withWriteLockAndDelegate(delegate -> {
+ *     delegate.add("D");
+ *     delegate.remove("A");
+ * });
+ * }</pre>
  *
  * @since 10.0.
  */
 public interface MultiReaderList<T>
         extends MutableList<T>
 {
+    /**
+     * Executes the given procedure with a read lock, allowing multiple concurrent readers.
+     * The procedure receives a delegate MutableList that should be used for all read operations.
+     *
+     * @param procedure the procedure to execute with read access to the list
+     */
     void withReadLockAndDelegate(Procedure<? super MutableList<T>> procedure);
 
+    /**
+     * Executes the given procedure with a write lock, providing exclusive access for modifications.
+     * The procedure receives a delegate MutableList that should be used for all write operations.
+     *
+     * @param procedure the procedure to execute with write access to the list
+     */
     void withWriteLockAndDelegate(Procedure<? super MutableList<T>> procedure);
 
+    /**
+     * Creates a new empty MultiReaderList of the same type.
+     *
+     * @return a new empty MultiReaderList
+     */
     @Override
     MultiReaderList<T> newEmpty();
 
+    /**
+     * Creates and returns a copy of this MultiReaderList.
+     *
+     * @return a clone of this MultiReaderList
+     */
     @Override
     MultiReaderList<T> clone();
 
+    /**
+     * Returns a view of the portion of this list between the specified fromIndex (inclusive) and toIndex (exclusive).
+     *
+     * @param fromIndex low endpoint (inclusive) of the sublist
+     * @param toIndex high endpoint (exclusive) of the sublist
+     * @return a view of the specified range within this list
+     */
     @Override
     MultiReaderList<T> subList(int fromIndex, int toIndex);
 

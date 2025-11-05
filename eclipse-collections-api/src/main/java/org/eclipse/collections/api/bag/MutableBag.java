@@ -52,8 +52,19 @@ import org.eclipse.collections.api.tuple.Pair;
 /**
  * A MutableBag is a Collection whose elements are unordered and may contain duplicate entries. It varies from
  * MutableCollection in that it adds a protocol for determining, adding, and removing the number of occurrences for an
- * item.
+ * item. MutableBag provides mutating operations that modify the bag in place.
  *
+ * <p><b>Usage Examples:</b></p>
+ * <pre>{@code
+ * MutableBag<String> bag = Bags.mutable.empty();
+ * bag.add("A");
+ * bag.addOccurrences("A", 2); // Now "A" has 3 occurrences
+ * bag.add("B");
+ * int countOfA = bag.occurrencesOf("A"); // Returns 3
+ * bag.removeOccurrences("A", 2); // Now "A" has 1 occurrence
+ * }</pre>
+ *
+ * @param <T> the type of elements in the bag
  * @since 1.0
  */
 public interface MutableBag<T>

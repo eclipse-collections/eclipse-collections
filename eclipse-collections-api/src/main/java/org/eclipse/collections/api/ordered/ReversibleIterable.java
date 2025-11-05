@@ -41,8 +41,18 @@ import org.eclipse.collections.api.tuple.Pair;
 /**
  * A ReversibleIterable is an ordered iterable that you can iterate over forwards or backwards.
  * It has methods that support efficient iteration from the end, including {@link #asReversed()} and
- * {@link #reverseForEach(Procedure)}.
+ * {@link #reverseForEach(Procedure)}. This interface is useful for data structures that naturally
+ * support bidirectional iteration, such as lists and ordered maps.
  *
+ * <p><b>Usage Examples:</b></p>
+ * <pre>{@code
+ * ReversibleIterable<String> reversible = Lists.mutable.of("A", "B", "C");
+ * String last = reversible.getLast(); // Returns "C"
+ * reversible.reverseForEach(System.out::println); // Prints: C, B, A
+ * ReversibleIterable<String> reversed = reversible.toReversed(); // ["C", "B", "A"]
+ * }</pre>
+ *
+ * @param <T> the type of elements in the iterable
  * @since 5.0
  */
 public interface ReversibleIterable<T> extends OrderedIterable<T>

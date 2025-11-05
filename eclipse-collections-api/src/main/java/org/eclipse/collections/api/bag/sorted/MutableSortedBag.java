@@ -44,6 +44,19 @@ import org.eclipse.collections.api.set.sorted.MutableSortedSet;
 import org.eclipse.collections.api.tuple.Pair;
 
 /**
+ * MutableSortedBag is a mutable bag that maintains its elements in sorted order while tracking
+ * occurrence counts. All mutating operations modify the bag in place while preserving sort order.
+ *
+ * <p><b>Usage Examples:</b></p>
+ * <pre>{@code
+ * MutableSortedBag<String> bag = SortedBags.mutable.empty();
+ * bag.add("C");
+ * bag.add("A");
+ * bag.addOccurrences("C", 2); // "C" now has 3 occurrences
+ * // Iteration order is A, C, C, C (sorted)
+ * }</pre>
+ *
+ * @param <T> the type of elements in the bag
  * @since 4.2
  */
 public interface MutableSortedBag<T>

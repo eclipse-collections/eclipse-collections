@@ -36,6 +36,20 @@ import org.eclipse.collections.api.partition.PartitionMutableCollection;
 import org.eclipse.collections.api.tuple.Pair;
 
 /**
+ * MutableMapIterable is the parent interface for all mutable map types in Eclipse Collections.
+ * It combines the Eclipse Collections MapIterable interface with java.util.Map, providing both
+ * standard JDK map operations and enhanced functional programming capabilities. All mutating
+ * operations modify the map in place.
+ *
+ * <p><b>Usage Examples:</b></p>
+ * <pre>{@code
+ * MutableMapIterable<String, Integer> map = Maps.mutable.empty();
+ * map.put("A", 1);
+ * map.putPair(Tuples.pair("B", 2));
+ * map.updateValue("A", () -> 0, v -> v + 10); // Updates "A" to 11
+ * map.removeKey("B");
+ * }</pre>
+ *
  * @since 6.0
  */
 public interface MutableMapIterable<K, V> extends MapIterable<K, V>, Map<K, V>

@@ -14,14 +14,63 @@ import java.io.Serializable;
 import java.util.function.Consumer;
 
 /**
- * A Procedure is a single argument lambda which has no return argument.
+ * A Procedure is a single-argument lambda which has no return value. It represents an operation
+ * that accepts a single input argument and returns no result, typically performing side effects.
+ * <p>
+ * This is a functional interface whose functional method is {@link #value(Object)}.
+ * It extends {@link Consumer} and adds serialization support.
+ * <p>
+ * Procedures are commonly used with methods like {@code each()}, {@code forEach()}, and {@code tap()}.
+ *
+ * <p><b>Usage Examples:</b></p>
+ * <pre>{@code
+ * // Print each element
+ * Procedure<String> print = System.out::println;
+ * names.forEach(print);
+ *
+ * // Add to another collection
+ * MutableList<String> target = Lists.mutable.empty();
+ * Procedure<String> addToTarget = target::add;
+ * source.forEach(addToTarget);
+ *
+ * // Side effect operations
+ * Procedure<Person> sendEmail = person -> emailService.send(person.getEmail());
+ * customers.forEach(sendEmail);
+ *
+ * // Modify state
+ * AtomicInteger counter = new AtomicInteger(0);
+ * Procedure<String> countAndPrint = each -> {
+ *     System.out.println(counter.incrementAndGet() + ": " + each);
+ * };
+ * items.forEach(countAndPrint);
+ *
+ * // Use with tap for debugging
+ * MutableList<String> result = names
+ *     .select(name -> name.length() > 3)
+ *     .tap(System.out::println)  // Print intermediate results
+ *     .collect(String::toUpperCase);
+ * }</pre>
+ *
+ * @param <T> the type of the input to the procedure
+ * @see Consumer
  */
 @FunctionalInterface
 public interface Procedure<T>
         extends Consumer<T>, Serializable
 {
+    /**
+     * Performs this operation on the given argument.
+     *
+     * @param each the input argument
+     */
     void value(T each);
 
+    /**
+     * Performs this operation on the given argument. This method delegates to {@link #value(Object)}
+     * to provide compatibility with {@link Consumer}.
+     *
+     * @param each the input argument
+     */
     @Override
     default void accept(T each)
     {

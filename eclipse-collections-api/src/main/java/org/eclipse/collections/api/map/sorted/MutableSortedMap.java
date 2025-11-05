@@ -49,8 +49,20 @@ import org.eclipse.collections.api.set.MutableSet;
 import org.eclipse.collections.api.tuple.Pair;
 
 /**
- * A MutableSortedMap is similar to a JCF Map but adds additional useful internal iterator methods.
+ * A MutableSortedMap is similar to a JCF SortedMap but adds additional useful internal iterator methods.
  * The MutableSortedMap interface additionally implements some methods in the Smalltalk Dictionary protocol.
+ * Keys are maintained in sorted order according to a comparator, and all mutating operations modify the
+ * map in place while preserving the sort order.
+ *
+ * <p><b>Usage Examples:</b></p>
+ * <pre>{@code
+ * MutableSortedMap<String, Integer> map = SortedMaps.mutable.empty();
+ * map.put("C", 3);
+ * map.put("A", 1);
+ * map.put("B", 2);
+ * // Iteration order is A, B, C (sorted by keys)
+ * MutableSortedMap<String, Integer> filtered = map.select((k, v) -> v > 1);
+ * }</pre>
  */
 public interface MutableSortedMap<K, V>
         extends MutableMapIterable<K, V>, SortedMapIterable<K, V>, SortedMap<K, V>, Cloneable

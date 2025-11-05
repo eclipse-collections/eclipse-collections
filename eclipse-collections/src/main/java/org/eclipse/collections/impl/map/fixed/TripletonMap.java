@@ -37,6 +37,27 @@ import org.eclipse.collections.impl.map.mutable.UnifiedMap;
 import org.eclipse.collections.impl.tuple.ImmutableEntry;
 import org.eclipse.collections.impl.tuple.Tuples;
 
+/**
+ * TripletonMap is a memory-efficient implementation of a fixed-size map with exactly three entries.
+ * <p>
+ * This class uses minimal memory by storing three key-value pairs directly as fields,
+ * avoiding the overhead of hash table structures. This is the largest fixed-size map implementation;
+ * maps with four or more entries use UnifiedMap. It follows copy-on-write semantics for modifications.
+ * <p>
+ * <b>Key Characteristics:</b>
+ * <ul>
+ *   <li>Size is always 3</li>
+ *   <li>Stores three key-value pairs directly as fields</li>
+ *   <li>O(1) lookup with maximum 3 comparisons</li>
+ *   <li>withKeyValue replaces value if key matches, otherwise returns UnifiedMap with 4 entries</li>
+ *   <li>withoutKey returns DoubletonMap with the remaining two entries</li>
+ *   <li>Supports null keys and values</li>
+ *   <li>Externalizable for efficient serialization</li>
+ * </ul>
+ *
+ * @param <K> the type of keys
+ * @param <V> the type of values
+ */
 final class TripletonMap<K, V>
         extends AbstractMemoryEfficientMutableMap<K, V>
         implements Externalizable

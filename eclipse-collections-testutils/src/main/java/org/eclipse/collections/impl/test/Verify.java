@@ -78,13 +78,33 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 /**
- * An extension of the {@link Assert} class, which adds useful additional "assert" methods.
- * You can import this class instead of Assert, and use it thus, e.g.:
+ * A comprehensive utility class that extends {@link Assert} with additional assertion methods
+ * specifically designed for testing Eclipse Collections and Java collections.
+ * <p>
+ * This class provides a rich set of assertion methods that go beyond standard JUnit assertions,
+ * including specialized assertions for:
+ * </p>
+ * <ul>
+ * <li>Collections, iterables, and arrays (empty, size, contains, ordering)</li>
+ * <li>Maps and multimaps (keys, values, entries)</li>
+ * <li>Primitive collections</li>
+ * <li>Serialization testing</li>
+ * <li>Object equality and hash codes</li>
+ * <li>Exception and error handling</li>
+ * <li>Class instantiation</li>
+ * </ul>
+ *
+ * <p><b>Basic Usage:</b></p>
  * <pre>
- *     Verify.assertEquals("fred", name);  // from original Assert class
- *     Verify.assertContains("fred", nameList);  // from new extensions
- *     Verify.assertBefore("fred", "jim", orderedNamesList);  // from new extensions
+ *     Verify.assertEquals("fred", name);              // from JUnit Assert
+ *     Verify.assertContains("fred", nameList);        // collection contains item
+ *     Verify.assertBefore("fred", "jim", namesList);  // ordering assertion
+ *     Verify.assertEmpty(collection);                 // empty collection
+ *     Verify.assertSize(3, list);                     // size assertion
  * </pre>
+ *
+ * @see Assert
+ * @see SerializeTestHelper
  */
 public final class Verify extends Assert
 {
@@ -98,13 +118,47 @@ public final class Verify extends Assert
         throw new AssertionError("Suppress default constructor for noninstantiability");
     }
 
+    /**
+     * Fails a test with the given message and cause.
+     * This method throws an AssertionError with both a message and a causing throwable,
+     * which is useful for providing context about why a test failed.
+     *
+     * @param message the descriptive message explaining the failure
+     * @param cause   the underlying throwable that caused the failure
+     * @throws AssertionError always thrown with the provided message and cause
+     *
+     * <p><b>Usage Examples:</b></p>
+     * <pre>{@code
+     * // Fail with context when catching an unexpected exception
+     * try {
+     *     someOperation();
+     * } catch (IOException e) {
+     *     Verify.fail("Operation failed unexpectedly", e);
+     * }
+     * }</pre>
+     */
     public static void fail(String message, Throwable cause)
     {
         throw new AssertionError(message, cause);
     }
 
     /**
-     * Assert that the given {@link Iterable} is empty.
+     * Asserts that the given {@link Iterable} is empty.
+     * This method verifies that the iterable contains no elements by checking multiple conditions.
+     *
+     * @param actualIterable the iterable to check for emptiness
+     * @throws AssertionError if the iterable is not empty or is null
+     *
+     * <p><b>Usage Examples:</b></p>
+     * <pre>{@code
+     * // Assert an empty list
+     * MutableList<String> list = Lists.mutable.empty();
+     * Verify.assertEmpty(list);
+     *
+     * // Verify filtered result is empty
+     * MutableList<Integer> numbers = Lists.mutable.of(2, 4, 6);
+     * Verify.assertEmpty(numbers.select(n -> n % 2 == 1)); // no odd numbers
+     * }</pre>
      */
     public static void assertEmpty(Iterable<?> actualIterable)
     {
@@ -112,7 +166,23 @@ public final class Verify extends Assert
     }
 
     /**
-     * Assert that the given {@link Collection} is empty.
+     * Asserts that the given {@link Iterable} is empty, with a custom name for error messages.
+     * This method verifies that the iterable contains no elements by checking multiple conditions.
+     *
+     * @param iterableName   the name of the iterable to use in error messages
+     * @param actualIterable the iterable to check for emptiness
+     * @throws AssertionError if the iterable is not empty or is null
+     *
+     * <p><b>Usage Examples:</b></p>
+     * <pre>{@code
+     * // Assert with custom name for clearer error messages
+     * MutableList<String> pendingTasks = Lists.mutable.empty();
+     * Verify.assertEmpty("pendingTasks", pendingTasks);
+     *
+     * // Use in test methods
+     * MutableSet<String> errors = validateData();
+     * Verify.assertEmpty("validation errors", errors);
+     * }</pre>
      */
     public static void assertEmpty(String iterableName, Iterable<?> actualIterable)
     {
@@ -241,7 +311,23 @@ public final class Verify extends Assert
     }
 
     /**
-     * Assert that the given object is an instanceof expectedClassType.
+     * Asserts that the given object is an instance of the expected class type.
+     * This is useful for verifying that objects are of the correct type in tests.
+     *
+     * @param expectedClassType the expected class or interface type
+     * @param actualObject      the object to check
+     * @throws AssertionError if the object is not an instance of the expected type
+     *
+     * <p><b>Usage Examples:</b></p>
+     * <pre>{@code
+     * // Verify collection type
+     * Object result = createCollection();
+     * Verify.assertInstanceOf(ArrayList.class, result);
+     *
+     * // Verify interface implementation
+     * Object obj = factory.create();
+     * Verify.assertInstanceOf(Serializable.class, obj);
+     * }</pre>
      */
     public static void assertInstanceOf(Class<?> expectedClassType, Object actualObject)
     {
@@ -249,7 +335,24 @@ public final class Verify extends Assert
     }
 
     /**
-     * Assert that the given object is an instanceof expectedClassType.
+     * Asserts that the given object is an instance of the expected class type,
+     * with a custom object name for error messages.
+     *
+     * @param objectName        the name of the object to use in error messages
+     * @param expectedClassType the expected class or interface type
+     * @param actualObject      the object to check
+     * @throws AssertionError if the object is not an instance of the expected type
+     *
+     * <p><b>Usage Examples:</b></p>
+     * <pre>{@code
+     * // Verify with descriptive name
+     * Object userDao = context.getBean("userDao");
+     * Verify.assertInstanceOf("userDao", UserDaoImpl.class, userDao);
+     *
+     * // Verify return type
+     * Object result = processor.process(data);
+     * Verify.assertInstanceOf("processor result", Map.class, result);
+     * }</pre>
      */
     public static void assertInstanceOf(String objectName, Class<?> expectedClassType, Object actualObject)
     {
@@ -785,6 +888,27 @@ public final class Verify extends Assert
         }
     }
 
+    /**
+     * Asserts that exactly the expected number of elements in the iterable satisfy the given predicate.
+     * This is useful for counting how many elements match a specific condition.
+     *
+     * @param expectedCount the expected number of elements satisfying the predicate
+     * @param iterable      the iterable to test
+     * @param predicate     the condition to test each element against
+     * @param <T>           the type of elements in the iterable
+     * @throws AssertionError if the actual count doesn't match the expected count
+     *
+     * <p><b>Usage Examples:</b></p>
+     * <pre>{@code
+     * // Verify count of even numbers
+     * MutableList<Integer> numbers = Lists.mutable.of(1, 2, 3, 4, 5, 6);
+     * Verify.assertCount(3, numbers, n -> n % 2 == 0);
+     *
+     * // Verify count of strings with specific length
+     * MutableList<String> words = Lists.mutable.of("cat", "dog", "bird");
+     * Verify.assertCount(2, words, w -> w.length() == 3);
+     * }</pre>
+     */
     public static <T> void assertCount(
             int expectedCount,
             Iterable<T> iterable,
@@ -793,16 +917,68 @@ public final class Verify extends Assert
         assertEquals(expectedCount, Iterate.count(iterable, predicate));
     }
 
+    /**
+     * Asserts that all elements in the iterable satisfy the given predicate.
+     * If any element fails the predicate, the test fails with a message listing the failing elements.
+     *
+     * @param iterable  the iterable whose elements to test
+     * @param predicate the condition that all elements must satisfy
+     * @param <T>       the type of elements in the iterable
+     * @throws AssertionError if any element does not satisfy the predicate
+     *
+     * <p><b>Usage Examples:</b></p>
+     * <pre>{@code
+     * // Verify all numbers are positive
+     * MutableList<Integer> numbers = Lists.mutable.of(1, 2, 3, 4, 5);
+     * Verify.assertAllSatisfy(numbers, n -> n > 0);
+     *
+     * // Verify all strings are non-empty
+     * MutableList<String> names = Lists.mutable.of("Alice", "Bob", "Charlie");
+     * Verify.assertAllSatisfy(names, s -> !s.isEmpty());
+     * }</pre>
+     */
     public static <T> void assertAllSatisfy(Iterable<T> iterable, Predicate<? super T> predicate)
     {
         Verify.assertAllSatisfy("The following items failed to satisfy the condition", iterable, predicate);
     }
 
+    /**
+     * Asserts that all values in the map satisfy the given predicate.
+     *
+     * @param map       the map whose values to test
+     * @param predicate the condition that all values must satisfy
+     * @param <K>       the type of keys in the map
+     * @param <V>       the type of values in the map
+     * @throws AssertionError if any value does not satisfy the predicate
+     *
+     * <p><b>Usage Examples:</b></p>
+     * <pre>{@code
+     * // Verify all ages are positive
+     * MutableMap<String, Integer> ages = Maps.mutable.of("Alice", 30, "Bob", 25);
+     * Verify.assertAllSatisfy(ages, age -> age > 0);
+     * }</pre>
+     */
     public static <K, V> void assertAllSatisfy(Map<K, V> map, Predicate<? super V> predicate)
     {
         Verify.assertAllSatisfy(map.values(), predicate);
     }
 
+    /**
+     * Asserts that all elements in the iterable satisfy the given predicate, with a custom error message.
+     *
+     * @param message   the message to display if the assertion fails
+     * @param iterable  the iterable whose elements to test
+     * @param predicate the condition that all elements must satisfy
+     * @param <T>       the type of elements in the iterable
+     * @throws AssertionError if any element does not satisfy the predicate
+     *
+     * <p><b>Usage Examples:</b></p>
+     * <pre>{@code
+     * // Custom error message
+     * MutableList<Double> prices = Lists.mutable.of(10.0, 20.0, 30.0);
+     * Verify.assertAllSatisfy("All prices must be positive", prices, p -> p > 0);
+     * }</pre>
+     */
     public static <T> void assertAllSatisfy(String message, Iterable<T> iterable, Predicate<? super T> predicate)
     {
         MutableList<T> unacceptable = Iterate.reject(iterable, predicate, Lists.mutable.of());
@@ -812,31 +988,135 @@ public final class Verify extends Assert
         }
     }
 
+    /**
+     * Asserts that at least one element in the iterable satisfies the given predicate.
+     *
+     * @param iterable  the iterable whose elements to test
+     * @param predicate the condition that at least one element must satisfy
+     * @param <T>       the type of elements in the iterable
+     * @throws AssertionError if no element satisfies the predicate
+     *
+     * <p><b>Usage Examples:</b></p>
+     * <pre>{@code
+     * // Verify at least one even number exists
+     * MutableList<Integer> numbers = Lists.mutable.of(1, 2, 3, 5);
+     * Verify.assertAnySatisfy(numbers, n -> n % 2 == 0);
+     *
+     * // Verify at least one string contains a substring
+     * MutableList<String> words = Lists.mutable.of("apple", "banana", "cherry");
+     * Verify.assertAnySatisfy(words, w -> w.contains("an"));
+     * }</pre>
+     */
     public static <T> void assertAnySatisfy(Iterable<T> iterable, Predicate<? super T> predicate)
     {
         Verify.assertAnySatisfy("No items satisfied the condition", iterable, predicate);
     }
 
+    /**
+     * Asserts that at least one value in the map satisfies the given predicate.
+     *
+     * @param map       the map whose values to test
+     * @param predicate the condition that at least one value must satisfy
+     * @param <K>       the type of keys in the map
+     * @param <V>       the type of values in the map
+     * @throws AssertionError if no value satisfies the predicate
+     *
+     * <p><b>Usage Examples:</b></p>
+     * <pre>{@code
+     * // Verify at least one person is an adult
+     * MutableMap<String, Integer> ages = Maps.mutable.of("Alice", 17, "Bob", 25);
+     * Verify.assertAnySatisfy(ages, age -> age >= 18);
+     * }</pre>
+     */
     public static <K, V> void assertAnySatisfy(Map<K, V> map, Predicate<? super V> predicate)
     {
         Verify.assertAnySatisfy(map.values(), predicate);
     }
 
+    /**
+     * Asserts that at least one element in the iterable satisfies the given predicate,
+     * with a custom error message.
+     *
+     * @param message   the message to display if the assertion fails
+     * @param iterable  the iterable whose elements to test
+     * @param predicate the condition that at least one element must satisfy
+     * @param <T>       the type of elements in the iterable
+     * @throws AssertionError if no element satisfies the predicate
+     *
+     * <p><b>Usage Examples:</b></p>
+     * <pre>{@code
+     * // Custom error message
+     * MutableList<String> items = Lists.mutable.of("x", "y", "z");
+     * Verify.assertAnySatisfy("At least one item must be valid", items, item -> item.equals("y"));
+     * }</pre>
+     */
     public static <T> void assertAnySatisfy(String message, Iterable<T> iterable, Predicate<? super T> predicate)
     {
         assertTrue(message, Predicates.<T>anySatisfy(predicate).accept(iterable));
     }
 
+    /**
+     * Asserts that no elements in the iterable satisfy the given predicate.
+     * This is the opposite of assertAnySatisfy.
+     *
+     * @param iterable  the iterable whose elements to test
+     * @param predicate the condition that no element should satisfy
+     * @param <T>       the type of elements in the iterable
+     * @throws AssertionError if any element satisfies the predicate
+     *
+     * <p><b>Usage Examples:</b></p>
+     * <pre>{@code
+     * // Verify no negative numbers exist
+     * MutableList<Integer> numbers = Lists.mutable.of(1, 2, 3, 4, 5);
+     * Verify.assertNoneSatisfy(numbers, n -> n < 0);
+     *
+     * // Verify no empty strings exist
+     * MutableList<String> names = Lists.mutable.of("Alice", "Bob", "Charlie");
+     * Verify.assertNoneSatisfy(names, String::isEmpty);
+     * }</pre>
+     */
     public static <T> void assertNoneSatisfy(Iterable<T> iterable, Predicate<? super T> predicate)
     {
         Verify.assertNoneSatisfy("The following items satisfied the condition", iterable, predicate);
     }
 
+    /**
+     * Asserts that no values in the map satisfy the given predicate.
+     *
+     * @param map       the map whose values to test
+     * @param predicate the condition that no value should satisfy
+     * @param <K>       the type of keys in the map
+     * @param <V>       the type of values in the map
+     * @throws AssertionError if any value satisfies the predicate
+     *
+     * <p><b>Usage Examples:</b></p>
+     * <pre>{@code
+     * // Verify no invalid scores exist
+     * MutableMap<String, Integer> scores = Maps.mutable.of("test1", 85, "test2", 90);
+     * Verify.assertNoneSatisfy(scores, score -> score < 0 || score > 100);
+     * }</pre>
+     */
     public static <K, V> void assertNoneSatisfy(Map<K, V> map, Predicate<? super V> predicate)
     {
         Verify.assertNoneSatisfy(map.values(), predicate);
     }
 
+    /**
+     * Asserts that no elements in the iterable satisfy the given predicate, with a custom error message.
+     *
+     * @param message   the message to display if the assertion fails
+     * @param iterable  the iterable whose elements to test
+     * @param predicate the condition that no element should satisfy
+     * @param <T>       the type of elements in the iterable
+     * @throws AssertionError if any element satisfies the predicate
+     *
+     * <p><b>Usage Examples:</b></p>
+     * <pre>{@code
+     * // Custom error message
+     * MutableList<String> usernames = Lists.mutable.of("alice", "bob", "charlie");
+     * Verify.assertNoneSatisfy("No usernames should contain spaces", usernames, s -> s.contains(" "));
+     * }</pre>
+     */
     public static <T> void assertNoneSatisfy(String message, Iterable<T> iterable, Predicate<? super T> predicate)
     {
         MutableList<T> unacceptable = Iterate.select(iterable, predicate, Lists.mutable.empty());

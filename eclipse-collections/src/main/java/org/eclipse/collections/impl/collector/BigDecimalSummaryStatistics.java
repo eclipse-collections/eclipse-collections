@@ -17,7 +17,44 @@ import java.util.Optional;
 import org.eclipse.collections.api.block.procedure.Procedure;
 
 /**
- * BigDecimalSummaryStatistics can be used to keep a rolling count, sum, min, max and average of BigDecimal values.
+ * BigDecimalSummaryStatistics maintains rolling statistics (count, sum, min, max, average) for {@link BigDecimal} values.
+ * Similar to {@link java.util.DoubleSummaryStatistics} but for arbitrary-precision BigDecimal values.
+ * <p>
+ * This class is designed for use with Stream API collectors and Eclipse Collections procedures.
+ * It handles null values gracefully by counting them but excluding them from sum/min/max calculations.
+ * </p>
+ * <p><b>Thread Safety:</b> Not thread-safe. External synchronization required for concurrent updates.</p>
+ * <p><b>Performance:</b> Efficient for large datasets. Uses BigDecimal arithmetic which is slower
+ * than primitive operations but provides arbitrary precision.</p>
+ * <p><b>Usage Examples:</b></p>
+ * <pre>{@code
+ * // Using with Eclipse Collections
+ * MutableList<BigDecimal> prices = Lists.mutable.with(
+ *     new BigDecimal("10.50"),
+ *     new BigDecimal("20.75"),
+ *     new BigDecimal("15.25")
+ * );
+ * BigDecimalSummaryStatistics stats = prices.collect(Collectors2.summarizingBigDecimal(x -> x));
+ * long count = stats.getCount(); // 3
+ * BigDecimal sum = stats.getSum(); // 46.50
+ * BigDecimal avg = stats.getAverage(); // 15.50
+ * BigDecimal min = stats.getMin(); // 10.50
+ * BigDecimal max = stats.getMax(); // 20.75
+ *
+ * // Using with Java Streams
+ * Stream<BigDecimal> stream = Stream.of(
+ *     new BigDecimal("100"),
+ *     new BigDecimal("200")
+ * );
+ * BigDecimalSummaryStatistics streamStats = stream
+ *     .collect(Collectors2.summarizingBigDecimal(Function.identity()));
+ *
+ * // Merging statistics from multiple sources
+ * BigDecimalSummaryStatistics stats1 = new BigDecimalSummaryStatistics();
+ * BigDecimalSummaryStatistics stats2 = new BigDecimalSummaryStatistics();
+ * // ... populate stats1 and stats2 ...
+ * stats1.merge(stats2); // Combines both statistics
+ * }</pre>
  *
  * @see Collectors2#summarizingBigDecimal(org.eclipse.collections.api.block.function.Function)
  * @since 8.1

@@ -19,6 +19,16 @@ import org.eclipse.collections.api.multimap.bag.UnsortedBagMultimap;
 import org.eclipse.collections.api.set.ParallelUnsortedSetIterable;
 
 /**
+ * ParallelUnsortedBag provides parallel iteration capabilities for unsorted Bag data structures.
+ * Operations are executed in parallel with no guarantees about iteration order.
+ *
+ * <p><b>Usage Examples:</b></p>
+ * <pre>{@code
+ * ParallelUnsortedBag<String> parallelBag = bag.asParallel(executor, batchSize);
+ * ParallelUnsortedBag<String> filtered = parallelBag.select(s -> s.length() > 2);
+ * }</pre>
+ *
+ * @param <T> the type of elements in the bag
  * @since 5.0
  */
 @Beta

@@ -48,7 +48,17 @@ import org.eclipse.collections.api.tuple.Pair;
 
 /**
  * An Iterable whose elements are sorted by some comparator or their natural ordering and may contain duplicate entries.
+ * SortedBag maintains elements in sorted order while tracking occurrence counts for each element.
  *
+ * <p><b>Usage Examples:</b></p>
+ * <pre>{@code
+ * SortedBag<String> bag = SortedBags.mutable.of("C", "A", "B", "A", "C", "C");
+ * // Iteration order is A, A, B, C, C, C (sorted)
+ * int countOfC = bag.occurrencesOf("C"); // Returns 3
+ * SortedBag<String> reversed = bag.toReversed();
+ * }</pre>
+ *
+ * @param <T> the type of elements in the bag
  * @since 4.2
  */
 public interface SortedBag<T>

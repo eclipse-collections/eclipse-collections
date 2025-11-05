@@ -44,7 +44,17 @@ import org.eclipse.collections.api.partition.list.PartitionList;
 import org.eclipse.collections.api.tuple.Pair;
 
 /**
- * An iterable Map whose elements are sorted.
+ * An iterable Map whose elements are sorted by their keys according to a comparator.
+ * SortedMapIterable maintains keys in sorted order and extends ReversibleIterable, allowing
+ * iteration in both ascending and descending key order.
+ *
+ * <p><b>Usage Examples:</b></p>
+ * <pre>{@code
+ * SortedMapIterable<String, Integer> map = SortedMaps.mutable.of("C", 3, "A", 1, "B", 2);
+ * // Iteration order is A, B, C (sorted by keys)
+ * SortedMapIterable<String, Integer> filtered = map.select((k, v) -> v > 1);
+ * // filtered contains: "B" -> 2, "C" -> 3 (still sorted)
+ * }</pre>
  */
 public interface SortedMapIterable<K, V>
         extends MapIterable<K, V>, ReversibleIterable<V>

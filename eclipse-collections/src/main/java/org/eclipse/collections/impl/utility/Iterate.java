@@ -91,10 +91,52 @@ import org.eclipse.collections.impl.utility.internal.IterableIterate;
 import org.eclipse.collections.impl.utility.internal.RandomAccessListIterate;
 
 /**
- * A utility class that acts as a router to other utility classes to provide optimized iteration pattern
- * implementations based on the type of Iterable. The lowest common denominator used will normally be IterableIterate.
- * Iterate can be used when a JDK interface is the only type available to the developer, as it can
- * determine the best way to iterate based on instanceof checks.
+ * Iterate is the primary utility class for iterating over any {@link Iterable}.
+ * It provides optimized iteration patterns by routing to specialized utility classes based on the
+ * concrete type of iterable (List, Set, Map, Array, etc.).
+ * <p>
+ * This class automatically selects the most efficient iteration strategy using instanceof checks.
+ * For example, iterating a RandomAccessList uses indexed access while LinkedList uses iterator-based access.
+ * When type is unknown, use Iterate. When type is known, use specialized utilities (ListIterate, ArrayIterate, etc.)
+ * for slightly better performance.
+ * </p>
+ * <p>
+ * Iterate provides rich functional programming operations including:
+ * </p>
+ * <ul>
+ * <li>Filtering: select, reject, partition</li>
+ * <li>Transformation: collect, flatCollect, collectIf</li>
+ * <li>Aggregation: injectInto, sumOf*, count</li>
+ * <li>Searching: detect, find, min, max</li>
+ * <li>Grouping: groupBy, aggregateBy</li>
+ * <li>Iteration: forEach, forEachWithIndex, forEachWith</li>
+ * </ul>
+ * <p><b>Thread Safety:</b> Not thread-safe. Operations do not modify input collections unless explicitly stated.</p>
+ * <p><b>Performance:</b> Automatically selects optimal iteration strategy based on collection type.
+ * Direct array access for arrays, indexed access for RandomAccessLists, iterator for others.</p>
+ * <p><b>Usage Examples:</b></p>
+ * <pre>{@code
+ * List<String> names = Arrays.asList("Alice", "Bob", "Charlie");
+ *
+ * // Filter elements
+ * MutableList<String> longNames = Iterate.select(names, name -> name.length() > 4);
+ *
+ * // Transform elements
+ * MutableList<Integer> lengths = Iterate.collect(names, String::length);
+ *
+ * // Find element
+ * String found = Iterate.detect(names, name -> name.startsWith("C"));
+ *
+ * // Count matches
+ * int count = Iterate.count(names, name -> name.length() > 3);
+ *
+ * // Group by attribute
+ * Multimap<Integer, String> byLength = Iterate.groupBy(names, String::length);
+ *
+ * // Iterate with index
+ * Iterate.forEachWithIndex(names, (name, index) ->
+ *     System.out.println(index + ": " + name));
+ * }</pre>
  *
  * @since 1.0
  */

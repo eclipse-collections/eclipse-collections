@@ -49,8 +49,42 @@ import org.eclipse.collections.impl.tuple.primitive.PrimitiveTuples;
 import org.eclipse.collections.impl.utility.Iterate;
 
 /**
- * Calculates and provides the code points stored in a String as an ImmutableIntList. This is a cleaner more OO way of
- * providing many of the iterable protocols available in StringIterate for code points.
+ * CodePointAdapter provides an immutable view of a String's Unicode code points as an {@link ImmutableIntList}.
+ * This correctly handles Unicode characters outside the Basic Multilingual Plane (BMP), including emoji and
+ * supplementary characters that require surrogate pairs.
+ * <p>
+ * Unlike CharAdapter which operates on 16-bit char values, CodePointAdapter works with full Unicode code points
+ * (21-bit values). This is the correct way to handle modern Unicode text that may contain emoji,
+ * mathematical symbols, or characters from ancient scripts.
+ * </p>
+ * <p><b>Thread Safety:</b> Immutable and thread-safe. The underlying String is immutable.</p>
+ * <p><b>Performance:</b> Processes the String to extract code points. More expensive than CharAdapter but
+ * necessary for correct Unicode handling. No boxing to Integer objects.</p>
+ * <p><b>Usage Examples:</b></p>
+ * <pre>{@code
+ * // String with emoji (supplementary characters)
+ * String text = "Hello 👋 World 🌍";
+ * CodePointAdapter codePoints = CodePointAdapter.adapt(text);
+ *
+ * // Count actual characters (not char units)
+ * int characterCount = codePoints.size(); // Correctly counts emoji as single characters
+ *
+ * // Filter code points
+ * IntList letters = codePoints.select(Character::isLetter);
+ *
+ * // Check for emoji (supplementary characters)
+ * boolean hasEmoji = codePoints.anySatisfy(cp -> cp > 0xFFFF);
+ *
+ * // Transform code points
+ * ImmutableIntList upperCase = codePoints.collectInt(Character::toUpperCase);
+ *
+ * // Create from code points array
+ * CodePointAdapter fromCodePoints = CodePointAdapter.from(
+ *     'H', 'i', 0x1F44B); // 'H', 'i', waving hand emoji
+ *
+ * // Convert back to String
+ * String result = codePoints.toString();
+ * }</pre>
  *
  * @since 7.0
  */

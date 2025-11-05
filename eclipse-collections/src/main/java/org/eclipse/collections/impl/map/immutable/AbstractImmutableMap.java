@@ -90,6 +90,29 @@ import org.eclipse.collections.impl.partition.bag.PartitionHashBag;
 import org.eclipse.collections.impl.tuple.ImmutableEntry;
 import org.eclipse.collections.impl.utility.MapIterate;
 
+/**
+ * AbstractImmutableMap provides a skeletal implementation of the {@link ImmutableMap} interface
+ * to minimize the effort required to implement immutable maps.
+ * <p>
+ * This abstract class provides default implementations for many operations by delegating to
+ * the underlying data structure. Immutable maps cannot be modified after creation - all "mutation"
+ * operations return new map instances.
+ * <p>
+ * <b>Key Characteristics:</b>
+ * <ul>
+ *   <li>Immutable - cannot be modified after creation</li>
+ *   <li>Thread-safe - all instances are inherently thread-safe due to immutability</li>
+ *   <li>Copy-on-write semantics - newWith/without methods return new instances</li>
+ *   <li>Implements both ImmutableMap and java.util.Map for interoperability</li>
+ *   <li>Unsupported operations (put, remove, etc.) throw UnsupportedOperationException</li>
+ * </ul>
+ * <p>
+ * Implementations should provide concrete storage and lookup mechanisms while inheriting
+ * the rich functional API from this class.
+ *
+ * @param <K> the type of keys maintained by this map
+ * @param <V> the type of mapped values
+ */
 public abstract class AbstractImmutableMap<K, V>
         extends AbstractMapIterable<K, V>
         implements ImmutableMap<K, V>, Map<K, V>

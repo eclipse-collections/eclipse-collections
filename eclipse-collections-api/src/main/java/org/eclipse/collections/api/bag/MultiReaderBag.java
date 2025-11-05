@@ -13,8 +13,25 @@ package org.eclipse.collections.api.bag;
 import org.eclipse.collections.api.block.procedure.Procedure;
 
 /**
- * A MultiReaderBag provides thread-safe iteration for a bag through methods {@code withReadLockAndDelegate()} and {@code withWriteLockAndDelegate()}.
+ * A MultiReaderBag provides thread-safe iteration for a bag through methods {@code withReadLockAndDelegate()}
+ * and {@code withWriteLockAndDelegate()}. It uses a read-write lock to allow multiple concurrent readers
+ * or a single writer, ensuring safe concurrent access to the bag.
  *
+ * <p><b>Usage Examples:</b></p>
+ * <pre>{@code
+ * MultiReaderBag<String> bag = MultiReaderBag.newBag();
+ * bag.add("A");
+ * bag.withReadLockAndDelegate(innerBag -> {
+ *     // Safe concurrent read operations
+ *     innerBag.forEach(System.out::println);
+ * });
+ * bag.withWriteLockAndDelegate(innerBag -> {
+ *     // Exclusive write operations
+ *     innerBag.add("B");
+ * });
+ * }</pre>
+ *
+ * @param <T> the type of elements in the bag
  * @since 10.0.
  */
 public interface MultiReaderBag<T>

@@ -40,7 +40,17 @@ import org.eclipse.collections.api.set.UnsortedSetIterable;
 import org.eclipse.collections.api.tuple.Pair;
 
 /**
- * An iterable Map whose elements are unsorted.
+ * An iterable Map whose elements are unsorted. This is the base interface for maps
+ * that do not guarantee any specific iteration order. The iteration order may vary
+ * between different implementations and is not deterministic.
+ *
+ * <p><b>Usage Examples:</b></p>
+ * <pre>{@code
+ * UnsortedMapIterable<String, Integer> map = Maps.mutable.of("A", 1, "B", 2, "C", 3);
+ * UnsortedMapIterable<String, Integer> filtered = map.select((k, v) -> v > 1);
+ * Bag<Integer> values = map.collect(v -> v * 2);
+ * // Iteration order is not guaranteed
+ * }</pre>
  */
 public interface UnsortedMapIterable<K, V>
         extends MapIterable<K, V>

@@ -41,6 +41,23 @@ import org.eclipse.collections.api.partition.bag.PartitionMutableBag;
 import org.eclipse.collections.api.set.MutableSet;
 import org.eclipse.collections.api.tuple.Pair;
 
+/**
+ * MutablePrimitiveObjectMap is a mutable map with primitive keys and Object values.
+ * This interface provides mutating operations for primitive-to-object maps. All modifications
+ * alter the map in place and provide better memory efficiency and performance compared to
+ * using boxed primitive keys.
+ *
+ * <p><b>Usage Examples:</b></p>
+ * <pre>{@code
+ * MutableIntObjectMap<String> map = IntObjectMaps.mutable.empty();
+ * map.put(1, "One");
+ * map.put(2, "Two");
+ * map.remove(1);
+ * map.put(3, "Three");
+ * }</pre>
+ *
+ * @param <V> the type of values in the map
+ */
 public interface MutablePrimitiveObjectMap<V> extends PrimitiveObjectMap<V>
 {
     void clear();

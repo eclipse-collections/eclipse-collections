@@ -66,6 +66,29 @@ import org.eclipse.collections.api.tuple.Twin;
  * Set (toSet), and to a Map (toMap).
  * <p>
  * There are several extensions to MutableCollection, including MutableList, MutableSet, and MutableBag.
+ * <p>
+ * Unlike ImmutableCollection, MutableCollection instances can be modified in place. Operations like add, remove,
+ * and clear directly modify the collection. The with/without methods provide a fluent interface that modifies
+ * the collection and returns it for method chaining.
+ *
+ * <p><b>Usage Examples:</b></p>
+ * <pre>{@code
+ * MutableCollection<String> collection = Lists.mutable.of("A", "B", "C");
+ *
+ * // Adding and removing elements (modifies the collection in place)
+ * collection.add("D");              // collection is now ["A", "B", "C", "D"]
+ * collection.remove("A");           // collection is now ["B", "C", "D"]
+ *
+ * // Fluent interface with method chaining
+ * collection.with("E").with("F");   // collection is now ["B", "C", "D", "E", "F"]
+ *
+ * // Filtering and transformation (returns new collection)
+ * MutableCollection<String> filtered = collection.select(s -> s.compareTo("D") >= 0);  // ["D", "E", "F"]
+ * MutableCollection<Integer> lengths = collection.collect(String::length);               // [1, 1, 1, 1, 1]
+ *
+ * // Convert to immutable
+ * ImmutableCollection<String> immutable = collection.toImmutable();
+ * }</pre>
  */
 public interface MutableCollection<T>
         extends Collection<T>, RichIterable<T>
@@ -99,6 +122,8 @@ public interface MutableCollection<T>
      * new instance. For other MutableCollection types you will replace the reference to collection with the same
      * collection, since the instance will return "this" after calling add on itself.
      *
+     * @param element the element to add
+     * @return this MutableCollection (or a new one for FixedSizeCollection) for method chaining
      * @see #add(Object)
      */
     MutableCollection<T> with(T element);
@@ -120,6 +145,8 @@ public interface MutableCollection<T>
      * new instance. For other MutableCollection types you will replace the reference to collection with the same
      * collection, since the instance will return "this" after calling remove on itself.
      *
+     * @param element the element to remove
+     * @return this MutableCollection (or a new one for FixedSizeCollection) for method chaining
      * @see #remove(Object)
      */
     MutableCollection<T> without(T element);
@@ -139,6 +166,8 @@ public interface MutableCollection<T>
      * new instance. For other MutableCollection types you will replace the reference to collection with the same
      * collection, since the instance will return "this" after calling addAll on itself.
      *
+     * @param elements the elements to add
+     * @return this MutableCollection (or a new one for FixedSizeCollection) for method chaining
      * @see #addAll(Collection)
      */
     MutableCollection<T> withAll(Iterable<? extends T> elements);
@@ -158,6 +187,8 @@ public interface MutableCollection<T>
      * new instance. For other MutableCollection types you will replace the reference to collection with the same
      * collection, since the instance will return "this" after calling removeAll on itself.
      *
+     * @param elements the elements to remove
+     * @return this MutableCollection (or a new one for FixedSizeCollection) for method chaining
      * @see #removeAll(Collection)
      */
     MutableCollection<T> withoutAll(Iterable<? extends T> elements);
@@ -166,9 +197,18 @@ public interface MutableCollection<T>
      * Creates a new empty mutable version of the same collection type. For example, if this instance is a FastList,
      * this method will return a new empty FastList. If the class of this instance is immutable or fixed size (i.e.
      * SingletonList) then a mutable alternative to the class will be provided.
+     *
+     * @return a new empty mutable collection of the same type
      */
     MutableCollection<T> newEmpty();
 
+    /**
+     * Executes the given procedure on each element in this collection and returns this collection for method chaining.
+     * This method is useful for performing side effects while chaining method calls.
+     *
+     * @param procedure the procedure to execute on each element
+     * @return this MutableCollection to allow method chaining
+     */
     @Override
     MutableCollection<T> tap(Procedure<? super T> procedure);
 
@@ -270,19 +310,29 @@ public interface MutableCollection<T>
 
     /**
      * Removes all elements in the collection that evaluate to true for the specified predicate.
+     * This method modifies the collection in place.
      *
      * <pre>e.g.
      * return lastNames.<b>removeIf</b>(Predicates.isNull());
      * </pre>
+     *
+     * @param predicate the predicate to evaluate each element
+     * @return true if any elements were removed, false otherwise
      */
     boolean removeIf(Predicate<? super T> predicate);
 
     /**
      * Removes all elements in the collection that evaluate to true for the specified predicate2 and parameter.
+     * This method modifies the collection in place.
      *
      * <pre>
      * return lastNames.<b>removeIfWith</b>(Predicates2.isNull(), null);
      * </pre>
+     *
+     * @param predicate the predicate to evaluate each element with the parameter
+     * @param parameter the parameter to pass to the predicate
+     * @param <P> the type of the parameter
+     * @return true if any elements were removed, false otherwise
      */
     <P> boolean removeIfWith(Predicate2<? super T, ? super P> predicate, P parameter);
 
@@ -591,18 +641,33 @@ public interface MutableCollection<T>
     MutableCollection<Pair<T, Integer>> zipWithIndex();
 
     /**
+     * Adds all elements from the specified iterable to this collection.
+     * This is similar to {@link #addAll(Collection)} but works with any Iterable.
+     *
+     * @param iterable the iterable containing elements to add
+     * @return true if this collection changed as a result of the call
      * @see #addAll(Collection)
      * @since 1.0
      */
     boolean addAllIterable(Iterable<? extends T> iterable);
 
     /**
+     * Removes all elements in this collection that are also contained in the specified iterable.
+     * This is similar to {@link #removeAll(Collection)} but works with any Iterable.
+     *
+     * @param iterable the iterable containing elements to be removed from this collection
+     * @return true if this collection changed as a result of the call
      * @see #removeAll(Collection)
      * @since 1.0
      */
     boolean removeAllIterable(Iterable<?> iterable);
 
     /**
+     * Retains only the elements in this collection that are contained in the specified iterable.
+     * This is similar to {@link #retainAll(Collection)} but works with any Iterable.
+     *
+     * @param iterable the iterable containing elements to be retained in this collection
+     * @return true if this collection changed as a result of the call
      * @see #retainAll(Collection)
      * @since 1.0
      */

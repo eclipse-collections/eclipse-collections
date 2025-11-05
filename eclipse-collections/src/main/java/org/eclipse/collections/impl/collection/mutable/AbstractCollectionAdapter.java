@@ -84,6 +84,34 @@ import org.eclipse.collections.impl.utility.LazyIterate;
 import org.eclipse.collections.impl.utility.internal.IterableIterate;
 import org.eclipse.collections.impl.utility.internal.MutableCollectionIterate;
 
+/**
+ * AbstractCollectionAdapter is an abstract adapter that wraps a JDK {@link Collection}
+ * and provides the Eclipse Collections {@link MutableCollection} API.
+ * <p>
+ * This class allows you to use any standard Java Collection with Eclipse Collections APIs,
+ * enabling seamless integration between JDK collections and Eclipse Collections functionality.
+ * All operations delegate to the wrapped collection while providing additional Eclipse Collections methods.
+ * </p>
+ * <p><b>Thread Safety:</b> Thread-safety depends on the wrapped collection. If the wrapped
+ * collection is thread-safe, then this adapter is thread-safe.</p>
+ * <p><b>Performance:</b> Performance characteristics match those of the underlying wrapped collection.
+ * Eclipse Collections methods use optimized iteration patterns when possible.</p>
+ * <p><b>Usage Examples:</b></p>
+ * <pre>{@code
+ * // Wrap a standard ArrayList with Eclipse Collections API
+ * List<String> jdkList = new ArrayList<>();
+ * jdkList.add("Alice");
+ * jdkList.add("Bob");
+ * MutableCollection<String> ecCollection = CollectionAdapter.adapt(jdkList);
+ *
+ * // Use Eclipse Collections APIs
+ * MutableList<String> upperCase = ecCollection.collect(String::toUpperCase).toList();
+ * MutableCollection<String> filtered = ecCollection.select(name -> name.startsWith("A"));
+ * }</pre>
+ *
+ * @param <T> the type of elements in this collection
+ * @since 1.0
+ */
 public abstract class AbstractCollectionAdapter<T>
         implements MutableCollection<T>
 {

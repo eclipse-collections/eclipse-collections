@@ -46,7 +46,19 @@ import org.eclipse.collections.api.tuple.Pair;
 
 /**
  * ImmutableSortedBag is the non-modifiable equivalent interface to {@link MutableSortedBag}.
+ * Elements are maintained in sorted order with occurrence counts tracked for each element.
+ * All operations that would modify the bag return new immutable instances instead.
  *
+ * <p><b>Usage Examples:</b></p>
+ * <pre>{@code
+ * ImmutableSortedBag<String> bag = SortedBags.immutable.of("C", "A", "B", "A", "C");
+ * // Iteration order is A, A, B, C, C (sorted)
+ * ImmutableSortedBag<String> updated = bag.newWith("D");
+ * // Original bag is unchanged
+ * int countOfC = bag.occurrencesOf("C"); // Returns 2
+ * }</pre>
+ *
+ * @param <T> the type of elements in the bag
  * @since 4.2
  */
 public interface ImmutableSortedBag<T>

@@ -78,6 +78,35 @@ import org.eclipse.collections.impl.UnmodifiableIteratorAdapter;
 import org.eclipse.collections.impl.block.factory.PrimitiveFunctions;
 import org.eclipse.collections.impl.utility.LazyIterate;
 
+/**
+ * AbstractUnmodifiableMutableCollection provides an unmodifiable view of a MutableCollection.
+ * This class prevents modifications while maintaining the MutableCollection interface.
+ * <p>
+ * All read operations are delegated to the wrapped collection. All write operations
+ * (add, remove, clear, etc.) throw {@link UnsupportedOperationException}. The iterator
+ * returned is also unmodifiable.
+ * </p>
+ * <p><b>Thread Safety:</b> Thread-safety depends on the wrapped collection. This wrapper
+ * does not add synchronization.</p>
+ * <p><b>Performance:</b> Read operations have the same performance as the wrapped collection.
+ * Write operations fail immediately.</p>
+ * <p><b>Usage Examples:</b></p>
+ * <pre>{@code
+ * MutableList<String> mutableList = FastList.newListWith("a", "b", "c");
+ * MutableCollection<String> unmodifiable = mutableList.asUnmodifiable();
+ *
+ * // Read operations work
+ * int size = unmodifiable.size(); // Returns 3
+ * boolean contains = unmodifiable.contains("a"); // Returns true
+ *
+ * // Write operations throw UnsupportedOperationException
+ * // unmodifiable.add("d"); // Throws UnsupportedOperationException
+ * // unmodifiable.remove("a"); // Throws UnsupportedOperationException
+ * }</pre>
+ *
+ * @param <T> the type of elements in this collection
+ * @since 1.0
+ */
 public class AbstractUnmodifiableMutableCollection<T> implements MutableCollection<T>
 {
     private final MutableCollection<? extends T> collection;

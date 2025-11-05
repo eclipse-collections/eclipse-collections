@@ -39,6 +39,19 @@ import org.eclipse.collections.api.partition.bag.PartitionUnsortedBag;
 import org.eclipse.collections.api.set.UnsortedSetIterable;
 import org.eclipse.collections.api.tuple.Pair;
 
+/**
+ * UnsortedBag is a Bag whose iteration order is not deterministic. This is the parent interface
+ * for bags that do not maintain any specific ordering of their elements.
+ *
+ * <p><b>Usage Examples:</b></p>
+ * <pre>{@code
+ * UnsortedBag<String> bag = Bags.mutable.of("C", "A", "B", "A");
+ * // Iteration order is not guaranteed
+ * int countOfA = bag.occurrencesOf("A"); // Returns 2
+ * }</pre>
+ *
+ * @param <T> the type of elements in the bag
+ */
 public interface UnsortedBag<T> extends Bag<T>
 {
     @Override

@@ -31,6 +31,24 @@ import org.eclipse.collections.api.set.MutableSet;
 import org.eclipse.collections.api.tuple.Pair;
 import org.eclipse.collections.impl.factory.Multimaps;
 
+/**
+ * EmptyMap is a memory-efficient implementation of a fixed-size map with zero entries.
+ * <p>
+ * This class represents an empty map that uses minimal memory. It is immutable in the sense that
+ * all mutation operations either throw exceptions or return new map instances via copy-on-write semantics.
+ * <p>
+ * <b>Key Characteristics:</b>
+ * <ul>
+ *   <li>Size is always 0</li>
+ *   <li>All query operations return empty results</li>
+ *   <li>withKeyValue returns a SingletonMap</li>
+ *   <li>withoutKey returns this same instance</li>
+ *   <li>Serializable and uses readResolve for singleton pattern</li>
+ * </ul>
+ *
+ * @param <K> the type of keys (never actually present)
+ * @param <V> the type of values (never actually present)
+ */
 final class EmptyMap<K, V>
         extends AbstractMemoryEfficientMutableMap<K, V>
         implements Serializable

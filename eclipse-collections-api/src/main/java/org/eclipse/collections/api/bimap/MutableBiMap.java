@@ -30,8 +30,22 @@ import org.eclipse.collections.api.set.MutableSet;
 import org.eclipse.collections.api.tuple.Pair;
 
 /**
- * A {@link BiMap} whose contents can be altered after initialization.
+ * A {@link BiMap} whose contents can be altered after initialization. MutableBiMap enforces uniqueness
+ * on both keys and values, and provides mutating operations that modify the map in place. The inverse
+ * view is also mutable and reflects changes made to either direction.
  *
+ * <p><b>Usage Examples:</b></p>
+ * <pre>{@code
+ * MutableBiMap<String, Integer> biMap = BiMaps.mutable.empty();
+ * biMap.put("A", 1);
+ * biMap.put("B", 2);
+ * MutableBiMap<Integer, String> inverse = biMap.inverse();
+ * inverse.put(3, "C"); // Also updates the original biMap
+ * biMap.forcePut("D", 1); // Removes "A" -> 1 and adds "D" -> 1
+ * }</pre>
+ *
+ * @param <K> the type of keys in the map
+ * @param <V> the type of values in the map
  * @since 4.2
  */
 public interface MutableBiMap<K, V> extends BiMap<K, V>, MutableMapIterable<K, V>, Cloneable

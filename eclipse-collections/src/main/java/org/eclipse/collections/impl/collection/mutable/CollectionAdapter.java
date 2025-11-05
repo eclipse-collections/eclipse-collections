@@ -36,13 +36,38 @@ import org.eclipse.collections.impl.utility.ArrayIterate;
 import org.eclipse.collections.impl.utility.Iterate;
 
 /**
- * This class provides a MutableCollection interface wrapper around a JDK Collections Collection interface instance.
- * All the MutableCollection interface methods are supported in addition to the JDK Collection interface methods.
+ * CollectionAdapter provides a MutableCollection wrapper around a JDK {@link Collection}.
+ * This adapter allows JDK collections to be used with the Eclipse Collections API seamlessly.
  * <p>
- * To create a new instance that wraps a collection with the MutableSet interface, use the {@link #wrapSet(Iterable)}
- * factory method. To create a new instance that wraps a collection with the MutableList interface, use the
- * {@link #wrapList(Iterable)} factory method. To wrap a collection with the MutableCollection interface alone, use
- * the {@link #adapt(Collection)} factory method.
+ * The adapter delegates all operations to the wrapped collection while providing Eclipse Collections
+ * methods. This enables JDK collections to benefit from Eclipse Collections' rich API without copying data.
+ * </p>
+ * <p><b>Factory Methods:</b></p>
+ * <ul>
+ * <li>{@link #adapt(Collection)} - Wraps a collection with MutableCollection interface</li>
+ * <li>{@link #wrapSet(Iterable)} - Wraps an iterable as a MutableSet</li>
+ * <li>{@link #wrapList(Iterable)} - Wraps an iterable as a MutableList</li>
+ * </ul>
+ * <p><b>Thread Safety:</b> Not thread-safe. Thread-safety depends on the wrapped collection.
+ * Use {@link #asSynchronized()} to create a thread-safe wrapper.</p>
+ * <p><b>Performance:</b> Delegates to the wrapped collection. Performance matches the underlying collection.</p>
+ * <p><b>Usage Examples:</b></p>
+ * <pre>{@code
+ * // Adapt a JDK ArrayList
+ * ArrayList<String> jdkList = new ArrayList<>();
+ * jdkList.add("a");
+ * jdkList.add("b");
+ * MutableCollection<String> adapted = CollectionAdapter.adapt(jdkList);
+ *
+ * // Use Eclipse Collections APIs
+ * MutableList<String> filtered = adapted.select(s -> s.length() > 1).toList();
+ *
+ * // Wrap as specific type
+ * MutableSet<Integer> set = CollectionAdapter.wrapSet(Arrays.asList(1, 2, 3));
+ * }</pre>
+ *
+ * @param <T> the type of elements in this collection
+ * @since 1.0
  */
 public final class CollectionAdapter<T>
         extends AbstractCollectionAdapter<T>

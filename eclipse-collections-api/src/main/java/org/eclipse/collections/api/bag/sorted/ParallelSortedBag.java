@@ -20,6 +20,17 @@ import org.eclipse.collections.api.list.ParallelListIterable;
 import org.eclipse.collections.api.multimap.sortedbag.SortedBagMultimap;
 
 /**
+ * ParallelSortedBag provides parallel iteration capabilities for SortedBag data structures.
+ * Operations are executed in parallel while maintaining sorted order and element occurrence counts.
+ *
+ * <p><b>Usage Examples:</b></p>
+ * <pre>{@code
+ * ParallelSortedBag<String> parallelBag = bag.asParallel(executor, batchSize);
+ * ParallelSortedBag<String> filtered = parallelBag.select(s -> s.length() > 2);
+ * // Result maintains sorted order
+ * }</pre>
+ *
+ * @param <T> the type of elements in the bag
  * @since 5.0
  */
 @Beta

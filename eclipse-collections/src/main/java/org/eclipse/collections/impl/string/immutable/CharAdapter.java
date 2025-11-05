@@ -49,8 +49,42 @@ import org.eclipse.collections.impl.utility.Iterate;
 import org.eclipse.collections.impl.utility.StringIterate;
 
 /**
- * Provides a view into the char[] stored in a String as an ImmutableCharList. This is a cleaner more OO way of
- * providing many of the iterable protocols available in StringIterate for char values.
+ * CharAdapter provides an immutable view of a String as an {@link ImmutableCharList}.
+ * This allows treating String char sequences as primitive char collections with Eclipse Collections' rich API.
+ * <p>
+ * This adapter bridges the gap between Java Strings and Eclipse Collections, enabling functional operations
+ * (select, collect, detect, etc.) on String characters without boxing to Character objects. All operations
+ * return views or new instances without modifying the underlying String.
+ * </p>
+ * <p><b>Thread Safety:</b> Immutable and thread-safe. The underlying String is immutable.</p>
+ * <p><b>Performance:</b> No boxing overhead for char primitives. Lazy operations available via asLazy().
+ * Memory-efficient as it doesn't copy the underlying String's char array.</p>
+ * <p><b>Usage Examples:</b></p>
+ * <pre>{@code
+ * String text = "Hello World";
+ * CharAdapter chars = CharAdapter.adapt(text);
+ *
+ * // Filter characters
+ * CharList vowels = chars.select(c -> "aeiouAEIOU".indexOf(c) >= 0);
+ * // Result: ['e', 'o', 'o']
+ *
+ * // Transform characters
+ * ImmutableCharList upperChars = chars.collectChar(Character::toUpperCase);
+ *
+ * // Count matching characters
+ * int spaceCount = chars.count(c -> c == ' '); // Returns 1
+ *
+ * // Check if any/all satisfy predicate
+ * boolean hasDigits = chars.anySatisfy(Character::isDigit); // false
+ * boolean allLettersOrSpaces = chars.allSatisfy(c ->
+ *     Character.isLetter(c) || Character.isWhitespace(c)); // true
+ *
+ * // Convert back to String
+ * String result = chars.makeString(""); // "Hello World"
+ *
+ * // Create from char array
+ * CharAdapter fromChars = CharAdapter.from('a', 'b', 'c');
+ * }</pre>
  *
  * @since 7.0
  */

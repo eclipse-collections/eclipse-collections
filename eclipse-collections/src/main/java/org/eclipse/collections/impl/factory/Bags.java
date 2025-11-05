@@ -18,30 +18,67 @@ import org.eclipse.collections.impl.bag.mutable.MultiReaderMutableBagFactory;
 import org.eclipse.collections.impl.bag.mutable.MutableBagFactoryImpl;
 
 /**
- * This class should be used to create instances of MutableBag and ImmutableBag
+ * Factory utility class for creating instances of {@link org.eclipse.collections.api.bag.MutableBag}
+ * and {@link org.eclipse.collections.api.bag.ImmutableBag}.
  * <p>
- * Mutable Examples:
+ * This class provides static factory instances for creating bag collections with different characteristics:
+ * <ul>
+ *   <li>{@link #mutable} - Creates standard mutable bags</li>
+ *   <li>{@link #immutable} - Creates immutable bags</li>
+ *   <li>{@link #multiReader} - Creates thread-safe multi-reader bags</li>
+ * </ul>
+ * <p>
+ * Bags are collections that allow duplicate elements and track the number of occurrences of each element.
+ * Unlike lists, bags do not maintain insertion order.
+ * <p>
+ * This class is thread-safe as all factory fields are immutable singletons.
+ * <p><b>Usage Examples:</b></p>
+ * <pre>{@code
+ * // Creating mutable bags
+ * MutableBag<String> emptyBag = Bags.mutable.empty();
+ * MutableBag<String> bagWith = Bags.mutable.with("a", "b", "c");
+ * MutableBag<String> bagOf = Bags.mutable.of("a", "b", "c");
+ * MutableBag<String> fromIterable = Bags.mutable.ofAll(Arrays.asList("a", "b"));
  *
- * <pre>
- * MutableBag&lt;String&gt; emptyBag = Bags.mutable.empty();
- * MutableBag&lt;String&gt; bagWith = Bags.mutable.with("a", "b", "c");
- * MutableBag&lt;String&gt; bagOf = Bags.mutable.of("a", "b", "c");
- * </pre>
+ * // Creating immutable bags
+ * ImmutableBag<String> immutableEmpty = Bags.immutable.empty();
+ * ImmutableBag<String> immutableWith = Bags.immutable.with("a", "b", "c");
+ * ImmutableBag<String> immutableOf = Bags.immutable.of("a", "b", "c");
  *
- * Immutable Examples:
+ * // Creating multi-reader bags (thread-safe)
+ * MutableBag<String> multiReaderBag = Bags.multiReader.empty();
+ * MutableBag<String> multiReaderWith = Bags.multiReader.with("a", "b", "c");
+ * }</pre>
  *
- * <pre>
- * ImmutableBag&lt;String&gt; emptyBag = Bags.immutable.empty();
- * ImmutableBag&lt;String&gt; bagWith = Bags.immutable.with("a", "b", "c");
- * ImmutableBag&lt;String&gt; bagOf = Bags.immutable.of("a", "b", "c");
- * </pre>
+ * @see org.eclipse.collections.api.bag.MutableBag
+ * @see org.eclipse.collections.api.bag.ImmutableBag
+ * @see org.eclipse.collections.api.factory.bag.MutableBagFactory
+ * @see org.eclipse.collections.api.factory.bag.ImmutableBagFactory
+ * @see org.eclipse.collections.api.factory.bag.MultiReaderBagFactory
  */
 
 @SuppressWarnings("ConstantNamingConvention")
 public final class Bags
 {
+    /**
+     * Factory for creating immutable bag instances.
+     * <p>
+     * Immutable bags are thread-safe and cannot be modified after creation.
+     */
     public static final ImmutableBagFactory immutable = ImmutableBagFactoryImpl.INSTANCE;
+
+    /**
+     * Factory for creating mutable bag instances.
+     * <p>
+     * Mutable bags are not thread-safe by default and can be modified after creation.
+     */
     public static final MutableBagFactory mutable = MutableBagFactoryImpl.INSTANCE;
+
+    /**
+     * Factory for creating multi-reader mutable bag instances.
+     * <p>
+     * Multi-reader bags provide thread-safe read operations and require explicit locking for write operations.
+     */
     public static final MultiReaderBagFactory multiReader = MultiReaderMutableBagFactory.INSTANCE;
 
     private Bags()

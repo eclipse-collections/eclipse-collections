@@ -22,14 +22,52 @@ import org.eclipse.collections.api.tuple.Triplet;
 import org.eclipse.collections.api.tuple.Twin;
 
 /**
- * A Pair is a container that holds two related objects. It is the equivalent of an Association in Smalltalk, or an
- * implementation of Map.Entry in the JDK. A Twin is a Pair with the same types. This class is a factory class
- * for Pairs and Twins.
+ * Tuples is a factory class for creating tuple instances (Pair, Twin, Triple, Triplet).
+ * Tuples are immutable containers that hold multiple related objects together.
+ * <p>
+ * This class provides factory methods for:
+ * </p>
+ * <ul>
+ * <li><b>Pair:</b> A container holding two related objects of potentially different types (like Map.Entry)</li>
+ * <li><b>Twin:</b> A Pair where both elements have the same type</li>
+ * <li><b>Triple:</b> A container holding three related objects of potentially different types</li>
+ * <li><b>Triplet:</b> A Triple where all three elements have the same type</li>
+ * </ul>
+ * <p>
+ * Tuples are useful for:
+ * </p>
+ * <ul>
+ * <li>Returning multiple values from methods</li>
+ * <li>Grouping related data without creating custom classes</li>
+ * <li>Representing key-value pairs or associations</li>
+ * <li>Intermediate results in functional transformations (zip operations)</li>
+ * </ul>
+ * <p><b>Thread Safety:</b> All tuples created are immutable and therefore thread-safe.</p>
+ * <p><b>Performance:</b> Lightweight immutable containers with minimal overhead.</p>
+ * <p><b>Usage Examples:</b></p>
+ * <pre>{@code
+ * // Create a Pair (different types)
+ * Pair<String, Integer> nameAge = Tuples.pair("Alice", 30);
+ * String name = nameAge.getOne(); // "Alice"
+ * Integer age = nameAge.getTwo(); // 30
  *
- * A Triple is a container that holds three related objects. Similar to Haskell a Tuple is container that can contain 2 or more objects.
- * The Triple is the implementation of the 3-tuple. A Triplet is a Triple with the same types. This class holds factory methods for Triples and Triplets
+ * // Create a Twin (same types)
+ * Twin<String> coordinates = Tuples.twin("x", "y");
  *
- * The equivalent class for primitive and object combinations is {@link org.eclipse.collections.impl.tuple.primitive.PrimitiveTuples}
+ * // Create from Map.Entry
+ * Map.Entry<String, Integer> entry = new AbstractMap.SimpleEntry<>("key", 42);
+ * Pair<String, Integer> pair = Tuples.pairFrom(entry);
+ *
+ * // Create a Triple
+ * Triple<String, Integer, Boolean> person = Tuples.triple("Bob", 25, true);
+ *
+ * // Convert Pair to List
+ * Twin<String> twin = Tuples.twin("a", "b");
+ * MutableList<String> list = Tuples.pairToList(twin); // ["a", "b"]
+ * }</pre>
+ *
+ * @see org.eclipse.collections.impl.tuple.primitive.PrimitiveTuples for primitive and object combinations
+ * @since 1.0
  */
 public final class Tuples
 {

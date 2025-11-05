@@ -49,7 +49,18 @@ import org.eclipse.collections.api.tuple.Pair;
 
 /**
  * An OrderedIterable is a RichIterable with some meaningful order, such as insertion order, access order, or sorted order.
+ * The iteration order is deterministic and consistent. OrderedIterable provides methods for accessing elements by
+ * position, finding indices, and performing operations that depend on the ordering.
  *
+ * <p><b>Usage Examples:</b></p>
+ * <pre>{@code
+ * OrderedIterable<String> ordered = Lists.mutable.of("A", "B", "C");
+ * String first = ordered.getFirst(); // Returns "A"
+ * int index = ordered.indexOf("B"); // Returns 1
+ * OrderedIterable<String> firstTwo = ordered.take(2); // Contains ["A", "B"]
+ * }</pre>
+ *
+ * @param <T> the type of elements in the iterable
  * @since 6.0
  */
 public interface OrderedIterable<T> extends RichIterable<T>

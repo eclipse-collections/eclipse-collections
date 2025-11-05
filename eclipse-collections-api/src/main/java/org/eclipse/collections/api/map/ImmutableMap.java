@@ -46,32 +46,99 @@ import org.eclipse.collections.api.tuple.Pair;
 
 /**
  * An ImmutableMap is different from a JCF Map because it has no mutating methods. It provides the read-only
- * protocol of a JDK Map.
+ * protocol of a JDK Map. Unlike mutable maps, all modification operations return new immutable instances,
+ * preserving the original map. ImmutableMap is an unordered collection - use ImmutableOrderedMap for
+ * maintaining insertion order.
+ *
+ * <p><b>Usage Examples:</b></p>
+ * <pre>{@code
+ * ImmutableMap<String, Integer> map = Maps.immutable.of("A", 1, "B", 2, "C", 3);
+ * ImmutableMap<String, Integer> updated = map.newWithKeyValue("D", 4);
+ * ImmutableMap<String, Integer> filtered = map.select((k, v) -> v > 1);
+ * // Original map is unchanged
+ * }</pre>
  */
 public interface ImmutableMap<K, V>
         extends UnsortedMapIterable<K, V>, ImmutableMapIterable<K, V>
 {
+    /**
+     * Returns a new ImmutableMap with an additional key-value pair added. If the key already exists,
+     * the value is replaced in the returned map.
+     *
+     * @param key the key to add
+     * @param value the value to associate with the key
+     * @return a new ImmutableMap with the key-value pair added
+     */
     @Override
     ImmutableMap<K, V> newWithKeyValue(K key, V value);
 
+    /**
+     * Returns a new ImmutableMap with all key-value pairs from the iterable added.
+     *
+     * @param keyValues the key-value pairs to add
+     * @return a new ImmutableMap with all key-value pairs added
+     */
     @Override
     ImmutableMap<K, V> newWithAllKeyValues(Iterable<? extends Pair<? extends K, ? extends V>> keyValues);
 
+    /**
+     * Returns a new ImmutableMap with all key-value pairs from the specified Map added.
+     *
+     * @param map the Map containing key-value pairs to add
+     * @return a new ImmutableMap with all key-value pairs added
+     */
     @Override
     ImmutableMap<K, V> newWithMap(Map<? extends K, ? extends V> map);
 
+    /**
+     * Returns a new ImmutableMap with all key-value pairs from the specified MapIterable added.
+     *
+     * @param mapIterable the MapIterable containing key-value pairs to add
+     * @return a new ImmutableMap with all key-value pairs added
+     */
     @Override
     ImmutableMap<K, V> newWithMapIterable(MapIterable<? extends K, ? extends V> mapIterable);
 
+    /**
+     * Returns a new ImmutableMap with all specified key-value pairs added.
+     *
+     * @param keyValuePairs the key-value pairs to add
+     * @return a new ImmutableMap with all key-value pairs added
+     */
     @Override
     ImmutableMap<K, V> newWithAllKeyValueArguments(Pair<? extends K, ? extends V>... keyValuePairs);
 
+    /**
+     * Returns a new ImmutableMap with the specified key removed. If the key does not exist,
+     * returns this map.
+     *
+     * @param key the key to remove
+     * @return a new ImmutableMap without the specified key
+     */
     @Override
     ImmutableMap<K, V> newWithoutKey(K key);
 
+    /**
+     * Returns a new ImmutableMap with all specified keys removed.
+     *
+     * @param keys the keys to remove
+     * @return a new ImmutableMap without the specified keys
+     */
     @Override
     ImmutableMap<K, V> newWithoutAllKeys(Iterable<? extends K> keys);
 
+    /**
+     * Converts this ImmutableMap to a MutableMap with the same key-value pairs.
+     *
+     * <p><b>Usage Examples:</b></p>
+     * <pre>{@code
+     * ImmutableMap<String, Integer> immutable = Maps.immutable.of("A", 1, "B", 2);
+     * MutableMap<String, Integer> mutable = immutable.toMap();
+     * mutable.put("C", 3); // Now we can modify it
+     * }</pre>
+     *
+     * @return a new MutableMap with the same key-value pairs
+     */
     MutableMap<K, V> toMap();
 
     @Override

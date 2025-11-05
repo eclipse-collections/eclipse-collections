@@ -15,6 +15,19 @@ import org.eclipse.collections.api.partition.bag.sorted.PartitionImmutableSorted
 import org.eclipse.collections.api.partition.bag.sorted.PartitionSortedBag;
 
 /**
+ * An immutable implementation of {@link PartitionImmutableSortedBag} created from a sorted partition.
+ * <p>
+ * This class maintains two immutable sorted bags: one for elements that satisfied the predicate (selected)
+ * and one for elements that did not (rejected). Once created, the contents of this partition
+ * cannot be modified. Both bags maintain their sort order from the source partition.
+ * </p>
+ * <p>
+ * This implementation is thread-safe and can be safely shared between threads.
+ * </p>
+ *
+ * @param <T> the type of elements in this partition
+ * @see PartitionImmutableSortedBag
+ * @see PartitionTreeBag
  * @since 4.2
  */
 public class PartitionImmutableSortedBagImpl<T> implements PartitionImmutableSortedBag<T>
@@ -22,18 +35,67 @@ public class PartitionImmutableSortedBagImpl<T> implements PartitionImmutableSor
     private final ImmutableSortedBag<T> selected;
     private final ImmutableSortedBag<T> rejected;
 
+    /**
+     * Constructs a new immutable sorted partition from the given sorted partition.
+     * <p>
+     * Creates immutable copies of both the selected and rejected sorted bags from the
+     * provided partition. This is a snapshot operation - subsequent changes to
+     * the source partition will not affect this immutable partition. The sort order
+     * is preserved from the source partition.
+     * </p>
+     * <p><b>Usage Examples:</b></p>
+     * <pre>{@code
+     * PartitionTreeBag<Integer> mutablePartition = new PartitionTreeBag<>(Comparator.naturalOrder());
+     * mutablePartition.getSelected().add(1);
+     * mutablePartition.getRejected().add(2);
+     * PartitionImmutableSortedBagImpl<Integer> immutable = new PartitionImmutableSortedBagImpl<>(mutablePartition);
+     * // immutable now contains a snapshot of the sorted partition
+     * }</pre>
+     *
+     * @param partitionImmutableSortedBag the sorted partition to create an immutable copy from
+     */
     public PartitionImmutableSortedBagImpl(PartitionSortedBag<T> partitionImmutableSortedBag)
     {
         this.selected = partitionImmutableSortedBag.getSelected().toImmutable();
         this.rejected = partitionImmutableSortedBag.getRejected().toImmutable();
     }
 
+    /**
+     * Returns the immutable sorted bag containing elements that satisfied the partition predicate.
+     * <p>
+     * The returned bag is immutable and cannot be modified. Elements are maintained in sorted order.
+     * </p>
+     * <p><b>Usage Examples:</b></p>
+     * <pre>{@code
+     * PartitionImmutableSortedBag<Integer> partition = ...;
+     * ImmutableSortedBag<Integer> selected = partition.getSelected();
+     * // selected contains all elements that satisfied the predicate in sorted order
+     * int size = selected.size();
+     * }</pre>
+     *
+     * @return the immutable sorted bag of selected elements
+     */
     @Override
     public ImmutableSortedBag<T> getSelected()
     {
         return this.selected;
     }
 
+    /**
+     * Returns the immutable sorted bag containing elements that did not satisfy the partition predicate.
+     * <p>
+     * The returned bag is immutable and cannot be modified. Elements are maintained in sorted order.
+     * </p>
+     * <p><b>Usage Examples:</b></p>
+     * <pre>{@code
+     * PartitionImmutableSortedBag<Integer> partition = ...;
+     * ImmutableSortedBag<Integer> rejected = partition.getRejected();
+     * // rejected contains all elements that did not satisfy the predicate in sorted order
+     * int size = rejected.size();
+     * }</pre>
+     *
+     * @return the immutable sorted bag of rejected elements
+     */
     @Override
     public ImmutableSortedBag<T> getRejected()
     {

@@ -33,7 +33,19 @@ import org.eclipse.collections.api.tuple.Pair;
 
 /**
  * A Read-only Map API, with the minor exception inherited from java.lang.Iterable. The method map.iterator().remove()
- * will throw an UnsupportedOperationException.
+ * will throw an UnsupportedOperationException. MapIterable is the parent interface for all map types in Eclipse Collections,
+ * providing a rich set of functional operations for working with key-value pairs. When iterated, it iterates over the values.
+ *
+ * <p><b>Usage Examples:</b></p>
+ * <pre>{@code
+ * MapIterable<String, Integer> map = Maps.mutable.of("A", 1, "B", 2, "C", 3);
+ * map.forEachKeyValue((key, value) -> System.out.println(key + ": " + value));
+ * MapIterable<String, Integer> filtered = map.select((k, v) -> v > 1);
+ * Integer value = map.getIfAbsentValue("D", 0);
+ * }</pre>
+ *
+ * @param <K> the type of keys in the map
+ * @param <V> the type of values in the map
  */
 public interface MapIterable<K, V> extends RichIterable<V>
 {

@@ -46,7 +46,21 @@ import org.eclipse.collections.api.tuple.Pair;
 
 /**
  * A MutableMap is similar to a JCF Map but adds additional useful internal iterator methods. The MutableMap interface
- * additionally implements some methods in the Smalltalk Dictionary protocol.
+ * additionally implements some methods in the Smalltalk Dictionary protocol. It provides mutating operations that
+ * modify the map in place and is the default mutable map implementation in Eclipse Collections.
+ *
+ * <p><b>Usage Examples:</b></p>
+ * <pre>{@code
+ * MutableMap<String, Integer> map = Maps.mutable.empty();
+ * map.put("A", 1);
+ * map.put("B", 2);
+ * map.updateValue("A", () -> 0, v -> v + 10); // Updates "A" to 11
+ * map.removeKey("B");
+ * MutableMap<String, Integer> filtered = map.select((k, v) -> v > 5);
+ * }</pre>
+ *
+ * @param <K> the type of keys in the map
+ * @param <V> the type of values in the map
  */
 public interface MutableMap<K, V>
         extends MutableMapIterable<K, V>, UnsortedMapIterable<K, V>, Cloneable

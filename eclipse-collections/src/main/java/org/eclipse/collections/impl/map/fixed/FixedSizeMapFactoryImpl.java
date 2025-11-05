@@ -15,6 +15,32 @@ import java.util.Objects;
 import org.eclipse.collections.api.factory.map.FixedSizeMapFactory;
 import org.eclipse.collections.api.map.FixedSizeMap;
 
+/**
+ * FixedSizeMapFactoryImpl is the implementation of {@link FixedSizeMapFactory} that creates memory-efficient fixed-size maps.
+ * <p>
+ * This factory creates specialized map implementations optimized for small sizes:
+ * <ul>
+ *   <li>0 entries: {@link EmptyMap} (singleton)</li>
+ *   <li>1 entry: {@link SingletonMap}</li>
+ *   <li>2 entries: {@link DoubletonMap}</li>
+ *   <li>3 entries: {@link TripletonMap}</li>
+ * </ul>
+ * <p>
+ * Maps with 4 or more entries should use UnifiedMap instead, which is not fixed-size.
+ * These specialized implementations avoid hash table overhead and use minimal memory by storing
+ * entries directly as fields.
+ * <p>
+ * <b>Duplicate Key Handling:</b> When creating maps with duplicate keys, the factory automatically
+ * collapses them, keeping the last value for each key. This ensures the resulting map size matches
+ * the number of unique keys.
+ * <p><b>Usage Examples:</b></p>
+ * <pre>{@code
+ * FixedSizeMap<String, Integer> empty = Maps.fixedSize.of();
+ * FixedSizeMap<String, Integer> one = Maps.fixedSize.of("a", 1);
+ * FixedSizeMap<String, Integer> two = Maps.fixedSize.of("a", 1, "b", 2);
+ * FixedSizeMap<String, Integer> three = Maps.fixedSize.of("a", 1, "b", 2, "c", 3);
+ * }</pre>
+ */
 @aQute.bnd.annotation.spi.ServiceProvider(FixedSizeMapFactory.class)
 public class FixedSizeMapFactoryImpl implements FixedSizeMapFactory
 {

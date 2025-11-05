@@ -42,6 +42,24 @@ import org.eclipse.collections.api.multimap.list.ImmutableListMultimap;
 import org.eclipse.collections.api.partition.list.PartitionImmutableList;
 import org.eclipse.collections.api.tuple.Pair;
 
+/**
+ * ImmutableOrderedMap is an ordered map that cannot be modified after initialization.
+ * It maintains the insertion order of keys and all operations that would modify the map
+ * return new immutable instances instead, preserving the original map.
+ *
+ * <p><b>Usage Examples:</b></p>
+ * <pre>{@code
+ * ImmutableOrderedMap<String, Integer> map = OrderedMaps.immutable.of("A", 1, "B", 2, "C", 3);
+ * // Iteration order is A, B, C (insertion order)
+ * ImmutableOrderedMap<String, Integer> updated = map.newWithKeyValue("D", 4);
+ * // Original map is unchanged
+ * ImmutableOrderedMap<String, Integer> reversed = map.toReversed();
+ * // reversed maintains order: C, B, A
+ * }</pre>
+ *
+ * @param <K> the type of keys in the map
+ * @param <V> the type of values in the map
+ */
 public interface ImmutableOrderedMap<K, V> extends OrderedMap<K, V>, ImmutableMapIterable<K, V>
 {
     @Override

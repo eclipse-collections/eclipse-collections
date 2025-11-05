@@ -98,16 +98,55 @@ import org.eclipse.collections.impl.tuple.primitive.PrimitiveTuples;
 import org.eclipse.collections.impl.utility.Iterate;
 
 /**
- * <p>A set of Collectors for Eclipse Collections types and algorithms.</p>
+ * Collectors2 provides a comprehensive set of {@link Collector} implementations for Eclipse Collections types.
+ * This class bridges Java Streams API with Eclipse Collections, enabling seamless integration.
+ * <p>
+ * This utility class includes collectors for:
+ * </p>
+ * <ul>
+ * <li><b>Collection Converters:</b> to{Immutable}{Sorted}{List/Set/Bag/Map/BiMap/Multimap/Stack}</li>
+ * <li><b>Filtering:</b> select, reject, partition</li>
+ * <li><b>Transformation:</b> collect, flatCollect, collectBoolean/Byte/Char/Short/Int/Float/Long/Double</li>
+ * <li><b>Aggregation:</b> sumBy{Int/Float/Long/Double}, summarizing{BigDecimal/BigInteger}</li>
+ * <li><b>Grouping:</b> groupBy, groupByEach, aggregateBy, countBy</li>
+ * <li><b>Utility:</b> makeString, zip, chunk</li>
+ * </ul>
+ * <p><b>Thread Safety:</b> All collectors support parallel streams where applicable.
+ * Some collectors are marked as CONCURRENT or UNORDERED for optimized parallel collection.</p>
+ * <p><b>Performance:</b> Optimized for Eclipse Collections. Often more efficient than JDK collectors
+ * when collecting to Eclipse Collections types.</p>
+ * <p><b>Usage Examples:</b></p>
+ * <pre>{@code
+ * List<String> jdkList = Arrays.asList("a", "bb", "ccc");
  *
- * <p>Includes converter Collectors to{Immutable}{Sorted}{List/Set/Bag/Map/BiMap/Multimap}.<br>
- * Includes Collectors for select, reject, partition.<br>
- * Includes Collectors for collect, collect{Boolean/Byte/Char/Short/Int/Float/Long/Double}.<br>
- * Includes Collectors for makeString, zip, chunk.<br>
- * Includes Collectors for sumBy{Int/Float/Long/Double}.</p>
+ * // Collect to Eclipse Collections ImmutableList
+ * ImmutableList<String> immutableList = jdkList.stream()
+ *     .collect(Collectors2.toImmutableList());
  *
- * <p>Use these Collectors with @{@link RichIterable#reduceInPlace(Collector)} and @{@link Stream#collect(Collector)}.</p>
+ * // Filter while collecting
+ * MutableList<String> longStrings = jdkList.stream()
+ *     .collect(Collectors2.select(s -> s.length() > 1));
  *
+ * // Transform while collecting
+ * ImmutableSet<Integer> lengths = jdkList.stream()
+ *     .collect(Collectors2.collect(String::length, Collectors2.toImmutableSet()));
+ *
+ * // Group by length
+ * MutableListMultimap<Integer, String> byLength = jdkList.stream()
+ *     .collect(Collectors2.groupBy(String::length));
+ *
+ * // Create summary statistics for BigDecimal
+ * Stream<BigDecimal> prices = Stream.of(new BigDecimal("10.50"), new BigDecimal("20.75"));
+ * BigDecimalSummaryStatistics stats = prices
+ *     .collect(Collectors2.summarizingBigDecimal(Function.identity()));
+ *
+ * // Use with RichIterable
+ * ImmutableSet<String> set = FastList.newListWith("a", "b", "c")
+ *     .reduceInPlace(Collectors2.toImmutableSet());
+ * }</pre>
+ *
+ * @see RichIterable#reduceInPlace(Collector)
+ * @see Stream#collect(Collector)
  * @since 8.0
  */
 public final class Collectors2

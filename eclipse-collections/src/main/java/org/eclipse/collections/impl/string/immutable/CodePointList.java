@@ -44,8 +44,37 @@ import org.eclipse.collections.impl.tuple.primitive.PrimitiveTuples;
 import org.eclipse.collections.impl.utility.Iterate;
 
 /**
- * Calculates and provides the code points stored in a String as an ImmutableIntList. This is a cleaner more OO way of
- * providing many of the iterable protocols available in StringIterate for code points.
+ * CodePointList is an immutable list implementation that stores Unicode code points extracted from a String.
+ * Unlike {@link CodePointAdapter}, this class eagerly extracts and stores code points in an internal list.
+ * <p>
+ * This class is useful when you need to perform multiple operations on the same String's code points, as
+ * the code points are extracted once and stored. For one-time operations, CodePointAdapter may be more efficient.
+ * Like CodePointAdapter, this correctly handles Unicode supplementary characters.
+ * </p>
+ * <p><b>Thread Safety:</b> Immutable and thread-safe. Code points are extracted at construction time.</p>
+ * <p><b>Performance:</b> Eager extraction of code points at construction. Higher memory usage than CodePointAdapter
+ * but faster for repeated access. No re-parsing of the String on each operation.</p>
+ * <p><b>Usage Examples:</b></p>
+ * <pre>{@code
+ * // Create from String with emoji
+ * String text = "Java ☕ Programming 💻";
+ * CodePointList codePoints = CodePointList.from(text);
+ *
+ * // Efficient repeated access
+ * int size = codePoints.size();
+ * int firstCodePoint = codePoints.get(0); // 'J'
+ *
+ * // Filter and transform
+ * IntList emojiCodePoints = codePoints.select(cp -> cp > 0xFFFF);
+ * IntList upperCase = codePoints.collectInt(Character::toUpperCase);
+ *
+ * // Create from code point array
+ * CodePointList fromArray = CodePointList.from(0x48, 0x69, 0x1F44B);
+ * // Represents "Hi👋"
+ *
+ * // Convert to String
+ * String result = codePoints.toStringBuilder().toString();
+ * }</pre>
  *
  * @since 7.0
  */

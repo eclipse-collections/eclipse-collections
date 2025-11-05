@@ -1,0 +1,112 @@
+Apache Maven 3.9.11 (3e54c93a704957b63ee3494413a2b544fd3d825b)
+Maven home: /opt/maven
+Java version: 21.0.8, vendor: Ubuntu, runtime: /usr/lib/jvm/java-21-openjdk-amd64
+Default locale: en_US, platform encoding: UTF-8
+OS name: "linux", version: "4.4.0", arch: "amd64", family: "unix"
+08:01:40:065 [INFO] Error stacktraces are turned on.
+08:01:40:131 [INFO] Scanning for projects...
+08:01:40:730 [ERROR] [ERROR] Some problems were encountered while processing the POMs:
+[WARNING] 'build.plugins.plugin.version' for org.apache.maven.plugins:maven-enforcer-plugin is missing. @ line 85, column 21
+[ERROR] Unresolveable build extension: Plugin org.eclipse.tycho:tycho-maven-plugin:4.0.13 or one of its dependencies could not be resolved:
+	Failed to read artifact descriptor for org.eclipse.tycho:tycho-maven-plugin:jar:4.0.13
+ @ 
+[ERROR] Unknown packaging: p2-maven-repository @ line 21, column 16
+ @ 
+08:01:40:731 [ERROR] The build could not read 1 project -> [Help 1]
+org.apache.maven.project.ProjectBuildingException: Some problems were encountered while processing the POMs:
+[WARNING] 'build.plugins.plugin.version' for org.apache.maven.plugins:maven-enforcer-plugin is missing. @ line 85, column 21
+[ERROR] Unresolveable build extension: Plugin org.eclipse.tycho:tycho-maven-plugin:4.0.13 or one of its dependencies could not be resolved:
+	Failed to read artifact descriptor for org.eclipse.tycho:tycho-maven-plugin:jar:4.0.13
+ @ 
+[ERROR] Unknown packaging: p2-maven-repository @ line 21, column 16
+
+    at org.apache.maven.project.DefaultProjectBuilder.build (DefaultProjectBuilder.java:389)
+    at org.apache.maven.graph.DefaultGraphBuilder.collectProjects (DefaultGraphBuilder.java:351)
+    at org.apache.maven.graph.DefaultGraphBuilder.getProjectsForMavenReactor (DefaultGraphBuilder.java:342)
+    at org.apache.maven.graph.DefaultGraphBuilder.build (DefaultGraphBuilder.java:76)
+    at org.apache.maven.DefaultMaven.buildGraph (DefaultMaven.java:448)
+    at org.apache.maven.DefaultMaven.doExecute (DefaultMaven.java:197)
+    at org.apache.maven.DefaultMaven.doExecute (DefaultMaven.java:173)
+    at org.apache.maven.DefaultMaven.execute (DefaultMaven.java:101)
+    at org.apache.maven.cli.MavenCli.execute (MavenCli.java:906)
+    at org.apache.maven.cli.MavenCli.doMain (MavenCli.java:283)
+    at org.apache.maven.cli.MavenCli.main (MavenCli.java:206)
+    at jdk.internal.reflect.DirectMethodHandleAccessor.invoke (DirectMethodHandleAccessor.java:103)
+    at java.lang.reflect.Method.invoke (Method.java:580)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.launchEnhanced (Launcher.java:255)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.launch (Launcher.java:201)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.mainWithExitCode (Launcher.java:361)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.main (Launcher.java:314)
+08:01:40:734 [ERROR]   
+08:01:40:734 [ERROR]   The project org.eclipse.collections:p2-site:14.0.0-SNAPSHOT (/home/user/eclipse-collections/p2-site/pom.xml) has 2 errors
+08:01:40:734 [ERROR]     Unresolveable build extension: Plugin org.eclipse.tycho:tycho-maven-plugin:4.0.13 or one of its dependencies could not be resolved:
+08:01:40:734 [ERROR]     	Failed to read artifact descriptor for org.eclipse.tycho:tycho-maven-plugin:jar:4.0.13
+08:01:40:734 [ERROR]     -> [Help 2]
+org.apache.maven.plugin.PluginManagerException: Plugin org.eclipse.tycho:tycho-maven-plugin:4.0.13 or one of its dependencies could not be resolved:
+	Failed to read artifact descriptor for org.eclipse.tycho:tycho-maven-plugin:jar:4.0.13
+
+    at org.apache.maven.plugin.internal.DefaultMavenPluginManager.setupExtensionsRealm (DefaultMavenPluginManager.java:780)
+    at org.apache.maven.project.DefaultProjectBuildingHelper.createProjectRealm (DefaultProjectBuildingHelper.java:177)
+    at org.apache.maven.project.DefaultModelBuildingListener.buildExtensionsAssembled (DefaultModelBuildingListener.java:92)
+    at org.apache.maven.model.building.ModelBuildingEventCatapult$1.fire (ModelBuildingEventCatapult.java:40)
+    at org.apache.maven.model.building.DefaultModelBuilder.fireEvent (DefaultModelBuilder.java:1293)
+    at org.apache.maven.model.building.DefaultModelBuilder.build (DefaultModelBuilder.java:516)
+    at org.apache.maven.model.building.DefaultModelBuilder.build (DefaultModelBuilder.java:497)
+    at org.apache.maven.project.DefaultProjectBuilder.build (DefaultProjectBuilder.java:612)
+    at org.apache.maven.project.DefaultProjectBuilder.build (DefaultProjectBuilder.java:630)
+    at org.apache.maven.project.DefaultProjectBuilder.build (DefaultProjectBuilder.java:375)
+    at org.apache.maven.graph.DefaultGraphBuilder.collectProjects (DefaultGraphBuilder.java:351)
+    at org.apache.maven.graph.DefaultGraphBuilder.getProjectsForMavenReactor (DefaultGraphBuilder.java:342)
+    at org.apache.maven.graph.DefaultGraphBuilder.build (DefaultGraphBuilder.java:76)
+    at org.apache.maven.DefaultMaven.buildGraph (DefaultMaven.java:448)
+    at org.apache.maven.DefaultMaven.doExecute (DefaultMaven.java:197)
+    at org.apache.maven.DefaultMaven.doExecute (DefaultMaven.java:173)
+    at org.apache.maven.DefaultMaven.execute (DefaultMaven.java:101)
+    at org.apache.maven.cli.MavenCli.execute (MavenCli.java:906)
+    at org.apache.maven.cli.MavenCli.doMain (MavenCli.java:283)
+    at org.apache.maven.cli.MavenCli.main (MavenCli.java:206)
+    at jdk.internal.reflect.DirectMethodHandleAccessor.invoke (DirectMethodHandleAccessor.java:103)
+    at java.lang.reflect.Method.invoke (Method.java:580)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.launchEnhanced (Launcher.java:255)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.launch (Launcher.java:201)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.mainWithExitCode (Launcher.java:361)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.main (Launcher.java:314)
+Caused by: org.apache.maven.plugin.PluginResolutionException: Plugin org.eclipse.tycho:tycho-maven-plugin:4.0.13 or one of its dependencies could not be resolved:
+	Failed to read artifact descriptor for org.eclipse.tycho:tycho-maven-plugin:jar:4.0.13
+
+    at org.apache.maven.plugin.internal.DefaultPluginDependenciesResolver.resolveInternal (DefaultPluginDependenciesResolver.java:226)
+    at org.apache.maven.plugin.internal.DefaultPluginDependenciesResolver.resolve (DefaultPluginDependenciesResolver.java:169)
+    at org.apache.maven.plugin.internal.DefaultMavenPluginManager.resolveExtensionArtifacts (DefaultMavenPluginManager.java:829)
+    at org.apache.maven.plugin.internal.DefaultMavenPluginManager.setupExtensionsRealm (DefaultMavenPluginManager.java:775)
+    at org.apache.maven.project.DefaultProjectBuildingHelper.createProjectRealm (DefaultProjectBuildingHelper.java:177)
+    at org.apache.maven.project.DefaultModelBuildingListener.buildExtensionsAssembled (DefaultModelBuildingListener.java:92)
+    at org.apache.maven.model.building.ModelBuildingEventCatapult$1.fire (ModelBuildingEventCatapult.java:40)
+    at org.apache.maven.model.building.DefaultModelBuilder.fireEvent (DefaultModelBuilder.java:1293)
+    at org.apache.maven.model.building.DefaultModelBuilder.build (DefaultModelBuilder.java:516)
+    at org.apache.maven.model.building.DefaultModelBuilder.build (DefaultModelBuilder.java:497)
+    at org.apache.maven.project.DefaultProjectBuilder.build (DefaultProjectBuilder.java:612)
+    at org.apache.maven.project.DefaultProjectBuilder.build (DefaultProjectBuilder.java:630)
+    at org.apache.maven.project.DefaultProjectBuilder.build (DefaultProjectBuilder.java:375)
+    at org.apache.maven.graph.DefaultGraphBuilder.collectProjects (DefaultGraphBuilder.java:351)
+    at org.apache.maven.graph.DefaultGraphBuilder.getProjectsForMavenReactor (DefaultGraphBuilder.java:342)
+    at org.apache.maven.graph.DefaultGraphBuilder.build (DefaultGraphBuilder.java:76)
+    at org.apache.maven.DefaultMaven.buildGraph (DefaultMaven.java:448)
+    at org.apache.maven.DefaultMaven.doExecute (DefaultMaven.java:197)
+    at org.apache.maven.DefaultMaven.doExecute (DefaultMaven.java:173)
+    at org.apache.maven.DefaultMaven.execute (DefaultMaven.java:101)
+    at org.apache.maven.cli.MavenCli.execute (MavenCli.java:906)
+    at org.apache.maven.cli.MavenCli.doMain (MavenCli.java:283)
+    at org.apache.maven.cli.MavenCli.main (MavenCli.java:206)
+    at jdk.internal.reflect.DirectMethodHandleAccessor.invoke (DirectMethodHandleAccessor.java:103)
+    at java.lang.reflect.Method.invoke (Method.java:580)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.launchEnhanced (Launcher.java:255)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.launch (Launcher.java:201)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.mainWithExitCode (Launcher.java:361)
+    at org.codehaus.plexus.classworlds.launcher.Launcher.main (Launcher.java:314)
+08:01:40:745 [ERROR]     Unknown packaging: p2-maven-repository @ line 21, column 16
+08:01:40:745 [ERROR] 
+08:01:40:748 [ERROR] Re-run Maven using the -X switch to enable full debug logging.
+08:01:40:748 [ERROR] 
+08:01:40:748 [ERROR] For more information about the errors and possible solutions, please read the following articles:
+08:01:40:749 [ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/ProjectBuildingException
+08:01:40:749 [ERROR] [Help 2] http://cwiki.apache.org/confluence/display/MAVEN/PluginManagerException

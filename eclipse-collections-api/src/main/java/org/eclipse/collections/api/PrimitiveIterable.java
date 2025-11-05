@@ -11,7 +11,20 @@
 package org.eclipse.collections.api;
 
 /**
- * PrimitiveIterable includes API that is common to all primitive collections.
+ * PrimitiveIterable is the root interface for all primitive collection types in Eclipse Collections.
+ * It defines common operations that apply to all primitive collections, including size checking,
+ * emptiness testing, and string representation.
+ * <p>
+ * Primitive collections provide memory-efficient alternatives to their object-based counterparts by storing
+ * primitive values directly without boxing. This results in lower memory footprint and better performance for
+ * numeric operations.
+ * <p><b>Usage Examples:</b></p>
+ * <pre>{@code
+ * IntList numbers = IntLists.mutable.with(1, 2, 3, 4, 5);
+ * System.out.println(numbers.size());        // 5
+ * System.out.println(numbers.isEmpty());     // false
+ * System.out.println(numbers.makeString());  // "1, 2, 3, 4, 5"
+ * }</pre>
  *
  * @since 3.0
  */
@@ -19,14 +32,29 @@ public interface PrimitiveIterable
 {
     /**
      * Returns the number of items in this iterable.
+     * <p><b>Usage Examples:</b></p>
+     * <pre>{@code
+     * IntList numbers = IntLists.mutable.with(1, 2, 3);
+     * int count = numbers.size();  // 3
+     * }</pre>
      *
+     * @return the number of items in this iterable
      * @since 3.0
      */
     int size();
 
     /**
      * Returns true if this iterable has zero items.
+     * <p><b>Usage Examples:</b></p>
+     * <pre>{@code
+     * IntList empty = IntLists.mutable.empty();
+     * boolean result = empty.isEmpty();  // true
      *
+     * IntList nonEmpty = IntLists.mutable.with(1, 2);
+     * boolean result2 = nonEmpty.isEmpty();  // false
+     * }</pre>
+     *
+     * @return true if this iterable is empty, false otherwise
      * @since 3.0
      */
     default boolean isEmpty()
@@ -35,8 +63,17 @@ public interface PrimitiveIterable
     }
 
     /**
-     * The English equivalent of !this.isEmpty()
+     * Returns true if this iterable has one or more items.
+     * This is the English equivalent of {@code !this.isEmpty()}.
+     * <p><b>Usage Examples:</b></p>
+     * <pre>{@code
+     * IntList numbers = IntLists.mutable.with(1, 2, 3);
+     * if (numbers.notEmpty()) {
+     *     System.out.println("Has elements");
+     * }
+     * }</pre>
      *
+     * @return true if this iterable is not empty, false otherwise
      * @since 3.0
      */
     default boolean notEmpty()
@@ -63,8 +100,13 @@ public interface PrimitiveIterable
     /**
      * Returns a string representation of this collection by delegating to {@link #makeString(String)} and defaulting
      * the separator parameter to the characters {@code ", "} (comma and space).
+     * <p><b>Usage Examples:</b></p>
+     * <pre>{@code
+     * IntList numbers = IntLists.mutable.with(1, 2, 3);
+     * String result = numbers.makeString();  // "1, 2, 3"
+     * }</pre>
      *
-     * @return a string representation of this collection.
+     * @return a string representation of this collection
      * @since 3.0
      */
     default String makeString()
@@ -75,8 +117,14 @@ public interface PrimitiveIterable
     /**
      * Returns a string representation of this collection by delegating to {@link #makeString(String, String, String)}
      * and defaulting the start and end parameters to {@code ""} (the empty String).
+     * <p><b>Usage Examples:</b></p>
+     * <pre>{@code
+     * IntList numbers = IntLists.mutable.with(1, 2, 3);
+     * String result = numbers.makeString(" | ");  // "1 | 2 | 3"
+     * }</pre>
      *
-     * @return a string representation of this collection.
+     * @param separator the separator to use between elements
+     * @return a string representation of this collection
      * @since 3.0
      */
     default String makeString(String separator)
@@ -87,8 +135,17 @@ public interface PrimitiveIterable
     /**
      * Returns a string representation of this collection with the elements separated by the specified
      * separator and enclosed between the start and end strings.
+     * <p><b>Usage Examples:</b></p>
+     * <pre>{@code
+     * IntList numbers = IntLists.mutable.with(1, 2, 3);
+     * String result = numbers.makeString("[", ", ", "]");  // "[1, 2, 3]"
+     * String result2 = numbers.makeString("{", "; ", "}");  // "{1; 2; 3}"
+     * }</pre>
      *
-     * @return a string representation of this collection.
+     * @param start the string to prepend to the result
+     * @param separator the separator to use between elements
+     * @param end the string to append to the result
+     * @return a string representation of this collection
      * @since 3.0
      */
     default String makeString(String start, String separator, String end)
@@ -101,7 +158,15 @@ public interface PrimitiveIterable
     /**
      * Prints a string representation of this collection onto the given {@code Appendable}. Prints the string returned
      * by {@link #makeString()}.
+     * <p><b>Usage Examples:</b></p>
+     * <pre>{@code
+     * IntList numbers = IntLists.mutable.with(1, 2, 3);
+     * StringBuilder builder = new StringBuilder();
+     * numbers.appendString(builder);
+     * // builder now contains "1, 2, 3"
+     * }</pre>
      *
+     * @param appendable the Appendable to write to
      * @since 3.0
      */
     default void appendString(Appendable appendable)
@@ -112,7 +177,16 @@ public interface PrimitiveIterable
     /**
      * Prints a string representation of this collection onto the given {@code Appendable}. Prints the string returned
      * by {@link #makeString(String)}.
+     * <p><b>Usage Examples:</b></p>
+     * <pre>{@code
+     * IntList numbers = IntLists.mutable.with(1, 2, 3);
+     * StringBuilder builder = new StringBuilder("Numbers: ");
+     * numbers.appendString(builder, " | ");
+     * // builder now contains "Numbers: 1 | 2 | 3"
+     * }</pre>
      *
+     * @param appendable the Appendable to write to
+     * @param separator the separator to use between elements
      * @since 3.0
      */
     default void appendString(Appendable appendable, String separator)
@@ -123,7 +197,18 @@ public interface PrimitiveIterable
     /**
      * Prints a string representation of this collection onto the given {@code Appendable}. Prints the string returned
      * by {@link #makeString(String, String, String)}.
+     * <p><b>Usage Examples:</b></p>
+     * <pre>{@code
+     * IntList numbers = IntLists.mutable.with(1, 2, 3);
+     * StringBuilder builder = new StringBuilder();
+     * numbers.appendString(builder, "[", ", ", "]");
+     * // builder now contains "[1, 2, 3]"
+     * }</pre>
      *
+     * @param appendable the Appendable to write to
+     * @param start the string to prepend to the result
+     * @param separator the separator to use between elements
+     * @param end the string to append to the result
      * @since 3.0
      */
     void appendString(Appendable appendable, String start, String separator, String end);

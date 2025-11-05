@@ -39,6 +39,15 @@ import org.eclipse.collections.api.tuple.Pair;
 
 /**
  * A map whose keys are ordered but not necessarily sorted, for example a linked hash map.
+ * The iteration order is deterministic and corresponds to the insertion order of keys.
+ * OrderedMap extends ReversibleIterable, allowing iteration in reverse order.
+ *
+ * <p><b>Usage Examples:</b></p>
+ * <pre>{@code
+ * OrderedMap<String, Integer> map = OrderedMaps.mutable.of("A", 1, "B", 2, "C", 3);
+ * OrderedMap<String, Integer> reversed = map.toReversed();
+ * OrderedMap<String, Integer> firstTwo = map.take(2); // Contains "A" -> 1, "B" -> 2
+ * }</pre>
  */
 public interface OrderedMap<K, V>
         extends MapIterable<K, V>, ReversibleIterable<V>

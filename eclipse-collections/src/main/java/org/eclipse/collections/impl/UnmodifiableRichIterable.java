@@ -73,7 +73,32 @@ import org.eclipse.collections.api.set.sorted.MutableSortedSet;
 import org.eclipse.collections.api.tuple.Pair;
 
 /**
- * An unmodifiable view of a RichIterable.
+ * An unmodifiable wrapper for a RichIterable that provides a read-only view.
+ * <p>
+ * This class wraps any RichIterable and delegates all operations to the underlying iterable.
+ * All methods return unmodifiable views or immutable results. The iterator returned by this
+ * class is wrapped in an {@link UnmodifiableIteratorAdapter} to prevent modification.
+ * </p>
+ * <p>
+ * This wrapper does not prevent modification of the underlying iterable through other
+ * references. It only prevents modification through this wrapper instance.
+ * </p>
+ * <p>
+ * Thread Safety: This class does not add any synchronization. Thread safety depends
+ * on the thread safety of the underlying iterable.
+ * </p>
+ * <p><b>Usage Examples:</b></p>
+ * <pre>{@code
+ * RichIterable<String> mutableIterable = Lists.mutable.with("a", "b", "c");
+ * RichIterable<String> readOnly = UnmodifiableRichIterable.of(mutableIterable);
+ * // All query operations work
+ * int size = readOnly.size();
+ * String first = readOnly.getFirst();
+ * // But the iterable is effectively read-only
+ * }</pre>
+ *
+ * @param <T> the type of elements in this iterable
+ * @since 1.0
  */
 public class UnmodifiableRichIterable<T>
         implements RichIterable<T>, Serializable
@@ -82,13 +107,37 @@ public class UnmodifiableRichIterable<T>
 
     protected final RichIterable<T> iterable;
 
+    /**
+     * Constructs an unmodifiable wrapper for the specified iterable.
+     * <p>
+     * This constructor is protected. Use the static factory method {@link #of(RichIterable)}
+     * to create instances.
+     * </p>
+     *
+     * @param richIterable the iterable to wrap
+     */
     protected UnmodifiableRichIterable(RichIterable<T> richIterable)
     {
         this.iterable = richIterable;
     }
 
     /**
-     * This method will take a RichIterable and wrap it directly in a UnmodifiableRichIterable.
+     * Creates an unmodifiable view of the specified iterable.
+     * <p>
+     * This factory method wraps the given iterable in an UnmodifiableRichIterable,
+     * providing a read-only view. All operations are delegated to the underlying iterable.
+     * </p>
+     * <p><b>Usage Examples:</b></p>
+     * <pre>{@code
+     * MutableList<Integer> numbers = Lists.mutable.with(1, 2, 3);
+     * UnmodifiableRichIterable<Integer> readOnly = UnmodifiableRichIterable.of(numbers);
+     * }</pre>
+     *
+     * @param <E> the type of elements in the iterable
+     * @param <RI> the type of the iterable
+     * @param iterable the iterable to wrap
+     * @return an unmodifiable view of the iterable
+     * @throws IllegalArgumentException if iterable is null
      */
     public static <E, RI extends RichIterable<E>> UnmodifiableRichIterable<E> of(RI iterable)
     {
@@ -99,6 +148,17 @@ public class UnmodifiableRichIterable<T>
         return new UnmodifiableRichIterable<>(iterable);
     }
 
+    /**
+     * Filters elements satisfying the predicate and adds them to the target collection.
+     * <p>
+     * This method delegates to the underlying iterable's select method.
+     * </p>
+     *
+     * @param predicate the predicate to filter elements
+     * @param target the collection to add matching elements to
+     * @param <R> the type of the target collection
+     * @return the target collection containing filtered elements
+     */
     @Override
     public <R extends Collection<T>> R select(Predicate<? super T> predicate, R target)
     {
@@ -766,12 +826,29 @@ public class UnmodifiableRichIterable<T>
         return this.iterable.asLazy();
     }
 
+    /**
+     * Returns an unmodifiable iterator over the elements in this iterable.
+     * <p>
+     * The returned iterator wraps the underlying iterator in an {@link UnmodifiableIteratorAdapter}
+     * to prevent modification through the remove() method.
+     * </p>
+     *
+     * @return an unmodifiable iterator over the elements
+     */
     @Override
     public Iterator<T> iterator()
     {
         return new UnmodifiableIteratorAdapter<>(this.iterable.iterator());
     }
 
+    /**
+     * Returns a string representation of this iterable.
+     * <p>
+     * Delegates to the underlying iterable's toString method.
+     * </p>
+     *
+     * @return a string representation of this iterable
+     */
     @Override
     public String toString()
     {

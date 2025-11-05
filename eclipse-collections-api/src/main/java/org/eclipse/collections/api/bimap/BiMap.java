@@ -24,7 +24,19 @@ import org.eclipse.collections.api.tuple.Pair;
 
 /**
  * A map that allows users to look up key-value pairs from either direction. Uniqueness is enforced on both the keys and values.
+ * BiMap provides a bidirectional view where both keys and values must be unique, allowing efficient lookup in both directions
+ * through the {@link #inverse()} method.
  *
+ * <p><b>Usage Examples:</b></p>
+ * <pre>{@code
+ * BiMap<String, Integer> biMap = BiMaps.mutable.of("A", 1, "B", 2, "C", 3);
+ * BiMap<Integer, String> inverse = biMap.inverse();
+ * String key = inverse.get(2); // Returns "B"
+ * Integer value = biMap.get("A"); // Returns 1
+ * }</pre>
+ *
+ * @param <K> the type of keys in the map
+ * @param <V> the type of values in the map
  * @since 4.2
  */
 public interface BiMap<K, V> extends MapIterable<K, V>

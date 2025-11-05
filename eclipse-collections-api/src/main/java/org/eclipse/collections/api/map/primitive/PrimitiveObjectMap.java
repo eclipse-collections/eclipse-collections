@@ -48,6 +48,19 @@ import org.eclipse.collections.api.set.UnsortedSetIterable;
 import org.eclipse.collections.api.tuple.Pair;
 
 /**
+ * PrimitiveObjectMap is a map with primitive keys and Object values. This interface is the parent
+ * of all primitive-to-object map types (IntObjectMap, LongObjectMap, etc.). Using primitive keys
+ * instead of boxed objects provides better memory efficiency and performance.
+ *
+ * <p><b>Usage Examples:</b></p>
+ * <pre>{@code
+ * IntObjectMap<String> map = IntObjectMaps.mutable.empty();
+ * map.put(1, "One");
+ * map.put(2, "Two");
+ * String value = map.get(1); // Returns "One"
+ * }</pre>
+ *
+ * @param <V> the type of values in the map
  * @since 8.0.
  */
 public interface PrimitiveObjectMap<V> extends RichIterable<V>

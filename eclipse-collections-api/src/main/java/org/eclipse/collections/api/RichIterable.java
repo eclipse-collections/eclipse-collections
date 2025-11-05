@@ -233,9 +233,19 @@ public interface RichIterable<T>
     RichIterable<T> tap(Procedure<? super T> procedure);
 
     /**
-     * Returns a lazy (deferred) iterable, most likely implemented by calling LazyIterate.adapt(this).
+     * Returns a lazy (deferred) iterable that defers evaluation of operations like select, reject, and collect.
+     * This allows for efficient chaining of operations without creating intermediate collections.
+     * <p><b>Usage Examples:</b></p>
+     * <pre>{@code
+     * // Operations are not executed until toList() is called
+     * MutableList<String> names = people.asLazy()
+     *     .select(person -> person.getAge() >= 18)
+     *     .collect(Person::getName)
+     *     .toList();
+     * }</pre>
      *
-     * @since 1.0.
+     * @return a LazyIterable view of this iterable
+     * @since 1.0
      */
     LazyIterable<T> asLazy();
 
@@ -1690,10 +1700,17 @@ public interface RichIterable<T>
 
     /**
      * Partitions elements in fixed size chunks.
+     * The last chunk may contain fewer elements if the total number is not evenly divisible by the chunk size.
+     * <p><b>Usage Examples:</b></p>
+     * <pre>{@code
+     * MutableList<Integer> numbers = Lists.mutable.with(1, 2, 3, 4, 5, 6, 7);
+     * RichIterable<RichIterable<Integer>> chunks = numbers.chunk(3);
+     * // chunks: [[1, 2, 3], [4, 5, 6], [7]]
+     * }</pre>
      *
      * @param size the number of elements per chunk
      * @return A {@code RichIterable} containing {@code RichIterable}s of size {@code size}, except the last will be
-     * truncated if the elements don't divide evenly.
+     * truncated if the elements don't divide evenly
      * @since 1.0
      */
     RichIterable<RichIterable<T>> chunk(int size);
@@ -2116,8 +2133,18 @@ public interface RichIterable<T>
     //region [Category: Converting] 🔌
 
     /**
-     * Adds all the elements in this iterable to the specific target Collection.
+     * Adds all the elements in this iterable to the specified target Collection.
+     * This is a convenient way to convert or transfer elements between collection types.
+     * <p><b>Usage Examples:</b></p>
+     * <pre>{@code
+     * MutableList<Integer> list = Lists.mutable.with(1, 2, 3, 4);
+     * MutableSet<Integer> set = list.into(Sets.mutable.empty());
+     * // set now contains {1, 2, 3, 4}
+     * }</pre>
      *
+     * @param target the collection to add all elements to
+     * @param <R> the type of the target collection
+     * @return the target collection with all elements from this iterable added
      * @since 8.0
      */
     <R extends Collection<T>> R into(R target);
@@ -2506,8 +2533,14 @@ public interface RichIterable<T>
     /**
      * Returns a string representation of this collection by delegating to {@link #makeString(String, String, String)}
      * and defaulting the start and end parameters to {@code ""} (the empty String).
+     * <p><b>Usage Examples:</b></p>
+     * <pre>{@code
+     * MutableList<Integer> numbers = Lists.mutable.with(1, 2, 3);
+     * String result = numbers.makeString(" | ");  // "1 | 2 | 3"
+     * }</pre>
      *
-     * @return a string representation of this collection.
+     * @param separator the separator to use between elements
+     * @return a string representation of this collection
      * @since 1.0
      */
     default String makeString(String separator)
@@ -2518,8 +2551,17 @@ public interface RichIterable<T>
     /**
      * Returns a string representation of this collection with the elements separated by the specified
      * separator and enclosed between the start and end strings.
+     * <p><b>Usage Examples:</b></p>
+     * <pre>{@code
+     * MutableList<Integer> numbers = Lists.mutable.with(1, 2, 3);
+     * String result = numbers.makeString("[", ", ", "]");  // "[1, 2, 3]"
+     * String result2 = numbers.makeString("{", "; ", "}");  // "{1; 2; 3}"
+     * }</pre>
      *
-     * @return a string representation of this collection.
+     * @param start the string to prepend to the result
+     * @param separator the separator to use between elements
+     * @param end the string to append to the result
+     * @return a string representation of this collection
      * @since 1.0
      */
     default String makeString(String start, String separator, String end)
@@ -2543,7 +2585,15 @@ public interface RichIterable<T>
     /**
      * Prints a string representation of this collection onto the given {@code Appendable}. Prints the string returned
      * by {@link #makeString()}.
+     * <p><b>Usage Examples:</b></p>
+     * <pre>{@code
+     * MutableList<Integer> numbers = Lists.mutable.with(1, 2, 3);
+     * StringBuilder builder = new StringBuilder("Numbers: ");
+     * numbers.appendString(builder);
+     * // builder now contains "Numbers: 1, 2, 3"
+     * }</pre>
      *
+     * @param appendable the Appendable to write to
      * @since 1.0
      */
     default void appendString(Appendable appendable)
@@ -2554,7 +2604,16 @@ public interface RichIterable<T>
     /**
      * Prints a string representation of this collection onto the given {@code Appendable}. Prints the string returned
      * by {@link #makeString(String)}.
+     * <p><b>Usage Examples:</b></p>
+     * <pre>{@code
+     * MutableList<Integer> numbers = Lists.mutable.with(1, 2, 3);
+     * StringBuilder builder = new StringBuilder("Values: ");
+     * numbers.appendString(builder, " | ");
+     * // builder now contains "Values: 1 | 2 | 3"
+     * }</pre>
      *
+     * @param appendable the Appendable to write to
+     * @param separator the separator to use between elements
      * @since 1.0
      */
     default void appendString(Appendable appendable, String separator)
@@ -2565,7 +2624,18 @@ public interface RichIterable<T>
     /**
      * Prints a string representation of this collection onto the given {@code Appendable}. Prints the string returned
      * by {@link #makeString(String, String, String)}.
+     * <p><b>Usage Examples:</b></p>
+     * <pre>{@code
+     * MutableList<Integer> numbers = Lists.mutable.with(1, 2, 3);
+     * StringBuilder builder = new StringBuilder();
+     * numbers.appendString(builder, "[", ", ", "]");
+     * // builder now contains "[1, 2, 3]"
+     * }</pre>
      *
+     * @param appendable the Appendable to write to
+     * @param start the string to prepend to the result
+     * @param separator the separator to use between elements
+     * @param end the string to append to the result
      * @since 1.0
      */
     void appendString(Appendable appendable, String start, String separator, String end);

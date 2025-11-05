@@ -43,6 +43,20 @@ import org.eclipse.collections.api.set.ImmutableSet;
 import org.eclipse.collections.api.tuple.Pair;
 
 /**
+ * ImmutablePrimitiveObjectMap is an immutable map with primitive keys and Object values.
+ * This interface provides read-only access to primitive-to-object maps. All operations that
+ * would modify the map return new immutable instances instead, preserving the original map.
+ * Using primitive keys provides better memory efficiency and performance.
+ *
+ * <p><b>Usage Examples:</b></p>
+ * <pre>{@code
+ * ImmutableIntObjectMap<String> map = IntObjectMaps.immutable.of(1, "One", 2, "Two");
+ * ImmutableIntObjectMap<String> updated = map.newWithKeyValue(3, "Three");
+ * // Original map is unchanged
+ * String value = map.get(1); // Returns "One"
+ * }</pre>
+ *
+ * @param <V> the type of values in the map
  * @since 8.0.
  */
 public interface ImmutablePrimitiveObjectMap<V> extends PrimitiveObjectMap<V>

@@ -16,6 +16,35 @@ import java.util.Objects;
 import org.eclipse.collections.api.factory.map.ImmutableMapFactory;
 import org.eclipse.collections.api.map.ImmutableMap;
 
+/**
+ * ImmutableMapFactoryImpl is the implementation of {@link ImmutableMapFactory} that creates immutable map instances.
+ * <p>
+ * This factory creates specialized map implementations optimized for different sizes:
+ * <ul>
+ *   <li>0 entries: {@link ImmutableEmptyMap} (singleton)</li>
+ *   <li>1 entry: {@link ImmutableSingletonMap}</li>
+ *   <li>2 entries: {@link ImmutableDoubletonMap}</li>
+ *   <li>3 entries: {@link ImmutableTripletonMap}</li>
+ *   <li>4 entries: {@link ImmutableQuadrupletonMap}</li>
+ *   <li>5+ entries: {@link ImmutableUnifiedMap}</li>
+ * </ul>
+ * <p>
+ * Maps with 0-4 entries use memory-efficient implementations that store entries directly as fields.
+ * Larger maps use a hash table-based implementation.
+ * <p>
+ * <b>Duplicate Key Handling:</b> When creating maps with duplicate keys, the factory automatically
+ * collapses them, keeping the last value for each key. This ensures the resulting map size matches
+ * the number of unique keys.
+ * <p>
+ * All created maps are immutable and thread-safe by design.
+ * <p><b>Usage Examples:</b></p>
+ * <pre>{@code
+ * ImmutableMap<String, Integer> empty = Maps.immutable.of();
+ * ImmutableMap<String, Integer> one = Maps.immutable.of("a", 1);
+ * ImmutableMap<String, Integer> two = Maps.immutable.of("a", 1, "b", 2);
+ * ImmutableMap<String, Integer> fromMap = Maps.immutable.ofAll(existingMap);
+ * }</pre>
+ */
 @aQute.bnd.annotation.spi.ServiceProvider(ImmutableMapFactory.class)
 public class ImmutableMapFactoryImpl implements ImmutableMapFactory
 {

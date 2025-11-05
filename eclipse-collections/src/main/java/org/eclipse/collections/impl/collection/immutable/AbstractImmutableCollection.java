@@ -47,6 +47,34 @@ import org.eclipse.collections.impl.AbstractRichIterable;
 import org.eclipse.collections.impl.block.factory.PrimitiveFunctions;
 import org.eclipse.collections.impl.utility.Iterate;
 
+/**
+ * AbstractImmutableCollection is an abstract base class for immutable collection implementations.
+ * This class provides default implementations for ImmutableCollection operations and ensures
+ * that all mutating operations throw {@link UnsupportedOperationException}.
+ * <p>
+ * Immutable collections cannot be modified after creation. All modification attempts will throw
+ * UnsupportedOperationException. Operations that would normally modify the collection (like
+ * add, remove, clear) are not supported.
+ * </p>
+ * <p><b>Thread Safety:</b> Immutable collections are inherently thread-safe as they cannot be modified.</p>
+ * <p><b>Performance:</b> Immutable collections provide better performance in concurrent scenarios
+ * as no synchronization is needed. They also enable safe sharing and caching.</p>
+ * <p><b>Usage Examples:</b></p>
+ * <pre>{@code
+ * // Create an immutable collection from existing data
+ * ImmutableCollection<String> names = Lists.immutable.with("Alice", "Bob", "Charlie");
+ *
+ * // All read operations work normally
+ * int size = names.size();
+ * boolean contains = names.contains("Alice");
+ *
+ * // Modification attempts throw UnsupportedOperationException
+ * // names.add("David"); // This would throw UnsupportedOperationException
+ * }</pre>
+ *
+ * @param <T> the type of elements in this collection
+ * @since 1.0
+ */
 public abstract class AbstractImmutableCollection<T>
         extends AbstractRichIterable<T>
         implements ImmutableCollection<T>, Collection<T>
@@ -111,36 +139,76 @@ public abstract class AbstractImmutableCollection<T>
         return map.toImmutable();
     }
 
+    /**
+     * This operation is not supported on immutable collections.
+     *
+     * @param t element to be added (not supported)
+     * @return never returns normally
+     * @throws UnsupportedOperationException always thrown as immutable collections cannot be modified
+     */
     @Override
     public boolean add(T t)
     {
         throw new UnsupportedOperationException("Cannot call add() on " + this.getClass().getSimpleName());
     }
 
+    /**
+     * This operation is not supported on immutable collections.
+     *
+     * @param o element to be removed (not supported)
+     * @return never returns normally
+     * @throws UnsupportedOperationException always thrown as immutable collections cannot be modified
+     */
     @Override
     public boolean remove(Object o)
     {
         throw new UnsupportedOperationException("Cannot call remove() on " + this.getClass().getSimpleName());
     }
 
+    /**
+     * This operation is not supported on immutable collections.
+     *
+     * @param collection elements to be added (not supported)
+     * @return never returns normally
+     * @throws UnsupportedOperationException always thrown as immutable collections cannot be modified
+     */
     @Override
     public boolean addAll(Collection<? extends T> collection)
     {
         throw new UnsupportedOperationException("Cannot call addAll() on " + this.getClass().getSimpleName());
     }
 
+    /**
+     * This operation is not supported on immutable collections.
+     *
+     * @param collection elements to be removed (not supported)
+     * @return never returns normally
+     * @throws UnsupportedOperationException always thrown as immutable collections cannot be modified
+     */
     @Override
     public boolean removeAll(Collection<?> collection)
     {
         throw new UnsupportedOperationException("Cannot call removeAll() on " + this.getClass().getSimpleName());
     }
 
+    /**
+     * This operation is not supported on immutable collections.
+     *
+     * @param collection elements to be retained (not supported)
+     * @return never returns normally
+     * @throws UnsupportedOperationException always thrown as immutable collections cannot be modified
+     */
     @Override
     public boolean retainAll(Collection<?> collection)
     {
         throw new UnsupportedOperationException("Cannot call retainAll() on " + this.getClass().getSimpleName());
     }
 
+    /**
+     * This operation is not supported on immutable collections.
+     *
+     * @throws UnsupportedOperationException always thrown as immutable collections cannot be modified
+     */
     @Override
     public void clear()
     {
