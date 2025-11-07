@@ -1,6 +1,8 @@
 import "copyright.stg"
 import "primitiveLiteral.stg"
 
+skipBoolean() ::= "true"
+
 isTest() ::= "true"
 
 targetPath() ::= "org/eclipse/collections/impl/list/immutable/primitive"

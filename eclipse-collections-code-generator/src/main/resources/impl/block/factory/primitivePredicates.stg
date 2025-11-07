@@ -3,6 +3,8 @@ import "primitiveEquals.stg"
 import "primitiveEqualsWithDelta.stg"
 import "specialPredicates.stg"
 
+skipBoolean() ::= "true"
+
 targetPath() ::= "org/eclipse/collections/impl/block/factory/primitive"
 
 fileName(primitive) ::= "<primitive.name>Predicates"

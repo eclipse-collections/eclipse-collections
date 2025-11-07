@@ -11,10 +11,6 @@
 package org.eclipse.collections.codegenerator.maven;
 
 import java.io.File;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.Arrays;
-import java.util.List;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -43,16 +39,14 @@ public abstract class AbstractGenerateMojo extends AbstractMojo
             this.getLog().info("Generating sources in " + this.mavenProject.getArtifactId() + " to " + this.getOutputDirectory());
         }
 
-        List<URL> urls = Arrays.asList(((URLClassLoader) this.getClass().getClassLoader()).getURLs());
-
         boolean[] error = new boolean[1];
         ErrorListener errorListener = string -> {
             this.getLog().error(string);
             error[0] = true;
         };
+
         EclipseCollectionsCodeGenerator codeGenerator = new EclipseCollectionsCodeGenerator(
                 this.getTemplateDirectory(),
-                urls,
                 errorListener,
                 this.getOutputDirectory(),
                 this.getFileExtension());
