@@ -62,15 +62,17 @@ public interface Mutable<name>ObjectMap\<V> extends <name>ObjectMap\<V>, Mutable
     void putAll(<name>ObjectMap\<? extends V> map);
 
     /**
-     * Removes the mapping associated with the key, if one exists, from the map.
-     * @param key the key to remove
+     * Remove an entry from the map at the specified {@code key}.
+     *
+     * @return The value removed from entry at key, or null if not found.
      * @see #remove(<type>)
      */
     V removeKey(<type> key);
 
     /**
-     * Removes the mapping associated with the key, if one exists, from the map.
-     * @param key the key to remove
+     * Remove an entry from the map at the specified {@code key}.
+     *
+     * @return The value removed from entry at key, or null if not found.
      * @see #removeKey(<type>)
      */
     V remove(<type> key);
