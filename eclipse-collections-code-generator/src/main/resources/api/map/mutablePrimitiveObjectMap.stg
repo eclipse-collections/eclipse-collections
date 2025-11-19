@@ -150,6 +150,71 @@ public interface Mutable<name>ObjectMap\<V> extends <name>ObjectMap\<V>, Mutable
      * with {@code key}
      */
     \<P> V updateValueWith(<type> key, Function0\<? extends V> factory, Function2\<? super V, ? super P, ? extends V> function, P parameter);
+    /**
+     * Computes a value if absent.
+     */
+    default V computeIfAbsent(<type> key, Function0<? extends V> supplier) {
+        V value = this.get(key);
+        if (value == null) {
+            value = supplier.value();
+            this.put(key, value);
+        }
+        return value;
+    }
+
+    /**
+     * Updates value only if key is present.
+     */
+    default V computeIfPresent(<type> key, Function<? super V, ? extends V> remappingFunction) {
+        V oldValue = this.get(key);
+        if (oldValue != null) {
+            V newValue = remappingFunction.value(oldValue);
+            this.put(key, newValue);
+            return newValue;
+        }
+        return null;
+    }
+
+    /**
+     * Merges old and new values.
+     */
+    default V merge(<type> key, V value, Function2<? super V, ? super V, ? extends V> remappingFunction) {
+        V oldValue = this.get(key);
+        V newValue;
+        if (oldValue == null) {
+            newValue = value;
+        } else {
+            newValue = remappingFunction.value(oldValue, value);
+        }
+        this.put(key, newValue);
+        return newValue;
+    }
+
+    /**
+     * Returns value or default.
+     */
+    default V getOrDefault(<type> key, V defaultValue) {
+        V value = this.get(key);
+        return value != null ? value : defaultValue;
+    }
+
+    /**
+     * Replaces all values based on function.
+     */
+    default void replaceAllValues(Function<? super V, ? extends V> function) {
+        for (<type> key : this.keysView()) {
+            V oldValue = this.get(key);
+            this.put(key, function.value(oldValue));
+        }
+    }
+/**
+ * Remove an entry from the map if the {@code predicate} evaluates to true.
+ *
+ * @param predicate should return true if the key/value pair should be removed.
+ * @return true if any entry is removed.
+ * @since 12.0
+ */
+boolean removeIf(<name>ObjectPredicate<? super V> predicate);
 
     @Override
     MutableObject<name>Map\<V> flipUniqueValues();
