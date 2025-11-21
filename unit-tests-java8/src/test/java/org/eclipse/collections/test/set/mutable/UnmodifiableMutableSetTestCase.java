@@ -28,18 +28,4 @@ public interface UnmodifiableMutableSetTestCase extends UnmodifiableMutableColle
     {
         UnmodifiableSetTestCase.super.Iterable_remove();
     }
-
-    @Override
-    @Test
-    default void MutableCollection_removeIf()
-    {
-        UnmodifiableMutableCollectionTestCase.super.MutableCollection_removeIf();
-    }
-
-    @Override
-    @Test
-    default void MutableCollection_removeIfWith()
-    {
-        UnmodifiableMutableCollectionTestCase.super.MutableCollection_removeIfWith();
-    }
 }

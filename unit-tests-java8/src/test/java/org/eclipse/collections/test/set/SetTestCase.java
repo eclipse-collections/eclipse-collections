@@ -21,6 +21,7 @@ import org.eclipse.collections.test.CollectionTestCase;
 import org.junit.jupiter.api.Test;
 
 import static org.eclipse.collections.impl.test.Verify.assertPostSerializedEqualsAndHashCode;
+import static org.eclipse.collections.impl.test.Verify.assertThrows;
 import static org.eclipse.collections.test.IterableTestCase.assertIterablesEqual;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
@@ -98,6 +99,15 @@ public interface SetTestCase extends CollectionTestCase
     @Test
     default void Iterable_remove()
     {
+        if (!this.allowsRemove())
+        {
+            Set<Integer> set = this.newWith(3, 2, 1);
+            Iterator<Integer> iterator = set.iterator();
+            iterator.next();
+            assertThrows(UnsupportedOperationException.class, iterator::remove);
+            return;
+        }
+
         Set<Integer> set = this.newWith(3, 2, 1);
         Iterator<Integer> iterator = set.iterator();
         iterator.next();
@@ -113,6 +123,12 @@ public interface SetTestCase extends CollectionTestCase
     default void Collection_add()
     {
         CollectionTestCase.super.Collection_add();
+
+        if (!this.allowsAdd())
+        {
+            return;
+        }
+
         Collection<Integer> collection = this.newWith(1, 2, 3);
         assertFalse(collection.add(3));
     }

@@ -24,6 +24,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public interface MutableCollectionTestCase extends CollectionTestCase, RichIterableTestCase
@@ -60,10 +61,24 @@ public interface MutableCollectionTestCase extends CollectionTestCase, RichItera
     {
         String s = "";
 
-        MutableCollection<String> collection = this.newWith();
-        assertTrue(collection.add(s));
-        assertEquals(this.allowsDuplicates(), collection.add(s));
-        assertEquals(this.allowsDuplicates() ? 2 : 1, collection.size());
+        if (this.allowsAdd())
+        {
+            MutableCollection<String> collection = this.newWith();
+            assertTrue(collection.add(s));
+            assertEquals(this.allowsDuplicates(), collection.add(s));
+            assertEquals(this.allowsDuplicates() ? 2 : 1, collection.size());
+        }
+        else
+        {
+            if (this.allowsDuplicates())
+            {
+                assertEquals(2, this.newWith(s, s).size());
+            }
+            else
+            {
+                assertThrows(IllegalStateException.class, () -> this.newWith(s, s));
+            }
+        }
     }
 
     @Test
@@ -76,6 +91,18 @@ public interface MutableCollectionTestCase extends CollectionTestCase, RichItera
     @Test
     default void MutableCollection_removeIf()
     {
+        if (!this.allowsRemove())
+        {
+            MutableCollection<Integer> collection = this.newWith(5, 4, 3, 2, 1);
+            assertThrows(UnsupportedOperationException.class, () -> collection.removeIf(Predicates.cast(each -> each % 2 == 0)));
+            assertThrows(UnsupportedOperationException.class, () -> this.newWith(7, 4, 5, 1).removeIf(Predicates.cast(null)));
+            assertThrows(UnsupportedOperationException.class, () -> this.newWith(9, 5, 1).removeIf(Predicates.cast(each -> each % 2 == 0)));
+            assertThrows(UnsupportedOperationException.class, () -> this.newWith(6, 4, 2).removeIf(Predicates.cast(each -> each % 2 == 0)));
+            assertThrows(UnsupportedOperationException.class, () -> this.<Integer>newWith().removeIf(Predicates.cast(each -> each % 2 == 0)));
+            assertIterablesEqual(this.newWith(5, 4, 3, 2, 1), collection);
+            return;
+        }
+
         MutableCollection<Integer> collection1 = this.newWith(5, 5, 4, 4, 3, 3, 2, 2, 1, 1);
         assertTrue(collection1.removeIf(Predicates.cast(each -> each % 2 == 0)));
         assertIterablesEqual(this.getExpectedFiltered(5, 5, 3, 3, 1, 1), collection1);
@@ -98,6 +125,18 @@ public interface MutableCollectionTestCase extends CollectionTestCase, RichItera
     @Test
     default void MutableCollection_removeIfWith()
     {
+        if (!this.allowsRemove())
+        {
+            MutableCollection<Integer> collection = this.newWith(5, 4, 3, 2, 1);
+            assertThrows(UnsupportedOperationException.class, () -> Boolean.valueOf(collection.removeIfWith(Predicates2.in(), Lists.immutable.with(5, 3, 1))));
+            assertThrows(UnsupportedOperationException.class, () -> this.newWith(7, 4, 5, 1).removeIfWith(null, this));
+            assertThrows(UnsupportedOperationException.class, () -> this.newWith(9, 5, 1).removeIfWith(Predicates2.greaterThan(), 10));
+            assertThrows(UnsupportedOperationException.class, () -> this.newWith(6, 4, 2).removeIfWith(Predicates2.greaterThan(), 2));
+            assertThrows(UnsupportedOperationException.class, () -> this.<Integer>newWith().removeIfWith(Predicates2.greaterThan(), 2));
+            assertIterablesEqual(this.newWith(5, 4, 3, 2, 1), collection);
+            return;
+        }
+
         MutableCollection<Integer> collection1 = this.newWith(5, 5, 4, 4, 3, 3, 2, 2, 1, 1);
         assertTrue(collection1.removeIfWith(Predicates2.in(), Lists.immutable.with(5, 3, 1)));
         assertIterablesEqual(this.getExpectedFiltered(4, 4, 2, 2), collection1);

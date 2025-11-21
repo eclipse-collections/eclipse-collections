@@ -26,6 +26,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public interface CollectionTestCase extends IterableTestCase, CollisionsTestCase
@@ -67,6 +68,17 @@ public interface CollectionTestCase extends IterableTestCase, CollisionsTestCase
     default void Collection_add()
     {
         Collection<Integer> collection = this.newWith(3, 2, 1);
+
+        if (!this.allowsAdd())
+        {
+            assertThrows(UnsupportedOperationException.class, () -> collection.add(1));
+            assertThrows(UnsupportedOperationException.class, () -> collection.add(2));
+            assertThrows(UnsupportedOperationException.class, () -> collection.add(3));
+            assertThrows(UnsupportedOperationException.class, () -> collection.add(4));
+            assertIterablesEqual(this.newWith(3, 2, 1), collection);
+            return;
+        }
+
         assertTrue(collection.add(4));
         assertTrue(collection.contains(4));
         assertTrue(collection.contains(3));
@@ -97,6 +109,17 @@ public interface CollectionTestCase extends IterableTestCase, CollisionsTestCase
     @Test
     default void Collection_remove_removeAll()
     {
+        if (!this.allowsRemove())
+        {
+            Collection<Integer> collection = this.newWith(3, 2, 1);
+            assertThrows(UnsupportedOperationException.class, () -> collection.remove(1));
+            assertThrows(UnsupportedOperationException.class, () -> collection.remove(4));
+            assertThrows(UnsupportedOperationException.class, () -> collection.removeAll(Lists.mutable.with(1, 2)));
+            assertThrows(UnsupportedOperationException.class, () -> collection.removeAll(Lists.mutable.with(4, 5)));
+            assertIterablesEqual(this.newWith(3, 2, 1), collection);
+            return;
+        }
+
         {
             Collection<Integer> collection = this.newWith(3, 2, 1);
             assertFalse(collection.remove(4));
@@ -172,7 +195,7 @@ public interface CollectionTestCase extends IterableTestCase, CollisionsTestCase
             assertIterablesEqual(this.newWith(3, 2, 1), collection2);
 
             Collection<Integer> collection3 = this.newWith(3, 2, 1);
-            assertFalse(collection2.removeAll(Lists.mutable.with()));
+            assertFalse(collection3.removeAll(Lists.mutable.with()));
             assertIterablesEqual(this.newWith(3, 2, 1), collection3);
 
             Collection<Integer> collection4 = this.newWith(5, 4, 3, 2, 1);
@@ -199,11 +222,26 @@ public interface CollectionTestCase extends IterableTestCase, CollisionsTestCase
     @Test
     default void Collection_clear()
     {
-        Collection<Integer> collection = this.newWith(1, 2, 3);
+        Collection<Integer> collection = this.newWith(3, 2, 1);
+
+        if (!this.allowsRemove())
+        {
+            assertThrows(UnsupportedOperationException.class, () -> this.newWith().clear());
+            assertThrows(UnsupportedOperationException.class, () -> this.newWith(3).clear());
+            assertThrows(UnsupportedOperationException.class, () -> this.newWith(3, 2).clear());
+            assertThrows(UnsupportedOperationException.class, () -> this.newWith(3, 2, 1).clear());
+
+            assertThrows(UnsupportedOperationException.class, collection::clear);
+            assertIterablesEqual(this.newWith(3, 2, 1), collection);
+            assertThat(collection, is(not(empty())));
+            return;
+        }
+
         assertThat(collection, is(not(empty())));
         collection.clear();
         assertThat(collection, is(empty()));
         assertThat(collection, hasSize(0));
+        assertIterablesEqual(this.newWith(), collection);
         collection.clear();
         assertThat(collection, is(empty()));
     }

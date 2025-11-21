@@ -15,6 +15,7 @@ import java.util.Iterator;
 import org.eclipse.collections.impl.utility.Iterate;
 import org.junit.jupiter.api.Test;
 
+import static org.eclipse.collections.impl.test.Verify.assertThrows;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.isOneOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -25,6 +26,15 @@ public interface MutableUnorderedIterableTestCase extends UnorderedIterableTestC
     @Test
     default void Iterable_remove()
     {
+        if (!this.allowsRemove())
+        {
+            Iterable<Integer> iterable = this.newWith(3, 2, 1);
+            Iterator<Integer> iterator = iterable.iterator();
+            iterator.next();
+            assertThrows(UnsupportedOperationException.class, iterator::remove);
+            return;
+        }
+
         Iterable<Integer> iterable = this.newWith(3, 3, 3, 2, 2, 1);
         Iterator<Integer> iterator = iterable.iterator();
         iterator.next();

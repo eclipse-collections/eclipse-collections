@@ -67,6 +67,16 @@ public interface IterableTestCase
 
     boolean allowsDuplicates();
 
+    default boolean allowsAdd()
+    {
+        return true;
+    }
+
+    default boolean allowsRemove()
+    {
+        return true;
+    }
+
     static void assertIterablesEqual(Object o1, Object o2)
     {
         if (!(o1 instanceof Iterable)

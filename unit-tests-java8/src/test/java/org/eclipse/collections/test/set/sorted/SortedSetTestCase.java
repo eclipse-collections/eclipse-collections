@@ -18,6 +18,7 @@ import java.util.SortedSet;
 import org.eclipse.collections.test.CollectionTestCase;
 import org.junit.jupiter.api.Test;
 
+import static org.eclipse.collections.impl.test.Verify.assertThrows;
 import static org.eclipse.collections.test.IterableTestCase.assertIterablesEqual;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
@@ -50,6 +51,15 @@ public interface SortedSetTestCase extends CollectionTestCase
     @Test
     default void Iterable_remove()
     {
+        if (!this.allowsRemove())
+        {
+            Iterable<Integer> iterable = this.newWith(3, 2, 1);
+            Iterator<Integer> iterator = iterable.iterator();
+            iterator.next();
+            assertThrows(UnsupportedOperationException.class, iterator::remove);
+            return;
+        }
+
         Iterable<Integer> iterable = this.newWith(3, 2, 1);
         Iterator<Integer> iterator = iterable.iterator();
         assertEquals(Integer.valueOf(3), iterator.next());
@@ -61,6 +71,13 @@ public interface SortedSetTestCase extends CollectionTestCase
     @Test
     default void Collection_add()
     {
+        CollectionTestCase.super.Collection_add();
+
+        if (!this.allowsAdd())
+        {
+            return;
+        }
+
         Collection<Integer> collection = this.newWith(1, 2, 3);
         assertFalse(collection.add(3));
     }
