@@ -33,14 +33,14 @@ public interface MutableSetTestCase extends SetTestCase, UnsortedSetIterableTest
     @Test
     default void Object_PostSerializedEqualsAndHashCode()
     {
-        UnsortedSetIterableTestCase.super.Object_PostSerializedEqualsAndHashCode();
+        SetTestCase.super.Object_PostSerializedEqualsAndHashCode();
     }
 
     @Override
     @Test
     default void Object_equalsAndHashCode()
     {
-        UnsortedSetIterableTestCase.super.Object_equalsAndHashCode();
+        SetTestCase.super.Object_equalsAndHashCode();
     }
 
     @Override

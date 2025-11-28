@@ -46,11 +46,13 @@ import org.eclipse.collections.api.list.primitive.ShortList;
 import org.eclipse.collections.api.ordered.ReversibleIterable;
 import org.eclipse.collections.api.ordered.SortedIterable;
 import org.eclipse.collections.api.set.MutableSet;
+import org.eclipse.collections.api.stack.ImmutableStack;
 import org.eclipse.collections.impl.list.mutable.MultiReaderFastList;
 import org.eclipse.collections.impl.test.SerializeTestHelper;
 import org.eclipse.collections.impl.test.Verify;
 import org.junit.jupiter.api.Test;
 
+import static org.eclipse.collections.impl.test.Verify.assertPostSerializedEqualsAndHashCode;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -209,7 +211,9 @@ public interface IterableTestCase
                 || (o1 instanceof Boolean && o2 instanceof Boolean)
                 || o1 instanceof ImmutableCollection<?> && o2 instanceof ImmutableCollection<?>
                 && ((ImmutableCollection<?>) o1).isEmpty() && ((ImmutableCollection<?>) o2).isEmpty()
-                && !(o1 instanceof SortedIterable<?>) && !(o2 instanceof SortedIterable<?>))
+                && !(o1 instanceof SortedIterable<?>) && !(o2 instanceof SortedIterable<?>)
+                || o1 instanceof ImmutableStack<?> && o2 instanceof ImmutableStack<?>
+                && ((ImmutableStack<?>) o1).isEmpty() && ((ImmutableStack<?>) o2).isEmpty())
         {
             assertSame(o1, o2);
             return;
@@ -244,21 +248,40 @@ public interface IterableTestCase
     @Test
     default void Object_PostSerializedEqualsAndHashCode()
     {
-        Iterable<Integer> iterable = this.newWith(3, 3, 3, 2, 2, 1);
+        Iterable<Integer> iterable = this.newWith(3, 2, 1);
         Object deserialized = SerializeTestHelper.serializeDeserialize(iterable);
         assertNotSame(iterable, deserialized);
+
+        if (!this.allowsDuplicates())
+        {
+            return;
+        }
+
+        Iterable<Integer> iterable2 = this.newWith(3, 3, 3, 2, 2, 1);
+        Object deserialized2 = SerializeTestHelper.serializeDeserialize(iterable2);
+        assertNotSame(iterable2, deserialized2);
     }
 
     @Test
     default void Object_equalsAndHashCode()
     {
-        Verify.assertEqualsAndHashCode(this.newWith(3, 3, 3, 2, 2, 1), this.newWith(3, 3, 3, 2, 2, 1));
+        assertPostSerializedEqualsAndHashCode(this.newWith(3, 2, 1));
 
         assertIterablesNotEqual(this.newWith(4, 3, 2, 1), this.newWith(3, 2, 1));
         assertIterablesNotEqual(this.newWith(3, 2, 1), this.newWith(4, 3, 2, 1));
 
         assertIterablesNotEqual(this.newWith(2, 1), this.newWith(3, 2, 1));
         assertIterablesNotEqual(this.newWith(3, 2, 1), this.newWith(2, 1));
+
+        assertIterablesNotEqual(this.newWith(4, 2, 1), this.newWith(3, 2, 1));
+        assertIterablesNotEqual(this.newWith(3, 2, 1), this.newWith(4, 2, 1));
+
+        if (!this.allowsDuplicates())
+        {
+            return;
+        }
+
+        Verify.assertEqualsAndHashCode(this.newWith(3, 3, 3, 2, 2, 1), this.newWith(3, 3, 3, 2, 2, 1));
 
         assertIterablesNotEqual(this.newWith(3, 3, 2, 1), this.newWith(3, 2, 1));
         assertIterablesNotEqual(this.newWith(3, 2, 1), this.newWith(3, 3, 2, 1));
