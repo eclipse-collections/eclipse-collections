@@ -15,12 +15,15 @@ import java.util.Set;
 import org.eclipse.collections.api.bimap.MutableBiMap;
 import org.eclipse.collections.impl.bimap.mutable.HashBiMap;
 import org.eclipse.collections.test.set.SetTestCase;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class HashBiMapKeySetTest implements SetTestCase
 {
+    @Override
+    public boolean allowsAdd()
+    {
+        return false;
+    }
+
     @SafeVarargs
     @Override
     public final <T> Set<T> newWith(T... elements)
@@ -35,13 +38,5 @@ public class HashBiMapKeySetTest implements SetTestCase
             result.put(element, element);
         }
         return result.keySet();
-    }
-
-    @Override
-    @Test
-    public void Collection_add()
-    {
-        // TODO Move up to a keySet view abstraction
-        assertThrows(UnsupportedOperationException.class, () -> SetTestCase.super.Collection_add());
     }
 }

@@ -16,16 +16,20 @@ import java.util.Set;
 import org.eclipse.collections.api.map.MutableMap;
 import org.eclipse.collections.impl.map.mutable.UnifiedMap;
 import org.eclipse.collections.test.set.SetTestCase;
-import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 // TODO MapIterable.keySet() should return SetIterable, and use SetIterableTestCase here
 
 public class UnifiedMapKeySetTest implements SetTestCase
 {
     private static final long CURRENT_TIME_MILLIS = System.currentTimeMillis();
+
+    @Override
+    public boolean allowsAdd()
+    {
+        return false;
+    }
 
     @SafeVarargs
     @Override
@@ -39,13 +43,5 @@ public class UnifiedMapKeySetTest implements SetTestCase
             assertNull(result.put(element, random.nextDouble()));
         }
         return result.keySet();
-    }
-
-    @Override
-    @Test
-    public void Collection_add()
-    {
-        // TODO Move up to a keySet view abstraction
-        assertThrows(UnsupportedOperationException.class, () -> SetTestCase.super.Collection_add());
     }
 }

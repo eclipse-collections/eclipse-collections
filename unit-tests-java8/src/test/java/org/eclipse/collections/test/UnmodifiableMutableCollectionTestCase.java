@@ -10,15 +10,8 @@
 
 package org.eclipse.collections.test;
 
-import org.eclipse.collections.api.collection.MutableCollection;
-import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.impl.block.factory.Predicates;
-import org.eclipse.collections.impl.block.factory.Predicates2;
 import org.eclipse.collections.test.collection.mutable.MutableCollectionTestCase;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public interface UnmodifiableMutableCollectionTestCase extends FixedSizeCollectionTestCase, MutableCollectionTestCase
 {
@@ -27,46 +20,5 @@ public interface UnmodifiableMutableCollectionTestCase extends FixedSizeCollecti
     default void Iterable_remove()
     {
         FixedSizeCollectionTestCase.super.Iterable_remove();
-    }
-
-    @Override
-    @Test
-    default void MutableCollection_sanity_check()
-    {
-        // Cannot call add()
-
-        String s = "";
-        if (this.allowsDuplicates())
-        {
-            assertEquals(2, this.newWith(s, s).size());
-        }
-        else
-        {
-            assertThrows(IllegalStateException.class, () -> this.newWith(s, s));
-        }
-    }
-
-    @Override
-    @Test
-    default void MutableCollection_removeIf()
-    {
-        MutableCollection<Integer> collection = this.newWith(5, 4, 3, 2, 1);
-        assertThrows(UnsupportedOperationException.class, () -> collection.removeIf(Predicates.cast(each -> each % 2 == 0)));
-        assertThrows(UnsupportedOperationException.class, () -> this.newWith(7, 4, 5, 1).removeIf(Predicates.cast(null)));
-        assertThrows(UnsupportedOperationException.class, () -> this.newWith(9, 5, 1).removeIf(Predicates.cast(each -> each % 2 == 0)));
-        assertThrows(UnsupportedOperationException.class, () -> this.newWith(6, 4, 2).removeIf(Predicates.cast(each -> each % 2 == 0)));
-        assertThrows(UnsupportedOperationException.class, () -> this.<Integer>newWith().removeIf(Predicates.cast(each -> each % 2 == 0)));
-    }
-
-    @Override
-    @Test
-    default void MutableCollection_removeIfWith()
-    {
-        MutableCollection<Integer> collection = this.newWith(5, 4, 3, 2, 1);
-        assertThrows(UnsupportedOperationException.class, () -> Boolean.valueOf(collection.removeIfWith(Predicates2.in(), Lists.immutable.with(5, 3, 1))));
-        assertThrows(UnsupportedOperationException.class, () -> this.newWith(7, 4, 5, 1).removeIfWith(null, this));
-        assertThrows(UnsupportedOperationException.class, () -> this.newWith(9, 5, 1).removeIfWith(Predicates2.greaterThan(), 10));
-        assertThrows(UnsupportedOperationException.class, () -> this.newWith(6, 4, 2).removeIfWith(Predicates2.greaterThan(), 2));
-        assertThrows(UnsupportedOperationException.class, () -> this.<Integer>newWith().removeIfWith(Predicates2.greaterThan(), 2));
     }
 }

@@ -26,11 +26,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public interface SetIterableTestCase extends RichIterableUniqueTestCase, CollisionsTestCase
 {
-    default boolean allowsRemove()
-    {
-        return true;
-    }
-
     default boolean allowsNull()
     {
         return true;
