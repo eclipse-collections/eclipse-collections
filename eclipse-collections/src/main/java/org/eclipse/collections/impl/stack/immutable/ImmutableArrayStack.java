@@ -64,6 +64,7 @@ import org.eclipse.collections.api.collection.primitive.MutableFloatCollection;
 import org.eclipse.collections.api.collection.primitive.MutableIntCollection;
 import org.eclipse.collections.api.collection.primitive.MutableLongCollection;
 import org.eclipse.collections.api.collection.primitive.MutableShortCollection;
+import org.eclipse.collections.api.factory.Stacks;
 import org.eclipse.collections.api.factory.primitive.BooleanStacks;
 import org.eclipse.collections.api.factory.primitive.ByteStacks;
 import org.eclipse.collections.api.factory.primitive.CharStacks;
@@ -381,7 +382,7 @@ final class ImmutableArrayStack<T> implements ImmutableStack<T>, Serializable
     @Override
     public <S> ImmutableStack<S> selectInstancesOf(Class<S> clazz)
     {
-        return ImmutableArrayStack.newStackFromTopToBottom(this.delegate.asReversed().selectInstancesOf(clazz).toList());
+        return Stacks.immutable.withAllReversed(this.delegate.asReversed().selectInstancesOf(clazz).toList());
     }
 
     @Override
