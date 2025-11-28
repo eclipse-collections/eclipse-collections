@@ -1,0 +1,19 @@
+{
+  "problemMatcher": [
+    {
+      "owner": "errorprone",
+      "pattern": [
+        {
+          "regexp": "\\[(.*?)(ERROR|WARNING|SUGGESTION)(.*?)\\] (.+?):\\[(\\d+),(\\d+)\\] \\[([^\\]]+)\\] (.+)$",
+          "severity": 2,
+          "file": 4,
+          "line": 5,
+          "column": 6,
+          "code": 7,
+          "message": 8
+        }
+      ],
+      "source": "errorprone"
+    }
+  ]
+}
