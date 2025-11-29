@@ -34,6 +34,13 @@ public interface RichIterableWithDuplicatesTestCase extends RichIterableTestCase
     @Test
     default void RichIterable_size()
     {
+        assertEquals(3, this.newWith(3, 2, 1).size());
+
+        if (!this.allowsDuplicates())
+        {
+            return;
+        }
+
         assertEquals(6, this.newWith(3, 3, 3, 2, 2, 1).size());
     }
 }

@@ -65,12 +65,21 @@ public interface StackIterableTestCase extends OrderedIterableWithDuplicatesTest
     @Test
     default void RichIterable_tap()
     {
-        RichIterable<Integer> iterable = this.newWith(3, 3, 3, 2, 2, 1);
+        RichIterable<Integer> iterable = this.newWith(3, 2, 1);
         MutableStack<Integer> result = Stacks.mutable.with();
         iterable.tap(result::push).forEach(Procedures.noop());
-        assertIterablesEqual(this.newWith(1, 2, 2, 3, 3, 3), result);
-
+        assertIterablesEqual(this.newWith(1, 2, 3), result);
         this.newWith().tap(Procedures.cast(each -> fail()));
+
+        if (!this.allowsDuplicates())
+        {
+            return;
+        }
+
+        RichIterable<Integer> iterable2 = this.newWith(3, 3, 3, 2, 2, 1);
+        MutableStack<Integer> result2 = Stacks.mutable.with();
+        iterable2.tap(result2::push).forEach(Procedures.noop());
+        assertIterablesEqual(this.newWith(1, 2, 2, 3, 3, 3), result2);
     }
 
     @Override
