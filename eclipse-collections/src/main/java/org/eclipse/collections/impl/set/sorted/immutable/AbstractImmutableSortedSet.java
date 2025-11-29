@@ -12,6 +12,7 @@ package org.eclipse.collections.impl.set.sorted.immutable;
 
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.NavigableSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.SortedSet;
@@ -101,10 +102,16 @@ import org.eclipse.collections.impl.utility.internal.SortedSetIterables;
  * interface so an TreeSet.equals(anImmutableSortedSet) can return true when the contents are the same.
  */
 abstract class AbstractImmutableSortedSet<T> extends AbstractImmutableCollection<T>
-        implements ImmutableSortedSet<T>, SortedSet<T>
+        implements ImmutableSortedSet<T>, NavigableSet<T>
 {
     @Override
     public SortedSet<T> castToSortedSet()
+    {
+        return this;
+    }
+
+    @Override
+    public NavigableSet<T> castToNavigableSet()
     {
         return this;
     }
@@ -464,21 +471,45 @@ abstract class AbstractImmutableSortedSet<T> extends AbstractImmutableCollection
     }
 
     @Override
-    public SortedSet<T> subSet(T fromElement, T toElement)
+    public T pollFirst()
     {
-        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".subSet() not implemented yet");
+        throw new UnsupportedOperationException("Cannot call pollFirst() on " + this.getClass().getSimpleName());
     }
 
     @Override
-    public SortedSet<T> headSet(T toElement)
+    public T pollLast()
     {
-        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".headSet() not implemented yet");
+        throw new UnsupportedOperationException("Cannot call pollLast() on " + this.getClass().getSimpleName());
     }
 
     @Override
-    public SortedSet<T> tailSet(T fromElement)
+    public abstract AbstractImmutableSortedSet<T> descendingSet();
+
+    @Override
+    public abstract AbstractImmutableSortedSet<T> subSet(T fromElement, boolean fromInclusive, T toElement, boolean toInclusive);
+
+    @Override
+    public abstract AbstractImmutableSortedSet<T> headSet(T toElement, boolean inclusive);
+
+    @Override
+    public abstract AbstractImmutableSortedSet<T> tailSet(T fromElement, boolean inclusive);
+
+    @Override
+    public AbstractImmutableSortedSet<T> subSet(T fromElement, T toElement)
     {
-        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".tailSet() not implemented yet");
+        return this.subSet(fromElement, true, toElement, false);
+    }
+
+    @Override
+    public AbstractImmutableSortedSet<T> headSet(T toElement)
+    {
+        return this.headSet(toElement, false);
+    }
+
+    @Override
+    public AbstractImmutableSortedSet<T> tailSet(T fromElement)
+    {
+        return this.tailSet(fromElement, true);
     }
 
     @Override
@@ -499,14 +530,8 @@ abstract class AbstractImmutableSortedSet<T> extends AbstractImmutableCollection
     }
 
     @Override
-    public ImmutableSortedSet<T> toReversed()
+    public AbstractImmutableSortedSet<T> toReversed()
     {
-        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".toReversed() not implemented yet");
-    }
-
-    @Override
-    public int detectLastIndex(Predicate<? super T> predicate)
-    {
-        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".detectLastIndex() not implemented yet");
+        return this.descendingSet();
     }
 }
