@@ -284,24 +284,6 @@ public abstract class AbstractMutableSetTestCase extends AbstractCollectionTestC
                         FastList.newList()), 3, 4);
     }
 
-    @Override
-    @Test
-    public void getFirst()
-    {
-        super.getFirst();
-
-        assertNotNull(this.newWith(1, 2, 3).getFirst());
-        assertNull(this.newWith().getFirst());
-    }
-
-    @Override
-    @Test
-    public void getLast()
-    {
-        assertNotNull(this.newWith(1, 2, 3).getLast());
-        assertNull(this.newWith().getLast());
-    }
-
     @Test
     public void unifiedSetKeySetToArrayDest()
     {
