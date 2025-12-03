@@ -638,13 +638,13 @@ public class TreeSortedSet<T> extends AbstractMutableCollection<T>
     @Override
     public T getFirst()
     {
-        return this.first();
+        return this.isEmpty() ? null : this.first();
     }
 
     @Override
     public T getLast()
     {
-        return this.last();
+        return this.isEmpty() ? null : this.last();
     }
 
     @Override

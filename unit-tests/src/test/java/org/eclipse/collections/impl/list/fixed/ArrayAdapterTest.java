@@ -220,26 +220,6 @@ public class ArrayAdapterTest extends AbstractListTestCase
 
     @Override
     @Test
-    public void getFirst()
-    {
-        super.getFirst();
-
-        assertEquals(Integer.valueOf(1), this.newWith(1, 2, 3).getFirst());
-        assertNotEquals(Integer.valueOf(3), this.newWith(1, 2, 3).getFirst());
-    }
-
-    @Override
-    @Test
-    public void getLast()
-    {
-        super.getLast();
-
-        assertNotEquals(Integer.valueOf(1), this.newWith(1, 2, 3).getLast());
-        assertEquals(Integer.valueOf(3), this.newWith(1, 2, 3).getLast());
-    }
-
-    @Override
-    @Test
     public void isEmpty()
     {
         super.isEmpty();

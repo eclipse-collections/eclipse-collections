@@ -46,7 +46,6 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -282,24 +281,6 @@ public abstract class AbstractMutableSetTestCase extends AbstractCollectionTestC
         Verify.assertContainsAll(
                 this.newWith(1, 2, 3, 4).reject(Predicates.lessThan(3),
                         FastList.newList()), 3, 4);
-    }
-
-    @Override
-    @Test
-    public void getFirst()
-    {
-        super.getFirst();
-
-        assertNotNull(this.newWith(1, 2, 3).getFirst());
-        assertNull(this.newWith().getFirst());
-    }
-
-    @Override
-    @Test
-    public void getLast()
-    {
-        assertNotNull(this.newWith(1, 2, 3).getLast());
-        assertNull(this.newWith().getLast());
     }
 
     @Test
