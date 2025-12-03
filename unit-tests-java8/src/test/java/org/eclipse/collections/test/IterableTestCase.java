@@ -253,7 +253,7 @@ public interface IterableTestCase
         {
             if (!result.add(element))
             {
-                throw new IllegalStateException();
+                throw new IllegalStateException("Failed to add element: " + element + " to collection: " + result);
             }
         }
     }
