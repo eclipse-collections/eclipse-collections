@@ -10,8 +10,6 @@
 
 package org.eclipse.collections.test.set.sorted;
 
-import java.util.NoSuchElementException;
-
 import org.eclipse.collections.api.factory.SortedSets;
 import org.eclipse.collections.api.set.sorted.MutableSortedSet;
 import org.eclipse.collections.api.set.sorted.SortedSetIterable;
@@ -27,7 +25,6 @@ import org.junit.jupiter.api.Test;
 import static org.eclipse.collections.test.IterableTestCase.assertIterablesEqual;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public interface SortedSetIterableTestCase extends SetIterableTestCase, SortedIterableTestCase, TransformsToListTrait
 {
@@ -90,14 +87,16 @@ public interface SortedSetIterableTestCase extends SetIterableTestCase, SortedIt
     @Test
     default void RichIterable_getFirst_empty_null()
     {
-        assertThrows(NoSuchElementException.class, () -> this.newWith().getFirst());
+        SetIterableTestCase.super.RichIterable_getFirst_empty_null();
+        SortedIterableTestCase.super.RichIterable_getFirst_empty_null();
     }
 
     @Override
     @Test
     default void RichIterable_getLast_empty_null()
     {
-        assertThrows(NoSuchElementException.class, () -> this.newWith().getLast());
+        SetIterableTestCase.super.RichIterable_getLast_empty_null();
+        SortedIterableTestCase.super.RichIterable_getLast_empty_null();
     }
 
     @Override
