@@ -1193,6 +1193,7 @@ public abstract class AbstractRichIterableTestCase
     @Test
     public void getFirst()
     {
+        assertNull(this.newWith().getFirst());
         assertEquals(Integer.valueOf(1), this.newWith(1, 2, 3).getFirst());
         assertNotEquals(Integer.valueOf(3), this.newWith(1, 2, 3).getFirst());
     }
@@ -1200,6 +1201,7 @@ public abstract class AbstractRichIterableTestCase
     @Test
     public void getLast()
     {
+        assertNull(this.newWith().getLast());
         assertNotEquals(Integer.valueOf(1), this.newWith(1, 2, 3).getLast());
         assertEquals(Integer.valueOf(3), this.newWith(1, 2, 3).getLast());
     }
