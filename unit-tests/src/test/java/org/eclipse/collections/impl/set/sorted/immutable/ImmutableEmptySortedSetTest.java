@@ -176,14 +176,14 @@ public class ImmutableEmptySortedSetTest extends AbstractImmutableSortedSetTestC
     @Test
     public void getFirst()
     {
-        assertThrows(NoSuchElementException.class, () -> this.classUnderTest().getFirst());
+        assertNull(this.classUnderTest().getFirst());
     }
 
     @Override
     @Test
     public void getLast()
     {
-        assertThrows(NoSuchElementException.class, () -> this.classUnderTest().getLast());
+        assertNull(this.classUnderTest().getLast());
     }
 
     @Test
