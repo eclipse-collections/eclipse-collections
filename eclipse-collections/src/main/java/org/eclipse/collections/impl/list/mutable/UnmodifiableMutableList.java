@@ -13,6 +13,7 @@ package org.eclipse.collections.impl.list.mutable;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Random;
@@ -64,7 +65,7 @@ public class UnmodifiableMutableList<T>
         extends AbstractUnmodifiableMutableCollection<T>
         implements MutableList<T>, Serializable
 {
-    UnmodifiableMutableList(MutableList<? extends T> mutableList)
+    private UnmodifiableMutableList(MutableList<? extends T> mutableList)
     {
         super(mutableList);
     }
@@ -87,7 +88,7 @@ public class UnmodifiableMutableList<T>
         return new UnmodifiableMutableList<>(ListAdapter.adapt(list));
     }
 
-    private MutableList<T> getMutableList()
+    protected MutableList<T> getMutableList()
     {
         return (MutableList<T>) this.getMutableCollection();
     }
@@ -549,6 +550,11 @@ public class UnmodifiableMutableList<T>
         return ReverseIterable.adapt(this);
     }
 
+    public UnmodifiableMutableList<T> asReversedList()
+    {
+        return new RandomAccessReversedUnmodifiableMutableList<>(this.getMutableList());
+    }
+
     @Override
     public ParallelListIterable<T> asParallel(ExecutorService executorService, int batchSize)
     {
@@ -590,6 +596,46 @@ public class UnmodifiableMutableList<T>
 
         @Override
         public RandomAccessUnmodifiableMutableList<T> clone()
+        {
+            return this;
+        }
+    }
+
+    private static final class RandomAccessReversedUnmodifiableMutableList<T>
+            extends UnmodifiableMutableList<T>
+            implements RandomAccess
+    {
+        private static final long serialVersionUID = 1L;
+
+        private RandomAccessReversedUnmodifiableMutableList(MutableList<? extends T> mutableList)
+        {
+            super(mutableList);
+        }
+
+        public UnmodifiableMutableList<T> asReversedList()
+        {
+            return new UnmodifiableMutableList<>(this.getMutableList());
+        }
+
+        @Override
+        public T get(int index)
+        {
+            return this.getMutableList().get(this.reverseIndex(index));
+        }
+
+        private int reverseIndex(int index)
+        {
+            return this.size() - 1 - index;
+        }
+
+        @Override
+        public Iterator<T> iterator()
+        {
+            return ReverseIterable.adapt(this.getMutableList()).iterator();
+        }
+
+        @Override
+        public RandomAccessReversedUnmodifiableMutableList<T> clone()
         {
             return this;
         }
