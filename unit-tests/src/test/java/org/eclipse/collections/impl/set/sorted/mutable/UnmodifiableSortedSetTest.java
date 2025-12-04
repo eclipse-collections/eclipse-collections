@@ -285,24 +285,6 @@ public class UnmodifiableSortedSetTest extends AbstractSortedSetTestCase
 
     @Override
     @Test
-    public void getFirst()
-    {
-        super.getFirst();
-        assertNotNull(this.newWith(1, 2, 3).getFirst());
-        assertThrows(NoSuchElementException.class, () -> assertNull(this.newWith().getFirst()));
-    }
-
-    @Override
-    @Test
-    public void getLast()
-    {
-        super.getLast();
-        assertNotNull(this.newWith(1, 2, 3).getLast());
-        assertThrows(NoSuchElementException.class, () -> assertNull(this.newWith().getLast()));
-    }
-
-    @Override
-    @Test
     public void subSet()
     {
         assertThrows(UnsupportedOperationException.class, () -> this.newWith(1, 2, 3).subSet(1, 3).clear());
