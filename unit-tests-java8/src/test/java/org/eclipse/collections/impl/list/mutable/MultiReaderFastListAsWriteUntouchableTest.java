@@ -16,6 +16,7 @@ import org.eclipse.collections.test.list.mutable.MutableListTestCase;
 import org.junit.jupiter.api.Test;
 
 import static org.eclipse.collections.impl.test.Verify.assertNotSerializable;
+import static org.eclipse.collections.test.IterableTestCase.assertIterablesNotEqual;
 
 public class MultiReaderFastListAsWriteUntouchableTest implements MutableListTestCase
 {
@@ -33,5 +34,21 @@ public class MultiReaderFastListAsWriteUntouchableTest implements MutableListTes
     public void Object_PostSerializedEqualsAndHashCode()
     {
         assertNotSerializable(this.newWith());
+    }
+
+    @Override
+    @Test
+    public void Object_equalsAndHashCode()
+    {
+        assertNotSerializable(this.newWith(3, 2, 1));
+
+        assertIterablesNotEqual(this.newWith(4, 3, 2, 1), this.newWith(3, 2, 1));
+        assertIterablesNotEqual(this.newWith(3, 2, 1), this.newWith(4, 3, 2, 1));
+
+        assertIterablesNotEqual(this.newWith(2, 1), this.newWith(3, 2, 1));
+        assertIterablesNotEqual(this.newWith(3, 2, 1), this.newWith(2, 1));
+
+        assertIterablesNotEqual(this.newWith(4, 2, 1), this.newWith(3, 2, 1));
+        assertIterablesNotEqual(this.newWith(3, 2, 1), this.newWith(4, 2, 1));
     }
 }

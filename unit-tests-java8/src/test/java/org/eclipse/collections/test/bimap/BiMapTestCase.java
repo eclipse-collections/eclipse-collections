@@ -46,8 +46,6 @@ public interface BiMapTestCase extends RichIterableUniqueTestCase, MapIterableTe
     @Test
     default void Iterable_toString()
     {
-        RichIterableUniqueTestCase.super.Iterable_toString();
-
         BiMap<String, Integer> bimap = this.newWithKeysValues("Two", 2, "One", 1);
         assertEquals("{Two=2, One=1}", bimap.toString());
         assertEquals("[Two, One]", bimap.keysView().toString());
@@ -102,13 +100,6 @@ public interface BiMapTestCase extends RichIterableUniqueTestCase, MapIterableTe
         assertIterablesEqual(
                 this.newWithKeysValues(3, "Three", 2, "Two", 1, "One"),
                 result);
-    }
-
-    @Override
-    @Test
-    default void RichIterable_size()
-    {
-        RichIterableUniqueTestCase.super.RichIterable_size();
     }
 
     @Test
