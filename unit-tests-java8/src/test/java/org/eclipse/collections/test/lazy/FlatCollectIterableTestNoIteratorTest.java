@@ -18,6 +18,7 @@ import org.eclipse.collections.impl.lazy.FlatCollectIterable;
 import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.test.LazyNoIteratorTestCase;
 import org.eclipse.collections.test.list.mutable.FastListNoIterator;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -30,6 +31,7 @@ public class FlatCollectIterableTestNoIteratorTest implements LazyNoIteratorTest
     }
 
     @Override
+    @Test
     public void RichIterable_detectOptionalNull()
     {
         RichIterable<Integer> iterable1 = this.newWith(1, null, 3);

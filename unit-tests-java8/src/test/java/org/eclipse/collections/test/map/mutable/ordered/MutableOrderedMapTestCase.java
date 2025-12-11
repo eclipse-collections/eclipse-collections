@@ -14,6 +14,7 @@ import org.eclipse.collections.api.map.MutableOrderedMap;
 import org.eclipse.collections.test.MutableOrderedIterableTestCase;
 import org.eclipse.collections.test.map.OrderedMapIterableTestCase;
 import org.eclipse.collections.test.map.mutable.MutableMapIterableTestCase;
+import org.junit.jupiter.api.Test;
 
 public interface MutableOrderedMapTestCase extends OrderedMapIterableTestCase, MutableMapIterableTestCase, MutableOrderedIterableTestCase
 {
@@ -24,8 +25,9 @@ public interface MutableOrderedMapTestCase extends OrderedMapIterableTestCase, M
     <K, V> MutableOrderedMap<K, V> newWithKeysValues(Object... elements);
 
     @Override
+    @Test
     default void Iterable_remove()
     {
-        MutableMapIterableTestCase.super.Iterable_remove();
+        MutableOrderedIterableTestCase.super.Iterable_remove();
     }
 }

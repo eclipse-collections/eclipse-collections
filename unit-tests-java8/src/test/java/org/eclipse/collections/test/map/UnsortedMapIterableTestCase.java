@@ -61,6 +61,7 @@ public interface UnsortedMapIterableTestCase
     }
 
     @Override
+    @Test
     default void Iterable_remove()
     {
         MapIterableTestCase.super.Iterable_remove();

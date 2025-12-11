@@ -13,6 +13,7 @@ package org.eclipse.collections.test.map.mutable.sorted;
 import org.eclipse.collections.api.map.sorted.MutableSortedMap;
 import org.eclipse.collections.test.MutableSortedIterableTestCase;
 import org.eclipse.collections.test.map.SortedMapIterableTestCase;
+import org.junit.jupiter.api.Test;
 
 public interface MutableSortedMapIterableTestCase extends SortedMapIterableTestCase, MutableSortedIterableTestCase
 {
@@ -23,8 +24,9 @@ public interface MutableSortedMapIterableTestCase extends SortedMapIterableTestC
     <K, V> MutableSortedMap<K, V> newWithKeysValues(Object... elements);
 
     @Override
+    @Test
     default void Iterable_remove()
     {
-        SortedMapIterableTestCase.super.Iterable_remove();
+        MutableSortedIterableTestCase.super.Iterable_remove();
     }
 }

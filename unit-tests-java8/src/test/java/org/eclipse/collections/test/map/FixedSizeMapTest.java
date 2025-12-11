@@ -16,13 +16,22 @@ import org.eclipse.collections.api.factory.Maps;
 import org.eclipse.collections.api.map.MutableMap;
 import org.eclipse.collections.api.map.UnsortedMapIterable;
 import org.eclipse.collections.impl.map.mutable.UnifiedMap;
+import org.eclipse.collections.test.FixedSizeIterableTestCase;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class FixedSizeMapTest implements UnsortedMapIterableTestCase
+public class FixedSizeMapTest implements UnsortedMapIterableTestCase, FixedSizeIterableTestCase
 {
     private static final long CURRENT_TIME_MILLIS = System.currentTimeMillis();
+
+    @Override
+    @Test
+    public void Iterable_remove()
+    {
+        FixedSizeIterableTestCase.super.Iterable_remove();
+    }
 
     @Override
     public <T> UnsortedMapIterable<Object, T> newWith(T... elements)

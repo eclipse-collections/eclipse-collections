@@ -19,6 +19,7 @@ import org.eclipse.collections.impl.set.sorted.mutable.TreeSortedSet;
 import org.eclipse.collections.test.IterableTestCase;
 import org.eclipse.collections.test.NoIteratorTestCase;
 import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 @Disabled("Requires scapegoat tree implementation")
 public class TreeSortedSetNoIteratorTest implements MutableSortedSetTestCase, NoIteratorTestCase
@@ -33,24 +34,28 @@ public class TreeSortedSetNoIteratorTest implements MutableSortedSetTestCase, No
     }
 
     @Override
+    @Test
     public void Iterable_next()
     {
         NoIteratorTestCase.super.Iterable_next();
     }
 
     @Override
+    @Test
     public void Iterable_remove()
     {
         NoIteratorTestCase.super.Iterable_remove();
     }
 
     @Override
+    @Test
     public void RichIterable_getFirst()
     {
         NoIteratorTestCase.super.RichIterable_getFirst();
     }
 
     @Override
+    @Test
     public void RichIterable_getLast()
     {
         NoIteratorTestCase.super.RichIterable_getLast();

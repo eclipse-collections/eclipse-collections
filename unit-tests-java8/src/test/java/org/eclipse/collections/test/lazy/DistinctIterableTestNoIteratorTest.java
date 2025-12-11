@@ -48,6 +48,7 @@ public class DistinctIterableTestNoIteratorTest implements NoIteratorTestCase, R
     }
 
     @Override
+    @Test
     public void Iterable_sanity_check()
     {
         // Not applicable. DistinctIterable wraps an instance that does have duplicates and behaves like it has no duplicates.
