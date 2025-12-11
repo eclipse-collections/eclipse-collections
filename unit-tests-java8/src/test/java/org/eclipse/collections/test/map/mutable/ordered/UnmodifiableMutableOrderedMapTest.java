@@ -17,6 +17,7 @@ import org.eclipse.collections.impl.map.ordered.mutable.OrderedMapAdapter;
 import org.eclipse.collections.impl.map.ordered.mutable.UnmodifiableMutableOrderedMap;
 import org.eclipse.collections.test.FixedSizeIterableTestCase;
 import org.eclipse.collections.test.map.mutable.UnmodifiableMutableMapIterableTestCase;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -55,6 +56,7 @@ public class UnmodifiableMutableOrderedMapTest
     }
 
     @Override
+    @Test
     public void Iterable_remove()
     {
         UnmodifiableMutableMapIterableTestCase.super.Iterable_remove();

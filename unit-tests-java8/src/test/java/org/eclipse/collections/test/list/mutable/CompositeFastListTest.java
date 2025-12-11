@@ -31,8 +31,8 @@ public class CompositeFastListTest implements MutableListTestCase
         return result;
     }
 
-    @Test
     @Override
+    @Test
     public void List_subList_subList_addAll()
     {
         // Not applicable

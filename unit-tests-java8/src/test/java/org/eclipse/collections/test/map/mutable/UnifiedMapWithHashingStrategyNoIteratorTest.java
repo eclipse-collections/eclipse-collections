@@ -61,48 +61,56 @@ public class UnifiedMapWithHashingStrategyNoIteratorTest implements MutableMapTe
     }
 
     @Override
+    @Test
     public void Iterable_next()
     {
         NoIteratorTestCase.super.Iterable_next();
     }
 
     @Override
+    @Test
     public void Iterable_remove()
     {
         NoIteratorTestCase.super.Iterable_remove();
     }
 
     @Override
+    @Test
     public void RichIterable_getFirst()
     {
         NoIteratorTestCase.super.RichIterable_getFirst();
     }
 
     @Override
+    @Test
     public void RichIterable_getLast()
     {
         NoIteratorTestCase.super.RichIterable_getLast();
     }
 
     @Override
+    @Test
     public void RichIterable_getFirst_and_getLast()
     {
         // Not applicable
     }
 
     @Override
+    @Test
     public void RichIterable_getLast_empty_null()
     {
         // Not applicable
     }
 
     @Override
+    @Test
     public void RichIterable_fused_collectMakeString()
     {
         // Not applicable
     }
 
     @Override
+    @Test
     public void RichIterable_anySatisfy_allSatisfy_noneSatisfy()
     {
         /**
@@ -119,6 +127,7 @@ public class UnifiedMapWithHashingStrategyNoIteratorTest implements MutableMapTe
     }
 
     @Override
+    @Test
     public void MutableMapIterable_updateValue()
     {
         /**

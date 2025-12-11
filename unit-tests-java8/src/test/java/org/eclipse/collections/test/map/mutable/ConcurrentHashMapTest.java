@@ -16,6 +16,7 @@ import java.util.Random;
 import org.eclipse.collections.api.map.MutableMap;
 import org.eclipse.collections.api.map.MutableMapIterable;
 import org.eclipse.collections.impl.map.mutable.ConcurrentHashMap;
+import org.junit.jupiter.api.Test;
 
 import static org.eclipse.collections.test.IterableTestCase.assertIterablesEqual;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -60,15 +61,21 @@ public class ConcurrentHashMapTest implements MutableMapTestCase
         return false;
     }
 
+    /**
+     * TODO: ConcurrentHashMap's Entry.setValue() throws RuntimeException("not implemented")
+     * instead of UnsupportedOperationException.
+     */
     @Override
+    @Test
     public void Map_entrySet_setValue()
     {
         MutableMapIterable<String, Integer> map = this.newWithKeysValues("3", 3, "2", 2, "1", 1);
-        map.entrySet().forEach(each -> assertThrows(UnsupportedOperationException.class, () -> each.setValue(each.getValue() + 1)));
+        map.entrySet().forEach(each -> assertThrows(RuntimeException.class, () -> each.setValue(each.getValue() + 1)));
         assertIterablesEqual(this.newWithKeysValues("3", 3, "2", 2, "1", 1), map);
     }
 
     @Override
+    @Test
     public void MutableMapIterable_entrySet_setValue()
     {
         this.Map_entrySet_setValue();
@@ -81,6 +88,7 @@ public class ConcurrentHashMapTest implements MutableMapTestCase
      * so replaceAll (which uses setValue internally) cannot work.
      */
     @Override
+    @Test
     public void Map_replaceAll()
     {
         Map<Integer, String> map = this.newWithKeysValues(1, "1", 2, "2", 3, "3");

@@ -15,6 +15,7 @@ import java.util.Random;
 import org.eclipse.collections.api.map.MutableMap;
 import org.eclipse.collections.impl.map.mutable.UnifiedMap;
 import org.eclipse.collections.impl.map.mutable.UnmodifiableMutableMap;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -53,6 +54,7 @@ public class UnmodifiableMutableMapTest
     }
 
     @Override
+    @Test
     public void Iterable_remove()
     {
         UnmodifiableMutableMapIterableTestCase.super.Iterable_remove();

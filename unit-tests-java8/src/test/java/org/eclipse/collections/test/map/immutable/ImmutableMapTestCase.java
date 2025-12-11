@@ -13,6 +13,7 @@ package org.eclipse.collections.test.map.immutable;
 import org.eclipse.collections.api.map.ImmutableMap;
 import org.eclipse.collections.test.ImmutableUnorderedIterableTestCase;
 import org.eclipse.collections.test.map.UnsortedMapIterableTestCase;
+import org.junit.jupiter.api.Test;
 
 public interface ImmutableMapTestCase extends UnsortedMapIterableTestCase, ImmutableUnorderedIterableTestCase
 {
@@ -23,8 +24,9 @@ public interface ImmutableMapTestCase extends UnsortedMapIterableTestCase, Immut
     <K, V> ImmutableMap<K, V> newWithKeysValues(Object... elements);
 
     @Override
+    @Test
     default void Iterable_remove()
     {
-        UnsortedMapIterableTestCase.super.Iterable_remove();
+        ImmutableUnorderedIterableTestCase.super.Iterable_remove();
     }
 }
