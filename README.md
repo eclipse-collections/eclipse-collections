@@ -202,3 +202,7 @@ We welcome contributions! We accept contributions via pull requests here in GitH
 [10-4-Release]: https://github.com/eclipse/eclipse-collections/releases/tag/10.4.0
 [11-0-Release]: https://github.com/eclipse/eclipse-collections/releases/tag/11.0.0
 [11-1-Release]: https://github.com/eclipse/eclipse-collections/releases/tag/11.1.0
+This is a minor documentation improvement for better readability.
+
+
+
