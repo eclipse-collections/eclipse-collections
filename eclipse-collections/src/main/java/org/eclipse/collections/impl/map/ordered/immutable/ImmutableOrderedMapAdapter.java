@@ -69,7 +69,7 @@ public class ImmutableOrderedMapAdapter<K, V>
 
     public ImmutableOrderedMapAdapter(Map<K, V> delegate)
     {
-        this.delegate = OrderedMapAdapter.adapt(new LinkedHashMap<>(delegate));
+        this.delegate = OrderedMapAdapter.adapt(Collections.unmodifiableMap(new LinkedHashMap<>(delegate)));
     }
 
     @Override
