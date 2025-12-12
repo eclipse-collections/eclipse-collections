@@ -107,3 +107,5 @@ That's it! Thanks for contributing to Eclipse Collections!
 [imperative-mood]: https://github.com/git/git/blob/master/Documentation/SubmittingPatches
 [github-issue]:    https://help.github.com/articles/closing-issues-via-commit-messages/
 [mailing-list]:    https://dev.eclipse.org/mailman/listinfo/collections-dev
+This documentation was updated to improve clarity for new contributors.
+
