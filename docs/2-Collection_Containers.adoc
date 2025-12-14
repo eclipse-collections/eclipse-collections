@@ -1134,6 +1134,18 @@ Assert.assertEquals(11, map.addToValue((byte) 0, 10));
 Assert.assertEquals(ByteIntHashMap.newWithKeysValues((byte) 0, 11), map);
 ----
 ====
+==== Iteration patterns for Primitive Maps
+
+[source,java]
+----
+MutableIntObjectMap<String> intObjectMap = new IntObjectHashMap<>();
+intObjectMap.put(1, "one");
+intObjectMap.put(2, "two");
+
+intObjectMap.forEachKeyValue((key, value) ->
+        System.out.println(key + " -> " + value)
+);
+----
 
 All primitive collections have immutable counterparts, and unmodifiable and synchronized wrappers.
 See the link:#protective-wrappers[Protecting collections] topic for more information.
