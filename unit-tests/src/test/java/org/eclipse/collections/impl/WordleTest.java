@@ -10,6 +10,8 @@
 
 package org.eclipse.collections.impl;
 
+import java.util.Locale;
+
 import org.eclipse.collections.api.bag.primitive.MutableCharBag;
 import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.factory.primitive.CharLists;
@@ -66,18 +68,18 @@ public class WordleTest
                 triple -> triple.getOne().equals(new Wordle(triple.getTwo()).guessZipCharReject(triple.getThree())));
     }
 
-    class Wordle
+    static class Wordle
     {
         private final String string;
 
         Wordle(String string)
         {
-            this.string = string.toLowerCase();
+            this.string = string.toLowerCase(Locale.ROOT);
         }
 
         public String guessForEachInBoth(String guess)
         {
-            CharAdapter guessChars = Strings.asChars(guess.toLowerCase());
+            CharAdapter guessChars = Strings.asChars(guess.toLowerCase(Locale.ROOT));
             CharAdapter hiddenChars = Strings.asChars(this.string);
             MutableCharBag remaining = CharBags.mutable.empty();
             hiddenChars.forEachInBoth(guessChars, (h, g) -> remaining.add(h == g ? '.' : h));
@@ -98,7 +100,7 @@ public class WordleTest
 
         public String guessInjectIntoIndex(String guess)
         {
-            CharAdapter guessChars = Strings.asChars(guess.toLowerCase());
+            CharAdapter guessChars = Strings.asChars(guess.toLowerCase(Locale.ROOT));
             CharAdapter hiddenChars = Strings.asChars(this.string);
             MutableCharBag remaining =
                     hiddenChars.injectIntoWithIndex(
@@ -109,7 +111,7 @@ public class WordleTest
 
         public String guessRejectWithIndex(String guess)
         {
-            CharAdapter guessChars = Strings.asChars(guess.toLowerCase());
+            CharAdapter guessChars = Strings.asChars(guess.toLowerCase(Locale.ROOT));
             CharAdapter hiddenChars = Strings.asChars(this.string);
             MutableCharBag remaining =
                     hiddenChars.rejectWithIndex((each, i) -> guessChars.get(i) == each, CharBags.mutable.empty());
@@ -118,7 +120,7 @@ public class WordleTest
 
         public String guessSelectWithIndex(String guess)
         {
-            CharAdapter guessChars = Strings.asChars(guess.toLowerCase());
+            CharAdapter guessChars = Strings.asChars(guess.toLowerCase(Locale.ROOT));
             CharAdapter hiddenChars = Strings.asChars(this.string);
             MutableCharBag remaining =
                     hiddenChars.selectWithIndex((each, i) -> guessChars.get(i) != each, CharBags.mutable.empty());
@@ -128,7 +130,7 @@ public class WordleTest
         public String guessZipCharReject(String guess)
         {
             ImmutableList<CharCharPair> charPairs =
-                    Strings.asChars(this.string).zipChar(Strings.asChars(guess.toLowerCase()));
+                    Strings.asChars(this.string).zipChar(Strings.asChars(guess.toLowerCase(Locale.ROOT)));
             MutableCharBag remaining =
                     charPairs.asLazy()
                             .reject(pair -> pair.getOne() == pair.getTwo())
