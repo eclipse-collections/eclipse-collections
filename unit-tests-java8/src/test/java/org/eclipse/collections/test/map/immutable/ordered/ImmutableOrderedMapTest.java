@@ -110,6 +110,15 @@ public class ImmutableOrderedMapTest
 
     @Override
     @Test
+    public void Map_entrySet_setValue()
+    {
+        Map<String, Integer> map = this.newWithKeysValues("3", 3, "2", 2, "1", 1);
+        map.entrySet().forEach(each -> assertThrows(UnsupportedOperationException.class, () -> each.setValue(each.getValue() + 1)));
+        assertIterablesEqual(this.newWithKeysValues("3", 3, "2", 2, "1", 1), map);
+    }
+
+    @Override
+    @Test
     public void Map_put()
     {
         Map<Integer, String> map = this.newWithKeysValues(3, "Three", 2, "Two", 1, "One");
