@@ -1835,7 +1835,7 @@ public final class ConcurrentHashMap<K, V>
         @Override
         public V setValue(V value)
         {
-            throw new RuntimeException("not implemented");
+            throw new UnsupportedOperationException("ConcurrentHashMap.Entry.setValue() not implemented. Use put() instead.");
         }
 
         public Entry<K, V> getNext()

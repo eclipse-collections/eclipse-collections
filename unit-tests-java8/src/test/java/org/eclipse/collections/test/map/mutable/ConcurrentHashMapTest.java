@@ -61,16 +61,12 @@ public class ConcurrentHashMapTest implements MutableMapTestCase
         return false;
     }
 
-    /**
-     * TODO: ConcurrentHashMap's Entry.setValue() throws RuntimeException("not implemented")
-     * instead of UnsupportedOperationException.
-     */
     @Override
     @Test
     public void Map_entrySet_setValue()
     {
         MutableMapIterable<String, Integer> map = this.newWithKeysValues("3", 3, "2", 2, "1", 1);
-        map.entrySet().forEach(each -> assertThrows(RuntimeException.class, () -> each.setValue(each.getValue() + 1)));
+        map.entrySet().forEach(each -> assertThrows(UnsupportedOperationException.class, () -> each.setValue(each.getValue() + 1)));
         assertIterablesEqual(this.newWithKeysValues("3", 3, "2", 2, "1", 1), map);
     }
 
@@ -82,17 +78,16 @@ public class ConcurrentHashMapTest implements MutableMapTestCase
     }
 
     /**
-     * TODO: Implement {@link java.util.Map.Entry#setValue(Object)} in {@link ConcurrentHashMap}
-     * or provide a custom {@link Map#replaceAll(java.util.function.BiFunction)} implementation.
-     * Currently, {@link ConcurrentHashMap}'s Entry.setValue() throws {@link RuntimeException} "not implemented",
-     * so replaceAll (which uses setValue internally) cannot work.
+     * TODO: Implement a custom replaceAll() using the JDK's retry-loop approach with replace().
+     * ConcurrentHashMap's Entry.setValue() throws UnsupportedOperationException,
+     * so the default replaceAll (which uses setValue internally) cannot work.
      */
     @Override
     @Test
     public void Map_replaceAll()
     {
         Map<Integer, String> map = this.newWithKeysValues(1, "1", 2, "2", 3, "3");
-        assertThrows(RuntimeException.class, () -> map.replaceAll((k, v) -> v + k));
+        assertThrows(UnsupportedOperationException.class, () -> map.replaceAll((k, v) -> v + k));
         assertIterablesEqual(this.newWithKeysValues(1, "1", 2, "2", 3, "3"), map);
     }
 }
