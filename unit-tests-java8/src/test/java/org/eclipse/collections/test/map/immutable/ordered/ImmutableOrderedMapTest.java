@@ -149,19 +149,19 @@ public class ImmutableOrderedMapTest
         assertThrows(UnsupportedOperationException.class, () -> map.putAll(Map.of()));
     }
 
-    /**
-     * ImmutableOrderedMapAdapter uses default Map.merge which calls the lambda before put.
-     * The lambda is called, then put throws UnsupportedOperationException.
-     */
     @Override
     @Test
     public void Map_merge()
     {
         Map<Integer, String> map = this.newWithKeysValues(1, "1", 2, "2", 3, "3");
-        // TODO: For existing key, lambda is called before put throws. Ideally should throw immediately.
-        assertThrows(UnsupportedOperationException.class, () -> map.merge(3, "4", (v1, v2) -> v1 + v2));
-        // TODO: For new key, put throws but only after checking the value. Ideally should throw immediately.
-        assertThrows(UnsupportedOperationException.class, () -> map.merge(4, "4", (v1, v2) -> v1 + v2));
+        assertThrows(UnsupportedOperationException.class, () -> map.merge(3, "4", (v1, v2) -> {
+            fail("Expected lambda not to be called on unmodifiable map");
+            return null;
+        }));
+        assertThrows(UnsupportedOperationException.class, () -> map.merge(4, "4", (v1, v2) -> {
+            fail("Expected lambda not to be called on unmodifiable map");
+            return null;
+        }));
         assertEquals(this.newWithKeysValues(1, "1", 2, "2", 3, "3"), map);
     }
 
