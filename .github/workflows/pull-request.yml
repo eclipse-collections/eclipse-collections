@@ -12,7 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - uses: actions/cache@v4
+      - uses: actions/cache@v5
         with:
           key: maven-test-${{ hashFiles('**/pom.xml') }}
           path: ~/.m2/repository
@@ -38,7 +38,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - uses: actions/cache@v4
+      - uses: actions/cache@v5
         with:
           key: maven-enforcer-${{ hashFiles('**/pom.xml') }}
           path: ~/.m2/repository
@@ -66,7 +66,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - uses: actions/cache@v4
+      - uses: actions/cache@v5
         with:
           key: maven-dependency-${{ hashFiles('**/pom.xml') }}
           path: ~/.m2/repository
@@ -98,7 +98,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - uses: actions/cache@v4
+      - uses: actions/cache@v5
         with:
           key: maven-test-no-p2-${{ hashFiles('**/pom.xml') }}
           path: ~/.m2/repository
@@ -127,7 +127,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - uses: actions/cache@v4
+      - uses: actions/cache@v5
         with:
           key: maven-test-early-access-${{ hashFiles('**/pom.xml') }}
           path: ~/.m2/repository
@@ -161,7 +161,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - uses: actions/cache@v4
+      - uses: actions/cache@v5
         with:
           key: maven-acceptance-test-${{ hashFiles('**/pom.xml') }}
           path: ~/.m2/repository
@@ -189,7 +189,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - uses: actions/cache@v4
+      - uses: actions/cache@v5
         with:
           key: maven-performance-test-${{ hashFiles('**/pom.xml') }}
           path: ~/.m2/repository
@@ -233,7 +233,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - uses: actions/cache@v4
+      - uses: actions/cache@v5
         with:
           key: maven-javadoc-${{ hashFiles('**/pom.xml') }}
           path: ~/.m2/repository
@@ -267,7 +267,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - uses: actions/cache@v4
+      - uses: actions/cache@v5
         with:
           key: maven-javadoc-ea-${{ hashFiles('**/pom.xml') }}
           path: ~/.m2/repository
