@@ -86,6 +86,7 @@ public class ConcurrentHashMapUnsafeTest implements MutableMapTestCase
      * so replaceAll (which uses setValue internally) cannot work.
      */
     @Override
+    @Test
     public void Map_replaceAll()
     {
         Map<Integer, String> map = this.newWithKeysValues(1, "1", 2, "2", 3, "3");

@@ -17,6 +17,7 @@ import org.eclipse.collections.api.map.sorted.MutableSortedMap;
 import org.eclipse.collections.impl.block.factory.Comparators;
 import org.eclipse.collections.impl.map.sorted.mutable.TreeSortedMap;
 import org.eclipse.collections.test.bag.mutable.sorted.OrderedIterableNoIteratorTest;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -53,6 +54,7 @@ public class TreeSortedMapNoIteratorTest implements MutableSortedMapIterableTest
     }
 
     @Override
+    @Test
     public void Iterable_remove()
     {
         OrderedIterableNoIteratorTest.super.Iterable_remove();
