@@ -22,7 +22,7 @@ jobs:
       JAVA_VERSION: ${{ matrix.java-version }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Set JDK ${{ matrix.java-version }}
         uses: actions/setup-java@v5
         with:
