@@ -10,8 +10,12 @@
 
 package org.eclipse.collections.test;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.eclipse.collections.api.RichIterable;
 import org.eclipse.collections.api.factory.Lists;
@@ -25,11 +29,13 @@ import org.eclipse.collections.impl.factory.primitive.IntLists;
 import org.eclipse.collections.impl.factory.primitive.IntSets;
 import org.eclipse.collections.impl.tuple.Tuples;
 import org.eclipse.collections.impl.tuple.primitive.PrimitiveTuples;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public interface OrderedIterableTestCase extends RichIterableTestCase
 {
@@ -202,5 +208,51 @@ public interface OrderedIterableTestCase extends RichIterableTestCase
                         Tuples.pair(1, 9)),
                 result);
         assertSame(target, result);
+    }
+
+    @Test
+    default void OrderedIterable_injectIntoWithIndex()
+    {
+        RichIterable<Integer> emptyIterable = this.newWith();
+        // empty iterable should just return the injected value
+        String actual0 = ((OrderedIterable<Integer>)emptyIterable).injectIntoWithIndex("foo",
+                (init, curr, idx) -> "bar");
+
+        assertEquals("foo", actual0);
+
+
+        // Given the individual implementations, cannot assert on the particular index+value PAIRS
+        // instead assert on a cumulative function (addition) that isn't dependent on order.
+        RichIterable<Integer> iterable = this.newWith(100, 200, 300, 400);
+
+        // collect indicies to verify the expected indicies (in-order) and values (not necessarily ordered) are as we expect.
+        final List<Integer> indicies = new ArrayList<>();
+        // different implementations (TreeSet) may order the values differently, so we do not assume order of values
+        final Set<Integer> values = new HashSet<>();
+
+        Integer actual = ((OrderedIterable<Integer>)iterable).injectIntoWithIndex(
+                1000000,
+                (init, curr, idx) -> {
+                    indicies.add(idx);
+                    values.add(curr);
+                    return init + curr + idx;
+                }
+        );
+        int expected = 1000000 + 100 + 200 + 1 + 300 + 2 + 400 + 3;
+        assertEquals(expected, actual);
+        assertEquals(indicies, List.of(0,1,2,3));
+        assertEquals(values, Set.of(100, 200, 300, 400));
+
+        // another test with a different initial value
+
+        Integer actual2 = ((OrderedIterable<Integer>)iterable).injectIntoWithIndex(
+                2000000,
+                (init, curr, idx) -> {
+                    return init + curr + idx.intValue();
+                }
+        );
+
+        int expected2 = 2000000 + 100 + 200 + 1 + 300 + 2 + 400 + 3;
+        assertEquals(expected2, actual2);
     }
 }
