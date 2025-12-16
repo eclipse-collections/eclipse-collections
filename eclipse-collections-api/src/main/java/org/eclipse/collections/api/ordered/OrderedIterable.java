@@ -10,9 +10,7 @@
 
 package org.eclipse.collections.api.ordered;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
