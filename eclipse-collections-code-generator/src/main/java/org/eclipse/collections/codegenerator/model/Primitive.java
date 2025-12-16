@@ -10,6 +10,8 @@
 
 package org.eclipse.collections.codegenerator.model;
 
+import java.util.Locale;
+
 public enum Primitive
 {
     INT("int"),
@@ -30,7 +32,7 @@ public enum Primitive
 
     public String getName()
     {
-        return this.type.substring(0, 1).toUpperCase() + this.type.substring(1);
+        return this.type.substring(0, 1).toUpperCase(Locale.ROOT) + this.type.substring(1);
     }
 
     public String getWrapperName()

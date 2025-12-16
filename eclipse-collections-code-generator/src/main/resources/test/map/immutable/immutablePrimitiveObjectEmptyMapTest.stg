@@ -22,6 +22,7 @@ package org.eclipse.collections.impl.map.immutable.primitive;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -593,7 +594,7 @@ public class Immutable<name>ObjectEmptyMapTest extends AbstractImmutable<name>Ob
     @Test
     public void collectWith()
     {
-        Function2\<String, String, String> function = (String each, String param) -> each.toUpperCase() + param;
+        Function2\<String, String, String> function = (String each, String param) -> each.toUpperCase(Locale.ROOT) + param;
         Verify.assertIterableEmpty(this.classUnderTest().collectWith(function, "!"));
 
         FastList\<String> target = FastList.newList();

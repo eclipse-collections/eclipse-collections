@@ -21,6 +21,7 @@ package org.eclipse.collections.impl.map.immutable.primitive;
 
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -597,7 +598,7 @@ public class Immutable<name>ObjectSingletonMapTest extends AbstractImmutable<nam
     @Test
     public void collectWith()
     {
-        Function2\<String, String, String> function = (String each, String param) -> each.toUpperCase() + param;
+        Function2\<String, String, String> function = (String each, String param) -> each.toUpperCase(Locale.ROOT) + param;
         assertEquals(HashBag.newBagWith("ZERO!"), this.classUnderTest().collectWith(function, "!"));
 
         MutableBag\<String> target = HashBag.newBag();
