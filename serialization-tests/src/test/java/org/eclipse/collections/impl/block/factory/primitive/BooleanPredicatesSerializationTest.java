@@ -20,6 +20,7 @@ public class BooleanPredicatesSerializationTest
     {
         private static final long serialVersionUID = 1L;
 
+        @Override
         public boolean accept(boolean value)
         {
             return false;

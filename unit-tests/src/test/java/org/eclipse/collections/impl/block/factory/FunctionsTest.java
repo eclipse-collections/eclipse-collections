@@ -365,6 +365,7 @@ public class FunctionsTest
 
         IntFunction<String> stringToLength = new IntegerFunctionImpl<String>()
         {
+            @Override
             public int intValueOf(String stringObject)
             {
                 return stringObject.length();
@@ -440,6 +441,7 @@ public class FunctionsTest
         Functions.FunctionChain<String, Boolean, String> chain = Functions.chain(STRING_LENGTH, IS_ODD).chain(BOOLEAN_STRING);
         IntFunction<String> stringToLength = new IntegerFunctionImpl<String>()
         {
+            @Override
             public int intValueOf(String stringObject)
             {
                 return stringObject.length();
@@ -494,6 +496,7 @@ public class FunctionsTest
         MutableList<Long> list = FastList.newListWith(5L, 4L, 3L, 2L, 1L).shuffleThis();
         list.sortThis(Comparators.byFunction(new LongFunctionImpl<Long>()
         {
+            @Override
             public long longValueOf(Long each)
             {
                 return each.longValue();

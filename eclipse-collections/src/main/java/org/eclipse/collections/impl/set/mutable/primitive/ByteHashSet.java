@@ -974,6 +974,7 @@ public final class ByteHashSet implements MutableByteSet, Externalizable
 
         this.forEach(new CheckedByteProcedure()
         {
+            @Override
             public void safeValue(byte each) throws IOException
             {
                 out.writeByte(each);

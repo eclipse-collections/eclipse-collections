@@ -45,6 +45,7 @@ public class CollectBooleanToObjectIterable<V> extends AbstractLazyIterable<V>
         {
             private int index;
 
+            @Override
             public void value(boolean each)
             {
                 objectIntProcedure.value(CollectBooleanToObjectIterable.this.function.valueOf(each), this.index++);
@@ -65,16 +66,19 @@ public class CollectBooleanToObjectIterable<V> extends AbstractLazyIterable<V>
         {
             private final BooleanIterator iterator = CollectBooleanToObjectIterable.this.iterable.booleanIterator();
 
+            @Override
             public boolean hasNext()
             {
                 return this.iterator.hasNext();
             }
 
+            @Override
             public V next()
             {
                 return CollectBooleanToObjectIterable.this.function.valueOf(this.iterator.next());
             }
 
+            @Override
             public void remove()
             {
                 throw new UnsupportedOperationException("Cannot call remove() on " + this.getClass().getSimpleName());

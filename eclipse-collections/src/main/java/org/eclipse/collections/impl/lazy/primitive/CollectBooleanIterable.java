@@ -50,11 +50,13 @@ public class CollectBooleanIterable<T>
         {
             private final Iterator<T> iterator = CollectBooleanIterable.this.iterable.iterator();
 
+            @Override
             public boolean next()
             {
                 return CollectBooleanIterable.this.function.booleanValueOf(this.iterator.next());
             }
 
+            @Override
             public boolean hasNext()
             {
                 return this.iterator.hasNext();

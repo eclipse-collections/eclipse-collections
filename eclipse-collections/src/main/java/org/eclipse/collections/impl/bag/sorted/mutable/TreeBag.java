@@ -275,6 +275,7 @@ public class TreeBag<T>
         {
             this.items.forEachKeyValue(new CheckedProcedure2<T, Counter>()
             {
+                @Override
                 public void safeValue(T object, Counter parameter) throws Exception
                 {
                     out.writeObject(object);

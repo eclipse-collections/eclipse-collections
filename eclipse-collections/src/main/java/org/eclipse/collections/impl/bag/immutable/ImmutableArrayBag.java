@@ -82,6 +82,7 @@ public class ImmutableArrayBag<T>
         {
             private int index;
 
+            @Override
             public void value(T each, int count)
             {
                 newKeys[this.index] = each;

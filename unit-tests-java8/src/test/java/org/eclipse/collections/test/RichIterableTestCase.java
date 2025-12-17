@@ -2824,6 +2824,7 @@ public interface RichIterableTestCase extends IterableTestCase
         {
             private static final long serialVersionUID = 1L;
 
+            @Override
             public Integer value(Integer argument1, Integer argument2)
             {
                 return argument1 + argument2;
@@ -2833,6 +2834,7 @@ public interface RichIterableTestCase extends IterableTestCase
         {
             private static final long serialVersionUID = 1L;
 
+            @Override
             public Integer value(Integer argument1, Integer argument2)
             {
                 return argument1 + argument2;

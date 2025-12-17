@@ -78,6 +78,7 @@ class ImmutableSortedBagImpl<T>
         {
             private int i;
 
+            @Override
             public void value(T each, int occurrencesOfEach)
             {
                 ImmutableSortedBagImpl.this.elements[this.i] = each;
@@ -590,6 +591,7 @@ class ImmutableSortedBagImpl<T>
         {
             private int i;
 
+            @Override
             public void value(T each)
             {
                 result[this.i] = each;

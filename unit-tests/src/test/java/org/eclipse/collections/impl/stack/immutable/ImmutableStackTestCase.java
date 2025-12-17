@@ -31,6 +31,7 @@ public abstract class ImmutableStackTestCase extends StackIterableTestCase
     @Override
     protected abstract <T> ImmutableStack<T> newStack(Iterable<T> elements);
 
+    @Override
     public void sumByInt()
     {
         ImmutableStack<Integer> values = this.newStackFromTopToBottom(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
@@ -39,6 +40,7 @@ public abstract class ImmutableStackTestCase extends StackIterableTestCase
         assertEquals(30, result.get(0));
     }
 
+    @Override
     public void sumByFloat()
     {
         ImmutableStack<Integer> values = this.newStackFromTopToBottom(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
@@ -47,6 +49,7 @@ public abstract class ImmutableStackTestCase extends StackIterableTestCase
         assertEquals(30.0f, result.get(0), 0.0);
     }
 
+    @Override
     public void sumByDouble()
     {
         ImmutableStack<Integer> values = this.newStackFromTopToBottom(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
@@ -55,6 +58,7 @@ public abstract class ImmutableStackTestCase extends StackIterableTestCase
         assertEquals(30.0d, result.get(0), 0.0);
     }
 
+    @Override
     public void sumByLong()
     {
         ImmutableStack<Integer> values = this.newStackFromTopToBottom(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);

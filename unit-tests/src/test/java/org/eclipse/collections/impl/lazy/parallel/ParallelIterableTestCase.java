@@ -749,16 +749,19 @@ public abstract class ParallelIterableTestCase
         {
             this.classUnderTest().appendString(new Appendable()
             {
+                @Override
                 public Appendable append(CharSequence csq) throws IOException
                 {
                     throw new IOException("Test exception");
                 }
 
+                @Override
                 public Appendable append(CharSequence csq, int start, int end) throws IOException
                 {
                     throw new IOException("Test exception");
                 }
 
+                @Override
                 public Appendable append(char c) throws IOException
                 {
                     throw new IOException("Test exception");

@@ -390,6 +390,7 @@ public abstract class AbstractParallelIterable<T, B extends Batch<T>> implements
             {
                 private boolean first = true;
 
+                @Override
                 public void safeValue(Appendable accumulator, String each) throws IOException
                 {
                     if ("".equals(each))

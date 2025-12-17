@@ -302,6 +302,7 @@ public abstract class Abstract<name>StackTestCase extends Abstract<name>Iterable
                 pairs.collect<name>(<name>IntPair::getOne, <name>Sets.mutable.empty()));
     }
 
+    @Override
     @Test
     public void chunk()
     {

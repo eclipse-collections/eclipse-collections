@@ -31,6 +31,7 @@ public interface RichIterableWithDuplicatesTestCase extends RichIterableTestCase
         assertEquals(!this.allowsDuplicates(), twoCopies.equals(oneCopy));
     }
 
+    @Override
     @Test
     default void RichIterable_size()
     {

@@ -773,6 +773,7 @@ public class Immutable<name>ObjectEmptyMapTest extends AbstractImmutable<name>Ob
         Verify.assertSortedBagsEqual(TreeBag.newBagWith(Comparators.byFunction(function), 10, 10, 1, 1, 1), sortedBag);
     }
 
+    @Override
     @Test
     public void toMapTarget()
     {
@@ -799,6 +800,7 @@ public class Immutable<name>ObjectEmptyMapTest extends AbstractImmutable<name>Ob
         assertTrue(map.toMap(keyLongFunction, valueFunction, new HashMap\<Long, String>()) instanceof HashMap);
     }
 
+    @Override
     @Test
     public void sumByInt()
     {
@@ -806,6 +808,7 @@ public class Immutable<name>ObjectEmptyMapTest extends AbstractImmutable<name>Ob
         assertEquals(ObjectLongMaps.immutable.empty(), map.sumByInt(Object::toString, Integer::valueOf));
     }
 
+    @Override
     @Test
     public void sumByFloat()
     {
@@ -813,6 +816,7 @@ public class Immutable<name>ObjectEmptyMapTest extends AbstractImmutable<name>Ob
         assertEquals(ObjectDoubleMaps.immutable.empty(), map.sumByFloat(Object::toString, Float::valueOf));
     }
 
+    @Override
     @Test
     public void sumByLong()
     {
@@ -820,6 +824,7 @@ public class Immutable<name>ObjectEmptyMapTest extends AbstractImmutable<name>Ob
         assertEquals(ObjectLongMaps.immutable.empty(), map.sumByLong(Object::toString, Long::valueOf));
     }
 
+    @Override
     @Test
     public void sumByDouble()
     {
