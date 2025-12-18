@@ -32,7 +32,7 @@ jobs:
       - name: Generate Coverage Report
         run: ./mvnw --color=always verify
       - name: Archive Jacoco reports
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: jacoco-reports
           path: test-coverage/target/site/jacoco-aggregate
