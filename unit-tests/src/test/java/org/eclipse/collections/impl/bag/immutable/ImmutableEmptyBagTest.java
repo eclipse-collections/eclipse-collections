@@ -66,6 +66,7 @@ public class ImmutableEmptyBagTest extends ImmutableBagTestCase
 
     public static final Predicates2<String, Class<Integer>> ERROR_THROWING_PREDICATE_2 = new Predicates2<String, Class<Integer>>()
     {
+        @Override
         public boolean accept(String argument1, Class<Integer> argument2)
         {
             throw new AssertionError();
@@ -591,6 +592,7 @@ public class ImmutableEmptyBagTest extends ImmutableBagTestCase
         assertEquals(UnifiedMap.newMap(), this.newBag().groupByUniqueKey(id -> id, UnifiedMap.newMap()));
     }
 
+    @Override
     @Test
     public void countByEach()
     {
