@@ -1948,7 +1948,7 @@ public class ConcurrentHashMapUnsafe<K, V>
         @Override
         public V setValue(V value)
         {
-            throw new RuntimeException("not implemented");
+            throw new UnsupportedOperationException("ConcurrentHashMapUnsafe.Entry.setValue() not implemented. Use put() instead.");
         }
 
         public Entry<K, V> getNext()
