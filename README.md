@@ -31,28 +31,55 @@ The current GA release of Eclipse Collections (11.1.0) is compatible with Java 8
 
 ## Why Eclipse Collections?
 
-* Productivity
-  * Supports _eager_, _lazy_, _serial_ and _parallel_ iteration patterns
-  * [Rich][RichIterable], functional, and fluent APIs with eager methods available directly on collection types
-  * Provides [`List`][ListIterable], [`Set`][SetIterable], [`Bag`][Bag], [`Stack`][StackIterable], [`Map`][MapIterable], [`Multimap`][Multimap], [`BiMap`][BiMap], [`Interval`][Interval] object container types
-  * [Readable][RichIterable], [`Mutable`][MutableCollection], and [`Immutable`][ImmutableCollection] interfaces for each collection type with covariant return types
-    * [Blog: Rich, Lazy, Mutable, Immutable interfaces in Eclipse collections][BlogRichLazyMutableImmutable] 
-  * Mutable and Immutable Collection [Factories][Factories]
-    * [Blog series: As a matter of Factory][BlogAsAMatterOfFactory] 
-  * [Adapters][Adapters] and [Utility][Utilities] classes for JCF Types
-    * [Blog: Iterate over any Iterable in Java][BlogIterateOverAnyIterableInJava] 
-* Performance
-    * Memory Efficient Containers
-      * [Blog: UnifiedMap: How it works?][BlogUnifiedMapHowItWorks]
-      * [Blog: UnifiedSet - The Memory Saver][BlogUnifiedSetTheMemorySaver]
-    * Optimized Eager, [`Lazy`][LazyIterable] and [`Parallel`][ParallelIterable] APIs
-      * [Blog: The unparalleled design of Eclipse Collections][BlogUnparalleledDesignOfEclipseCollections] 
-    * [Primitive][PrimitiveIterable] Collections for all primitive types
-      * Provides `List`, `Set`, `Bag`, `Stack`, `Map`, `Interval` primitive container types
-* Maturity
-    * Eclipse Collections has been actively developed and used in financial services applications since 2004
-    * Eclipse Collections existed for a decade before concise lambda expressions were added in Java 8
-      * [Blog: My ten-year quest for concise lambda expressions in Java][BlogLambdaExpressionsInJava] 
+Eclipse Collections is a powerful and versatile library for managing collections in Java. It goes beyond the limitations of the standard Java Collections Framework (JCF) and other third-party libraries. Here’s why you should use it:
+
+### 1. **Productivity**
+- **Rich and Fluent API**: 
+  - Methods are directly integrated into the collection types, eliminating the need for external utilities like `Collections` or `Arrays`.
+  - Example: Instead of `list.stream().map(...).collect(Collectors.toList())`, simply use `list.collect(...)`.
+- **Support for Various Iterations**:
+  - **Eager**: For immediate results.
+  - **Lazy**: For deferred execution, optimizing memory and performance.
+  - **Parallel**: For parallel processing.
+- **Functional and Fluent Design**: 
+  - Ideal for operations like filtering, mapping, or reducing, with simplified syntax.
+- **Advanced Collection Types**:
+  - [`Bag`](https://eclipse.dev/collections/javadoc/latest/org/eclipse/collections/api/bag/package-summary.html): Count element occurrences.
+  - [`Multimap`](https://eclipse.dev/collections/javadoc/latest/org/eclipse/collections/api/multimap/package-summary.html): Associate keys with multiple values.
+  - [`BiMap`](https://eclipse.dev/collections/javadoc/latest/org/eclipse/collections/api/bimap/package-summary.html): For bidirectional mappings.
+  - [`Interval`](https://eclipse.dev/collections/javadoc/latest/org/eclipse/collections/api/list/primitive/package-summary.html): For managing numerical ranges.
+- **Mutable and Immutable Collections**:
+  - Each collection type has mutable and immutable variants, offering flexibility and safety.
+
+### 2. **Performance**
+- **Optimized Structures**: 
+  - For example, `UnifiedMap` and `UnifiedSet` consume fewer resources compared to `HashMap` and `HashSet` in JCF.
+- **Primitive Collections**:
+  - Avoid boxing/unboxing with collections specific to primitive types (`IntSet`, `DoubleBag`), improving memory usage and speed.
+- **Efficient Lazy and Parallel API**:
+  - Designed to minimize calculations and memory usage.
+
+### 3. **Compatibility and Integration**
+- Compatible with the Java Collections Framework (JCF).
+- Adapters for converting between Eclipse Collections and JCF.
+- Compatible with Java 8+ and the latest JDK versions.
+
+### 4. **Maturity and Proven Use**
+- Active since 2004, widely used in critical applications, including financial services.
+- Supported by an experienced community.
+
+### Comparison with Other Libraries
+
+| Feature                       | JCF                              | Apache Commons Collections | Guava       | Eclipse Collections     |
+|-------------------------------|-----------------------------------|----------------------------|-------------|-------------------------|
+| Fluent API                    | Limited                           | Limited                     | Moderate    | **Extensive**           |
+| Lazy Iteration                | No                                | No                          | Yes         | **Yes**                 |
+| Primitive Collections         | No                                | No                          | No          | **Yes**                 |
+| Advanced Structures           | Basic                             | Moderate                    | Good        | **Extensive**           |
+| Memory Efficiency             | Standard                          | Standard                    | Standard    | **Optimized**           |
+| Mutable/Immutable Interfaces  | No                                | No                          | No          | **Yes**                 |
+
+Eclipse Collections stands out with its rich functionality, optimized performance, and a wide range of collection types, making it an ideal choice for Java developers seeking productivity and efficiency.
 
 ## Learn Eclipse Collections
 
