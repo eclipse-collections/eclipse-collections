@@ -24,6 +24,8 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Set;
+import java.util.Spliterator;
+import java.util.Spliterators;
 import java.util.concurrent.Executor;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -1631,6 +1633,12 @@ public final class ConcurrentHashMap<K, V>
         }
 
         @Override
+        public Spliterator<K> spliterator()
+        {
+            return Spliterators.spliteratorUnknownSize(this.iterator(), Spliterator.CONCURRENT | Spliterator.DISTINCT | Spliterator.NONNULL);
+        }
+
+        @Override
         public int size()
         {
             return ConcurrentHashMap.this.size();
@@ -1661,6 +1669,12 @@ public final class ConcurrentHashMap<K, V>
         public Iterator<V> iterator()
         {
             return new ValueIterator();
+        }
+
+        @Override
+        public Spliterator<V> spliterator()
+        {
+            return Spliterators.spliteratorUnknownSize(this.iterator(), Spliterator.CONCURRENT | Spliterator.NONNULL);
         }
 
         @Override
@@ -1720,6 +1734,12 @@ public final class ConcurrentHashMap<K, V>
         public Iterator<Map.Entry<K, V>> iterator()
         {
             return new EntryIterator();
+        }
+
+        @Override
+        public Spliterator<Map.Entry<K, V>> spliterator()
+        {
+            return Spliterators.spliteratorUnknownSize(this.iterator(), Spliterator.CONCURRENT | Spliterator.DISTINCT | Spliterator.NONNULL);
         }
 
         @Override
