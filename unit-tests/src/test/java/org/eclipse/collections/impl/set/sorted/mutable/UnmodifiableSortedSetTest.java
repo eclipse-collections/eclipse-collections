@@ -23,8 +23,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -281,24 +279,6 @@ public class UnmodifiableSortedSetTest extends AbstractSortedSetTestCase
         Appendable builder = new StringBuilder();
         collection.appendString(builder);
         assertEquals(collection.toString(), '[' + builder.toString() + ']');
-    }
-
-    @Override
-    @Test
-    public void getFirst()
-    {
-        super.getFirst();
-        assertNotNull(this.newWith(1, 2, 3).getFirst());
-        assertThrows(NoSuchElementException.class, () -> assertNull(this.newWith().getFirst()));
-    }
-
-    @Override
-    @Test
-    public void getLast()
-    {
-        super.getLast();
-        assertNotNull(this.newWith(1, 2, 3).getLast());
-        assertThrows(NoSuchElementException.class, () -> assertNull(this.newWith().getLast()));
     }
 
     @Override

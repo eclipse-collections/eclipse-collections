@@ -10,7 +10,6 @@
 
 package org.eclipse.collections.test.set.sorted;
 
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.eclipse.collections.api.RichIterable;
@@ -69,14 +68,16 @@ public interface SortedSetIterableTestCase extends SetIterableTestCase, SortedIt
     @Test
     default void RichIterable_getFirst_empty_null()
     {
-        assertThrows(NoSuchElementException.class, () -> this.newWith().getFirst());
+        SetIterableTestCase.super.RichIterable_getFirst_empty_null();
+        SortedIterableTestCase.super.RichIterable_getFirst_empty_null();
     }
 
     @Override
     @Test
     default void RichIterable_getLast_empty_null()
     {
-        assertThrows(NoSuchElementException.class, () -> this.newWith().getLast());
+        SetIterableTestCase.super.RichIterable_getLast_empty_null();
+        SortedIterableTestCase.super.RichIterable_getLast_empty_null();
     }
 
     @Override
