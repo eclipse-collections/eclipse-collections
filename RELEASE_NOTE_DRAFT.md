@@ -18,6 +18,14 @@ The Eclipse Collections team gives a huge thank you to everyone who participated
 * Upgrade bnd plugin to 7.1.0.
 * Publish p2 artifacts to maven central. Fixes #294 . Example [here](https://central.sonatype.com/artifact/org.eclipse.collections/p2-site)
 
+
+# Bug Fixes
+-----------------
+* Fixed ConcurrentHashMap keySet(), values(), and entrySet() spliterators to ensure they are CONCURRENT and not SIZED. Fixes #1801.
+* Fixed ConcurrentHashMapUnsafe keySet(), values(), and entrySet() spliterators to ensure they are CONCURRENT and not SIZED.
+
+
+
 # Note
 -------
 _We have taken all the measures to ensure all features are captured in the release notes. 
