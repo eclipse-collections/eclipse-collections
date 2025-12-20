@@ -390,11 +390,13 @@ public interface OrderedIterable<T> extends RichIterable<T>
      * index as the third parameter. This method is commonly called foldIndexed or sometimes reduce.
      *
      * @since 14.0
+     * @see {@link #injectInto(Object, Function2)}
+     * @param injectedValue first parameter of first evaluation
+     * @param function function invoked with arguments: injectedValue or previous result, element, and index of element
      */
 
     default <IV> IV injectIntoWithIndex(IV injectedValue, Function3<? super IV, ? super T, Integer, ? extends IV> function) {
-        AtomicReference<IV> ref = new AtomicReference<>(injectedValue);
-        this.forEachWithIndex((value, index) -> ref.set(function.value(ref.get(), value, index)));
-        return ref.get();
+        int[] index = {0};
+        return this.injectInto(injectedValue, (prev, each) -> function.value(prev, each, index[0]++));
     }
 }

@@ -578,4 +578,30 @@ public interface SortedNaturalOrderTestCase extends OrderedIterableTestCase
         SortedIterable<?> iterable = (SortedIterable<?>) this.newWith();
         assertNull(iterable.comparator());
     }
+
+    @Override
+    @Test
+    default void OrderedIterable_injectIntoWithIndex()
+    {
+        OrderedIterable<Integer> iterable = (OrderedIterable<Integer>)this.newWith(1, 2, 2, 3, 3, 3, 4, 4, 4, 4);
+        MutableList<Pair<Integer, Integer>> injected = Lists.mutable.empty();
+        MutableList<Pair<Integer, Integer>> result = iterable.injectIntoWithIndex(injected, (coll, each, index) -> {
+            injected.add(Tuples.pair(each, index));
+            return injected;
+        });
+        assertEquals(
+                Lists.immutable.with(
+                        Tuples.pair(1, 0),
+                        Tuples.pair(2, 1),
+                        Tuples.pair(2, 2),
+                        Tuples.pair(3, 3),
+                        Tuples.pair(3, 4),
+                        Tuples.pair(3, 5),
+                        Tuples.pair(4, 6),
+                        Tuples.pair(4, 7),
+                        Tuples.pair(4, 8),
+                        Tuples.pair(4, 9)),
+                result);
+        assertSame(injected, result);
+    }
 }
