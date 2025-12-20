@@ -66,6 +66,7 @@ import org.eclipse.collections.impl.AbstractRichIterable;
 import org.eclipse.collections.impl.block.factory.Comparators;
 import org.eclipse.collections.impl.block.factory.Predicates;
 import org.eclipse.collections.impl.factory.Multimaps;
+import org.eclipse.collections.impl.lazy.ReverseIterable;
 import org.eclipse.collections.impl.partition.stack.PartitionArrayStack;
 import org.eclipse.collections.impl.partition.stack.PartitionArrayStack.PartitionPredicate2Procedure;
 import org.eclipse.collections.impl.partition.stack.PartitionArrayStack.PartitionProcedure;
@@ -429,7 +430,12 @@ final class ImmutableNotEmptyStack<T>
     @Override
     public ImmutableStack<T> takeWhile(Predicate<? super T> predicate)
     {
-        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".takeWhile() not implemented yet");
+        return Stacks.immutable.withAll(this.asReversed().takeWhile(predicate));
+    }
+
+    public ReverseIterable<T> asReversed()
+    {
+        return ReverseIterable.adapt(this.toList());
     }
 
     @Override
