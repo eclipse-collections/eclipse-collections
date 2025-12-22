@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicReference;
 
 import org.eclipse.collections.api.RichIterable;
 import org.eclipse.collections.api.block.function.Function;
@@ -390,12 +389,13 @@ public interface OrderedIterable<T> extends RichIterable<T>
      * index as the third parameter. This method is commonly called foldIndexed or sometimes reduce.
      *
      * @since 14.0
-     * @see {@link #injectInto(Object, Function2)}
+     * @see #injectInto(Object, Function2)
      * @param injectedValue first parameter of first evaluation
      * @param function function invoked with arguments: injectedValue or previous result, element, and index of element
      */
 
-    default <IV> IV injectIntoWithIndex(IV injectedValue, Function3<? super IV, ? super T, Integer, ? extends IV> function) {
+    default <IV> IV injectIntoWithIndex(IV injectedValue, Function3<? super IV, ? super T, Integer, ? extends IV> function)
+    {
         int[] index = {0};
         return this.injectInto(injectedValue, (prev, each) -> function.value(prev, each, index[0]++));
     }

@@ -583,7 +583,7 @@ public interface SortedNaturalOrderTestCase extends OrderedIterableTestCase
     @Test
     default void OrderedIterable_injectIntoWithIndex()
     {
-        OrderedIterable<Integer> iterable = (OrderedIterable<Integer>)this.newWith(1, 2, 2, 3, 3, 3, 4, 4, 4, 4);
+        OrderedIterable<Integer> iterable = (OrderedIterable<Integer>) this.newWith(1, 2, 2, 3, 3, 3, 4, 4, 4, 4);
         MutableList<Pair<Integer, Integer>> injected = Lists.mutable.empty();
         MutableList<Pair<Integer, Integer>> result = iterable.injectIntoWithIndex(injected, (coll, each, index) -> {
             injected.add(Tuples.pair(each, index));

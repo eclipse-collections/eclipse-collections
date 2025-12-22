@@ -10,12 +10,8 @@
 
 package org.eclipse.collections.test;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import org.eclipse.collections.api.RichIterable;
 import org.eclipse.collections.api.factory.Lists;
@@ -24,7 +20,6 @@ import org.eclipse.collections.api.list.ImmutableList;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.ordered.OrderedIterable;
 import org.eclipse.collections.api.tuple.Pair;
-import org.eclipse.collections.api.tuple.Triple;
 import org.eclipse.collections.api.tuple.primitive.ObjectIntPair;
 import org.eclipse.collections.impl.block.factory.Comparators;
 import org.eclipse.collections.impl.factory.primitive.IntLists;
@@ -36,7 +31,6 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public interface OrderedIterableTestCase extends RichIterableTestCase
 {
@@ -215,18 +209,17 @@ public interface OrderedIterableTestCase extends RichIterableTestCase
     default void OrderedIterable_injectIntoWithIndex()
     {
         RichIterable<Integer> emptyIterable = this.newWith();
-        String actual0 = ((OrderedIterable<Integer>)emptyIterable).injectIntoWithIndex("foo",
+        String actual0 = ((OrderedIterable<Integer>) emptyIterable).injectIntoWithIndex("foo",
                 (init, curr, idx) -> "bar");
         assertEquals("foo", actual0, "injectIntoWithIndex called on empty iterable should return injected value");
 
-        OrderedIterable<Integer> iterable = (OrderedIterable<Integer>)this.newWith(3, 2, 1, 0);
+        OrderedIterable<Integer> iterable = (OrderedIterable<Integer>) this.newWith(3, 2, 1, 0);
 
         ImmutableList<Pair<Integer, Integer>> expected = Lists.immutable.with(
                 Tuples.pair(3, 0),
                 Tuples.pair(2, 1),
                 Tuples.pair(1, 2),
-                Tuples.pair(0, 3)
-        );
+                Tuples.pair(0, 3));
         MutableList<Pair<Integer, Integer>> injected = Lists.mutable.empty();
         MutableList<Pair<Integer, Integer>> actual = iterable.injectIntoWithIndex(injected, (coll, each, index) -> {
             coll.add(Tuples.pair(each, index));
