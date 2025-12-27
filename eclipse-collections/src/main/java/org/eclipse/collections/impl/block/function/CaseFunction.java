@@ -17,6 +17,9 @@ import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.tuple.Pair;
 import org.eclipse.collections.impl.tuple.Tuples;
 
+/**
+ * Represents a case function for creating and evaluating cases in order, returning the result of the first matching case. Multiple cases not supported.
+ */
 public class CaseFunction<T extends Comparable<? super T>, V> implements Function<T, V>
 {
     private static final long serialVersionUID = 1L;
