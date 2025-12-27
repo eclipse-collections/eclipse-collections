@@ -23,6 +23,7 @@ public interface RichIterableWithDuplicatesTestCase extends RichIterableTestCase
     }
 
     @Test
+    @SuppressWarnings("UndefinedEquals")
     default void Iterable_sanity_check()
     {
         String s = "";
