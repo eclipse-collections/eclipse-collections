@@ -60,8 +60,6 @@ import static org.junit.Assert.fail;
  */
 public class VerifyTest
 {
-    private static final String ASSERT_FAIL = "org.junit.Assert.fail";
-
     @Test
     public void assertThrowsWithCause()
     {

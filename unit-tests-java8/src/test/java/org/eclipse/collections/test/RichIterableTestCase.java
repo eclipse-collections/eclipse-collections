@@ -1207,21 +1207,21 @@ public interface RichIterableTestCase extends IterableTestCase
         assertIterablesEqual(expectedInjectIntoIterationOrder, injectIntoFloatIterationOrder);
 
         Counter toSortedListCount = new Counter();
-        this.getInstanceUnderTest().toSortedList((o1, o2) -> {
+        this.getInstanceUnderTest().toSortedList((unused1, unused2) -> {
             toSortedListCount.increment();
             return 0;
         });
         assertEquals(expectedIterationOrder.size() - 1, toSortedListCount.getCount());
 
         Counter toSortedSetCount = new Counter();
-        this.getInstanceUnderTest().toSortedSet((o1, o2) -> {
+        this.getInstanceUnderTest().toSortedSet((unused1, unused2) -> {
             toSortedSetCount.increment();
             return 0;
         });
         assertEquals(expectedIterationOrder.size(), toSortedSetCount.getCount());
 
         Counter toSortedBagCount = new Counter();
-        this.getInstanceUnderTest().toSortedBag((o1, o2) -> {
+        this.getInstanceUnderTest().toSortedBag((unused1, unused2) -> {
             toSortedBagCount.increment();
             return 0;
         });

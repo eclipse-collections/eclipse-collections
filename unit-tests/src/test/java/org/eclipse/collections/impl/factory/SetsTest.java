@@ -617,6 +617,7 @@ public class SetsTest
         setContainsProcedure.value(function.value(setA, function.value(setB, setC)), elements);
     }
 
+    @SuppressWarnings("UnusedVariable")
     private <E> void assertDistributiveProperty(
             Procedure2<Set<E>, Set<E>> setsEqualProcedure,
             Function2<Set<E>, Set<E>, Set<E>> function1,

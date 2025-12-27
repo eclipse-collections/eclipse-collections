@@ -76,11 +76,6 @@ public class ObjectBooleanHashMapWithHashingStrategy<K> implements MutableObject
 
     private static final long serialVersionUID = 1L;
 
-    /**
-     * @deprecated in 5.1.0.
-     */
-    @Deprecated
-    private static final float DEFAULT_LOAD_FACTOR = 0.5f;
     private static final int OCCUPIED_DATA_RATIO = 2;
     private static final int OCCUPIED_SENTINEL_RATIO = 4;
     private static final int DEFAULT_INITIAL_CAPACITY = 8;

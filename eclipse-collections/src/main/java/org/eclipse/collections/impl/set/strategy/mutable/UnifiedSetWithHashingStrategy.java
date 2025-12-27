@@ -302,7 +302,7 @@ public class UnifiedSetWithHashingStrategy<T>
         }
         if (cur instanceof ChainedBucket)
         {
-            return this.chainedAddOrReplace(key, (ChainedBucket) cur, index);
+            return this.chainedAddOrReplace(key, (ChainedBucket) cur);
         }
         if (this.nonNullTableObjectEquals(cur, key))
         {
@@ -2164,7 +2164,7 @@ public class UnifiedSetWithHashingStrategy<T>
         while (true);
     }
 
-    private T chainedAddOrReplace(T key, ChainedBucket bucket, int index)
+    private T chainedAddOrReplace(T key, ChainedBucket bucket)
     {
         Object realKey = UnifiedSetWithHashingStrategy.toSentinelIfNull(key);
         do
