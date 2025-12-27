@@ -55,7 +55,7 @@ import org.eclipse.collections.impl.utility.Iterate;
 import org.eclipse.collections.impl.utility.MapIterate;
 import org.eclipse.collections.impl.utility.internal.IterableIterate;
 
-@SuppressWarnings({"rawtypes", "ObjectEquality"})
+@SuppressWarnings({"rawtypes", "ObjectEquality", "ReferenceEquality"})
 public final class ConcurrentHashMap<K, V>
         extends AbstractMutableMap<K, V>
         implements ConcurrentMutableMap<K, V>, Externalizable

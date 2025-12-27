@@ -56,7 +56,7 @@ import org.eclipse.collections.impl.utility.MapIterate;
 import org.eclipse.collections.impl.utility.internal.IterableIterate;
 import sun.misc.Unsafe;
 
-@SuppressWarnings("UseOfSunClasses")
+@SuppressWarnings({"UseOfSunClasses", "ReferenceEquality"})
 public class ConcurrentHashMapUnsafe<K, V>
         extends AbstractMutableMap<K, V>
         implements ConcurrentMutableMap<K, V>, Externalizable
