@@ -334,14 +334,14 @@ public final class LongInterval
         {
             for (long i = this.from; i <= this.to; i += this.step)
             {
-                procedure.value((int) i, index++);
+                procedure.value(i, index++);
             }
         }
         else
         {
             for (long i = this.from; i >= this.to; i += this.step)
             {
-                procedure.value((int) i, index++);
+                procedure.value(i, index++);
             }
         }
     }
