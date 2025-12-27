@@ -1668,17 +1668,6 @@ public class ConcurrentHashMapUnsafe<K, V>
             return e;
         }
 
-        protected void removeByKey()
-        {
-            if (this.current == null)
-            {
-                throw new IllegalStateException();
-            }
-            K key = this.current.key;
-            this.current = null;
-            ConcurrentHashMapUnsafe.this.remove(key);
-        }
-
         protected boolean removeByKeyValue()
         {
             if (this.current == null)

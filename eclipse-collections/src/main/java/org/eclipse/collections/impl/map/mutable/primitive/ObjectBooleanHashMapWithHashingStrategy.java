@@ -77,7 +77,6 @@ public class ObjectBooleanHashMapWithHashingStrategy<K> implements MutableObject
     private static final long serialVersionUID = 1L;
 
     private static final int OCCUPIED_DATA_RATIO = 2;
-    private static final int OCCUPIED_SENTINEL_RATIO = 4;
     private static final int DEFAULT_INITIAL_CAPACITY = 8;
 
     private static final Object NULL_KEY = new Object()
@@ -1167,11 +1166,6 @@ public class ObjectBooleanHashMapWithHashingStrategy<K> implements MutableObject
     private static <K> boolean isNonSentinel(K key)
     {
         return key != null && !ObjectBooleanHashMapWithHashingStrategy.isRemovedKey(key);
-    }
-
-    private int maxOccupiedWithSentinels()
-    {
-        return this.keys.length / OCCUPIED_SENTINEL_RATIO;
     }
 
     public ObjectBooleanHashMapWithHashingStrategy<K> withKeysValues(K key1, boolean value1, K key2, boolean value2)
