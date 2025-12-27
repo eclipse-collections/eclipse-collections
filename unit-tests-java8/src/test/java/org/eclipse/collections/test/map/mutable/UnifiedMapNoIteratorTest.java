@@ -152,11 +152,11 @@ public class UnifiedMapNoIteratorTest implements MutableMapTestCase, NoIteratorT
     @Test
     public void MutableMapIterable_updateValue()
     {
-        /**
+        /*
          * TODO: {@link UnifiedMap#KeySet#equals)} should be optimized to not use an iterator
          */
 
-        /**
+        /*
          * TODO: {@link org.eclipse.collections.impl.set.mutable.UnifiedSet#addAll(Collection)} should be optimized to not use an iterator when another UnifiedSet is passed in.
          */
     }

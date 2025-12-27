@@ -969,7 +969,7 @@ public class ObjectBooleanHashMap<K> implements MutableObjectBooleanMap<K>, Exte
     public void writeExternal(ObjectOutput out) throws IOException
     {
         out.writeInt(this.size());
-        /**
+        /*
          * @deprecated in 5.1.0.
          */
         out.writeFloat(DEFAULT_LOAD_FACTOR);
@@ -987,7 +987,7 @@ public class ObjectBooleanHashMap<K> implements MutableObjectBooleanMap<K>, Exte
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException
     {
         int size = in.readInt();
-        /**
+        /*
          * @deprecated in 5.1.0.
          */
         in.readFloat();
