@@ -343,7 +343,7 @@ public final class ServiceLoaderUtils
         try
         {
             Class<T> fallbackClass = (Class<T>) Class.forName(fallbackName, true, loader);
-            return fallbackClass.newInstance();
+            return fallbackClass.getDeclaredConstructor().newInstance();
         }
         catch (Exception e)
         {

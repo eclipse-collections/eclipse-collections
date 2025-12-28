@@ -2293,10 +2293,12 @@ public final class Verify extends Assert
     {
         try
         {
-            aClass.newInstance();
+            Constructor<T> declaredConstructor = aClass.getDeclaredConstructor();
+            declaredConstructor.setAccessible(true);
+            declaredConstructor.newInstance();
             fail("Expected class '" + aClass + "' to be non-instantiable");
         }
-        catch (InstantiationException e)
+        catch (InstantiationException | NoSuchMethodException e)
         {
             // pass
         }
@@ -2306,6 +2308,10 @@ public final class Verify extends Assert
             {
                 fail("Expected constructor of non-instantiable class '" + aClass + "' to throw an exception, but didn't");
             }
+        }
+        catch (InvocationTargetException e)
+        {
+            // pass - constructor threw an exception, which is expected for non-instantiable classes
         }
     }
 
