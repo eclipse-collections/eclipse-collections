@@ -1367,7 +1367,7 @@ public class VerifyTest
         @Override
         public boolean equals(Object o)
         {
-            return o != null;
+            return o instanceof TestClass;
         }
 
         @Override
