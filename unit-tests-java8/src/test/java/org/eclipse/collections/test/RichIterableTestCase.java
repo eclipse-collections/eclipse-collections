@@ -1200,7 +1200,7 @@ public interface RichIterableTestCase extends IterableTestCase
         assertIterablesEqual(expectedInjectIntoIterationOrder, injectIntoDoubleIterationOrder);
 
         MutableCollection<Integer> injectIntoFloatIterationOrder = this.newMutableForFilter();
-        this.getInstanceUnderTest().injectInto(0L, (FloatObjectToFloatFunction<Integer>) (floatParameter, objectParameter) -> {
+        this.getInstanceUnderTest().injectInto(0.0f, (FloatObjectToFloatFunction<Integer>) (floatParameter, objectParameter) -> {
             injectIntoFloatIterationOrder.add(objectParameter);
             return floatParameter + objectParameter;
         });
