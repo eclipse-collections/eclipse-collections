@@ -39,43 +39,14 @@ public final class FileUtils
         {
             throw new IllegalStateException(outputFile.getAbsolutePath());
         }
-        OutputStreamWriter outputStreamWriter = null;
-        BufferedWriter bufferedWriter = null;
-        try
+        try (BufferedWriter bufferedWriter = new BufferedWriter(
+                new OutputStreamWriter(new FileOutputStream(outputFile), StandardCharsets.UTF_8)))
         {
-            outputStreamWriter = new OutputStreamWriter(new FileOutputStream(outputFile), StandardCharsets.UTF_8);
-            bufferedWriter = new BufferedWriter(outputStreamWriter);
             bufferedWriter.write(data);
-            bufferedWriter.flush();
         }
         catch (IOException e)
         {
             throw new RuntimeException("Could not write generated sources to file: " + e);
-        }
-        finally
-        {
-            if (outputStreamWriter != null)
-            {
-                try
-                {
-                    outputStreamWriter.close();
-                }
-                catch (IOException e)
-                {
-                    throw new RuntimeException("Could not close outputStreamWriter: " + e);
-                }
-            }
-            if (bufferedWriter != null)
-            {
-                try
-                {
-                    bufferedWriter.close();
-                }
-                catch (IOException e)
-                {
-                    throw new RuntimeException("Could not close bufferedwriter: " + e);
-                }
-            }
         }
     }
 
