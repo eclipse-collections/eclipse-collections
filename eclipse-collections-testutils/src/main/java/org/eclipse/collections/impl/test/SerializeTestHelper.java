@@ -51,7 +51,7 @@ public final class SerializeTestHelper
         return baos;
     }
 
-    private static <T> void writeObjectToStream(Object sourceObject, ByteArrayOutputStream baos) throws IOException
+    private static void writeObjectToStream(Object sourceObject, ByteArrayOutputStream baos) throws IOException
     {
         try (ObjectOutput objectOutputStream = new ObjectOutputStream(baos))
         {
