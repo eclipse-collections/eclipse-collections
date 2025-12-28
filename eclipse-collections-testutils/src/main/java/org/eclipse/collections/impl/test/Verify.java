@@ -86,6 +86,7 @@ import static org.junit.Assert.fail;
  *     Verify.assertBefore("fred", "jim", orderedNamesList);  // from new extensions
  * </pre>
  */
+@SuppressWarnings("ExtendingJUnitAssert")
 public final class Verify extends Assert
 {
     private static final int MAX_DIFFERENCES = 5;
