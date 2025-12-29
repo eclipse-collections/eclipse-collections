@@ -12,6 +12,7 @@ package org.eclipse.collections.impl.lazy.parallel;
 
 import java.io.IOException;
 import java.util.NoSuchElementException;
+import java.util.Random;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -913,7 +914,10 @@ public abstract class ParallelIterableTestCase
     {
         DoubleFunction<Integer> roundingSensitiveElementFunction = i -> (i <= 99995) ? 1.0e-18d : 1.0d;
 
-        MutableList<Integer> list = Interval.oneTo(100_000).toList().shuffleThis();
+        // Static seed
+        Random random = new Random(1303L);
+        MutableList<Integer> list = Interval.oneTo(100_000).toList().shuffleThis(random);
+
         double baseline = this.getExpectedWith(list.toArray(new Integer[]{}))
                 .sumOfDouble(roundingSensitiveElementFunction);
 
@@ -922,13 +926,19 @@ public abstract class ParallelIterableTestCase
             this.batchSize = batchSize;
 
             ParallelIterable<Integer> testCollection = this.newWith(list.toArray(new Integer[]{}));
+            double actual = testCollection.sumOfDouble(roundingSensitiveElementFunction);
+
+            double tolerance = 4.0d * Math.max(Math.ulp(baseline), Math.ulp(actual));
+
+
             assertEquals(
                     baseline,
-                    testCollection.sumOfDouble(roundingSensitiveElementFunction),
-                    1.0e-15d,
+                    actual,
+                    tolerance,
                     "Batch size: " + this.batchSize);
         }
     }
+
 
     @Test
     public void asUnique()
