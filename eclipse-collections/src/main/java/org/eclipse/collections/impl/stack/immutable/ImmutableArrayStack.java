@@ -808,7 +808,7 @@ final class ImmutableArrayStack<T> implements ImmutableStack<T>, Serializable
     }
 
     @Override
-    public <T> T[] toArray(T[] a)
+    public <T2> T2[] toArray(T2[] a)
     {
         return this.delegate.asReversed().toArray(a);
     }

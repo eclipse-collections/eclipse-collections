@@ -655,7 +655,7 @@ final class ImmutableEmptyBag<T>
     }
 
     @Override
-    public <T> T[] toArray(T[] a)
+    public <T2> T2[] toArray(T2[] a)
     {
         if (a.length > 0)
         {

@@ -1757,11 +1757,11 @@ public class UnifiedSetWithHashingStrategy<T>
     }
 
     @Override
-    public <T> T[] toArray(T[] array)
+    public <T2> T2[] toArray(T2[] array)
     {
         int size = this.size();
-        T[] result = array.length < size
-                ? (T[]) Array.newInstance(array.getClass().getComponentType(), size)
+        T2[] result = array.length < size
+                ? (T2[]) Array.newInstance(array.getClass().getComponentType(), size)
                 : array;
 
         this.copyToArray(result);

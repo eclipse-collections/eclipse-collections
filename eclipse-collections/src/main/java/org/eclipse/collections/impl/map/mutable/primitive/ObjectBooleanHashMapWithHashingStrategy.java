@@ -1845,10 +1845,10 @@ public class ObjectBooleanHashMapWithHashingStrategy<K> implements MutableObject
         @Override
         public Iterator<K> iterator()
         {
-            return new InternalKeysViewIterator<>();
+            return new InternalKeysViewIterator();
         }
 
-        public class InternalKeysViewIterator<K> implements Iterator<K>
+        public class InternalKeysViewIterator implements Iterator<K>
         {
             private int count;
             private int position;
