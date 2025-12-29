@@ -930,7 +930,6 @@ public abstract class ParallelIterableTestCase
 
             double tolerance = 4.0d * Math.max(Math.ulp(baseline), Math.ulp(actual));
 
-
             assertEquals(
                     baseline,
                     actual,
@@ -938,7 +937,6 @@ public abstract class ParallelIterableTestCase
                     "Batch size: " + this.batchSize);
         }
     }
-
 
     @Test
     public void asUnique()
