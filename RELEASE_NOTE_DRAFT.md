@@ -21,8 +21,7 @@ The Eclipse Collections team gives a huge thank you to everyone who participated
 
 # Bug Fixes
 -----------------
-* Fixed flaky parallel sumOfDoubleConsistentRounding() test by using deterministic shuffle seed and ULP-based tolerance. Fixes #1790.
-
+* Fixed flaky sumOfDoubleConsistentRounding() test by using deterministic input ordering and validating the sum stays within the mathematically expected range for rounding-sensitive values across batch sizes. Fixes #1790.
 
 
 # Note
