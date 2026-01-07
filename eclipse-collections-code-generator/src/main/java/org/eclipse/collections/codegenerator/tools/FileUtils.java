@@ -12,17 +12,15 @@ package org.eclipse.collections.codegenerator.tools;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.jar.JarEntry;
-import java.util.jar.JarInputStream;
+import java.util.regex.Pattern;
+
+import io.github.classgraph.ClassGraph;
 
 public final class FileUtils
 {
@@ -77,88 +75,11 @@ public final class FileUtils
         }
     }
 
-    public static List<URL> getAllTemplateFilesFromClasspath(String templateDirectory, List<URL> classPathURLs)
+    public static List<URL> findTemplateFiles(Pattern resourcePattern)
     {
-        List<URL> files = new ArrayList<>();
-        try
-        {
-            for (URL url : classPathURLs)
-            {
-                recurseURL(url, files, templateDirectory);
-            }
-        }
-        catch (IOException | URISyntaxException e)
-        {
-            throw new RuntimeException(e);
-        }
-        return files;
-    }
-
-    private static void recurseURL(URL url, List<URL> files, String templateDirectory) throws URISyntaxException, IOException
-    {
-        if ("file".equals(url.getProtocol()))
-        {
-            recurse(new File(url.toURI()), new File(url.toURI()), files, templateDirectory);
-        }
-        else
-        {
-            if (url.getPath().endsWith(".jar"))
-            {
-                JarInputStream stream = new JarInputStream(url.openStream());
-                processJar(stream, files, templateDirectory);
-                stream.close();
-            }
-        }
-    }
-
-    private static void recurse(File rootDirectory, File file, List<URL> files, String templateDirectory) throws IOException
-    {
-        if (file.isDirectory())
-        {
-            File[] children = file.listFiles();
-            if (children != null)
-            {
-                for (File child : children)
-                {
-                    recurse(rootDirectory, child, files, templateDirectory);
-                }
-            }
-        }
-        else
-        {
-            if (file.getName().endsWith(".jar"))
-            {
-                try (JarInputStream stream = new JarInputStream(new FileInputStream(file)))
-                {
-                    processJar(stream, files, templateDirectory);
-                }
-            }
-            else
-            {
-                String rootPath = rootDirectory.getAbsolutePath();
-                String filePath = file.getAbsolutePath();
-                if (filePath.contains(templateDirectory) && !rootPath.equals(filePath) && isTemplateFile(filePath))
-                {
-                    files.add(new URL("file:" + filePath));
-                }
-            }
-        }
-    }
-
-    private static void processJar(
-            JarInputStream stream,
-            List<URL> files,
-            String templateDirectory) throws IOException
-    {
-        JarEntry entry;
-        while ((entry = stream.getNextJarEntry()) != null)
-        {
-            String entryName = entry.getName();
-            if (isTemplateFile(entryName) && entryName.startsWith(templateDirectory))
-            {
-                files.add(FileUtils.class.getClassLoader().getResource(entryName));
-            }
-        }
+        return new ClassGraph().scan()
+                .getResourcesMatchingPattern(resourcePattern)
+                .getURLs();
     }
 
     public static void createDirectory(File path)
@@ -171,11 +92,6 @@ public final class FileUtils
                 throw new RuntimeException("Could not create directory " + path);
             }
         }
-    }
-
-    private static boolean isTemplateFile(String filePath)
-    {
-        return filePath.endsWith(".stg");
     }
 
     public static String readFile(Path path)

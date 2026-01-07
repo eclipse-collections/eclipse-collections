@@ -3,6 +3,8 @@ import "primitiveEquals.stg"
 import "primitiveHashCode.stg"
 import "primitiveLiteral.stg"
 
+skipBoolean() ::= "true"
+
 targetPath() ::= "org/eclipse/collections/impl/list/mutable/primitive"
 
 fileName(primitive) ::= "<primitive.name>ArrayList"
