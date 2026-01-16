@@ -26,6 +26,7 @@ The Eclipse Collections team gives a huge thank you to everyone who participated
 # Documentation Changes
 ----------------------
 * Improved mutablePrimitivePrimitiveMap's remove() and removeKey() Javadoc.
+* Added examples of iteration patterns for primitive stacks to the reference guide. Fixes #1386.
 
 # Build Changes
 -----------------

@@ -39,10 +39,12 @@ All rights reserved.
 :ImmutableSortedBag:   {api-url}/api/bag/sorted/ImmutableSortedBag.html[ImmutableSortedBag]
 :ImmutableStack:       {api-url}/api/stack/ImmutableStack.html[ImmutableStack]
 :IntArrayList:         {api-url}/impl/list/mutable/primitive/IntArrayList.html[IntArrayList]
+:IntArrayStack:        {api-url}/impl/stack/mutable/primitive/IntArrayStack.html[IntArrayStack]
 :IntHashSet:           {api-url}/impl/set/mutable/primitive/IntHashSet.html[IntHashSet]
 :IntLists:             {api-url}/impl/factory/primitive/IntLists.html[IntLists]
 :IntIntHashMap:         {api-url}/impl/map/mutable/primitive/IntIntHashMap.html[IntIntHashMap]
 :IntObjectHashMap:     {api-url}/impl/map/mutable/primitive/IntObjectHashMap.html[IntObjectHashMap]
+:IntStacks:            {api-url}/impl/factory/primitive/IntStacks.html[IntStacks]
 :ListIterable:         {api-url}/api/list/ListIterable.html[ListIterable]
 :Lists:                {api-url}/impl/factory/Lists.html[Lists]
 :Maps:                 {api-url}/impl/factory/Maps.html[Maps]
@@ -1105,6 +1107,82 @@ MutableIntBag mutableIntBag = intHashSet.toBag();
 === Primitive stacks
 
 Primitive stack implementations are similar to JCF *ArrayStack* but optimized for primitives.
+They are named *{IntArrayStack}*, LongArrayStack, CharArrayStack, etc.
+
+Primitive stacks are created with the factory classes *{IntStacks}*, LongStacks, CharStacks, etc.
+Each factory has a *mutable* and an *immutable* field.
+The last element passed to *with* ends up on top of the stack.
+[source,java]
+----
+// Stacks for the different primitive types are created the same way.
+MutableIntStack intStack = IntStacks.mutable.with(1, 2, 3, 4, 5);    // [5, 4, 3, 2, 1]
+MutableLongStack longStack = LongStacks.mutable.with(1L, 2L, 3L);    // [3, 2, 1]
+MutableCharStack charStack = CharStacks.mutable.with('a', 'b', 'c'); // [c, b, a]
+
+// withAll accepts any IntIterable.
+MutableIntStack fromIterable = IntStacks.mutable.withAll(IntInterval.oneTo(5)); // [5, 4, 3, 2, 1]
+
+// The immutable factory returns an ImmutableIntStack.
+ImmutableIntStack immutableStack = IntStacks.immutable.with(1, 2, 3, 4, 5);
+----
+
+*push*, *pop* and *peek* operate on the top of the stack.
+*pop* and *peek* are overloaded to take a count, and those overloads return an *IntList*.
+[source,java]
+----
+MutableIntStack stack = IntStacks.mutable.with(1, 2, 3); // [3, 2, 1]
+stack.push(4);                    // [4, 3, 2, 1]
+
+int top = stack.peek();           // 4
+IntList topTwo = stack.peek(2);   // [4, 3]
+
+int popped = stack.pop();         // 4, stack is now [3, 2, 1]
+IntList poppedTwo = stack.pop(2); // [3, 2], stack is now [1]
+
+// push on an immutable stack returns a new stack and leaves the original alone.
+ImmutableIntStack original = IntStacks.immutable.with(1, 2); // [2, 1]
+ImmutableIntStack pushed = original.push(3);                 // [3, 2, 1]
+----
+
+==== Iteration patterns
+
+Primitive stacks support the same iteration patterns as the other primitive containers.
+Every pattern visits the elements in Last-In-First-Out order, starting at the top of the stack.
+The results below show that order.
+[source,java]
+----
+MutableIntStack stack = IntStacks.mutable.with(1, 2, 3, 4, 5); // [5, 4, 3, 2, 1]
+
+// Filtering. select and reject return a stack in the same top-down order.
+MutableIntStack evens = stack.select(each -> each % 2 == 0); // [4, 2]
+MutableIntStack odds = stack.reject(each -> each % 2 == 0);  // [5, 3, 1]
+
+// Transforming. collect returns a stack of objects, while collectInt writes the
+// results into the target collection passed as the second argument.
+MutableStack<String> strings = stack.collect(Integer::toString);                      // [5, 4, 3, 2, 1]
+MutableIntList doubled = stack.collectInt(each -> each * 2, IntLists.mutable.empty()); // [10, 8, 6, 4, 2]
+
+// Converting. toList and toArray keep the stack order, toSortedList does not.
+MutableIntList list = stack.toList();             // [5, 4, 3, 2, 1]
+MutableIntList sortedList = stack.toSortedList(); // [1, 2, 3, 4, 5]
+MutableIntSet set = stack.toSet();
+MutableIntBag bag = stack.toBag();
+int[] array = stack.toArray();                    // [5, 4, 3, 2, 1]
+
+// Calculating.
+long sum = stack.sum();                                 // 15
+int min = stack.min();                                  // 1
+int max = stack.max();                                  // 5
+double average = stack.average();                       // 3.0
+double median = stack.median();                         // 3.0
+IntSummaryStatistics stats = stack.summaryStatistics(); // sum 15, min 1, max 5
+
+// Short-circuit patterns.
+boolean anyEven = stack.anySatisfy(each -> each % 2 == 0);    // true
+boolean allPositive = stack.allSatisfy(each -> each > 0);     // true
+int firstEven = stack.detectIfNone(each -> each % 2 == 0, 0); // 4, the topmost even value
+int evenCount = stack.count(each -> each % 2 == 0);           // 2
+----
 
 === Primitive bags
 
