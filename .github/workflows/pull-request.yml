@@ -261,6 +261,41 @@ jobs:
       - name: 'Clean Maven cache'
         run: rm -rf ~/.m2/repository/org/eclipse/collections
 
+  javadoc-17:
+    name: Javadoc 17
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/cache@v4
+        with:
+          key: maven-javadoc-${{ hashFiles('**/pom.xml') }}
+          path: ~/.m2/repository
+          restore-keys: |
+            maven-javadoc-
+            maven-
+
+      - run: mvn --non-recursive wrapper:wrapper -Dmaven=3.9.6
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: 17
+      - name: Build Generator
+        run: ./mvnw --color=always -Dsurefire.useFile=false -DskipTests -Denforcer.skip=true clean install --projects 'eclipse-collections-code-generator,eclipse-collections-code-generator-maven-plugin'
+      - name: JavaDoc Aggregate
+        run: ./mvnw --color=always --activate-profiles maven-javadoc-plugin -DskipTests -Denforcer.skip=true clean javadoc:aggregate verify --projects '!unit-tests,!serialization-tests,!jcstress-tests,!unit-tests-java8,!test-coverage'
+        env:
+          MAVEN_OPTS: '-Xmx1g'
+      - name: JavaDoc Jar
+        run: ./mvnw --color=always --activate-profiles maven-javadoc-plugin -DskipTests -Denforcer.skip=true clean verify javadoc:jar --projects '!unit-tests,!serialization-tests,!jcstress-tests,!unit-tests-java8,!test-coverage'
+        env:
+          MAVEN_OPTS: '-Xmx1g'
+
+      - name: 'Clean Maven cache'
+        run: rm -rf ~/.m2/repository/org/eclipse/collections
+
+
   javadoc-early-access:
     name: Javadoc Early Access
     runs-on: ubuntu-latest
