@@ -39,7 +39,7 @@ Eclipse Collections is hardly the first library to provide primitive collections
 
 For all the primitive collection types there also exist mutable and immutable versions (`MutableIntList`, `ImmutableIntList`). They behave much the same as their object-based counterparts so we will not cover them here.
 
-Eclipse Collections is split into two parts: The API and the implementation of that API. Since the implementation depends on the API, we will only have to add that as a dependency to our Maven project. See the [latest release](https://github.com/eclipse/eclipse-collections/releases) for the details on the Maven or Gradle coordinates. 
+Eclipse Collections is split into two parts: The API and the implementation of that API. Since the implementation depends on the API, we will only have to add that as a dependency to our Maven project. See the [latest release](https://github.com/eclipse/eclipse-collections/releases) for the details on the Maven or Gradle coordinates.
 
 ## Jackson
 

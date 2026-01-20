@@ -12,7 +12,7 @@ All rights reserved.
 = Code blocks
 :sectanchors:
 :toc: left
-:toc-title: 
+:toc-title:
 :toclevels: 3
 // Javadoc links
 :api-url:           https://www.eclipse.org/collections/javadoc/11.1.0/org/eclipse/collections

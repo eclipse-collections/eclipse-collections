@@ -2184,4 +2184,3 @@ Throws *IllegalArgumentException* if the *MapIterable* contains duplicate values
 |===
 |xref:0-RefGuide.adoc[previous: Introduction]  | |xref:2-Collection_Containers.adoc[next: Collections and containers]
 |===
-

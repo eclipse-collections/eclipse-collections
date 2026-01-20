@@ -28,7 +28,7 @@
 
         <tycho-version>4.0.13</tycho-version>
     </properties>
-    
+
     <build>
         <plugins>
 			<!-- configure default plug-ins -->

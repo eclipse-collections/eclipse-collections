@@ -142,7 +142,7 @@ public final class <name>QuickSort
             }
         }
     }
-    
+
     private static void swap(<type>[] array, int i1, int i2)
     {
         <type> value = array[i1];

@@ -28,14 +28,14 @@ public class Person
 ```
 
 #### Example 1: `Collect` (aka `map`, `transform`)
-First we will create a `MutableList` with three instances of the `Person` class. 
+First we will create a `MutableList` with three instances of the `Person` class.
 ```java
 MutableList<Person> people = Lists.mutable.with(
         new Person("Sally", "Smith"),
         new Person("Ted", "Watson"),
         new Person("Mary", "Williams"));
 ```
-Then we will `collect` their last names into a new `MutableList`, and finally output the names to a comma delimited String using `makeString`. 
+Then we will `collect` their last names into a new `MutableList`, and finally output the names to a comma delimited String using `makeString`.
 ```java
 MutableList<String> lastNames = people.collect(person -> person.getLastName());
 Assert.assertEquals("Smith, Watson, Williams", lastNames.makeString());
@@ -52,7 +52,7 @@ ImmutableList<Person> people = Lists.immutable.with(
         new Person("Ted", "Watson"),
         new Person("Mary", "Williams"));
 ```
-While the `collect` method on a `MutableList` returned a `MutableList`, the `collect` method on an `ImmutableList` will return an `ImmutableList`.  
+While the `collect` method on a `MutableList` returned a `MutableList`, the `collect` method on an `ImmutableList` will return an `ImmutableList`.
 ```java
 ImmutableList<String> lastNames = people.collect(Person::getLastName);
 Assert.assertEquals("Smith, Watson, Williams", lastNames.makeString());

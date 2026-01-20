@@ -288,7 +288,7 @@ The *Partition* pattern allocates each element of a collection into one of two n
 ###### EC (w/lambda)
 
 ```java
-PartitionMutableList<Person> partitionedFolks = 
+PartitionMutableList<Person> partitionedFolks =
     people.partition(person -> person.getAge() >= 18);
 MutableList<Person> adults = partitionedFolks.getSelected();
 MutableList<Person> children = partitionedFolks.getRejected();
@@ -360,12 +360,12 @@ create <newCollection>
 ###### EC (w/lambda and method reference)
 
 ```java
-MutableList<Address> addresses = 
+MutableList<Address> addresses =
     people.collect(person -> person.getAddress());
 
 //or
 
-MutableList<Address> addresses = 
+MutableList<Address> addresses =
     people.collect(Person::getAddress);
 ```
 
@@ -389,12 +389,12 @@ Notice that this assumes each person in the **people** collection has just one a
 ###### EC (w/lambda and method reference)
 
 ```java
-MutableList<MutableList<Address>> addresses = 
+MutableList<MutableList<Address>> addresses =
     people.collect(person -> person.getAddresses());
 
 //or
 
-MutableList<MutableList<Address>> addresses = 
+MutableList<MutableList<Address>> addresses =
     people.collect(Person::getAddresses);
 ```
 
@@ -510,12 +510,12 @@ create <newCollection>
 ###### EC (w/lambda and method reference)
 
 ```java
-MutableList<Address> flatAddress = 
+MutableList<Address> flatAddress =
     people.flatCollect(person -> person.getAddresses());
 
-// or 
+// or
 
-MutableList<Address> flatAddress = 
+MutableList<Address> flatAddress =
     people.flatCollect(Person::getAddresses);
 ```
 
@@ -524,7 +524,7 @@ Note the **flatCollect** method's similarity to a **collect** method having the 
 ###### EC (w/anonymous inner class)
 
 ```java
-MutableList<Address> addresses = 
+MutableList<Address> addresses =
     people.flatCollect(
        new Function<Person, MutableList<Address>>()
        {
@@ -596,21 +596,21 @@ for each <element> of <collection>
 ###### EC (w/lambda)
 
 ```java
-Integer result = 
+Integer result =
     list.detect(each -> each > 50);
 ```
 
 ###### EC (w/Predicates factory)
 
 ```java
-Integer result = 
+Integer result =
     list.detect(Predicates.greaterThan(50));
 ```
 
 ###### Java 8 Streams
 
 ```java
-Integer result = 
+Integer result =
     list.stream().findAny(each -> each > 50).get();
 ```
 
@@ -664,21 +664,21 @@ for each <element> of <collection>
 ###### EC (w/lambda)
 
 ```java
-boolean result = 
+boolean result =
     list.anySatisfy(num -> num > 50);
 ```
 
 ###### EC (w/Predicates factory)
 
 ```java
-boolean result = 
+boolean result =
     list.anySatisfy(Predicates.greaterThan(50));
 ```
 
 ###### Java 8 Streams
 
 ```java
-boolean result = 
+boolean result =
     list.stream().anyMatch(num -> num > 50);
 ```
 
@@ -719,27 +719,27 @@ for each <element> of <collection>
      if not condition(<element>)
          return false
  otherwise return true
-                      
+
 ```
 
 ###### EC (w/lambda)
 
 ```java
-boolean result = 
+boolean result =
     list.allSatisfy(each -> each > 50);
 ```
 
 ###### EC (w/Predicates factory)
 
 ```java
-boolean result = 
+boolean result =
     list.allSatisfy(Predicates.greaterThan(50));
 ```
 
 ###### Java 8 Streams
 
 ```java
-boolean result = 
+boolean result =
     list.stream().allMatch(each -> each > 50);
 ```
 
@@ -873,31 +873,31 @@ set <result> to <initialvalue>
 ###### EC (w/lambda and method reference)
 
 ```java
-Integer result = 
+Integer result =
     Lists.mutable.of(1, 2).injectInto(3, (result, each) -> result + each);
 
 // or
 
-Integer result = 
+Integer result =
     Lists.mutable.of(1, 2).injectInto(3, Integer::sum);
 ```
 
 ###### EC (w/static class)
 
 ```java
-Integer result = 
+Integer result =
     Lists.mutable.of(1, 2).injectInto(3, AddFunction.INTEGER);
 ```
 
 ###### Java 8 Streams (w/lambda and method reference)
 
 ```java
-Integer result = 
+Integer result =
     Lists.mutable.of(1, 2).stream().reduce(3, (result, each) -> result + each);
 
 // or
 
-Integer result = 
+Integer result =
     Lists.mutable.of(1, 2).stream().reduce(3, Integer::sum);
 ```
 
@@ -993,7 +993,7 @@ LazyIterable<Address> addresses =
 
 //or
 
-LazyIterable<Address> addresses = 
+LazyIterable<Address> addresses =
     lazyPeople.flatCollect(Person::getAddresses);
 ```
 
@@ -1103,7 +1103,7 @@ Same result with no starting and ending strings.
 
 Same result with the default delimiter ", " (comma space) and no starting and ending strings.
 
-###### EC 
+###### EC
 
 ```java
 MutableList<Integer> list = Lists.mutable.with(1, 2, 3);
@@ -1112,15 +1112,15 @@ String mySeper = list.makeString("/"); // "1/2/3"
 String defaultString = list.makeString(); //"1, 2, 3"
 ```
 
-###### Java 8 Streams 
+###### Java 8 Streams
 
 ```java
 MutableList<Integer> list = Lists.mutable.with(1, 2, 3);
-String myDelim = 
+String myDelim =
     list.stream().map(Object::toString).collect(Collectors.joining("/", "[", "]")); // "[1/2/3]"
-String mySeper = 
+String mySeper =
     list.stream().map(Object::toString).collect(Collectors.joining("/")); // "1/2/3"
-String defaultString = 
+String defaultString =
     list.stream().map(Object::toString).collect(Collectors.joining()); // "1/2/3"
 ```
 
@@ -1128,11 +1128,11 @@ String defaultString =
 
 ```java
 MutableList<Integer> list = Lists.mutable.with(1, 2, 3);
-String myDelim = 
+String myDelim =
     list.stream().collect(Collectors2.makeString("[", "/", "]")); // "[1/2/3]"
-String mySeper = 
+String mySeper =
     list.stream().collect(Collectors2.makeString("/")); // "1/2/3"
-String defaultString = 
+String defaultString =
     list.stream().collect(Collectors2.makeString()); // "1/2/3"
 ```
 
@@ -1150,7 +1150,7 @@ Appends with specified separator, but no starting or ending strings.
 
 Appends with the default delimiter ", " (comma space) and no starting and ending strings.
 
-###### EC 
+###### EC
 
 ```java
 MutableList<Integer> list = Lists.mutable.with(1, 2, 3);
@@ -1180,10 +1180,10 @@ int count =
 ###### EC (w/anonymous inner class)
 
 ```java
-int count = 
-    people.count(new Predicate<Person>() 
+int count =
+    people.count(new Predicate<Person>()
     {
-      public boolean value(Person person) 
+      public boolean value(Person person)
       {
         return person.getAddress().getState().getName().equals("New York");
       }
@@ -1197,7 +1197,7 @@ Returns the number of elements that satisfy the **Predicate2**. The second param
 ###### EC (w/[Predicates2](http://www.eclipse.org/collections/javadoc/11.1.0/org/eclipse/collections/impl/block/factory/Predicates2.html) factory)
 
 ```java
-int count = 
+int count =
     lastNames.countWith(Predicates2.equal(), "Smith");
 ```
 
@@ -1239,7 +1239,7 @@ Returns the maximum value based on the natural ordering.
 
 Returns the minimum value based on the natural ordering.
 
-###### EC 
+###### EC
 
 ```java
 RichIterable<Integer> iterable = Lists.mutable.with(5, 4, 8, 9, 1);
@@ -1249,7 +1249,7 @@ Assert.assertEquals(Integer.valueOf(1), iterable.min());
 
 If any element in the iterable is not Comparable, then a ClassCastException is thrown.
 
-###### EC 
+###### EC
 
 ```java
 RichIterable<Object> iterable = Lists.mutable.with(5, 4, 8, 9, 1, new Foo());
@@ -1269,11 +1269,11 @@ Returns the minimum element out of this collection based on the comparator.
 ###### EC (Java 5+)
 
 ```java
-public class SillyWalk 
+public class SillyWalk
 {
   public final int wiggles;
-  
-  public SillyWalk(int wiggles) 
+
+  public SillyWalk(int wiggles)
   {
     this.wiggles = wiggles;
   }
@@ -1282,9 +1282,9 @@ public class SillyWalk
 
 ```java
 private static final Comparator<SillyWalk> SILLY_WALK_COMPARATOR =
-    new Comparator<SillyWalk>() 
+    new Comparator<SillyWalk>()
     {
-      public int compare(SillyWalk o1, SillyWalk o2) 
+      public int compare(SillyWalk o1, SillyWalk o2)
       {
         return o1.wiggles - o2.wiggles;
       }
@@ -1385,12 +1385,12 @@ FastList<Integer> integers = FastList.newListWith(1, 1, 1, 2, 2, 3);
 MutableMap<Integer, Integer> aggregation = integers.aggregateBy(groupBy, factory, sumAggregator);
 Assert.assertEquals(4, aggregation.get(0).intValue());
 Assert.assertEquals(6, aggregation.get(1).intValue());
-                  
+
 ```
 
 ##### aggregateInPlaceBy(Function, Function0, Function2): MapIterable
 
-Same result with no starting and ending strings. 
+Same result with no starting and ending strings.
 
 ###### EC (w/lambda and method reference)
 
@@ -1446,21 +1446,21 @@ The **chunk** method can be used to gather the elements of a collection into *ch
 
 Returns a new collection with the source collection's elements grouped in "chunks," with *size* elements in each chunk, and the last chunk containing the remaining elements, if any.
 
-###### EC 
+###### EC
 
 ```java
 MutableList<Integer> list =
     Lists.mutable.with(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
 RichIterable<RichIterable<Integer>> chunks = list.chunk(4);
 System.out.println(chunks);
-       
+
 ```
 
 This example prints out:
 
 ```java
 [[1, 2, 3, 4], [5, 6, 7, 8], [9, 10]]
-              
+
 ```
 
 The **zip** method pairs up the elements of one **RichIterable** with those of second. If one of the two collections has more elements than the other, those remaining elements are dropped. The **zipWithIndex** method is a special case of **zip** that pairs the elements in a collection with their index positions.
@@ -1469,7 +1469,7 @@ The **zip** method pairs up the elements of one **RichIterable** with those of s
 
 Returns a new **RichIterable** by combining, into pairs, corresponding elements from the calling RichIterable collection and the RichIterable collection named in the parameter. If one of the two collections is longer, its remaining elements are ignored..
 
-###### EC 
+###### EC
 
 ```java
 MutableList<String> list1 = Lists.mutable.with("One", "Two", "Three", "Truncated");
@@ -1488,7 +1488,7 @@ This example prints out:
 
 Returns a new **RichIterable** consisting of the calling collection's elements, each paired with its index (beginning with index 0).
 
-###### EC 
+###### EC
 
 ```java
 MutableList<String> list = Lists.mutable.with("One", "Two", "Three");
@@ -1529,7 +1529,7 @@ These " **...With**" forms accomplish exactly the same actions as their basic co
 
 ```java
 MutableList<Person> people =...;
-MutableList<Person> adults = 
+MutableList<Person> adults =
     people.select(each -> each.getAge() >= 18);
 ```
 
@@ -1567,12 +1567,12 @@ Here's the same algorithm, again in Eclipse Collections, this time using **selec
 
 ```java
 MutableList<Person> people =...;
-MutableList<Person> adults = 
+MutableList<Person> adults =
     people.selectWith((eachPerson, age) -> eachPerson.getAge() > age, 18);
 
 // or
 
-MutableList<Person> adults = 
+MutableList<Person> adults =
     people.selectWith(Person::isOlderThan, 18);
 ```
 
@@ -1779,7 +1779,7 @@ comparison.add("Microsoft");
 ###### **FastList** (EC)
 
 ```java
-MutableList<String> comparison = 
+MutableList<String> comparison =
     FastList.newListWith("Comcast", "IBM", "Microsoft", "Microsoft");
 ```
 
@@ -1918,7 +1918,7 @@ integers.add(3);
 
 And, here is the identical construction in Eclipse Collections:
 
-###### EC 
+###### EC
 
 ```java
 List<Integer> integers = new FastList<Integer>();
@@ -1940,7 +1940,7 @@ integers.add(3);
 
 The Eclipse Collections **newListWith()** method also provides varargs support, allowing any number of arguments
 
-###### EC 
+###### EC
 
 ```java
 List<Integer> integers = FastList.newListWith(1, 2, 3);
@@ -1948,10 +1948,10 @@ List<Integer> integers = FastList.newListWith(1, 2, 3);
 
 There are also factory classes in Eclipse Collections named for each type (e.g. [Lists](http://www.eclipse.org/collections/javadoc/11.1.0/org/eclipse/collections/impl/factory/Lists.html), [Sets](http://www.eclipse.org/collections/javadoc/11.1.0/org/eclipse/collections/impl/factory/Sets.html), [Maps](http://www.eclipse.org/collections/javadoc/11.1.0/org/eclipse/collections/impl/factory/Sets.html), [Bags](http://www.eclipse.org/collections/javadoc/11.1.0/org/eclipse/collections/impl/factory/Bags.html), [Stacks](http://www.eclipse.org/collections/javadoc/11.1.0/org/eclipse/collections/impl/factory/Stacks.html), [BiMaps](http://www.eclipse.org/collections/javadoc/11.1.0/org/eclipse/collections/impl/factory/BiMaps.html), [Multimaps](http://www.eclipse.org/collections/javadoc/11.1.0/org/eclipse/collections/impl/factory/Multimaps.html), etc.)
 
-###### EC 
+###### EC
 
 ```java
-List<Integer> integers = 
+List<Integer> integers =
     Lists.mutable.with(1, 2, 3);
 ```
 
@@ -1960,12 +1960,12 @@ You can also use the richer interface:
 ###### EC (Java 5+)
 
 ```java
-MutableList<Integer> integers = 
+MutableList<Integer> integers =
     FastList.newListWith(1, 2, 3);
 
 // or
 
-MutableList<Integer> integers = 
+MutableList<Integer> integers =
     Lists.mutable.with(1, 2, 3);
 ```
 
@@ -1982,7 +1982,7 @@ There is also a form of **newList** that takes another iterable
 
 ```java
 MutableList<Integer> integers =
-    FastList.newList(listOfIntegers); 
+    FastList.newList(listOfIntegers);
 ```
 
 These refactorings are analogous for **UnifiedSet** and **UnifiedMap**.
@@ -2033,9 +2033,9 @@ Here is an example of a MutableSortedSet containing numbers in reverse order:
 ###### EC (Java 5+)
 
 ```java
-MutableSortedSet<Integer> sortedSetA = 
+MutableSortedSet<Integer> sortedSetA =
     TreeSortedSet.newSet(Collections.<Integer>reverseOrder());
-MutableSortedSet<Integer> sortedSetB = 
+MutableSortedSet<Integer> sortedSetB =
     TreeSortedSet.newSet(sortedSetA.with(1).with(2, 3).with(4, 5, 6));
 ```
 
@@ -2078,7 +2078,7 @@ A [**MutableSortedMap**](http://www.eclipse.org/collections/javadoc/11.1.0/org/e
 
 This code block creates a TreeSortedMap which sorts in reverse order:
 
-###### EC 
+###### EC
 
 ```java
 MutableSortedMap<String, Integer> sortedMap = TreeSortedMap.newMapWith(Comparators.<String>reverseNaturalOrder(),
@@ -2096,7 +2096,7 @@ MutableSortedMap<String, Integer> sortedMap = TreeSortedMap.newMapWith(Comparato
 ###### EC
 
 ```java
-MutableBiMap<Integer, String> biMap = 
+MutableBiMap<Integer, String> biMap =
     HashBiMap.newWithKeysValues(1, "1", 2, "2", 3, "3");
 ```
 
@@ -2174,15 +2174,15 @@ For example, this list:
 |                        | `Orange` | `3` |
 |                        | `Apple`  | `2` |
 
-###### EC 
+###### EC
 
 ```java
-MutableBag<String> bag = 
+MutableBag<String> bag =
     HashBag.newBagWith("Apple", "Pear", "Orange", "Apple", "Apple", "Orange");
 
 // or
 
-MutableBag<String> bag = 
+MutableBag<String> bag =
     Bags.mutable.with("Apple", "Pear", "Orange", "Apple", "Apple", "Orange");
 ```
 
@@ -2200,7 +2200,7 @@ The distinctive methods on **Bag** are:
 
 The [**MutableBag**](http://www.eclipse.org/collections/javadoc/11.1.0/org/eclipse/collections/api/bag/MutableBag.html) interface includes methods for manipulating the number of occurrences of an item. For example, to determine the number of unique elements in a MutableBag, use the **sizeDistinct** method. The most common implementation of **MutableBag** is [**HashBag**](http://www.eclipse.org/collections/javadoc/11.1.0/org/eclipse/collections/impl/bag/mutable/HashBag.html).
 
-###### EC 
+###### EC
 
 ```java
 MutableBag<String> bag = HashBag.newBagWith("Apple", "Pear", "Orange", "Apple", "Apple", "Orange");
@@ -2226,15 +2226,15 @@ A [**MutableSortedBag**](http://www.eclipse.org/collections/javadoc/11.1.0/org/e
 
 For example, this **MutableSortedBag** would contain integers sorted in reverse order:
 
-###### EC 
+###### EC
 
 ```java
-MutableSortedBag<Integer> revIntegers = 
+MutableSortedBag<Integer> revIntegers =
     TreeBag.newBagWith(Collections.reverseOrder(), 4, 3, 3, 2, 2, 2, 1, 1);
 
 // or
 
-MutableSortedBag<Integer> revIntegers = 
+MutableSortedBag<Integer> revIntegers =
     SortedBags.mutable.with(Collections.reverseOrder(), 4, 3, 3, 2, 2, 2, 1, 1);
 ```
 
@@ -2277,12 +2277,12 @@ stack.push(3);
 ###### **ArrayStack** (EC)
 
 ```java
-MutableStack mutableStack = 
+MutableStack mutableStack =
     ArrayStack.newStackWith(1, 2, 3);
 
 // or
 
-MutableStack mutableStack = 
+MutableStack mutableStack =
     Stacks.mutable.with(1, 2, 3);
 ```
 
@@ -2318,7 +2318,7 @@ The code that performs this action uses the [**groupBy**](#groupby-pattern "Crea
 ```java
 MutableList<String> words = Lists.mutable.with("here", "are", "a", "few",
      "words", "that", "are", "not", "too", "long");
-MutableListMultimap<Integer, String> multimap = 
+MutableListMultimap<Integer, String> multimap =
     words.groupBy(StringFunctions.length());
 ```
 
@@ -2327,7 +2327,7 @@ MutableListMultimap<Integer, String> multimap =
 ```java
 MutableList<String> words = Lists.mutable.with("here", "are", "a", "few",
      "words", "that", "are", "not", "too", "long");
-MutableListMultimap<Integer, String> multimap = 
+MutableListMultimap<Integer, String> multimap =
     words.groupBy(String::length);
 ```
 
@@ -2340,7 +2340,7 @@ If we change **words** to a **MutableSet**, the result will be a [**MutableSetMu
 ```java
 MutableSet<String> words = Sets.mutable.with("here", "are", "a", "few",
      "words", "that", "are", "not", "too", "long");
-MutableSetMultimap<Integer, String> multimap = 
+MutableSetMultimap<Integer, String> multimap =
     words.groupBy(StringFunctions.length());
 ```
 
@@ -2349,7 +2349,7 @@ MutableSetMultimap<Integer, String> multimap =
 ```java
 MutableSet<String> words = Sets.mutable.with("here", "are", "a", "few",
      "words", "that", "are", "not", "too", "long");
-MutableSetMultimap<Integer, String> multimap = 
+MutableSetMultimap<Integer, String> multimap =
     words.groupBy(String::length);
 ```
 
@@ -2393,7 +2393,7 @@ To create an **IntArrayList**, use one of the following:
 IntArrayList emptyList = new IntArrayList();
 IntArrayList intList = IntArrayList.newListWith(1, 2, 3);
 IntArrayList alternate = IntLists.mutable.with(1, 2, 3);
-IntArrayList listFromIntIterable = IntArrayList.newListWith(IntHashSet.newSetWith(1, 2, 3));              
+IntArrayList listFromIntIterable = IntArrayList.newListWith(IntHashSet.newSetWith(1, 2, 3));
 ```
 
 ### IntInterval
@@ -2402,7 +2402,7 @@ An **IntInterval** is a range of **int**s that may be iterated over using a step
 
 ```java
 Assert.assertEquals(IntLists.mutable.with(1, 2, 3), IntInterval.oneTo(3));
-Assert.assertEquals(IntLists.mutable.with(1, 3, 5), IntInterval.oneToBy(5, 2));             
+Assert.assertEquals(IntLists.mutable.with(1, 3, 5), IntInterval.oneToBy(5, 2));
 ```
 
 ### Primitive Sets
@@ -2542,7 +2542,7 @@ These factories highlight yet another benefit of immutable collections: they let
 ### []() Growing and Shrinking Immutable Collections
 
 There are no mutating methods like `add(), addAll(), remove()` or `removeAll()` on immutable collection interfaces in Eclipse Collections. However, we may want to add or remove elements. Methods like `newWith(), newWithout(), newWithAll()` and `newWithoutAll()` allow for safe copying of immutable collections. For ImmutableMap implementations, the methods are named `newWithKeyValue(), newWithAllKeyValues(), newWithoutKey()` and `newWithoutAllKeys()`.
-     
+
 ```java
 // persons is an mutable list: MutableList<Person> persons
 // Person is a class with attributes name, age and address
@@ -2648,17 +2648,17 @@ There are two ways to create an immutable **List**, **Set**, **Bag**, **Stack** 
 ```java
 
 // 1. Calling toImmutable()
-ImmutableList<String> list = 
+ImmutableList<String> list =
     Lists.mutable.with("a", "b", "c").toImmutable(); // creates a list of elements a,b,c
-ImmutableSet<String> set0 =  
+ImmutableSet<String> set0 =
     Lists.mutable.with("a", "b", "a", "c").toSet().toImmutable(); // creates a set of elements a,b,c
-ImmutableSet<String> set1 =  
+ImmutableSet<String> set1 =
     Sets.mutable.with("a", "b", "a", "c").toImmutable(); // creates a set of elements a,b,c
-ImmutableMap<Integer, String> map = 
+ImmutableMap<Integer, String> map =
     Maps.mutable.with(1, "a", 2, "b", 3, "c").toImmutable(); // creates a map with keys 1,2,3
 
 //2. Using factory classes
-ImmutableList<String> emptyList_i = 
+ImmutableList<String> emptyList_i =
     Lists.immutable.empty();  // creates an empty list
 ImmutableList<String> list_b =
     Lists.immutable.with("a", "b", "c"); // creates a list of elements a,b,c
@@ -2690,17 +2690,17 @@ The techniques for creating mutable or immutable primitive containers are the sa
 <!-- -->
 
 ```java
-MutableIntList emptyList_pm = 
+MutableIntList emptyList_pm =
     IntLists.mutable.empty();       // creates an empty list
-MutableIntList list_d = 
+MutableIntList list_d =
     IntLists.mutable.with(1, 2, 3); // creates a list of elements a,b,c
-MutableIntList list_e = 
+MutableIntList list_e =
     IntLists.mutable.of(1, 2, 3);   // creates a list of elements a,b,c
-ImmutableIntList emptyList_pi = 
+ImmutableIntList emptyList_pi =
     IntLists.immutable.empty();     // creates an empty list
-ImmutableIntList list_f = 
+ImmutableIntList list_f =
     IntLists.immutable.with(1, 2, 3); // creates a list of elements a,b,c
-ImmutableIntList list_g = 
+ImmutableIntList list_g =
     IntLists.immutable.of(1, 2, 3); // creates a list of elements a,b,c
 ```
 
@@ -2792,9 +2792,9 @@ Verify.assertSize(1, texans);
 
 ```java
 MutableList<Person> texans = this.people.select(
-  new Predicate<Person>() 
+  new Predicate<Person>()
   {
-    public boolean accept(Person each) 
+    public boolean accept(Person each)
     {
       return each.getAddress().getState().equals("TX");
     }
