@@ -54,7 +54,6 @@ import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.map.mutable.AbstractMutableMap;
 import org.eclipse.collections.impl.parallel.BatchIterable;
 import org.eclipse.collections.impl.set.strategy.mutable.UnifiedSetWithHashingStrategy;
-import org.eclipse.collections.impl.tuple.ImmutableEntry;
 import org.eclipse.collections.impl.tuple.Tuples;
 import org.eclipse.collections.impl.utility.ArrayIterate;
 import org.eclipse.collections.impl.utility.Iterate;
@@ -2753,7 +2752,7 @@ public class UnifiedMapWithHashingStrategy<K, V> extends AbstractMutableMap<K, V
             {
                 if (UnifiedMapWithHashingStrategy.nullSafeEquals(value, curValue))
                 {
-                    return ImmutableEntry.of(UnifiedMapWithHashingStrategy.this.nonSentinel(cur), (V) curValue);
+                    return new WeakBoundEntry<>(UnifiedMapWithHashingStrategy.this.nonSentinel(cur), (V) curValue, this.holder, UnifiedMapWithHashingStrategy.this.hashingStrategy);
                 }
             }
             return null;
@@ -2773,7 +2772,7 @@ public class UnifiedMapWithHashingStrategy<K, V> extends AbstractMutableMap<K, V
                     Object curValue = chain[i + 1];
                     if (UnifiedMapWithHashingStrategy.nullSafeEquals(value, curValue))
                     {
-                        return ImmutableEntry.of(UnifiedMapWithHashingStrategy.this.nonSentinel(cur), (V) curValue);
+                        return new WeakBoundEntry<>(UnifiedMapWithHashingStrategy.this.nonSentinel(cur), (V) curValue, this.holder, UnifiedMapWithHashingStrategy.this.hashingStrategy);
                     }
                 }
             }
@@ -2969,7 +2968,11 @@ public class UnifiedMapWithHashingStrategy<K, V> extends AbstractMutableMap<K, V
                 }
                 else if (cur != null)
                 {
-                    procedure.value(ImmutableEntry.of(UnifiedMapWithHashingStrategy.this.nonSentinel(cur), (V) map[i + 1]));
+                    procedure.value(new WeakBoundEntry<>(
+                            UnifiedMapWithHashingStrategy.this.nonSentinel(cur),
+                            (V) map[i + 1],
+                            this.holder,
+                            UnifiedMapWithHashingStrategy.this.hashingStrategy));
                 }
             }
         }
