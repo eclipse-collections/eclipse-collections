@@ -16,6 +16,7 @@ import java.util.Optional;
 import org.eclipse.collections.api.RichIterable;
 import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.factory.Sets;
+import org.eclipse.collections.api.list.ImmutableList;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.ordered.OrderedIterable;
 import org.eclipse.collections.api.tuple.Pair;
@@ -202,5 +203,30 @@ public interface OrderedIterableTestCase extends RichIterableTestCase
                         Tuples.pair(1, 9)),
                 result);
         assertSame(target, result);
+    }
+
+    @Test
+    default void OrderedIterable_injectIntoWithIndex()
+    {
+        RichIterable<Integer> emptyIterable = this.newWith();
+        String actual0 = ((OrderedIterable<Integer>) emptyIterable).injectIntoWithIndex("foo",
+                (init, curr, idx) -> "bar");
+        assertEquals("foo", actual0, "injectIntoWithIndex called on empty iterable should return injected value");
+
+        OrderedIterable<Integer> iterable = (OrderedIterable<Integer>) this.newWith(3, 2, 1, 0);
+
+        ImmutableList<Pair<Integer, Integer>> expected = Lists.immutable.with(
+                Tuples.pair(3, 0),
+                Tuples.pair(2, 1),
+                Tuples.pair(1, 2),
+                Tuples.pair(0, 3));
+        MutableList<Pair<Integer, Integer>> injected = Lists.mutable.empty();
+        MutableList<Pair<Integer, Integer>> actual = iterable.injectIntoWithIndex(injected, (coll, each, index) -> {
+            coll.add(Tuples.pair(each, index));
+            return coll;
+        });
+
+        assertEquals(expected, actual);
+        assertSame(injected, actual);
     }
 }

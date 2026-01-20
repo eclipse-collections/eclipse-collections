@@ -19,6 +19,7 @@ import java.util.Optional;
 import org.eclipse.collections.api.RichIterable;
 import org.eclipse.collections.api.block.function.Function;
 import org.eclipse.collections.api.block.function.Function2;
+import org.eclipse.collections.api.block.function.Function3;
 import org.eclipse.collections.api.block.function.primitive.BooleanFunction;
 import org.eclipse.collections.api.block.function.primitive.ByteFunction;
 import org.eclipse.collections.api.block.function.primitive.CharFunction;
@@ -380,4 +381,22 @@ public interface OrderedIterable<T> extends RichIterable<T>
      */
     @Override
     <R extends Collection<Pair<T, Integer>>> R zipWithIndex(R target);
+
+    /**
+     * Returns the final result of evaluating function using each element of the iterable, the index of that element,
+     * and the previous evaluation result as the parameters. The injected value is used for the first parameter of the
+     * first evaluation, and the current item in the iterable is used as the second parameter, and the current item's
+     * index as the third parameter. This method is commonly called foldIndexed or sometimes reduce.
+     *
+     * @since 14.0
+     * @see #injectInto(Object, Function2)
+     * @param injectedValue first parameter of first evaluation
+     * @param function function invoked with arguments: injectedValue or previous result, element, and index of element
+     */
+
+    default <IV> IV injectIntoWithIndex(IV injectedValue, Function3<? super IV, ? super T, Integer, ? extends IV> function)
+    {
+        int[] index = {0};
+        return this.injectInto(injectedValue, (prev, each) -> function.value(prev, each, index[0]++));
+    }
 }
