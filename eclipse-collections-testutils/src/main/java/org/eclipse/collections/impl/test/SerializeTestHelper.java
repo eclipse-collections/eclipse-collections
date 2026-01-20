@@ -18,6 +18,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 
+import static org.junit.jupiter.api.Assertions.fail;
+
 public final class SerializeTestHelper
 {
     private SerializeTestHelper()
@@ -46,7 +48,7 @@ public final class SerializeTestHelper
         }
         catch (IOException e)
         {
-            Verify.fail("Failed to marshal an object", e);
+            fail("Failed to marshal an object", e);
         }
         return baos;
     }
@@ -79,7 +81,7 @@ public final class SerializeTestHelper
         }
         catch (ClassNotFoundException | IOException e)
         {
-            Verify.fail("Failed to unmarshal an object", e);
+            fail("Failed to unmarshal an object", e);
         }
 
         return null;

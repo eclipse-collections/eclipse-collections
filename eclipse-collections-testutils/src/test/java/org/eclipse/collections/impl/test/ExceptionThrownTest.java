@@ -12,15 +12,13 @@ package org.eclipse.collections.impl.test;
 
 import java.util.concurrent.Callable;
 
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.function.ThrowingRunnable;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertThrows;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
- * JUnit test to make sure that methods like {@link Assert#assertThrows(Class, ThrowingRunnable)} really throw when
+ * JUnit test to make sure that methods like {@link Assert#assertThrows(Class)} really throw when
  * they ought to.
  */
 public class ExceptionThrownTest
@@ -30,12 +28,12 @@ public class ExceptionThrownTest
     {
         try
         {
-            assertThrows(NullPointerException.class, new EmptyRunnable());
+            assertThrows(NullPointerException.class, EmptyRunnable::new);
             fail("AssertionError expected");
         }
         catch (AssertionError e)
         {
-            Verify.assertContains("org.junit.Assert.assertThrows", e.getStackTrace()[0].toString());
+            Verify.assertContains("org.junit.jupiter.api.Assertions.assertThrows", e.getStackTrace()[3].toString());
         }
     }
 
@@ -49,7 +47,7 @@ public class ExceptionThrownTest
         }
         catch (AssertionError e)
         {
-            Verify.assertContains(ExceptionThrownTest.class.getName(), e.getStackTrace()[2].toString());
+            Verify.assertContains(ExceptionThrownTest.class.getName(), e.getStackTrace()[3].toString());
         }
     }
 
@@ -69,11 +67,11 @@ public class ExceptionThrownTest
         }
         catch (AssertionError e)
         {
-            Verify.assertContains(ExceptionThrownTest.class.getName(), e.getStackTrace()[4].toString());
+            Verify.assertContains(ExceptionThrownTest.class.getName(), e.getStackTrace()[6].toString());
         }
     }
 
-    private static final class EmptyRunnable implements Runnable, ThrowingRunnable
+    private static final class EmptyRunnable implements Runnable
     {
         @Override
         public void run()

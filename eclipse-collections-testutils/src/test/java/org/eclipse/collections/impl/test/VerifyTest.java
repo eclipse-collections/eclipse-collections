@@ -16,7 +16,6 @@ import java.util.Map;
 import java.util.TreeSet;
 import java.util.concurrent.Callable;
 
-import junit.framework.AssertionFailedError;
 import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.factory.Maps;
 import org.eclipse.collections.api.factory.Sets;
@@ -49,10 +48,11 @@ import org.eclipse.collections.impl.multimap.set.sorted.TreeSortedSetMultimap;
 import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import org.eclipse.collections.impl.set.sorted.mutable.TreeSortedSet;
 import org.eclipse.collections.impl.tuple.Tuples;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.opentest4j.AssertionFailedError;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * JUnit test for our extensions to JUnit. These tests make sure that methods in {@link Verify} really fail when they
@@ -68,42 +68,42 @@ public class VerifyTest
         Verify.assertThrowsWithCause(RuntimeException.class, NullPointerException.class, (Callable<Void>) () -> {
             throw new RuntimeException(new NullPointerException());
         });
-        Verify.assertError(AssertionError.class, () -> Verify.assertThrowsWithCause(RuntimeException.class, NullPointerException.class, (Callable<Void>) () -> null));
+        Verify.assertError(AssertionFailedError.class, () -> Verify.assertThrowsWithCause(RuntimeException.class, NullPointerException.class, (Callable<Void>) () -> null));
     }
 
     @Test
     public void assertBefore()
     {
         Verify.assertBefore("numbers", Integer.valueOf(1), Integer.valueOf(2), FastList.newListWith(1, 2));
-        Verify.assertError(AssertionError.class, () -> Verify.assertBefore("numbers", Integer.valueOf(2), Integer.valueOf(1), FastList.newListWith(1, 2)));
+        Verify.assertError(AssertionFailedError.class, () -> Verify.assertBefore("numbers", Integer.valueOf(2), Integer.valueOf(1), FastList.newListWith(1, 2)));
     }
 
     @Test
     public void assertEndsWithArray()
     {
         Verify.assertEndsWith(new Integer[]{1, 2, 3, 4}, 3, 4);
-        Verify.assertError(AssertionError.class, () -> Verify.assertEndsWith(new Integer[]{1, 2, 3, 4}, 3, 2));
+        Verify.assertError(AssertionFailedError.class, () -> Verify.assertEndsWith(new Integer[]{1, 2, 3, 4}, 3, 2));
     }
 
     @Test
     public void assertStartsWithArray()
     {
         Verify.assertStartsWith(new Integer[]{1, 2, 3, 4}, 1, 2);
-        Verify.assertError(AssertionError.class, () -> Verify.assertStartsWith(new Integer[]{1, 2, 3, 4}, 3, 2));
+        Verify.assertError(AssertionFailedError.class, () -> Verify.assertStartsWith(new Integer[]{1, 2, 3, 4}, 3, 2));
     }
 
     @Test
     public void assertStartsWithList()
     {
         Verify.assertStartsWith(FastList.newListWith(1, 2, 3, 4), 1, 2);
-        Verify.assertError(AssertionError.class, () -> Verify.assertStartsWith(FastList.newListWith(1, 2, 3, 4), 3, 2));
+        Verify.assertError(AssertionFailedError.class, () -> Verify.assertStartsWith(FastList.newListWith(1, 2, 3, 4), 3, 2));
     }
 
     @Test
     public void assertEndsWithList()
     {
         Verify.assertEndsWith(FastList.newListWith(1, 2, 3, 4), 3, 4);
-        Verify.assertError(AssertionError.class, () -> Verify.assertEndsWith(FastList.newListWith(1, 2, 3, 4), 3, 2));
+        Verify.assertError(AssertionFailedError.class, () -> Verify.assertEndsWith(FastList.newListWith(1, 2, 3, 4), 3, 2));
     }
 
     @Test
@@ -111,8 +111,8 @@ public class VerifyTest
     {
         Verify.assertNotContains("1", "0");
         Verify.assertNotContains("message", "1", "0");
-        Verify.assertError(AssertionError.class, () -> Verify.assertNotContains("1", "1"));
-        Verify.assertError(AssertionError.class, () -> Verify.assertNotContains("message", "1", "1"));
+        Verify.assertError(AssertionFailedError.class, () -> Verify.assertNotContains("1", "1"));
+        Verify.assertError(AssertionFailedError.class, () -> Verify.assertNotContains("message", "1", "1"));
     }
 
     @Test
@@ -120,8 +120,8 @@ public class VerifyTest
     {
         Verify.assertListsEqual(FastList.newListWith(1, 2, 3), FastList.newListWith(1, 2, 3));
         Verify.assertListsEqual("message", FastList.newListWith(1, 2, 3), FastList.newListWith(1, 2, 3));
-        Verify.assertError(AssertionError.class, () -> Verify.assertListsEqual(FastList.newListWith(1, 2, 3), FastList.newListWith(1, 2)));
-        Verify.assertError(AssertionError.class, () -> Verify.assertListsEqual("message", FastList.newListWith(1, 2, 3), FastList.newListWith(1, 2)));
+        Verify.assertError(AssertionFailedError.class, () -> Verify.assertListsEqual(FastList.newListWith(1, 2, 3), FastList.newListWith(1, 2)));
+        Verify.assertError(AssertionFailedError.class, () -> Verify.assertListsEqual("message", FastList.newListWith(1, 2, 3), FastList.newListWith(1, 2)));
     }
 
     @Test
@@ -129,9 +129,9 @@ public class VerifyTest
     {
         Verify.assertBagsEqual(HashBag.newBagWith(1, 1, 2, 2), HashBag.newBagWith(1, 2, 2, 1));
         Verify.assertBagsEqual("message", HashBag.newBagWith(1, 1, 2, 2), HashBag.newBagWith(1, 1, 2, 2));
-        Verify.assertError(AssertionError.class, () -> Verify.assertBagsEqual(HashBag.newBagWith(1, 1, 2, 2), HashBag.newBagWith(1, 1, 2, 2, 3, 3)));
-        Verify.assertError(AssertionError.class, () -> Verify.assertBagsEqual("message", HashBag.newBagWith(1, 1, 2, 2, 3, 3), HashBag.newBagWith(1, 1, 2, 2)));
-        Verify.assertError(AssertionError.class, () -> Verify.assertBagsEqual("message", HashBag.newBagWith(1, 1, 2, 2, 4, 4), HashBag.newBagWith(1, 1, 2, 2, 3, 3)));
+        Verify.assertError(AssertionFailedError.class, () -> Verify.assertBagsEqual(HashBag.newBagWith(1, 1, 2, 2), HashBag.newBagWith(1, 1, 2, 2, 3, 3)));
+        Verify.assertError(AssertionFailedError.class, () -> Verify.assertBagsEqual("message", HashBag.newBagWith(1, 1, 2, 2, 3, 3), HashBag.newBagWith(1, 1, 2, 2)));
+        Verify.assertError(AssertionFailedError.class, () -> Verify.assertBagsEqual("message", HashBag.newBagWith(1, 1, 2, 2, 4, 4), HashBag.newBagWith(1, 1, 2, 2, 3, 3)));
     }
 
     @Test
@@ -153,14 +153,14 @@ public class VerifyTest
         Verify.assertListMultimapsEqual(multimap3, multimap4);
         Verify.assertListMultimapsEqual("message", multimap3.toImmutable(), multimap4);
 
-        Verify.assertError(AssertionError.class, () -> Verify.assertListMultimapsEqual(multimap1, null));
-        Verify.assertError(AssertionError.class, () -> Verify.assertListMultimapsEqual(multimap1, multimap3));
-        Verify.assertError(AssertionError.class, () -> Verify.assertListMultimapsEqual(multimap1, FastListMultimap.newMultimap()));
+        Verify.assertError(AssertionFailedError.class, () -> Verify.assertListMultimapsEqual(multimap1, null));
+        Verify.assertError(AssertionFailedError.class, () -> Verify.assertListMultimapsEqual(multimap1, multimap3));
+        Verify.assertError(AssertionFailedError.class, () -> Verify.assertListMultimapsEqual(multimap1, FastListMultimap.newMultimap()));
         Verify.assertError(AssertionFailedError.class, () -> Verify.assertListMultimapsEqual("message", multimap1, FastListMultimap.newMultimap(Tuples.pair(1, "One"), Tuples.pair(2, "TwoTwo"), Tuples.pair(2, "Two"))));
         Verify.assertError(AssertionFailedError.class, () -> Verify.assertListMultimapsEqual(multimap1, FastListMultimap.newMultimap(Tuples.pair(1, "OneOne"), Tuples.pair(2, "Two"), Tuples.pair(2, "TwoTwo"))));
-        Verify.assertError(AssertionError.class, () -> Verify.assertListMultimapsEqual(multimap1, FastListMultimap.newMultimap(Tuples.pair(3, "One"), Tuples.pair(2, "Two"), Tuples.pair(2, "TwoTwo"))));
+        Verify.assertError(AssertionFailedError.class, () -> Verify.assertListMultimapsEqual(multimap1, FastListMultimap.newMultimap(Tuples.pair(3, "One"), Tuples.pair(2, "Two"), Tuples.pair(2, "TwoTwo"))));
         Verify.assertError(AssertionFailedError.class, () -> Verify.assertListMultimapsEqual(multimap1, FastListMultimap.newMultimap(Tuples.pair(1, "OneOne"), Tuples.pair(2, "One"), Tuples.pair(2, "TwoTwo"))));
-        Verify.assertError(AssertionError.class, () -> Verify.assertListMultimapsEqual(multimap1, FastListMultimap.newMultimap(Tuples.pair(1, "One"), Tuples.pair(2, "Two"), Tuples.pair(2, "TwoTwo"), Tuples.pair(3, "Three"))));
+        Verify.assertError(AssertionFailedError.class, () -> Verify.assertListMultimapsEqual(multimap1, FastListMultimap.newMultimap(Tuples.pair(1, "One"), Tuples.pair(2, "Two"), Tuples.pair(2, "TwoTwo"), Tuples.pair(3, "Three"))));
     }
 
     @Test
@@ -181,13 +181,13 @@ public class VerifyTest
         Verify.assertSetMultimapsEqual("message", multimap3.toImmutable(), multimap4);
 
         multimap3.put(2, "TwoTwoTwo");
-        Verify.assertError(AssertionError.class, () -> Verify.assertSetMultimapsEqual(multimap1, null));
-        Verify.assertError(AssertionError.class, () -> Verify.assertSetMultimapsEqual(multimap1, multimap3));
-        Verify.assertError(AssertionError.class, () -> Verify.assertSetMultimapsEqual(multimap1, UnifiedSetMultimap.newMultimap()));
+        Verify.assertError(AssertionFailedError.class, () -> Verify.assertSetMultimapsEqual(multimap1, null));
+        Verify.assertError(AssertionFailedError.class, () -> Verify.assertSetMultimapsEqual(multimap1, multimap3));
+        Verify.assertError(AssertionFailedError.class, () -> Verify.assertSetMultimapsEqual(multimap1, UnifiedSetMultimap.newMultimap()));
         Verify.assertError(AssertionFailedError.class, () -> Verify.assertSetMultimapsEqual("message", multimap1, UnifiedSetMultimap.newMultimap(Tuples.pair(1, "OneOne"), Tuples.pair(2, "Two"), Tuples.pair(2, "TwoTwo"))));
-        Verify.assertError(AssertionError.class, () -> Verify.assertSetMultimapsEqual(multimap1, UnifiedSetMultimap.newMultimap(Tuples.pair(3, "One"), Tuples.pair(2, "Two"), Tuples.pair(2, "TwoTwo"))));
+        Verify.assertError(AssertionFailedError.class, () -> Verify.assertSetMultimapsEqual(multimap1, UnifiedSetMultimap.newMultimap(Tuples.pair(3, "One"), Tuples.pair(2, "Two"), Tuples.pair(2, "TwoTwo"))));
         Verify.assertError(AssertionFailedError.class, () -> Verify.assertSetMultimapsEqual(multimap1, UnifiedSetMultimap.newMultimap(Tuples.pair(1, "One"), Tuples.pair(2, "One"), Tuples.pair(2, "TwoTwo"))));
-        Verify.assertError(AssertionError.class, () -> Verify.assertSetMultimapsEqual(multimap1, UnifiedSetMultimap.newMultimap(Tuples.pair(1, "One"), Tuples.pair(2, "Two"), Tuples.pair(2, "TwoTwo"), Tuples.pair(3, "Three"))));
+        Verify.assertError(AssertionFailedError.class, () -> Verify.assertSetMultimapsEqual(multimap1, UnifiedSetMultimap.newMultimap(Tuples.pair(1, "One"), Tuples.pair(2, "Two"), Tuples.pair(2, "TwoTwo"), Tuples.pair(3, "Three"))));
     }
 
     @Test
@@ -209,16 +209,16 @@ public class VerifyTest
         Verify.assertBagMultimapsEqual(multimap3, multimap4);
         Verify.assertBagMultimapsEqual("message", multimap3.toImmutable(), multimap4);
 
-        Verify.assertError(AssertionError.class, () -> Verify.assertBagMultimapsEqual(multimap1, null));
-        Verify.assertError(AssertionError.class, () -> Verify.assertBagMultimapsEqual(multimap1, multimap3));
-        Verify.assertError(AssertionError.class, () -> Verify.assertBagMultimapsEqual(multimap1, HashBagMultimap.newMultimap()));
+        Verify.assertError(AssertionFailedError.class, () -> Verify.assertBagMultimapsEqual(multimap1, null));
+        Verify.assertError(AssertionFailedError.class, () -> Verify.assertBagMultimapsEqual(multimap1, multimap3));
+        Verify.assertError(AssertionFailedError.class, () -> Verify.assertBagMultimapsEqual(multimap1, HashBagMultimap.newMultimap()));
 
         multimap3.put(2, "TwoTwoTwo");
-        Verify.assertError(AssertionError.class, () -> Verify.assertBagMultimapsEqual(multimap3, multimap4));
-        Verify.assertError(AssertionError.class, () -> Verify.assertBagMultimapsEqual("message", multimap1, HashBagMultimap.newMultimap(Tuples.pair(1, "OneOne"), Tuples.pair(2, "Two"), Tuples.pair(2, "TwoTwo"))));
-        Verify.assertError(AssertionError.class, () -> Verify.assertBagMultimapsEqual(multimap1, HashBagMultimap.newMultimap(Tuples.pair(3, "One"), Tuples.pair(2, "Two"), Tuples.pair(2, "TwoTwo"))));
-        Verify.assertError(AssertionError.class, () -> Verify.assertBagMultimapsEqual(multimap1, HashBagMultimap.newMultimap(Tuples.pair(1, "One"), Tuples.pair(2, "One"), Tuples.pair(2, "TwoTwo"))));
-        Verify.assertError(AssertionError.class, () -> Verify.assertBagMultimapsEqual(multimap1, HashBagMultimap.newMultimap(Tuples.pair(1, "One"), Tuples.pair(2, "Two"), Tuples.pair(2, "TwoTwo"), Tuples.pair(3, "Three"))));
+        Verify.assertError(AssertionFailedError.class, () -> Verify.assertBagMultimapsEqual(multimap3, multimap4));
+        Verify.assertError(AssertionFailedError.class, () -> Verify.assertBagMultimapsEqual("message", multimap1, HashBagMultimap.newMultimap(Tuples.pair(1, "OneOne"), Tuples.pair(2, "Two"), Tuples.pair(2, "TwoTwo"))));
+        Verify.assertError(AssertionFailedError.class, () -> Verify.assertBagMultimapsEqual(multimap1, HashBagMultimap.newMultimap(Tuples.pair(3, "One"), Tuples.pair(2, "Two"), Tuples.pair(2, "TwoTwo"))));
+        Verify.assertError(AssertionFailedError.class, () -> Verify.assertBagMultimapsEqual(multimap1, HashBagMultimap.newMultimap(Tuples.pair(1, "One"), Tuples.pair(2, "One"), Tuples.pair(2, "TwoTwo"))));
+        Verify.assertError(AssertionFailedError.class, () -> Verify.assertBagMultimapsEqual(multimap1, HashBagMultimap.newMultimap(Tuples.pair(1, "One"), Tuples.pair(2, "Two"), Tuples.pair(2, "TwoTwo"), Tuples.pair(3, "Three"))));
     }
 
     @Test
@@ -246,14 +246,14 @@ public class VerifyTest
         Verify.assertSortedSetMultimapsEqual(multimap5.toImmutable(), multimap6.toImmutable());
 
         multimap3.put(2, 3);
-        Verify.assertError(AssertionError.class, () -> Verify.assertSortedSetMultimapsEqual(multimap1, null));
-        Verify.assertError(AssertionError.class, () -> Verify.assertSortedSetMultimapsEqual(multimap1, multimap3));
+        Verify.assertError(AssertionFailedError.class, () -> Verify.assertSortedSetMultimapsEqual(multimap1, null));
+        Verify.assertError(AssertionFailedError.class, () -> Verify.assertSortedSetMultimapsEqual(multimap1, multimap3));
         Verify.assertError(AssertionFailedError.class, () -> Verify.assertSortedSetMultimapsEqual(multimap1, multimap5));
-        Verify.assertError(AssertionError.class, () -> Verify.assertSortedSetMultimapsEqual(multimap1, TreeSortedSetMultimap.newMultimap()));
-        Verify.assertError(AssertionError.class, () -> Verify.assertSortedSetMultimapsEqual("message", multimap1, TreeSortedSetMultimap.newMultimap(Tuples.pair(1, 2), Tuples.pair(2, 1), Tuples.pair(2, 2))));
-        Verify.assertError(AssertionError.class, () -> Verify.assertSortedSetMultimapsEqual(multimap1, TreeSortedSetMultimap.newMultimap(Tuples.pair(3, 1), Tuples.pair(2, 1), Tuples.pair(2, 2))));
-        Verify.assertError(AssertionError.class, () -> Verify.assertSortedSetMultimapsEqual(multimap1, TreeSortedSetMultimap.newMultimap(Tuples.pair(1, 1), Tuples.pair(2, 2), Tuples.pair(2, 3))));
-        Verify.assertError(AssertionError.class, () -> Verify.assertSortedSetMultimapsEqual(multimap1, TreeSortedSetMultimap.newMultimap(Tuples.pair(1, 1), Tuples.pair(2, 1), Tuples.pair(2, 2), Tuples.pair(3, 1))));
+        Verify.assertError(AssertionFailedError.class, () -> Verify.assertSortedSetMultimapsEqual(multimap1, TreeSortedSetMultimap.newMultimap()));
+        Verify.assertError(AssertionFailedError.class, () -> Verify.assertSortedSetMultimapsEqual("message", multimap1, TreeSortedSetMultimap.newMultimap(Tuples.pair(1, 2), Tuples.pair(2, 1), Tuples.pair(2, 2))));
+        Verify.assertError(AssertionFailedError.class, () -> Verify.assertSortedSetMultimapsEqual(multimap1, TreeSortedSetMultimap.newMultimap(Tuples.pair(3, 1), Tuples.pair(2, 1), Tuples.pair(2, 2))));
+        Verify.assertError(AssertionFailedError.class, () -> Verify.assertSortedSetMultimapsEqual(multimap1, TreeSortedSetMultimap.newMultimap(Tuples.pair(1, 1), Tuples.pair(2, 2), Tuples.pair(2, 3))));
+        Verify.assertError(AssertionFailedError.class, () -> Verify.assertSortedSetMultimapsEqual(multimap1, TreeSortedSetMultimap.newMultimap(Tuples.pair(1, 1), Tuples.pair(2, 1), Tuples.pair(2, 2), Tuples.pair(3, 1))));
     }
 
     @Test
@@ -282,16 +282,16 @@ public class VerifyTest
         Verify.assertSortedBagMultimapsEqual(multimap5, multimap6.toImmutable());
         Verify.assertSortedBagMultimapsEqual(multimap5.toImmutable(), multimap6.toImmutable());
 
-        Verify.assertError(AssertionError.class, () -> Verify.assertSortedBagMultimapsEqual(multimap1, null));
-        Verify.assertError(AssertionError.class, () -> Verify.assertSortedBagMultimapsEqual(multimap1, multimap3));
+        Verify.assertError(AssertionFailedError.class, () -> Verify.assertSortedBagMultimapsEqual(multimap1, null));
+        Verify.assertError(AssertionFailedError.class, () -> Verify.assertSortedBagMultimapsEqual(multimap1, multimap3));
         Verify.assertError(AssertionFailedError.class, () -> Verify.assertSortedBagMultimapsEqual(multimap1, multimap5));
-        Verify.assertError(AssertionError.class, () -> Verify.assertSortedBagMultimapsEqual(multimap1, TreeBagMultimap.newMultimap()));
+        Verify.assertError(AssertionFailedError.class, () -> Verify.assertSortedBagMultimapsEqual(multimap1, TreeBagMultimap.newMultimap()));
         multimap3.put(2, 3);
-        Verify.assertError(AssertionError.class, () -> Verify.assertSortedBagMultimapsEqual(multimap3, multimap4));
-        Verify.assertError(AssertionError.class, () -> Verify.assertSortedBagMultimapsEqual("message", multimap1, TreeBagMultimap.newMultimap(Tuples.pair(1, 2), Tuples.pair(2, 1), Tuples.pair(2, 2))));
-        Verify.assertError(AssertionError.class, () -> Verify.assertSortedBagMultimapsEqual(multimap1, TreeBagMultimap.newMultimap(Tuples.pair(3, 1), Tuples.pair(2, 1), Tuples.pair(2, 2))));
-        Verify.assertError(AssertionError.class, () -> Verify.assertSortedBagMultimapsEqual(multimap1, TreeBagMultimap.newMultimap(Tuples.pair(1, 1), Tuples.pair(2, 2), Tuples.pair(2, 2))));
-        Verify.assertError(AssertionError.class, () -> Verify.assertSortedBagMultimapsEqual(multimap1, TreeBagMultimap.newMultimap(Tuples.pair(1, 1), Tuples.pair(2, 1), Tuples.pair(2, 2), Tuples.pair(3, 1))));
+        Verify.assertError(AssertionFailedError.class, () -> Verify.assertSortedBagMultimapsEqual(multimap3, multimap4));
+        Verify.assertError(AssertionFailedError.class, () -> Verify.assertSortedBagMultimapsEqual("message", multimap1, TreeBagMultimap.newMultimap(Tuples.pair(1, 2), Tuples.pair(2, 1), Tuples.pair(2, 2))));
+        Verify.assertError(AssertionFailedError.class, () -> Verify.assertSortedBagMultimapsEqual(multimap1, TreeBagMultimap.newMultimap(Tuples.pair(3, 1), Tuples.pair(2, 1), Tuples.pair(2, 2))));
+        Verify.assertError(AssertionFailedError.class, () -> Verify.assertSortedBagMultimapsEqual(multimap1, TreeBagMultimap.newMultimap(Tuples.pair(1, 1), Tuples.pair(2, 2), Tuples.pair(2, 2))));
+        Verify.assertError(AssertionFailedError.class, () -> Verify.assertSortedBagMultimapsEqual(multimap1, TreeBagMultimap.newMultimap(Tuples.pair(1, 1), Tuples.pair(2, 1), Tuples.pair(2, 2), Tuples.pair(3, 1))));
     }
 
     @Test
@@ -299,8 +299,8 @@ public class VerifyTest
     {
         Verify.assertSetsEqual(UnifiedSet.newSetWith(1, 2, 3), UnifiedSet.newSetWith(1, 2, 3));
         Verify.assertSetsEqual("message", UnifiedSet.newSetWith(1, 2, 3), UnifiedSet.newSetWith(1, 2, 3));
-        Verify.assertError(AssertionError.class, () -> Verify.assertSetsEqual(UnifiedSet.newSetWith(1, 2, 3), UnifiedSet.newSetWith(1, 2)));
-        Verify.assertError(AssertionError.class, () -> Verify.assertSetsEqual("message", UnifiedSet.newSetWith(1, 2, 3), UnifiedSet.newSetWith(1, 2)));
+        Verify.assertError(AssertionFailedError.class, () -> Verify.assertSetsEqual(UnifiedSet.newSetWith(1, 2, 3), UnifiedSet.newSetWith(1, 2)));
+        Verify.assertError(AssertionFailedError.class, () -> Verify.assertSetsEqual("message", UnifiedSet.newSetWith(1, 2, 3), UnifiedSet.newSetWith(1, 2)));
     }
 
     @Test
@@ -308,8 +308,8 @@ public class VerifyTest
     {
         Verify.assertMapsEqual(UnifiedMap.newWithKeysValues(1, 1, 2, 2), UnifiedMap.newWithKeysValues(1, 1, 2, 2));
         Verify.assertMapsEqual("message", UnifiedMap.newWithKeysValues(1, 1, 2, 2), UnifiedMap.newWithKeysValues(1, 1, 2, 2));
-        Verify.assertError(AssertionError.class, () -> Verify.assertMapsEqual(UnifiedMap.newWithKeysValues(1, 1, 2, 2), UnifiedMap.newWithKeysValues(1, 1, 2, 2, 3, 3)));
-        Verify.assertError(AssertionError.class, () -> Verify.assertMapsEqual("message", UnifiedMap.newWithKeysValues(1, 1, 2, 2), UnifiedMap.newWithKeysValues(1, 1, 2, 2, 3, 3)));
+        Verify.assertError(AssertionFailedError.class, () -> Verify.assertMapsEqual(UnifiedMap.newWithKeysValues(1, 1, 2, 2), UnifiedMap.newWithKeysValues(1, 1, 2, 2, 3, 3)));
+        Verify.assertError(AssertionFailedError.class, () -> Verify.assertMapsEqual("message", UnifiedMap.newWithKeysValues(1, 1, 2, 2), UnifiedMap.newWithKeysValues(1, 1, 2, 2, 3, 3)));
     }
 
     @Test
@@ -317,8 +317,8 @@ public class VerifyTest
     {
         Verify.assertIterablesEqual(FastList.newListWith(1, 2, 3), TreeSortedSet.newSetWith(1, 2, 3));
         Verify.assertIterablesEqual("message", FastList.newListWith(1, 2, 3), TreeSortedSet.newSetWith(1, 2, 3));
-        Verify.assertError(AssertionError.class, () -> Verify.assertIterablesEqual(FastList.newListWith(1, 2, 3), FastList.newListWith(1, 2)));
-        Verify.assertError(AssertionError.class, () -> Verify.assertIterablesEqual("message", FastList.newListWith(1, 2, 3), FastList.newListWith(1, 2)));
+        Verify.assertError(AssertionFailedError.class, () -> Verify.assertIterablesEqual(FastList.newListWith(1, 2, 3), FastList.newListWith(1, 2)));
+        Verify.assertError(AssertionFailedError.class, () -> Verify.assertIterablesEqual("message", FastList.newListWith(1, 2, 3), FastList.newListWith(1, 2)));
     }
 
     @Test
@@ -327,7 +327,7 @@ public class VerifyTest
         Verify.assertError(AssertionError.class, () -> {
             throw new AssertionError();
         });
-        Verify.assertError(AssertionError.class, () -> Verify.assertError(AssertionError.class, () -> {
+        Verify.assertError(AssertionFailedError.class, () -> Verify.assertError(AssertionFailedError.class, () -> {
             // do nothing
         }));
     }
@@ -345,7 +345,7 @@ public class VerifyTest
         }
         catch (AssertionError e)
         {
-            Verify.assertContains(VerifyTest.class.getName(), e.getStackTrace()[6].toString());
+            Verify.assertContains(VerifyTest.class.getName(), e.getStackTrace()[8].toString());
         }
     }
 
@@ -385,7 +385,7 @@ public class VerifyTest
         }
         catch (AssertionError e)
         {
-            Verify.assertContains(VerifyTest.class.getName(), e.getStackTrace()[5].toString());
+            Verify.assertContains(VerifyTest.class.getName(), e.getStackTrace()[7].toString());
         }
 
         try
@@ -395,7 +395,7 @@ public class VerifyTest
         }
         catch (AssertionError e)
         {
-            Verify.assertContains(VerifyTest.class.getName(), e.getStackTrace()[5].toString());
+            Verify.assertContains(VerifyTest.class.getName(), e.getStackTrace()[7].toString());
         }
     }
 
@@ -441,7 +441,7 @@ public class VerifyTest
         }
         catch (AssertionError e)
         {
-            Verify.assertContains(VerifyTest.class.getName(), e.getStackTrace()[3].toString());
+            Verify.assertContains(VerifyTest.class.getName(), e.getStackTrace()[4].toString());
         }
     }
 
@@ -456,7 +456,7 @@ public class VerifyTest
         }
         catch (AssertionError e)
         {
-            Verify.assertContains(VerifyTest.class.getName(), e.getStackTrace()[3].toString());
+            Verify.assertContains(VerifyTest.class.getName(), e.getStackTrace()[4].toString());
         }
     }
 
@@ -485,7 +485,7 @@ public class VerifyTest
         }
         catch (AssertionError e)
         {
-            Verify.assertContains(VerifyTest.class.getName(), e.getStackTrace()[3].toString());
+            Verify.assertContains(VerifyTest.class.getName(), e.getStackTrace()[5].toString());
         }
     }
 
@@ -501,7 +501,7 @@ public class VerifyTest
         }
         catch (AssertionError e)
         {
-            Verify.assertContains(VerifyTest.class.getName(), e.getStackTrace()[3].toString());
+            Verify.assertContains(VerifyTest.class.getName(), e.getStackTrace()[4].toString());
         }
     }
 
@@ -522,7 +522,7 @@ public class VerifyTest
         }
         catch (AssertionError e)
         {
-            Verify.assertContains(VerifyTest.class.getName(), e.getStackTrace()[5].toString());
+            Verify.assertContains(VerifyTest.class.getName(), e.getStackTrace()[7].toString());
         }
 
         try
@@ -532,7 +532,7 @@ public class VerifyTest
         }
         catch (AssertionError e)
         {
-            Verify.assertContains(VerifyTest.class.getName(), e.getStackTrace()[5].toString());
+            Verify.assertContains(VerifyTest.class.getName(), e.getStackTrace()[7].toString());
         }
 
         try
@@ -542,7 +542,7 @@ public class VerifyTest
         }
         catch (AssertionError e)
         {
-            Verify.assertContains(VerifyTest.class.getName(), e.getStackTrace()[5].toString());
+            Verify.assertContains(VerifyTest.class.getName(), e.getStackTrace()[7].toString());
         }
 
         try
@@ -552,7 +552,7 @@ public class VerifyTest
         }
         catch (AssertionError e)
         {
-            Verify.assertContains(VerifyTest.class.getName(), e.getStackTrace()[5].toString());
+            Verify.assertContains(VerifyTest.class.getName(), e.getStackTrace()[7].toString());
         }
     }
 
@@ -567,7 +567,7 @@ public class VerifyTest
         catch (AssertionError ex)
         {
             Verify.assertContains("actual size:<1>", ex.getMessage());
-            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[3].toString());
+            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[4].toString());
         }
     }
 
@@ -582,7 +582,7 @@ public class VerifyTest
         catch (AssertionError ex)
         {
             Verify.assertContains("actual size:<1>", ex.getMessage());
-            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[3].toString());
+            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[4].toString());
         }
     }
 
@@ -597,7 +597,7 @@ public class VerifyTest
         catch (AssertionError ex)
         {
             Verify.assertContains("actual size:<1>", ex.getMessage());
-            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[3].toString());
+            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[4].toString());
         }
     }
 
@@ -612,7 +612,7 @@ public class VerifyTest
         catch (AssertionError ex)
         {
             Verify.assertContains("actual size:<1>", ex.getMessage());
-            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[3].toString());
+            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[4].toString());
         }
     }
 
@@ -627,7 +627,7 @@ public class VerifyTest
         catch (AssertionError ex)
         {
             Verify.assertContains("actual size:<1>", ex.getMessage());
-            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[3].toString());
+            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[4].toString());
         }
     }
 
@@ -642,7 +642,7 @@ public class VerifyTest
         catch (AssertionError ex)
         {
             Verify.assertContains("actual size:<2>", ex.getMessage());
-            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[3].toString());
+            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[4].toString());
         }
     }
 
@@ -657,7 +657,7 @@ public class VerifyTest
         catch (AssertionError ex)
         {
             Verify.assertContains("should be non-empty", ex.getMessage());
-            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[5].toString());
+            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[7].toString());
         }
     }
 
@@ -672,7 +672,7 @@ public class VerifyTest
         catch (AssertionError ex)
         {
             Verify.assertContains("should be non-empty", ex.getMessage());
-            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[5].toString());
+            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[7].toString());
         }
     }
 
@@ -687,7 +687,7 @@ public class VerifyTest
         catch (AssertionError ex)
         {
             Verify.assertContains("should be non-empty", ex.getMessage());
-            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[5].toString());
+            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[7].toString());
         }
     }
 
@@ -702,7 +702,7 @@ public class VerifyTest
         catch (AssertionError ex)
         {
             Verify.assertContains("should be non-empty", ex.getMessage());
-            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[5].toString());
+            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[7].toString());
         }
     }
 
@@ -717,7 +717,7 @@ public class VerifyTest
         catch (AssertionError ex)
         {
             Verify.assertContains("should be non-empty", ex.getMessage());
-            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[4].toString());
+            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[7].toString());
         }
     }
 
@@ -733,7 +733,7 @@ public class VerifyTest
         catch (AssertionError ex)
         {
             Verify.assertContains("items", ex.getMessage());
-            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[5].toString());
+            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[7].toString());
         }
     }
 
@@ -748,7 +748,7 @@ public class VerifyTest
         catch (AssertionError ex)
         {
             Verify.assertContains("Incorrect size", ex.getMessage());
-            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[3].toString());
+            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[4].toString());
         }
     }
 
@@ -763,7 +763,7 @@ public class VerifyTest
         catch (AssertionError ex)
         {
             Verify.assertContains("Incorrect size", ex.getMessage());
-            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[3].toString());
+            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[4].toString());
         }
     }
 
@@ -778,7 +778,7 @@ public class VerifyTest
         catch (AssertionError ex)
         {
             Verify.assertContains("Incorrect size", ex.getMessage());
-            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[3].toString());
+            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[4].toString());
         }
     }
 
@@ -793,7 +793,7 @@ public class VerifyTest
         catch (AssertionError ex)
         {
             Verify.assertContains("Incorrect size", ex.getMessage());
-            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[3].toString());
+            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[4].toString());
         }
     }
 
@@ -808,7 +808,7 @@ public class VerifyTest
         catch (AssertionError ex)
         {
             Verify.assertContains("Incorrect size", ex.getMessage());
-            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[3].toString());
+            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[4].toString());
         }
     }
 
@@ -823,7 +823,7 @@ public class VerifyTest
         catch (AssertionError ex)
         {
             Verify.assertContains("Incorrect size", ex.getMessage());
-            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[3].toString());
+            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[4].toString());
         }
     }
 
@@ -838,7 +838,7 @@ public class VerifyTest
         catch (AssertionError ex)
         {
             Verify.assertContains("Incorrect size", ex.getMessage());
-            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[3].toString());
+            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[4].toString());
         }
     }
 
@@ -853,7 +853,7 @@ public class VerifyTest
         catch (AssertionError ex)
         {
             Verify.assertContains("Incorrect size", ex.getMessage());
-            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[3].toString());
+            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[4].toString());
         }
     }
 
@@ -868,7 +868,7 @@ public class VerifyTest
         catch (AssertionError ex)
         {
             Verify.assertContains("Incorrect size", ex.getMessage());
-            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[3].toString());
+            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[4].toString());
         }
     }
 
@@ -883,7 +883,7 @@ public class VerifyTest
         catch (AssertionError ex)
         {
             Verify.assertContains("did not contain", ex.getMessage());
-            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[3].toString());
+            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[4].toString());
         }
     }
 
@@ -898,7 +898,7 @@ public class VerifyTest
         catch (AssertionError ex)
         {
             Verify.assertContains("failed to satisfy the condition", ex.getMessage());
-            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[3].toString());
+            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[4].toString());
         }
     }
 
@@ -913,7 +913,7 @@ public class VerifyTest
         catch (AssertionError ex)
         {
             Verify.assertContains("failed to satisfy the condition", ex.getMessage());
-            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[4].toString());
+            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[5].toString());
         }
     }
 
@@ -928,7 +928,7 @@ public class VerifyTest
         catch (AssertionError ex)
         {
             Verify.assertContains("satisfied the condition", ex.getMessage());
-            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[3].toString());
+            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[4].toString());
         }
     }
 
@@ -943,7 +943,7 @@ public class VerifyTest
         catch (AssertionError ex)
         {
             Verify.assertContains("satisfied the condition", ex.getMessage());
-            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[4].toString());
+            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[5].toString());
         }
     }
 
@@ -958,7 +958,7 @@ public class VerifyTest
         catch (AssertionError ex)
         {
             Verify.assertContains("No items satisfied the condition", ex.getMessage());
-            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[4].toString());
+            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[7].toString());
         }
     }
 
@@ -973,7 +973,7 @@ public class VerifyTest
         catch (AssertionError ex)
         {
             Verify.assertContains("No items satisfied the condition", ex.getMessage());
-            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[5].toString());
+            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[8].toString());
         }
     }
 
@@ -988,7 +988,7 @@ public class VerifyTest
         catch (AssertionError ex)
         {
             Verify.assertContains("did not contain", ex.getMessage());
-            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[5].toString());
+            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[6].toString());
         }
     }
 
@@ -1003,7 +1003,7 @@ public class VerifyTest
         catch (AssertionError ex)
         {
             Verify.assertContains("map.valuesView() did not contain these items:<[quaz]>", ex.getMessage());
-            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[5].toString());
+            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[6].toString());
         }
     }
 
@@ -1018,7 +1018,7 @@ public class VerifyTest
         catch (AssertionError ex)
         {
             Verify.assertContains("Odd number of keys and values", ex.getMessage());
-            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[3].toString());
+            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[4].toString());
         }
     }
 
@@ -1033,7 +1033,7 @@ public class VerifyTest
         catch (AssertionError ex)
         {
             Verify.assertContains("did not contain these items", ex.getMessage());
-            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[5].toString());
+            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[6].toString());
         }
     }
 
@@ -1048,7 +1048,7 @@ public class VerifyTest
         catch (AssertionError ex)
         {
             Verify.assertContains("did not contain these items", ex.getMessage());
-            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[5].toString());
+            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[6].toString());
         }
     }
 
@@ -1063,7 +1063,7 @@ public class VerifyTest
         catch (AssertionError ex)
         {
             Verify.assertContains("Odd number of keys and values", ex.getMessage());
-            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[3].toString());
+            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[4].toString());
         }
     }
 
@@ -1078,7 +1078,7 @@ public class VerifyTest
         catch (AssertionError ex)
         {
             Verify.assertContains("has an intersection with", ex.getMessage());
-            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[3].toString());
+            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[4].toString());
         }
     }
 
@@ -1093,7 +1093,7 @@ public class VerifyTest
         catch (AssertionError ex)
         {
             Verify.assertContains("has an intersection with", ex.getMessage());
-            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[3].toString());
+            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[4].toString());
         }
     }
 
@@ -1108,7 +1108,7 @@ public class VerifyTest
         catch (AssertionError ex)
         {
             Verify.assertContains("did not contain", ex.getMessage());
-            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[3].toString());
+            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[4].toString());
         }
     }
 
@@ -1123,7 +1123,7 @@ public class VerifyTest
         catch (AssertionError ex)
         {
             Verify.assertContains("did not contain", ex.getMessage());
-            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[3].toString());
+            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[4].toString());
         }
     }
 
@@ -1138,7 +1138,7 @@ public class VerifyTest
         catch (AssertionError ex)
         {
             Verify.assertContains("did not contain", ex.getMessage());
-            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[3].toString());
+            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[4].toString());
         }
     }
 
@@ -1153,7 +1153,7 @@ public class VerifyTest
         catch (AssertionError ex)
         {
             Verify.assertContains("did not contain", ex.getMessage());
-            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[3].toString());
+            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[4].toString());
         }
     }
 
@@ -1168,7 +1168,7 @@ public class VerifyTest
         catch (AssertionError ex)
         {
             Verify.assertContains("did not contain", ex.getMessage());
-            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[3].toString());
+            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[4].toString());
         }
     }
 
@@ -1183,7 +1183,7 @@ public class VerifyTest
         catch (AssertionError ex)
         {
             Verify.assertContains("contained unexpected", ex.getMessage());
-            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[3].toString());
+            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[4].toString());
         }
     }
 
@@ -1198,7 +1198,7 @@ public class VerifyTest
         catch (AssertionError ex)
         {
             Verify.assertContains("did not contain", ex.getMessage());
-            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[4].toString());
+            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[5].toString());
         }
     }
 
@@ -1213,7 +1213,7 @@ public class VerifyTest
         catch (AssertionError ex)
         {
             Verify.assertContains("did not contain", ex.getMessage());
-            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[3].toString());
+            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[4].toString());
         }
     }
 
@@ -1228,7 +1228,7 @@ public class VerifyTest
         catch (AssertionError ex)
         {
             Verify.assertContains("did not contain", ex.getMessage());
-            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[4].toString());
+            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[5].toString());
         }
     }
 
@@ -1243,7 +1243,7 @@ public class VerifyTest
         catch (AssertionError ex)
         {
             Verify.assertContains("did not contain", ex.getMessage());
-            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[4].toString());
+            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[5].toString());
         }
     }
 
@@ -1258,7 +1258,7 @@ public class VerifyTest
         catch (AssertionError ex)
         {
             Verify.assertContains("should not contain", ex.getMessage());
-            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[3].toString());
+            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[4].toString());
         }
     }
 
@@ -1273,7 +1273,7 @@ public class VerifyTest
         catch (AssertionError ex)
         {
             Verify.assertContains("should not contain", ex.getMessage());
-            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[3].toString());
+            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[4].toString());
         }
     }
 
@@ -1288,7 +1288,7 @@ public class VerifyTest
         catch (AssertionError ex)
         {
             Verify.assertContains("should not contain", ex.getMessage());
-            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[3].toString());
+            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[4].toString());
         }
     }
 
@@ -1305,7 +1305,7 @@ public class VerifyTest
         catch (AssertionError ex)
         {
             Verify.assertContains("to be non-instantiable", ex.getMessage());
-            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[2].toString());
+            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[3].toString());
         }
     }
 
@@ -1321,7 +1321,7 @@ public class VerifyTest
         catch (AssertionError ex)
         {
             assertEquals("Block did not throw an exception of type java.io.NotSerializableException", ex.getMessage());
-            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[3].toString());
+            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[4].toString());
         }
     }
 
@@ -1336,7 +1336,7 @@ public class VerifyTest
         catch (AssertionError ex)
         {
             assertEquals("Failed to marshal an object", ex.getMessage());
-            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[5].toString());
+            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[6].toString());
         }
     }
 
@@ -1351,7 +1351,7 @@ public class VerifyTest
         catch (AssertionError ex)
         {
             assertEquals("Failed to marshal an object", ex.getMessage());
-            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[5].toString());
+            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[6].toString());
         }
         try
         {
@@ -1360,7 +1360,7 @@ public class VerifyTest
         catch (AssertionError ex)
         {
             assertEquals("not same toString", ex.getMessage());
-            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[3].toString());
+            Verify.assertContains(VerifyTest.class.getName(), ex.getStackTrace()[5].toString());
         }
     }
 
