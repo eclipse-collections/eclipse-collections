@@ -23,6 +23,7 @@ import static org.junit.Assert.fail;
  * JUnit test to make sure that methods like {@link Assert#assertThrows(Class, ThrowingRunnable)} really throw when
  * they ought to.
  */
+@SuppressWarnings("AssertionFailureIgnored")
 public class ExceptionThrownTest
 {
     @Test

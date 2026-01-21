@@ -302,7 +302,7 @@ public class UnifiedSetWithHashingStrategy<T>
         }
         if (cur instanceof ChainedBucket)
         {
-            return this.chainedAddOrReplace(key, (ChainedBucket) cur, index);
+            return this.chainedAddOrReplace(key, (ChainedBucket) cur);
         }
         if (this.nonNullTableObjectEquals(cur, key))
         {
@@ -1757,11 +1757,11 @@ public class UnifiedSetWithHashingStrategy<T>
     }
 
     @Override
-    public <T> T[] toArray(T[] array)
+    public <T2> T2[] toArray(T2[] array)
     {
         int size = this.size();
-        T[] result = array.length < size
-                ? (T[]) Array.newInstance(array.getClass().getComponentType(), size)
+        T2[] result = array.length < size
+                ? (T2[]) Array.newInstance(array.getClass().getComponentType(), size)
                 : array;
 
         this.copyToArray(result);
@@ -2164,7 +2164,7 @@ public class UnifiedSetWithHashingStrategy<T>
         while (true);
     }
 
-    private T chainedAddOrReplace(T key, ChainedBucket bucket, int index)
+    private T chainedAddOrReplace(T key, ChainedBucket bucket)
     {
         Object realKey = UnifiedSetWithHashingStrategy.toSentinelIfNull(key);
         do

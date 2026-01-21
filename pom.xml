@@ -1176,6 +1176,87 @@ Arrays, Maps or Strings. The iteration protocol was inspired by the Smalltalk co
         </profile>
         <!--endregion Phase 17: package-->
 
+        <!--region Phase 7: compile-->
+        <profile>
+            <id>errorprone</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <configuration>
+                            <fork>true</fork>
+                            <compilerArgs combine.children="append">
+                                <arg>-XDcompilePolicy=simple</arg>
+                                <arg>--should-stop=ifError=FLOW</arg>
+                                <arg>
+                                    -Xplugin:ErrorProne \
+                                    -XepExcludedPaths:.*/generated-sources/.* \
+                                    -Xep:CanIgnoreReturnValueSuggester:OFF \
+                                    -Xep:InlineMeSuggester:OFF \
+                                    <!-- Thread.yield() in ConcurrentHashMap is intentional spin-wait optimization -->
+                                    -Xep:ThreadPriorityCheck:OFF \
+                                    <!-- ArrayList return types in FastList/ArrayListAdapter are intentional for performance guarantees -->
+                                    -Xep:NonApiType:OFF \
+                                    <!-- LinkedList and SortedSet/SortedMap usage are intentional API design choices -->
+                                    -Xep:JdkObsolete:OFF \
+                                    -Xep:NullableOnContainingClass:OFF \
+                                    -Xep:OperatorPrecedence:OFF \
+                                    <!-- Suppressing EqualsGetClass due to https://github.com/google/error-prone/issues/1144 -->
+                                    -Xep:EqualsGetClass:OFF \
+                                    <!-- Suppressing checks that have false positives in this codebase -->
+                                    -Xep:EqualsWrongThing:OFF \
+                                    -Xep:ComparisonOutOfRange:OFF \
+                                    <!-- Intentional test patterns in this codebase -->
+                                    -Xep:BoxedPrimitiveConstructor:OFF \
+                                    -Xep:SelfAssertion:OFF \
+                                    -Xep:SelfEquals:OFF \
+                                    -Xep:SelfComparison:OFF \
+                                    -Xep:IdentityBinaryExpression:OFF \
+                                    -Xep:IsInstanceIncompatibleType:OFF \
+                                    -Xep:CollectionIncompatibleType:OFF \
+                                    -Xep:ReturnValueIgnored:OFF \
+                                    -Xep:UnnecessaryTypeArgument:OFF \
+                                    <!-- IntegerWithCast.java intentionally uses unsafe cast for testing -->
+                                    -Xep:EqualsUnsafeCast:OFF \
+                                    <!-- Javadoc summaries not required -->
+                                    -Xep:MissingSummary:OFF \
+                                    -Xep:UnusedVariable:WARN \
+                                    <!-- Promoted to ERROR -->
+                                    -Xep:BadImport:ERROR \
+                                    -Xep:ClassCanBeStatic:ERROR \
+                                    -Xep:InvalidInlineTag:ERROR \
+                                    -Xep:JavaDurationGetSecondsToToSeconds:ERROR \
+                                    -Xep:MissingOverride:ERROR \
+                                    -Xep:ObjectToString:ERROR \
+                                    -Xep:StringCaseLocaleUsage:ERROR \
+                                    -Xep:TypeParameterShadowing:ERROR
+                                </arg>
+                                <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED</arg>
+                                <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED</arg>
+                                <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED</arg>
+                                <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.model=ALL-UNNAMED</arg>
+                                <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED</arg>
+                                <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED</arg>
+                                <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED</arg>
+                                <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED</arg>
+                                <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED</arg>
+                                <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED</arg>
+                            </compilerArgs>
+                            <annotationProcessorPaths combine.self="override">
+                                <path>
+                                    <groupId>com.google.errorprone</groupId>
+                                    <artifactId>error_prone_core</artifactId>
+                                    <version>2.36.0</version>
+                                </path>
+                            </annotationProcessorPaths>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!--endregion Phase 7: compile-->
         <!--region Phase 21: verify-->
         <profile>
             <id>maven-dependency-plugin</id>

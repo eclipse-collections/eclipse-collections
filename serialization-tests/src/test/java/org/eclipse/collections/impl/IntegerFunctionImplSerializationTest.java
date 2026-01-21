@@ -20,6 +20,7 @@ public class IntegerFunctionImplSerializationTest
     {
         private static final long serialVersionUID = 1L;
 
+        @Override
         public int intValueOf(Object o)
         {
             return 0;

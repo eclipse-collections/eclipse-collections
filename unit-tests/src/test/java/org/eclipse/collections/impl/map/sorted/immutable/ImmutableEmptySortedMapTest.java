@@ -454,6 +454,7 @@ public class ImmutableEmptySortedMapTest extends ImmutableSortedMapTestCase
         assertEquals(this.classUnderTest(), this.classUnderTest().drop(2));
     }
 
+    @Override
     @Test
     public void getOnly()
     {

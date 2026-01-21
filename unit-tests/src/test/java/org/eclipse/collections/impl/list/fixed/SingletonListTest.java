@@ -12,6 +12,7 @@ package org.eclipse.collections.impl.list.fixed;
 
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.Locale;
 
 import org.eclipse.collections.api.block.function.Function;
 import org.eclipse.collections.api.block.function.Function0;
@@ -454,7 +455,7 @@ public class SingletonListTest extends AbstractMemoryEfficientMutableListTestCas
         MutableList<String> upperList = SingletonListTest.newWith("ONE");
         for (String each : list)
         {
-            Verify.assertContains(each.toUpperCase(), upperList);
+            Verify.assertContains(each.toUpperCase(Locale.ROOT), upperList);
         }
     }
 
@@ -466,7 +467,7 @@ public class SingletonListTest extends AbstractMemoryEfficientMutableListTestCas
         MutableList<String> upperList = SingletonListTest.newWith("ONE");
         for (String each : subList)
         {
-            Verify.assertContains(each.toUpperCase(), upperList);
+            Verify.assertContains(each.toUpperCase(Locale.ROOT), upperList);
         }
         assertEquals("one", subList.getFirst());
         assertEquals("one", subList.getLast());

@@ -28,6 +28,7 @@ import static org.junit.Assert.fail;
  * {@link Verify#assertSetsEqual(String, Set, Set)},
  * and {@link Verify#assertMapsEqual(String, Map, Map)} really throw when they ought to.
  */
+@SuppressWarnings("AssertionFailureIgnored")
 public class CollectionsEqualTest
 {
     private final MutableList<String> list = mList("asdf", "qwer");

@@ -1118,7 +1118,7 @@ public final class SynchronizedStack<T> implements MutableStack<T>, Serializable
     }
 
     @Override
-    public <T> T[] toArray(T[] a)
+    public <T2> T2[] toArray(T2[] a)
     {
         synchronized (this.lock)
         {

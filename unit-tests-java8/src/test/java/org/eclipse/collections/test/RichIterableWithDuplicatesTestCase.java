@@ -23,6 +23,7 @@ public interface RichIterableWithDuplicatesTestCase extends RichIterableTestCase
     }
 
     @Test
+    @SuppressWarnings("UndefinedEquals")
     default void Iterable_sanity_check()
     {
         String s = "";
@@ -31,6 +32,7 @@ public interface RichIterableWithDuplicatesTestCase extends RichIterableTestCase
         assertEquals(!this.allowsDuplicates(), twoCopies.equals(oneCopy));
     }
 
+    @Override
     @Test
     default void RichIterable_size()
     {

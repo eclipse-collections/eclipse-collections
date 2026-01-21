@@ -1202,6 +1202,7 @@ public class AssertTest
     {
         return new ThrowingRunnable()
         {
+            @Override
             public void run()
             {
             }
@@ -1212,6 +1213,7 @@ public class AssertTest
     {
         return new ThrowingRunnable()
         {
+            @Override
             public void run() throws Throwable
             {
                 throw t;

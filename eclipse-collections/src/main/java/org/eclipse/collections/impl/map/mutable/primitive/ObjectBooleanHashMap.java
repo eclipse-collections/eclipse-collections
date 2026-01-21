@@ -81,7 +81,6 @@ public class ObjectBooleanHashMap<K> implements MutableObjectBooleanMap<K>, Exte
     @Deprecated
     private static final float DEFAULT_LOAD_FACTOR = 0.5f;
     private static final int OCCUPIED_DATA_RATIO = 2;
-    private static final int OCCUPIED_SENTINEL_RATIO = 4;
     private static final int DEFAULT_INITIAL_CAPACITY = 8;
 
     private static final Object NULL_KEY = new Object()
@@ -969,7 +968,7 @@ public class ObjectBooleanHashMap<K> implements MutableObjectBooleanMap<K>, Exte
     public void writeExternal(ObjectOutput out) throws IOException
     {
         out.writeInt(this.size());
-        /**
+        /*
          * @deprecated in 5.1.0.
          */
         out.writeFloat(DEFAULT_LOAD_FACTOR);
@@ -987,7 +986,7 @@ public class ObjectBooleanHashMap<K> implements MutableObjectBooleanMap<K>, Exte
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException
     {
         int size = in.readInt();
-        /**
+        /*
          * @deprecated in 5.1.0.
          */
         in.readFloat();
@@ -1148,11 +1147,6 @@ public class ObjectBooleanHashMap<K> implements MutableObjectBooleanMap<K>, Exte
     private static <K> boolean isNonSentinel(K key)
     {
         return key != null && !ObjectBooleanHashMap.isRemovedKey(key);
-    }
-
-    private int maxOccupiedWithSentinels()
-    {
-        return this.keys.length / OCCUPIED_SENTINEL_RATIO;
     }
 
     public ObjectBooleanHashMap<K> withKeysValues(K key1, boolean value1, K key2, boolean value2)
@@ -1818,10 +1812,10 @@ public class ObjectBooleanHashMap<K> implements MutableObjectBooleanMap<K>, Exte
         @Override
         public Iterator<K> iterator()
         {
-            return new InternalKeysViewIterator<>();
+            return new InternalKeysViewIterator();
         }
 
-        public class InternalKeysViewIterator<K> implements Iterator<K>
+        public class InternalKeysViewIterator implements Iterator<K>
         {
             private int count;
             private int position;

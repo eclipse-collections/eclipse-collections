@@ -58,11 +58,13 @@ public class UnifiedSetWithHashingStrategyTest extends AbstractUnifiedSetTestCas
     //Not using the static factory method in order to have concrete types for test cases
     private static final HashingStrategy<Integer> INTEGER_HASHING_STRATEGY = HashingStrategies.nullSafeHashingStrategy(new HashingStrategy<Integer>()
     {
+        @Override
         public int computeHashCode(Integer object)
         {
             return object.hashCode();
         }
 
+        @Override
         public boolean equals(Integer object1, Integer object2)
         {
             return object1.equals(object2);
@@ -70,11 +72,13 @@ public class UnifiedSetWithHashingStrategyTest extends AbstractUnifiedSetTestCas
     });
     private static final HashingStrategy<String> STRING_HASHING_STRATEGY = HashingStrategies.nullSafeHashingStrategy(new HashingStrategy<String>()
     {
+        @Override
         public int computeHashCode(String object)
         {
             return object.hashCode();
         }
 
+        @Override
         public boolean equals(String object1, String object2)
         {
             return object1.equals(object2);
@@ -284,11 +288,13 @@ public class UnifiedSetWithHashingStrategyTest extends AbstractUnifiedSetTestCas
     {
         HashingStrategy<Integer> hashingStrategy = HashingStrategies.nullSafeHashingStrategy(new HashingStrategy<Integer>()
         {
+            @Override
             public int computeHashCode(Integer object)
             {
                 return object % 1000;
             }
 
+            @Override
             public boolean equals(Integer object1, Integer object2)
             {
                 return object1.equals(object2);
@@ -611,11 +617,13 @@ public class UnifiedSetWithHashingStrategyTest extends AbstractUnifiedSetTestCas
     {
         HashingStrategy<Integer> hashingStrategy = HashingStrategies.nullSafeHashingStrategy(new HashingStrategy<Integer>()
         {
+            @Override
             public int computeHashCode(Integer object)
             {
                 return object % 1000;
             }
 
+            @Override
             public boolean equals(Integer object1, Integer object2)
             {
                 return object1.equals(object2);
@@ -701,11 +709,13 @@ public class UnifiedSetWithHashingStrategyTest extends AbstractUnifiedSetTestCas
     {
         HashingStrategy<Integer> hashingStrategy = HashingStrategies.nullSafeHashingStrategy(new HashingStrategy<Integer>()
         {
+            @Override
             public int computeHashCode(Integer object)
             {
                 return object % 1000;
             }
 
+            @Override
             public boolean equals(Integer object1, Integer object2)
             {
                 return object1.equals(object2);
@@ -845,11 +855,13 @@ public class UnifiedSetWithHashingStrategyTest extends AbstractUnifiedSetTestCas
         //Testing the asymmetry of equals
         HashingStrategy<String> firstLetterHashingStrategy = new HashingStrategy<String>()
         {
+            @Override
             public int computeHashCode(String object)
             {
                 return Character.valueOf(object.charAt(0));
             }
 
+            @Override
             public boolean equals(String object1, String object2)
             {
                 return object1.charAt(0) == object2.charAt(0);

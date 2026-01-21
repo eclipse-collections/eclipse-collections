@@ -28,11 +28,13 @@ public class ObjectBooleanHashMapWithHashingStrategyKeySetTest extends ObjectBoo
 {
     private static final HashingStrategy<String> STRING_HASHING_STRATEGY = HashingStrategies.nullSafeHashingStrategy(new HashingStrategy<String>()
     {
+        @Override
         public int computeHashCode(String object)
         {
             return object.hashCode();
         }
 
+        @Override
         public boolean equals(String object1, String object2)
         {
             return object1.equals(object2);

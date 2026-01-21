@@ -210,6 +210,7 @@ public abstract class MutableStackTestCase extends StackIterableTestCase
         Verify.assertInstanceOf(SynchronizedStack.class, this.newStackWith().asSynchronized());
     }
 
+    @Override
     public void sumByInt()
     {
         MutableStack<Integer> values = this.newStackFromTopToBottom(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
@@ -218,6 +219,7 @@ public abstract class MutableStackTestCase extends StackIterableTestCase
         assertEquals(30, result.get(0));
     }
 
+    @Override
     public void sumByFloat()
     {
         MutableStack<Integer> values = this.newStackFromTopToBottom(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
@@ -226,6 +228,7 @@ public abstract class MutableStackTestCase extends StackIterableTestCase
         assertEquals(30.0f, result.get(0), 0.0);
     }
 
+    @Override
     public void sumByLong()
     {
         MutableStack<Integer> values = this.newStackFromTopToBottom(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
@@ -234,6 +237,7 @@ public abstract class MutableStackTestCase extends StackIterableTestCase
         assertEquals(30, result.get(0));
     }
 
+    @Override
     public void sumByDouble()
     {
         MutableStack<Integer> values = this.newStackFromTopToBottom(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);

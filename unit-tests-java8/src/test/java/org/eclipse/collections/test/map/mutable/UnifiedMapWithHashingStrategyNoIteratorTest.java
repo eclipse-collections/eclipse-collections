@@ -113,15 +113,15 @@ public class UnifiedMapWithHashingStrategyNoIteratorTest implements MutableMapTe
     @Test
     public void RichIterable_anySatisfy_allSatisfy_noneSatisfy()
     {
-        /**
+        /*
          * TODO: {@link UnifiedMapWithHashingStrategy#anySatisfy(Predicate)} should be optimized to not use an iterator
          */
 
-        /**
+        /*
          * TODO: {@link UnifiedMapWithHashingStrategy#allSatisfy(Predicate)} should be optimized to not use an iterator
          */
 
-        /**
+        /*
          * TODO: {@link UnifiedMapWithHashingStrategy#noneSatisfy(Predicate)} should be optimized to not use an iterator
          */
     }
@@ -130,11 +130,11 @@ public class UnifiedMapWithHashingStrategyNoIteratorTest implements MutableMapTe
     @Test
     public void MutableMapIterable_updateValue()
     {
-        /**
+        /*
          * TODO: {@link UnifiedMapWithHashingStrategy#KeySet#equals)} should be optimized to not use an iterator
          */
 
-        /**
+        /*
          * TODO: {@link org.eclipse.collections.impl.set.strategy.mutable.UnifiedSetWithHashingStrategy#addAll(Collection)} should be optimized to not use an iterator when another UnifiedSet is passed in.
          */
     }

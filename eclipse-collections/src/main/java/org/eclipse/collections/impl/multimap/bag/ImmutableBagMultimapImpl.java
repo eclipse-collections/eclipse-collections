@@ -143,12 +143,14 @@ public final class ImmutableBagMultimapImpl<K, V>
             out.writeInt(keysCount);
             this.map.forEachKeyValue(new CheckedProcedure2<K, ImmutableBag<V>>()
             {
+                @Override
                 public void safeValue(K key, ImmutableBag<V> bag) throws IOException
                 {
                     out.writeObject(key);
                     out.writeInt(bag.sizeDistinct());
                     bag.forEachWithOccurrences(new CheckedObjectIntProcedure<V>()
                     {
+                        @Override
                         public void safeValue(V value, int count) throws IOException
                         {
                             out.writeObject(value);

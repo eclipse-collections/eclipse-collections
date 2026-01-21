@@ -13,10 +13,12 @@ package org.eclipse.collections.codegenerator.tools;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -37,43 +39,14 @@ public final class FileUtils
         {
             throw new IllegalStateException(outputFile.getAbsolutePath());
         }
-        FileWriter fileWriter = null;
-        BufferedWriter bufferedWriter = null;
-        try
+        try (BufferedWriter bufferedWriter = new BufferedWriter(
+                new OutputStreamWriter(new FileOutputStream(outputFile), StandardCharsets.UTF_8)))
         {
-            fileWriter = new FileWriter(outputFile);
-            bufferedWriter = new BufferedWriter(fileWriter);
             bufferedWriter.write(data);
-            bufferedWriter.flush();
         }
         catch (IOException e)
         {
             throw new RuntimeException("Could not write generated sources to file: " + e);
-        }
-        finally
-        {
-            if (fileWriter != null)
-            {
-                try
-                {
-                    fileWriter.close();
-                }
-                catch (IOException e)
-                {
-                    throw new RuntimeException("Could not close filewriter: " + e);
-                }
-            }
-            if (bufferedWriter != null)
-            {
-                try
-                {
-                    bufferedWriter.close();
-                }
-                catch (IOException e)
-                {
-                    throw new RuntimeException("Could not close bufferedwriter: " + e);
-                }
-            }
         }
     }
 
@@ -182,7 +155,7 @@ public final class FileUtils
     {
         try
         {
-            return new String(Files.readAllBytes(path));
+            return new String(Files.readAllBytes(path), StandardCharsets.UTF_8);
         }
         catch (IOException e)
         {

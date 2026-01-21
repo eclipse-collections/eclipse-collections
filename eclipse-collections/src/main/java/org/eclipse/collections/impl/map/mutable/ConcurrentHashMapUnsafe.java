@@ -56,7 +56,7 @@ import org.eclipse.collections.impl.utility.MapIterate;
 import org.eclipse.collections.impl.utility.internal.IterableIterate;
 import sun.misc.Unsafe;
 
-@SuppressWarnings("UseOfSunClasses")
+@SuppressWarnings({"UseOfSunClasses", "ReferenceEquality"})
 public class ConcurrentHashMapUnsafe<K, V>
         extends AbstractMutableMap<K, V>
         implements ConcurrentMutableMap<K, V>, Externalizable
@@ -1668,17 +1668,6 @@ public class ConcurrentHashMapUnsafe<K, V>
             return e;
         }
 
-        protected void removeByKey()
-        {
-            if (this.current == null)
-            {
-                throw new IllegalStateException();
-            }
-            K key = this.current.key;
-            this.current = null;
-            ConcurrentHashMapUnsafe.this.remove(key);
-        }
-
         protected boolean removeByKeyValue()
         {
             if (this.current == null)
@@ -2145,7 +2134,7 @@ public class ConcurrentHashMapUnsafe<K, V>
     }
 
     @Override
-    public <K, V> MutableMap<K, V> newEmpty(int capacity)
+    public <K2, V2> MutableMap<K2, V2> newEmpty(int capacity)
     {
         return ConcurrentHashMapUnsafe.newMap();
     }
@@ -2308,6 +2297,7 @@ public class ConcurrentHashMapUnsafe<K, V>
             {
                 return AccessController.doPrivileged(new PrivilegedExceptionAction<Unsafe>()
                 {
+                    @Override
                     public Unsafe run() throws Exception
                     {
                         Field f = Unsafe.class.getDeclaredField("theUnsafe");

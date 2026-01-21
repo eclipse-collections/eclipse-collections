@@ -12,6 +12,7 @@ package org.eclipse.collections.impl.list.fixed;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.list.MutableList;
@@ -181,7 +182,7 @@ public class QuintupletonListTest extends AbstractMemoryEfficientMutableListTest
         MutableList<String> upperList = Lists.fixedSize.of("ONE", "TWO", "THREE", "FOUR", "FIVE");
         for (String each : list)
         {
-            Verify.assertContains(each.toUpperCase(), upperList);
+            Verify.assertContains(each.toUpperCase(Locale.ROOT), upperList);
         }
     }
 
@@ -193,7 +194,7 @@ public class QuintupletonListTest extends AbstractMemoryEfficientMutableListTest
         MutableList<String> upperList = Lists.fixedSize.of("ONE", "TWO", "THREE", "FOUR", "FIVE");
         for (String each : subList)
         {
-            Verify.assertContains(each.toUpperCase(), upperList);
+            Verify.assertContains(each.toUpperCase(Locale.ROOT), upperList);
         }
     }
 

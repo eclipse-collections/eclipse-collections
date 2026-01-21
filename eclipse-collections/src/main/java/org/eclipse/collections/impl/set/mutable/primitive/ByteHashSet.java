@@ -46,6 +46,7 @@ import org.eclipse.collections.impl.factory.primitive.ByteSets;
 import org.eclipse.collections.impl.lazy.primitive.LazyByteIterableAdapter;
 import org.eclipse.collections.impl.set.immutable.primitive.ImmutableByteSetSerializationProxy;
 
+@SuppressWarnings("NarrowingCompoundAssignment")
 public final class ByteHashSet implements MutableByteSet, Externalizable
 {
     private static final long serialVersionUID = 1L;
@@ -974,6 +975,7 @@ public final class ByteHashSet implements MutableByteSet, Externalizable
 
         this.forEach(new CheckedByteProcedure()
         {
+            @Override
             public void safeValue(byte each) throws IOException
             {
                 out.writeByte(each);

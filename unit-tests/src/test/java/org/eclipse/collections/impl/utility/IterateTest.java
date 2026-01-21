@@ -958,6 +958,7 @@ public class IterateTest
                 Tuples.twin("3", "3"));
         Collection<Twin<String>> results = Iterate.select(twins, new PairPredicate<String, String>()
         {
+            @Override
             public boolean accept(String argument1, String argument2)
             {
                 return "1".equals(argument1) || "1".equals(argument2);

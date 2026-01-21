@@ -58,10 +58,9 @@ import static org.junit.Assert.fail;
  * JUnit test for our extensions to JUnit. These tests make sure that methods in {@link Verify} really fail when they
  * ought to.
  */
+@SuppressWarnings("AssertionFailureIgnored")
 public class VerifyTest
 {
-    private static final String ASSERT_FAIL = "org.junit.Assert.fail";
-
     @Test
     public void assertThrowsWithCause()
     {
@@ -1369,7 +1368,7 @@ public class VerifyTest
         @Override
         public boolean equals(Object o)
         {
-            return o != null;
+            return o instanceof TestClass;
         }
 
         @Override

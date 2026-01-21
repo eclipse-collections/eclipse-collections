@@ -34,11 +34,13 @@ public class SynchronizedMultimapSerializationProxy<K, V> implements Externaliza
         this.multimap = multimap;
     }
 
+    @Override
     public void writeExternal(ObjectOutput out) throws IOException
     {
         out.writeObject(this.multimap);
     }
 
+    @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException
     {
         this.multimap = (MutableMultimap<K, V>) in.readObject();

@@ -1200,28 +1200,28 @@ public interface RichIterableTestCase extends IterableTestCase
         assertIterablesEqual(expectedInjectIntoIterationOrder, injectIntoDoubleIterationOrder);
 
         MutableCollection<Integer> injectIntoFloatIterationOrder = this.newMutableForFilter();
-        this.getInstanceUnderTest().injectInto(0L, (FloatObjectToFloatFunction<Integer>) (floatParameter, objectParameter) -> {
+        this.getInstanceUnderTest().injectInto(0.0f, (FloatObjectToFloatFunction<Integer>) (floatParameter, objectParameter) -> {
             injectIntoFloatIterationOrder.add(objectParameter);
             return floatParameter + objectParameter;
         });
         assertIterablesEqual(expectedInjectIntoIterationOrder, injectIntoFloatIterationOrder);
 
         Counter toSortedListCount = new Counter();
-        this.getInstanceUnderTest().toSortedList((o1, o2) -> {
+        this.getInstanceUnderTest().toSortedList((unused1, unused2) -> {
             toSortedListCount.increment();
             return 0;
         });
         assertEquals(expectedIterationOrder.size() - 1, toSortedListCount.getCount());
 
         Counter toSortedSetCount = new Counter();
-        this.getInstanceUnderTest().toSortedSet((o1, o2) -> {
+        this.getInstanceUnderTest().toSortedSet((unused1, unused2) -> {
             toSortedSetCount.increment();
             return 0;
         });
         assertEquals(expectedIterationOrder.size(), toSortedSetCount.getCount());
 
         Counter toSortedBagCount = new Counter();
-        this.getInstanceUnderTest().toSortedBag((o1, o2) -> {
+        this.getInstanceUnderTest().toSortedBag((unused1, unused2) -> {
             toSortedBagCount.increment();
             return 0;
         });
@@ -2824,6 +2824,7 @@ public interface RichIterableTestCase extends IterableTestCase
         {
             private static final long serialVersionUID = 1L;
 
+            @Override
             public Integer value(Integer argument1, Integer argument2)
             {
                 return argument1 + argument2;
@@ -2833,6 +2834,7 @@ public interface RichIterableTestCase extends IterableTestCase
         {
             private static final long serialVersionUID = 1L;
 
+            @Override
             public Integer value(Integer argument1, Integer argument2)
             {
                 return argument1 + argument2;

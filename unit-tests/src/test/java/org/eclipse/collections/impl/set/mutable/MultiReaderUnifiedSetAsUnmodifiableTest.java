@@ -22,6 +22,7 @@ public class MultiReaderUnifiedSetAsUnmodifiableTest extends UnmodifiableMutable
         return MultiReaderUnifiedSet.newSetWith(1).asUnmodifiable();
     }
 
+    @Override
     @Test
     public void iteratorRemove()
     {

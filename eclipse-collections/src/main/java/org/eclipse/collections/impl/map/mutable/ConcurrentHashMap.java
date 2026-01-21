@@ -55,7 +55,7 @@ import org.eclipse.collections.impl.utility.Iterate;
 import org.eclipse.collections.impl.utility.MapIterate;
 import org.eclipse.collections.impl.utility.internal.IterableIterate;
 
-@SuppressWarnings({"rawtypes", "ObjectEquality"})
+@SuppressWarnings({"rawtypes", "ObjectEquality", "ReferenceEquality"})
 public final class ConcurrentHashMap<K, V>
         extends AbstractMutableMap<K, V>
         implements ConcurrentMutableMap<K, V>, Externalizable
@@ -2041,7 +2041,7 @@ public final class ConcurrentHashMap<K, V>
     }
 
     @Override
-    public <K, V> MutableMap<K, V> newEmpty(int capacity)
+    public <K2, V2> MutableMap<K2, V2> newEmpty(int capacity)
     {
         return ConcurrentHashMap.newMap();
     }

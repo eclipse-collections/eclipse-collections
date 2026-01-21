@@ -200,7 +200,8 @@ public class Unmodifiable<name1><name2>MapKeySetTest extends Abstract<name1>SetT
         assertEquals(<(wideLiteral.(type1))("3")>, this.newWith(<["0", "1", "2"]:(literal.(type1))(); separator=", ">).sum()<wideDelta.(type1)>);
     }
 
-    <if(primitive1.floatPrimitive)>@Test
+    <if(primitive1.floatPrimitive)>@Override
+@Test
 public void sumConsistentRounding()
 {
     Mutable<name1>Set set = this.newWith(Interval.oneTo(100_000)
@@ -217,7 +218,8 @@ public void sumConsistentRounding()
             1.0e-15);
 }
 
-    <elseif(primitive1.doublePrimitive)>@Test
+    <elseif(primitive1.doublePrimitive)>@Override
+@Test
 public void sumConsistentRounding()
 {
     Mutable<name1>Set set = this.newWith(Interval.oneTo(100_000)

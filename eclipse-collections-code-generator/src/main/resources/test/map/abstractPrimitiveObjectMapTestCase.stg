@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -357,7 +358,7 @@ public abstract class Abstract<name>ObjectMapTestCase
         <name>ObjectMap\<String> map1 = this.newWithKeysValues(<(literal.(type))("0")>, "zero", <(literal.(type))("1")>, "one", <(literal.(type))("9")>, "nine");
 
         assertEquals(HashBag.newBagWith("ZERO!", "ONE!", "NINE!"),
-                map1.collectWith((String argument1, String argument2) -> argument1.toUpperCase() + argument2, "!"));
+                map1.collectWith((String argument1, String argument2) -> argument1.toUpperCase(Locale.ROOT) + argument2, "!"));
     }
 
     @Test
@@ -366,7 +367,7 @@ public abstract class Abstract<name>ObjectMapTestCase
         <name>ObjectMap\<String> map1 = this.newWithKeysValues(<(literal.(type))("0")>, "zero", <(literal.(type))("1")>, "one", <(literal.(type))("9")>, "nine");
 
         assertEquals(HashBag.newBagWith("ZERO!", "ONE!", "NINE!"),
-                map1.collectWith((String argument1, String argument2) -> argument1.toUpperCase() + argument2, "!", HashBag.\<String>newBag()));
+                map1.collectWith((String argument1, String argument2) -> argument1.toUpperCase(Locale.ROOT) + argument2, "!", HashBag.\<String>newBag()));
     }
 
     @Test

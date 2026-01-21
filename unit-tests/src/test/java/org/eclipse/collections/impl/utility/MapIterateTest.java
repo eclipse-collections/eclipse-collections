@@ -432,6 +432,7 @@ public class MapIterateTest
                 "3", "3");
         Collection<Map.Entry<String, String>> results = Iterate.select(map.entrySet(), new MapEntryPredicate<String, String>()
         {
+            @Override
             public boolean accept(String argument1, String argument2)
             {
                 return "1".equals(argument1) || "1".equals(argument2);

@@ -96,6 +96,7 @@ public class ConcurrentHashMapTest extends ConcurrentHashMapTestCase
         {
             private String visited = "";
 
+            @Override
             public String valueOf(String object)
             {
                 return this.visited += object;
@@ -106,6 +107,7 @@ public class ConcurrentHashMapTest extends ConcurrentHashMapTestCase
         {
             private String visited = "";
 
+            @Override
             public String valueOf(String object)
             {
                 return this.visited += object;

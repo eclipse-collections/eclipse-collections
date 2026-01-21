@@ -11,6 +11,7 @@
 package org.eclipse.collections.impl.list.fixed;
 
 import java.util.ListIterator;
+import java.util.Locale;
 
 import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.list.MutableList;
@@ -214,7 +215,7 @@ public class TripletonListTest extends AbstractMemoryEfficientMutableListTestCas
         MutableList<String> upperList = Lists.fixedSize.of("ONE", "TWO", "THREE");
         for (String each : list)
         {
-            Verify.assertContains(each.toUpperCase(), upperList);
+            Verify.assertContains(each.toUpperCase(Locale.ROOT), upperList);
         }
     }
 
@@ -226,7 +227,7 @@ public class TripletonListTest extends AbstractMemoryEfficientMutableListTestCas
         MutableList<String> upperList = Lists.fixedSize.of("ONE", "TWO", "THREE");
         for (String each : subList)
         {
-            Verify.assertContains(each.toUpperCase(), upperList);
+            Verify.assertContains(each.toUpperCase(Locale.ROOT), upperList);
         }
         assertEquals("one", subList.getFirst());
         assertEquals("three", subList.getLast());
