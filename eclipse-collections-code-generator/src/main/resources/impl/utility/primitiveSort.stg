@@ -18,29 +18,26 @@ import org.eclipse.collections.api.block.comparator.primitive.<name>Comparator;
 /**
  * <name>QuickSort is an implementation of the Quick Sort algorithm as described in Donald Knuth's TAOCP with some
  * optimizations. It supports indirect array sorting based on primitive comparators and/or key values extracted from
- * the array values if a sort order other thant the natural one of the array elements is required.
+ * the array values if a sort order other than the natural one of the array elements is required.
+ *
+ * Note: This QuickSort implementation is not stable. It does not guarantee that the relative order of equal elements
+ * is preserved. This may be important when using a custom comparator.
  *
  * This file was automatically generated from template file primitiveSort.stg.
- *
  */
-
 public final class <name>QuickSort
 {
     private static final int SORT_SMALL_SIZE = 9;
 
     private <name>QuickSort()
     {
+        throw new AssertionError("Suppress default constructor for noninstantiability");
     }
 
     public static void sort(<type>[] array, int left, int right, <name>Comparator comparator)
     {
-        int size = right - left + 1;
-
-        if (size \<= <name>QuickSort.SORT_SMALL_SIZE)
-        {
-            <name>QuickSort.insertionSort(array, left, right, comparator);
-        }
-        else
+        // Use a loop to handle the larger partition iteratively (Tail Recursion Elimination)
+        while (right - left + 1 \> <name>QuickSort.SORT_SMALL_SIZE)
         {
             // Initialize new stage
             int mid = (right - (right / 2)) + (left / 2);
@@ -50,7 +47,7 @@ public final class <name>QuickSort
 
             int swapIndex = -1;
 
-            if (comparator.compare(leftVal, midVal) > 0 && comparator.compare(leftVal, rightVal) > 0)
+            if (comparator.compare(leftVal, midVal) \> 0 && comparator.compare(leftVal, rightVal) \> 0)
             {
                 swapIndex = (comparator.compare(midVal, rightVal) \< 0) ? right : mid;
             }
@@ -59,7 +56,7 @@ public final class <name>QuickSort
                 swapIndex = (comparator.compare(midVal, rightVal) \< 0) ? mid : right;
             }
 
-            if (swapIndex > 0)
+            if (swapIndex \> 0)
             {
                 swap(array, left, swapIndex);
             }
@@ -77,8 +74,8 @@ public final class <name>QuickSort
                     i++;
                 }
 
-                // Compare Key : Key(j), skip all which are > pivot or until hit i
-                while (comparator.compare(pivot, array[j]) \< 0 && j > i - 1)
+                // Compare Key : Key(j), skip all which are \> pivot or until hit i
+                while (comparator.compare(pivot, array[j]) \< 0 && j \> i - 1)
                 {
                     j--;
                 }
@@ -93,40 +90,56 @@ public final class <name>QuickSort
                 }
             }
 
-            // Sort partitions, skipping sequences of elements equal to the pivot
-            if (right > j + 1)
+            // Calculate the start of the right partition (skipping duplicates)
+            int effectiveRightStart = j + 1;
+            while (right \> effectiveRightStart && comparator.compare(pivot, array[effectiveRightStart]) == 0)
             {
-                int from = j + 1;
-                while (right > from && comparator.compare(pivot, array[from]) == 0)
-                {
-                    from++;
-                }
-                if (right > from)
-                {
-                    <name>QuickSort.sort(array, from, right, comparator);
-                }
+                effectiveRightStart++;
             }
 
-            if (left \< j - 1)
+            // Calculate the end of the left partition (skipping duplicates)
+            int effectiveLeftEnd = j - 1;
+            while (effectiveLeftEnd \> left && comparator.compare(pivot, array[effectiveLeftEnd]) == 0)
             {
-                int to = j - 1;
-                while (to > left && comparator.compare(pivot, array[to]) == 0)
+                effectiveLeftEnd--;
+            }
+
+            // OPTIMIZATION: Recurse on the smaller partition, Loop on the larger partition
+            // This prevents StackOverflowError by limiting recursion depth to log(N)
+            int leftLength = effectiveLeftEnd - left;
+            int rightLength = right - effectiveRightStart;
+
+            if (leftLength \< rightLength)
+            {
+                // Recurse Left
+                if (leftLength \> 0)
                 {
-                    to--;
+                    <name>QuickSort.sort(array, left, effectiveLeftEnd, comparator);
                 }
-                if (left \< to)
+                // Loop Right (update 'left' to process the right side in the next iteration)
+                left = effectiveRightStart;
+            }
+            else
+            {
+                // Recurse Right
+                if (rightLength \> 0)
                 {
-                    <name>QuickSort.sort(array, left, to, comparator);
+                    <name>QuickSort.sort(array, effectiveRightStart, right, comparator);
                 }
+                // Loop Left (update 'right' to process the left side in the next iteration)
+                right = effectiveLeftEnd;
             }
         }
+
+        // Base case: Use Insertion Sort for small arrays
+        <name>QuickSort.insertionSort(array, left, right, comparator);
     }
 
     private static void insertionSort(<type>[] array, int left, int right, <name>Comparator comparator)
     {
         for (int j = left + 1; j \<= right; j++)
         {
-            if (comparator.compare(array[j - 1], array[j]) > 0)
+            if (comparator.compare(array[j - 1], array[j]) \> 0)
             {
                 <type> key = array[j];
                 int i = j - 1;
@@ -136,7 +149,7 @@ public final class <name>QuickSort
                     array[i + 1] = array[i];
                     i--;
                 }
-                while (i > -1 && comparator.compare(key, array[i]) \< 0);
+                while (i \> -1 && comparator.compare(key, array[i]) \< 0);
 
                 array[i + 1] = key;
             }
