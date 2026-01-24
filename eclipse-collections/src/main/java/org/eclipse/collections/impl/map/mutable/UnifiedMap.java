@@ -1111,6 +1111,39 @@ public class UnifiedMap<K, V> extends AbstractMutableMap<K, V>
     }
 
     @Override
+    public V getLast()
+    {
+        for (int i = this.table.length - 2; i >= 0; i -= 2)
+        {
+            Object cur = this.table[i];
+            if (cur == CHAINED_KEY)
+            {
+                Object[] chain = (Object[]) this.table[i + 1];
+                return this.lastValueFromChain(chain);
+            }
+            if (cur != null)
+            {
+                return (V) this.table[i + 1];
+            }
+        }
+        return null;
+    }
+
+    private V lastValueFromChain(Object[] chain)
+    {
+        V lastValue = null;
+        for (int i = 0; i < chain.length; i += 2)
+        {
+            if (chain[i] == null)
+            {
+                break;
+            }
+            lastValue = (V) chain[i + 1];
+        }
+        return lastValue;
+    }
+
+    @Override
     public <E> MutableMap<K, V> collectKeysAndValues(
             Iterable<E> iterable,
             Function<? super E, ? extends K> keyFunction,
