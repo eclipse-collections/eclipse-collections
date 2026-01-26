@@ -24,6 +24,13 @@ public interface MutableSortedSetTestCase extends SortedSetIterableTestCase, Mut
 
     @Override
     @Test
+    default void Iterable_toString()
+    {
+        SortedSetTestCase.super.Iterable_toString();
+    }
+
+    @Override
+    @Test
     default void Iterable_remove()
     {
         // Both implementations are the same
