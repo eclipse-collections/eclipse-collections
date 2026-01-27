@@ -21,9 +21,7 @@ The Eclipse Collections team gives a huge thank you to everyone who participated
 
 # Bug Fixes
 -----------------
-* Fixed ConcurrentHashMap keySet(), values(), and entrySet() spliterators to ensure they are CONCURRENT and not SIZED. Fixes #1801.
-* Fixed ConcurrentHashMapUnsafe keySet(), values(), and entrySet() spliterators to ensure they are CONCURRENT and not SIZED.
-
+* Fixed flaky sumOfDoubleConsistentRounding() test by using deterministic input ordering and validating the sum stays within the mathematically expected range for rounding-sensitive values across batch sizes. Fixes #1790.
 
 
 # Note
