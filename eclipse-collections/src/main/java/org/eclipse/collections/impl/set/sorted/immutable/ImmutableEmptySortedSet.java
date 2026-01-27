@@ -305,6 +305,60 @@ final class ImmutableEmptySortedSet<T>
     }
 
     @Override
+    public T lower(T e)
+    {
+        return null;
+    }
+
+    @Override
+    public T floor(T e)
+    {
+        return null;
+    }
+
+    @Override
+    public T ceiling(T e)
+    {
+        return null;
+    }
+
+    @Override
+    public T higher(T e)
+    {
+        return null;
+    }
+
+    @Override
+    public Iterator<T> descendingIterator()
+    {
+        return this.iterator();
+    }
+
+    @Override
+    public ImmutableEmptySortedSet<T> descendingSet()
+    {
+        return this;
+    }
+
+    @Override
+    public ImmutableEmptySortedSet<T> subSet(T fromElement, boolean fromInclusive, T toElement, boolean toInclusive)
+    {
+        return this;
+    }
+
+    @Override
+    public ImmutableEmptySortedSet<T> headSet(T toElement, boolean inclusive)
+    {
+        return this;
+    }
+
+    @Override
+    public ImmutableEmptySortedSet<T> tailSet(T fromElement, boolean inclusive)
+    {
+        return this;
+    }
+
+    @Override
     public T getOnly()
     {
         throw new IllegalStateException("Size must be 1 but was " + this.size());
