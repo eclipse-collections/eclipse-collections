@@ -295,7 +295,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/cache@v4
+      - uses: actions/cache@v5
         with:
           key: maven-javadoc-${{ hashFiles('**/pom.xml') }}
           path: ~/.m2/repository
