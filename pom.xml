@@ -206,6 +206,13 @@ Arrays, Maps or Strings. The iteration protocol was inspired by the Smalltalk co
                 <version>${scala.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.assertj</groupId>
+                <artifactId>assertj-core</artifactId>
+                <version>3.25.3</version>
+                <scope>test</scope>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
