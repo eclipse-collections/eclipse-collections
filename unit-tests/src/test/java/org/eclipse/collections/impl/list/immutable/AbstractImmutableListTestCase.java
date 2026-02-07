@@ -785,4 +785,21 @@ public abstract class AbstractImmutableListTestCase extends AbstractImmutableCol
         assertEquals(integers, actual);
         assertSame(integers, actual);
     }
+
+    @Test
+    public void binarySearch()
+    {
+        Comparator<Integer> comparator = Comparator.naturalOrder();
+        ImmutableList<Integer> list = this.classUnderTest();
+        list.forEachWithIndex((v, i) ->
+                assertEquals(
+                        i,
+                        list.binarySearch(v, comparator)));
+        assertEquals(
+                -1,
+                list.binarySearch(Integer.MIN_VALUE, comparator));
+        assertEquals(
+                -(list.size() + 1),
+                list.binarySearch(Integer.MAX_VALUE, comparator));
+    }
 }

@@ -676,7 +676,7 @@ abstract class AbstractImmutableList<T>
     }
 
     @Override
-    public ImmutableSubList<T> subList(int fromIndex, int toIndex)
+    public AbstractImmutableList<T> subList(int fromIndex, int toIndex)
     {
         return new ImmutableSubList<>(this, fromIndex, toIndex);
     }
