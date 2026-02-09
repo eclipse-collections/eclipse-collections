@@ -19,7 +19,6 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * JUnit test for {@link SynchronizedSortedSet}.
@@ -63,31 +62,4 @@ public class SynchronizedSortedSet2Test extends AbstractSortedSetTestCase
         assertThrows(NoSuchElementException.class, () -> this.newWith().max());
     }
 
-    @Override
-    @Test
-    public void detectLastIndex()
-    {
-        assertThrows(UnsupportedOperationException.class, () -> this.newWith(1, 2, 3).detectLastIndex(each -> each % 2 == 0));
-    }
-
-    @Override
-    @Test
-    public void reverseForEach()
-    {
-        assertThrows(UnsupportedOperationException.class, () -> this.newWith(1, 2, 3).reverseForEach(each -> fail("Should not be evaluated")));
-    }
-
-    @Override
-    @Test
-    public void reverseForEachWithIndex()
-    {
-        assertThrows(UnsupportedOperationException.class, () -> this.newWith(1, 2, 3).reverseForEachWithIndex((each, index) -> fail("Should not be evaluated")));
-    }
-
-    @Override
-    @Test
-    public void toReversed()
-    {
-        assertThrows(UnsupportedOperationException.class, () -> this.newWith(1, 2, 3).toReversed());
-    }
 }
