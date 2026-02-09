@@ -12,8 +12,8 @@ package org.eclipse.collections.impl.set.sorted.immutable;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
-import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.SortedSet;
@@ -28,12 +28,10 @@ import org.eclipse.collections.api.block.procedure.Procedure;
 import org.eclipse.collections.api.block.procedure.primitive.ObjectIntProcedure;
 import org.eclipse.collections.api.factory.SortedSets;
 import org.eclipse.collections.api.list.ImmutableList;
-import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.map.MapIterable;
 import org.eclipse.collections.api.multimap.sortedset.ImmutableSortedSetMultimap;
 import org.eclipse.collections.api.ordered.OrderedIterable;
 import org.eclipse.collections.api.set.sorted.ImmutableSortedSet;
-import org.eclipse.collections.api.set.sorted.MutableSortedSet;
 import org.eclipse.collections.api.set.sorted.ParallelSortedSetIterable;
 import org.eclipse.collections.api.set.sorted.SortedSetIterable;
 import org.eclipse.collections.impl.lazy.AbstractLazyIterable;
@@ -46,12 +44,12 @@ import org.eclipse.collections.impl.lazy.parallel.set.sorted.FlatCollectSortedSe
 import org.eclipse.collections.impl.lazy.parallel.set.sorted.RootSortedSetBatch;
 import org.eclipse.collections.impl.lazy.parallel.set.sorted.SelectSortedSetBatch;
 import org.eclipse.collections.impl.lazy.parallel.set.sorted.SortedSetBatch;
-import org.eclipse.collections.impl.list.mutable.FastList;
+import org.eclipse.collections.impl.list.immutable.ImmutableReversibleArrayList;
 import org.eclipse.collections.impl.map.mutable.ConcurrentHashMap;
 import org.eclipse.collections.impl.utility.ArrayIterate;
 import org.eclipse.collections.impl.utility.Iterate;
 import org.eclipse.collections.impl.utility.ListIterate;
-import org.eclipse.collections.impl.utility.internal.InternalArrayIterate;
+
 
 final class ImmutableTreeSet<T>
         extends AbstractImmutableSortedSet<T>
@@ -59,94 +57,83 @@ final class ImmutableTreeSet<T>
 {
     private static final long serialVersionUID = 2L;
 
-    private final T[] delegate;
+    private final ImmutableReversibleArrayList<T> delegate;
     private final Comparator<? super T> comparator;
 
-    private ImmutableTreeSet(T[] input, Comparator<? super T> inputComparator, boolean isSortedAndUnique)
+    private ImmutableTreeSet(ImmutableReversibleArrayList<T> delegate, Comparator<? super T> comparator)
+    {
+        this.delegate = delegate;
+        this.comparator = comparator;
+    }
+
+    private ImmutableTreeSet(T[] input, Comparator<? super T> inputComparator)
     {
         if (ArrayIterate.contains(input, null))
         {
             throw new NullPointerException("Input array contains nulls!");
         }
 
-        if (isSortedAndUnique)
+        int length = input.length;
+
+        if (length > 0)
         {
-            for (int i = input.length - 1; i > 0; i--)
+            if (inputComparator == null && !(input[0] instanceof Comparable))
+            {
+                throw new ClassCastException("Comparator is null and input does not implement Comparable!");
+            }
+
+            Arrays.sort(input, inputComparator);
+
+            int uniqueCount = 1;
+            for (int i = 1; i < length; i++)
             {
                 int compare = inputComparator == null
-                        ? ((Comparable<? super T>) input[i - 1]).compareTo(input[i])
-                        : inputComparator.compare(input[i - 1], input[i]);
-                if (compare >= 0)
+                        ? ((Comparable<? super T>) input[uniqueCount - 1]).compareTo(input[i])
+                        : inputComparator.compare(input[uniqueCount - 1], input[i]);
+                if (compare < 0)
                 {
-                    throw new ConcurrentModificationException("Input Array expected to be sorted, but was not!");
+                    input[uniqueCount] = input[i];
+                    uniqueCount++;
                 }
             }
-        }
-        else
-        {
-            if (input.length > 0)
-            {
-                Arrays.sort(input, inputComparator);
-                T[] unique = (T[]) new Object[input.length];
-                unique[0] = input[0];
-
-                if (inputComparator == null && !(input[0] instanceof Comparable))
-                {
-                    throw new ClassCastException("Comparator is null and input does not implement Comparable!");
-                }
-
-                int uniqueCount = 1;
-                for (int i = 1; i < input.length; i++)
-                {
-                    int compare = inputComparator == null
-                            ? ((Comparable<? super T>) unique[uniqueCount - 1]).compareTo(input[i])
-                            : inputComparator.compare(unique[uniqueCount - 1], input[i]);
-                    if (compare < 0)
-                    {
-                        unique[uniqueCount] = input[i];
-                        uniqueCount++;
-                    }
-                }
-                if (uniqueCount < input.length)
-                {
-                    input = Arrays.copyOf(unique, uniqueCount);
-                }
-            }
+            length = uniqueCount;
         }
 
-        this.delegate = input;
+        this.delegate = ImmutableReversibleArrayList.copyOfRange(input, 0, length);
         this.comparator = inputComparator;
     }
 
     public static <T> ImmutableSortedSet<T> newSetWith(T... elements)
     {
-        return new ImmutableTreeSet<>(elements.clone(), null, false);
+        return new ImmutableTreeSet<>(elements.clone(), null);
     }
 
     public static <T> ImmutableSortedSet<T> newSetWith(Comparator<? super T> comparator, T... elements)
     {
-        return new ImmutableTreeSet<>(elements.clone(), comparator, false);
+        return new ImmutableTreeSet<>(elements.clone(), comparator);
     }
 
     public static <T> ImmutableSortedSet<T> newSet(SortedSet<? super T> set)
     {
-        return new ImmutableTreeSet<>((T[]) set.toArray(), set.comparator(), true);
+        return new ImmutableTreeSet<>(
+                (ImmutableReversibleArrayList<T>) ImmutableReversibleArrayList.newList(set),
+                set.comparator());
     }
 
     public static <T> ImmutableSortedSet<T> newSetFromIterable(Iterable<? extends T> iterable)
     {
-        return new ImmutableTreeSet<>((T[]) Iterate.toArray(iterable), null, false);
+        return new ImmutableTreeSet<>((T[]) Iterate.toArray(iterable), null);
     }
 
     public static <T> ImmutableSortedSet<T> newSetFromIterable(Comparator<? super T> comparator, Iterable<? extends T> iterable)
     {
-        return new ImmutableTreeSet<>((T[]) Iterate.toArray(iterable), comparator, false);
+        return new ImmutableTreeSet<>((T[]) Iterate.toArray(iterable), comparator);
     }
 
     @Override
     public int size()
     {
-        return this.delegate.length;
+        return this.delegate.size();
     }
 
     private Object writeReplace()
@@ -184,34 +171,25 @@ final class ImmutableTreeSet<T>
     @Override
     public int hashCode()
     {
-        int result = 0;
-        for (T each : this.delegate)
-        {
-            result += each.hashCode();
-        }
-
-        return result;
+        return this.delegate.injectInto(0, (int sum, T each) -> sum + each.hashCode());
     }
 
     @Override
     public boolean contains(Object object)
     {
-        return Arrays.binarySearch(this.delegate, (T) object, this.comparator) >= 0;
+        return this.indexOf(object) >= 0;
     }
 
     @Override
     public Iterator<T> iterator()
     {
-        return FastList.newListWith(this.delegate).asUnmodifiable().iterator();
+        return this.delegate.iterator();
     }
 
     @Override
     public void each(Procedure<? super T> procedure)
     {
-        for (T t : this.delegate)
-        {
-            procedure.value(t);
-        }
+        this.delegate.each(procedure);
     }
 
     /**
@@ -220,25 +198,19 @@ final class ImmutableTreeSet<T>
     @Override
     public <V> ImmutableList<V> collectWithIndex(ObjectIntToObjectFunction<? super T, ? extends V> function)
     {
-        MutableList<V> result = FastList.newList(this.size());
-        int index = 0;
-        for (T t : this.delegate)
-        {
-            result.add(function.valueOf(t, index++));
-        }
-        return result.toImmutable();
+        return this.delegate.collectWithIndex(function);
     }
 
     @Override
     public T first()
     {
-        return this.delegate[0];
+        return this.delegate.getFirst();
     }
 
     @Override
     public T last()
     {
-        return this.delegate[this.delegate.length - 1];
+        return this.delegate.getLast();
     }
 
     @Override
@@ -252,13 +224,14 @@ final class ImmutableTreeSet<T>
     {
         Iterator<T> iterator = otherSet.iterator();
 
-        for (T eachInThis : this.delegate)
+        for (int i = 0; i < this.delegate.size(); i++)
         {
             if (!iterator.hasNext())
             {
                 return 1;
             }
 
+            T eachInThis = this.delegate.get(i);
             T eachInOther = iterator.next();
 
             int compare = this.compare(eachInThis, eachInOther);
@@ -276,6 +249,115 @@ final class ImmutableTreeSet<T>
         return this.comparator == null
                 ? ((Comparable<T>) o1).compareTo(o2)
                 : this.comparator.compare(o1, o2);
+    }
+
+    @Override
+    public T lower(T e)
+    {
+        return this.getOrNull(this.lowerBound(e) - 1);
+    }
+
+    @Override
+    public T floor(T e)
+    {
+        return this.getOrNull(this.upperBound(e) - 1);
+    }
+
+    @Override
+    public T ceiling(T e)
+    {
+        return this.getOrNull(this.lowerBound(e));
+    }
+
+    @Override
+    public T higher(T e)
+    {
+        return this.getOrNull(this.upperBound(e));
+    }
+
+    private T getOrNull(int index)
+    {
+        if (index >= 0 && index < this.delegate.size())
+        {
+            return this.delegate.get(index);
+        }
+        return null;
+    }
+
+    @Override
+    public Iterator<T> descendingIterator()
+    {
+        return this.descendingSet().iterator();
+    }
+
+    @Override
+    public AbstractImmutableSortedSet<T> descendingSet()
+    {
+        if (this.isEmpty())
+        {
+            return new ImmutableEmptySortedSet<>(Collections.reverseOrder(this.comparator));
+        }
+        return new ImmutableTreeSet<>(this.delegate.toReversed(), Collections.reverseOrder(this.comparator));
+    }
+
+    @Override
+    public AbstractImmutableSortedSet<T> subSet(T fromElement, boolean fromInclusive, T toElement, boolean toInclusive)
+    {
+        int fromIdx = fromInclusive ?
+                this.lowerBound(fromElement)
+                : this.upperBound(fromElement);
+        int toIdx = toInclusive
+                ? this.upperBound(toElement)
+                : this.lowerBound(toElement);
+        return this.subSet(fromIdx, toIdx);
+    }
+
+    @Override
+    public AbstractImmutableSortedSet<T> headSet(T toElement, boolean inclusive)
+    {
+        int toIdx = inclusive
+                ? this.upperBound(toElement)
+                : this.lowerBound(toElement);
+        return this.subSet(0, toIdx);
+    }
+
+    @Override
+    public AbstractImmutableSortedSet<T> tailSet(T fromElement, boolean inclusive)
+    {
+        int fromIdx = inclusive
+                ? this.lowerBound(fromElement)
+                : this.upperBound(fromElement);
+        return this.subSet(fromIdx, this.delegate.size());
+    }
+
+    private int binarySearch(T element)
+    {
+        return this.delegate.binarySearch(element, this.comparator);
+    }
+
+    private int lowerBound(T element)
+    {
+        int index = this.binarySearch(element);
+        return index >= 0 ? index : -(index + 1);
+    }
+
+    private int upperBound(T element)
+    {
+        int index = this.binarySearch(element);
+        return index >= 0 ? index + 1 : -(index + 1);
+    }
+
+    private AbstractImmutableSortedSet<T> subSet(int fromIdx, int toIdx)
+    {
+        if (fromIdx >= toIdx)
+        {
+            return new ImmutableEmptySortedSet<>(this.comparator);
+        }
+        if (fromIdx == 0 && toIdx == this.delegate.size())
+        {
+            return this;
+        }
+        return new ImmutableTreeSet<>(this.delegate.subList(fromIdx, toIdx), this.comparator);
     }
 
     @Override
@@ -435,75 +517,41 @@ final class ImmutableTreeSet<T>
 
     private final class ImmutableTreeSetBatch extends AbstractBatch<T> implements RootSortedSetBatch<T>
     {
-        private final int chunkStartIndex;
-        private final int chunkEndIndex;
+        private final ImmutableReversibleArrayList<T> chunk;
 
         private ImmutableTreeSetBatch(int chunkStartIndex, int chunkEndIndex)
         {
-            this.chunkStartIndex = chunkStartIndex;
-            this.chunkEndIndex = chunkEndIndex;
+            this.chunk = ImmutableTreeSet.this.delegate.subList(chunkStartIndex, chunkEndIndex);
         }
 
         @Override
         public void forEach(Procedure<? super T> procedure)
         {
-            for (int i = this.chunkStartIndex; i < this.chunkEndIndex; i++)
-            {
-                procedure.value(ImmutableTreeSet.this.delegate[i]);
-            }
+            this.chunk.forEach(procedure);
         }
 
         @Override
         public int count(Predicate<? super T> predicate)
         {
-            int count = 0;
-            for (int i = this.chunkStartIndex; i < this.chunkEndIndex; i++)
-            {
-                if (predicate.accept(ImmutableTreeSet.this.delegate[i]))
-                {
-                    count++;
-                }
-            }
-            return count;
+            return this.chunk.count(predicate);
         }
 
         @Override
         public boolean anySatisfy(Predicate<? super T> predicate)
         {
-            for (int i = this.chunkStartIndex; i < this.chunkEndIndex; i++)
-            {
-                if (predicate.accept(ImmutableTreeSet.this.delegate[i]))
-                {
-                    return true;
-                }
-            }
-            return false;
+            return this.chunk.anySatisfy(predicate);
         }
 
         @Override
         public boolean allSatisfy(Predicate<? super T> predicate)
         {
-            for (int i = this.chunkStartIndex; i < this.chunkEndIndex; i++)
-            {
-                if (!predicate.accept(ImmutableTreeSet.this.delegate[i]))
-                {
-                    return false;
-                }
-            }
-            return true;
+            return this.chunk.allSatisfy(predicate);
         }
 
         @Override
         public T detect(Predicate<? super T> predicate)
         {
-            for (int i = this.chunkStartIndex; i < this.chunkEndIndex; i++)
-            {
-                if (predicate.accept(ImmutableTreeSet.this.delegate[i]))
-                {
-                    return ImmutableTreeSet.this.delegate[i];
-                }
-            }
-            return null;
+            return this.chunk.detect(predicate);
         }
 
         @Override
@@ -534,51 +582,42 @@ final class ImmutableTreeSet<T>
     @Override
     public int detectIndex(Predicate<? super T> predicate)
     {
-        return ArrayIterate.detectIndex(this.delegate, predicate);
+        return this.delegate.detectIndex(predicate);
     }
 
     @Override
     public <S> boolean corresponds(OrderedIterable<S> other, Predicate2<? super T, ? super S> predicate)
     {
-        return InternalArrayIterate.corresponds(this.delegate, this.size(), other, predicate);
+        return this.delegate.corresponds(other, predicate);
     }
 
     @Override
     public void forEach(int fromIndex, int toIndex, Procedure<? super T> procedure)
     {
         ListIterate.rangeCheck(fromIndex, toIndex, this.size());
-
         if (fromIndex > toIndex)
         {
             throw new IllegalArgumentException("fromIndex must not be greater than toIndex");
         }
-
-        for (int i = fromIndex; i <= toIndex; i++)
-        {
-            procedure.value(this.delegate[i]);
-        }
+        this.delegate.forEach(fromIndex, toIndex, procedure);
     }
 
     @Override
     public void forEachWithIndex(int fromIndex, int toIndex, ObjectIntProcedure<? super T> objectIntProcedure)
     {
         ListIterate.rangeCheck(fromIndex, toIndex, this.size());
-
         if (fromIndex > toIndex)
         {
             throw new IllegalArgumentException("fromIndex must not be greater than toIndex");
         }
-
-        for (int i = fromIndex; i <= toIndex; i++)
-        {
-            objectIntProcedure.value(this.delegate[i], i);
-        }
+        this.delegate.forEachWithIndex(fromIndex, toIndex, objectIntProcedure);
     }
 
     @Override
     public int indexOf(Object object)
     {
-        return ArrayIterate.indexOf(this.delegate, object);
+        int index = this.binarySearch((T) object);
+        return index >= 0 ? index : -1;
     }
 
     @Override
@@ -586,7 +625,7 @@ final class ImmutableTreeSet<T>
     {
         if (count < 0)
         {
-            throw new IllegalArgumentException("Count must be greater than zero, but was: " + count);
+            throw new IllegalArgumentException("Count must not be negative, but was: " + count);
         }
         if (count >= this.size())
         {
@@ -596,15 +635,7 @@ final class ImmutableTreeSet<T>
         {
             return SortedSets.immutable.empty(this.comparator());
         }
-
-        MutableSortedSet<T> output = SortedSets.mutable.of(this.comparator());
-
-        for (int i = 0; i < count; i++)
-        {
-            output.add(this.delegate[i]);
-        }
-
-        return output.toImmutable();
+        return this.subSet(0, count);
     }
 
     @Override
@@ -612,9 +643,8 @@ final class ImmutableTreeSet<T>
     {
         if (count < 0)
         {
-            throw new IllegalArgumentException("Count must be greater than zero, but was: " + count);
+            throw new IllegalArgumentException("Count must not be negative, but was: " + count);
         }
-
         if (count == 0)
         {
             return this;
@@ -623,16 +653,6 @@ final class ImmutableTreeSet<T>
         {
             return SortedSets.immutable.empty(this.comparator());
         }
-
-        MutableSortedSet<T> output = SortedSets.mutable.of(this.comparator());
-        for (int i = 0; i < this.size(); i++)
-        {
-            if (i >= count)
-            {
-                output.add(this.delegate[i]);
-            }
-        }
-
-        return output.toImmutable();
+        return this.subSet(count, this.delegate.size());
     }
 }
