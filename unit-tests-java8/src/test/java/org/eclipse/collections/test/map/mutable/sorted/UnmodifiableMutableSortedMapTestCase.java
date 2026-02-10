@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Goldman Sachs.
+ * Copyright (c) 2024 Goldman Sachs and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -10,19 +10,11 @@
 
 package org.eclipse.collections.test.map.mutable.sorted;
 
-import org.eclipse.collections.api.map.sorted.MutableSortedMap;
-import org.eclipse.collections.test.MutableSortedIterableTestCase;
-import org.eclipse.collections.test.map.SortedMapIterableTestCase;
+import org.eclipse.collections.test.map.mutable.UnmodifiableMutableMapIterableTestCase;
 import org.junit.jupiter.api.Test;
 
-public interface MutableSortedMapIterableTestCase extends SortedMapIterableTestCase, SortedMapTestCase, MutableSortedIterableTestCase
+public interface UnmodifiableMutableSortedMapTestCase extends UnmodifiableMutableMapIterableTestCase, MutableSortedMapIterableTestCase
 {
-    @Override
-    <T> MutableSortedMap<Object, T> newWith(T... elements);
-
-    @Override
-    <K, V> MutableSortedMap<K, V> newWithKeysValues(Object... elements);
-
     @Override
     default boolean supportsNullKeys()
     {
@@ -37,14 +29,15 @@ public interface MutableSortedMapIterableTestCase extends SortedMapIterableTestC
 
     @Override
     @Test
-    default void Iterable_toString()
+    default void Iterable_remove()
     {
-        SortedMapTestCase.super.Iterable_toString();
+        UnmodifiableMutableMapIterableTestCase.super.Iterable_remove();
     }
 
     @Override
-    default void Iterable_remove()
+    @Test
+    default void Iterable_toString()
     {
-        SortedMapIterableTestCase.super.Iterable_remove();
+        MutableSortedMapIterableTestCase.super.Iterable_toString();
     }
 }
