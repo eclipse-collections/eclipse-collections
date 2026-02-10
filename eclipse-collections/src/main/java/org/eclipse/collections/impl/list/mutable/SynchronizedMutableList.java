@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Optional;
 import java.util.Random;
+import java.util.RandomAccess;
 import java.util.concurrent.ExecutorService;
 import java.util.function.UnaryOperator;
 
@@ -582,6 +583,19 @@ public class SynchronizedMutableList<T>
         synchronized (this.getLock())
         {
             return ReverseIterable.adapt(this);
+        }
+    }
+
+    @Override
+    public MutableList<T> reversed()
+    {
+        synchronized (this.getLock())
+        {
+            if (this instanceof RandomAccess)
+            {
+                return new ReversedRandomAccessMutableList<>(this);
+            }
+            return new ReversedMutableList<>(this);
         }
     }
 

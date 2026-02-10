@@ -774,7 +774,7 @@ public final class MultiReaderFastList<T>
 
     static final class UntouchableMutableList<T>
             extends UntouchableMutableCollection<T>
-            implements MutableList<T>
+            implements MutableList<T>, RandomAccess
     {
         private final MutableList<UntouchableListIterator<T>> requestedIterators = mList();
         private final MutableList<UntouchableMutableList<T>> requestedSubLists = mList();
@@ -1073,6 +1073,12 @@ public final class MultiReaderFastList<T>
         {
             this.getDelegate().sortThis(comparator);
             return this;
+        }
+
+        @Override
+        public MutableList<T> reversed()
+        {
+            return new ReversedRandomAccessMutableList<>(this);
         }
 
         @Override
@@ -1439,6 +1445,12 @@ public final class MultiReaderFastList<T>
         {
             return this.delegate.zipWithIndex();
         }
+    }
+
+    @Override
+    public MutableList<T> reversed()
+    {
+        return new ReversedRandomAccessMutableList<>(this);
     }
 
     @Override

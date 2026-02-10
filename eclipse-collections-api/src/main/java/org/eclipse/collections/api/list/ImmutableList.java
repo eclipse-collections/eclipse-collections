@@ -215,6 +215,11 @@ public interface ImmutableList<T>
     @Override
     ImmutableList<T> subList(int fromIndex, int toIndex);
 
+    /**
+     * Returns a reverse-order view of this list.
+     */
+    ImmutableList<T> reversed();
+
     @Override
     ImmutableList<T> toReversed();
 

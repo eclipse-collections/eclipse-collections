@@ -973,6 +973,16 @@ public abstract class AbstractMutableList<T>
     }
 
     @Override
+    public MutableList<T> reversed()
+    {
+        if (this instanceof RandomAccess)
+        {
+            return new ReversedRandomAccessMutableList<>(this);
+        }
+        return new ReversedMutableList<>(this);
+    }
+
+    @Override
     public ReverseIterable<T> asReversed()
     {
         return ReverseIterable.adapt(this);

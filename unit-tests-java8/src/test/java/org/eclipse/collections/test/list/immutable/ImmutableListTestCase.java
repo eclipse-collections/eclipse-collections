@@ -12,11 +12,13 @@ package org.eclipse.collections.test.list.immutable;
 
 import java.util.List;
 
+import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.list.ImmutableList;
 import org.eclipse.collections.test.collection.immutable.ImmutableCollectionTestCase;
 import org.eclipse.collections.test.list.ListIterableTestCase;
 import org.junit.jupiter.api.Test;
 
+import static org.eclipse.collections.test.IterableTestCase.assertIterablesEqual;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
 public interface ImmutableListTestCase extends ImmutableCollectionTestCase, ListIterableTestCase
@@ -30,5 +32,17 @@ public interface ImmutableListTestCase extends ImmutableCollectionTestCase, List
         ImmutableList<Integer> immutableList = this.newWith(3, 3, 3, 2, 2, 1);
         List<Integer> list = immutableList.castToList();
         assertSame(immutableList, list);
+    }
+
+    @Test
+    default void ImmutableList_reversed()
+    {
+        ImmutableList<Integer> original = this.newWith(3, 3, 3, 2, 2, 1);
+        ImmutableList<Integer> reversed = original.reversed();
+        assertIterablesEqual(Lists.immutable.with(1, 2, 2, 3, 3, 3), reversed);
+        assertSame(original, reversed.reversed());
+
+        ImmutableList<Integer> empty = this.newWith();
+        assertSame(empty, empty.reversed());
     }
 }
