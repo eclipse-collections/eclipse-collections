@@ -37,6 +37,7 @@ import org.eclipse.collections.impl.list.Interval;
 import org.eclipse.collections.impl.list.fixed.ArrayAdapter;
 import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.test.Verify;
+import org.eclipse.collections.impl.test.domain.Holder;
 import org.eclipse.collections.impl.utility.Iterate;
 import org.junit.jupiter.api.Test;
 
@@ -445,14 +446,14 @@ public abstract class AbstractMutableSetTestCase extends AbstractCollectionTestC
             assertEquals(list.toSet(), set);
         }
 
-        for (Integer item : MORE_COLLISIONS)
+        MutableList<Holder<Integer>> holderCollisions = MORE_COLLISIONS.collect(Holder::new);
+        for (Holder<Integer> item : holderCollisions)
         {
-            MutableSet<Integer> integers = this.<Integer>newWith().withAll(MORE_COLLISIONS);
-            @SuppressWarnings("BoxingBoxedValue")
-            Integer keyCopy = new Integer(item);
-            assertTrue(integers.retainAll(mList(keyCopy)));
-            assertEquals(iSet(keyCopy), integers);
-            assertNotSame(keyCopy, Iterate.getOnly(integers));
+            MutableSet<Holder<Integer>> holders = this.<Holder<Integer>>newWith().withAll(holderCollisions);
+            Holder<Integer> keyCopy = new Holder<>(item.getValue());
+            assertTrue(holders.retainAll(mList(keyCopy)));
+            assertEquals(iSet(keyCopy), holders);
+            assertNotSame(keyCopy, Iterate.getOnly(holders));
         }
 
         // retain all on a bucket with a single element

@@ -38,7 +38,7 @@ import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.set.mutable.MultiReaderUnifiedSet;
 import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import org.eclipse.collections.impl.test.Verify;
-import org.eclipse.collections.impl.test.domain.Key;
+import org.eclipse.collections.impl.test.domain.Holder;
 import org.eclipse.collections.impl.tuple.Tuples;
 import org.junit.jupiter.api.Test;
 
@@ -975,38 +975,38 @@ public class SetsTest
     @Test
     public void setKeyPreservation()
     {
-        Key key = new Key("key");
+        Holder<String> key = new Holder<>("key");
 
-        Key duplicateKey1 = new Key("key");
-        ImmutableSet<Key> set1 = Sets.immutable.of(key, duplicateKey1);
+        Holder<String> duplicateKey1 = new Holder<>("key");
+        ImmutableSet<Holder<String>> set1 = Sets.immutable.of(key, duplicateKey1);
         Verify.assertSize(1, set1);
         Verify.assertContains(key, set1);
         assertSame(key, set1.getFirst());
 
-        Key duplicateKey2 = new Key("key");
-        ImmutableSet<Key> set2 = Sets.immutable.of(key, duplicateKey1, duplicateKey2);
+        Holder<String> duplicateKey2 = new Holder<>("key");
+        ImmutableSet<Holder<String>> set2 = Sets.immutable.of(key, duplicateKey1, duplicateKey2);
         Verify.assertSize(1, set2);
         Verify.assertContains(key, set2);
         assertSame(key, set2.getFirst());
 
-        Key duplicateKey3 = new Key("key");
-        ImmutableSet<Key> set3 = Sets.immutable.of(key, new Key("not a dupe"), duplicateKey3);
+        Holder<String> duplicateKey3 = new Holder<>("key");
+        ImmutableSet<Holder<String>> set3 = Sets.immutable.of(key, new Holder<>("not a dupe"), duplicateKey3);
         Verify.assertSize(2, set3);
-        Verify.assertContainsAll("immutable set", set3, key, new Key("not a dupe"));
+        Verify.assertContainsAll("immutable set", set3, key, new Holder<>("not a dupe"));
         assertSame(key, set3.detect(key::equals));
 
-        Key duplicateKey4 = new Key("key");
-        ImmutableSet<Key> set4 = Sets.immutable.of(key, new Key("not a dupe"), duplicateKey3, duplicateKey4);
+        Holder<String> duplicateKey4 = new Holder<>("key");
+        ImmutableSet<Holder<String>> set4 = Sets.immutable.of(key, new Holder<>("not a dupe"), duplicateKey3, duplicateKey4);
         Verify.assertSize(2, set4);
-        Verify.assertContainsAll("immutable set", set4, key, new Key("not a dupe"));
+        Verify.assertContainsAll("immutable set", set4, key, new Holder<>("not a dupe"));
         assertSame(key, set4.detect(key::equals));
 
-        ImmutableSet<Key> set5 = Sets.immutable.of(key, new Key("not a dupe"), new Key("me neither"), duplicateKey4);
+        ImmutableSet<Holder<String>> set5 = Sets.immutable.of(key, new Holder<>("not a dupe"), new Holder<>("me neither"), duplicateKey4);
         Verify.assertSize(3, set5);
-        Verify.assertContainsAll("immutable set", set5, key, new Key("not a dupe"), new Key("me neither"));
+        Verify.assertContainsAll("immutable set", set5, key, new Holder<>("not a dupe"), new Holder<>("me neither"));
         assertSame(key, set5.detect(key::equals));
 
-        ImmutableSet<Key> set6 = Sets.immutable.of(key, duplicateKey2, duplicateKey3, duplicateKey4);
+        ImmutableSet<Holder<String>> set6 = Sets.immutable.of(key, duplicateKey2, duplicateKey3, duplicateKey4);
         Verify.assertSize(1, set6);
         Verify.assertContains(key, set6);
         assertSame(key, set6.detect(key::equals));

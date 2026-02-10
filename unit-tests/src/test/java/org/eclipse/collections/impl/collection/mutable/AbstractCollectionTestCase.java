@@ -28,6 +28,7 @@ import org.eclipse.collections.impl.list.Interval;
 import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import org.eclipse.collections.impl.test.Verify;
+import org.eclipse.collections.impl.test.domain.Holder;
 import org.junit.jupiter.api.Test;
 
 import static org.eclipse.collections.impl.factory.Iterables.iList;
@@ -188,11 +189,11 @@ public abstract class AbstractCollectionTestCase extends AbstractRichIterableTes
         assertFalse(integers1.retainAll(FastList.newListWith(1, 0)));
         assertEquals(Bags.mutable.of(0), integers1.toBag());
 
-        MutableCollection<Integer> integers2 = this.newWith(1, 2, 3);
-        Integer copy = new Integer(1);
-        assertTrue(integers2.retainAll(FastList.newListWith(copy)));
-        assertEquals(Bags.mutable.of(1), integers2.toBag());
-        assertNotSame(copy, integers2.getFirst());
+        MutableCollection<Holder<Integer>> holders = this.newWith(new Holder<>(1), new Holder<>(2), new Holder<>(3));
+        Holder<Integer> copy = new Holder<>(1);
+        assertTrue(holders.retainAll(FastList.newListWith(copy)));
+        assertEquals(Bags.mutable.of(new Holder<>(1)), holders.toBag());
+        assertNotSame(copy, holders.getFirst());
     }
 
     @Test

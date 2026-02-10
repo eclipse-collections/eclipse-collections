@@ -57,6 +57,7 @@ import org.eclipse.collections.impl.math.IntegerSum;
 import org.eclipse.collections.impl.math.Sum;
 import org.eclipse.collections.impl.multimap.list.FastListMultimap;
 import org.eclipse.collections.impl.test.Verify;
+import org.eclipse.collections.impl.test.domain.Holder;
 import org.eclipse.collections.impl.tuple.Tuples;
 import org.junit.jupiter.api.Test;
 
@@ -838,10 +839,9 @@ public class ArrayListIterateTest
     {
         ArrayList<Integer> list = this.getIntegerList();
         assertEquals(Integer.valueOf(1), ArrayListIterate.detect(list, Integer.valueOf(1)::equals));
-        //noinspection CachedNumberConstructorCall,UnnecessaryBoxing
-        ArrayList<Integer> list2 =
-                this.newArrayList(1, new Integer(2), 2);  // test relies on having a unique instance of "2"
-        assertSame(list2.get(1), ArrayListIterate.detect(list2, Integer.valueOf(2)::equals));
+        ArrayList<Holder<Integer>> list2 =
+                new ArrayList<>(Lists.mutable.with(new Holder<>(1), new Holder<>(2), new Holder<>(2)));
+        assertSame(list2.get(1), ArrayListIterate.detect(list2, new Holder<>(2)::equals));
     }
 
     @Test
@@ -856,10 +856,9 @@ public class ArrayListIterateTest
     {
         ArrayList<Integer> list = this.getIntegerList();
         assertEquals(Integer.valueOf(1), ArrayListIterate.detectWith(list, Object::equals, 1));
-        //noinspection CachedNumberConstructorCall,UnnecessaryBoxing
-        ArrayList<Integer> list2 =
-                this.newArrayList(1, new Integer(2), 2);  // test relies on having a unique instance of "2"
-        assertSame(list2.get(1), ArrayListIterate.detectWith(list2, Object::equals, 2));
+        ArrayList<Holder<Integer>> list2 =
+                new ArrayList<>(Lists.mutable.with(new Holder<>(1), new Holder<>(2), new Holder<>(2)));
+        assertSame(list2.get(1), ArrayListIterate.detectWith(list2, Object::equals, new Holder<>(2)));
     }
 
     @Test

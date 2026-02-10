@@ -13,7 +13,7 @@ package org.eclipse.collections.impl.map.immutable;
 import org.eclipse.collections.api.factory.Maps;
 import org.eclipse.collections.api.map.ImmutableMap;
 import org.eclipse.collections.impl.test.Verify;
-import org.eclipse.collections.impl.test.domain.Key;
+import org.eclipse.collections.impl.test.domain.Holder;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -96,11 +96,11 @@ public class ImmutableMapFactoryTest
     @Test
     public void keyPreservation()
     {
-        Key key = new Key("key");
-        Key duplicateKey = new Key("key");
-        ImmutableMap<Key, Integer> map4 = ImmutableMapFactoryImpl.INSTANCE.of(key, 1, new Key("still not a dupe"), 2, new Key("me neither"), 3, duplicateKey, 4);
+        Holder<String> key = new Holder<>("key");
+        Holder<String> duplicateKey = new Holder<>("key");
+        ImmutableMap<Holder<String>, Integer> map4 = ImmutableMapFactoryImpl.INSTANCE.of(key, 1, new Holder<>("still not a dupe"), 2, new Holder<>("me neither"), 3, duplicateKey, 4);
         Verify.assertSize(3, map4);
-        Verify.assertContainsAllKeyValues(map4, key, 4, new Key("still not a dupe"), 2, new Key("me neither"), 3);
+        Verify.assertContainsAllKeyValues(map4, key, 4, new Holder<>("still not a dupe"), 2, new Holder<>("me neither"), 3);
         assertSame(key, map4.keysView().detect(key::equals));
     }
 }

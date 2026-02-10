@@ -12,6 +12,7 @@ package org.eclipse.collections.impl.block.procedure;
 
 import java.util.Optional;
 
+import org.eclipse.collections.impl.test.domain.Holder;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -40,17 +41,17 @@ public class MaxProcedureTest
     @Test
     public void value()
     {
-        MaxProcedure<Integer> procedure = new MaxProcedure<>();
-        Integer first = new Integer(1);
+        MaxProcedure<Holder<Integer>> procedure = new MaxProcedure<>();
+        Holder<Integer> first = new Holder<>(1);
         procedure.value(first);
         assertSame(first, procedure.getResult());
-        Integer second = new Integer(1);
+        Holder<Integer> second = new Holder<>(1);
         procedure.value(second);
         assertSame(first, procedure.getResult());
-        Integer third = new Integer(3);
+        Holder<Integer> third = new Holder<>(3);
         procedure.value(third);
         assertSame(third, procedure.getResult());
-        Integer fourth = new Integer(0);
+        Holder<Integer> fourth = new Holder<>(0);
         procedure.value(fourth);
         assertSame(third, procedure.getResult());
     }
