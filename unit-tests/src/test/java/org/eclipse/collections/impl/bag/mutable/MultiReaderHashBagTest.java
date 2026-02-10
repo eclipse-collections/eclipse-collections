@@ -619,15 +619,15 @@ public class MultiReaderHashBagTest extends MultiReaderMutableCollectionTestCase
         MultiReaderHashBag<Integer> numbers = this.newWith(1, 1, 1, 2, 2, 3, 3);
         MutableList<ObjectIntPair<Integer>> pairs = numbers.bottomOccurrences(1);
         Verify.assertSize(2, pairs);
-        Verify.assertAnySatisfy(pairs, pair -> pair.getOne().equals(new Integer(2)));
-        Verify.assertAnySatisfy(pairs, pair -> pair.getOne().equals(new Integer(3)));
+        Verify.assertAnySatisfy(pairs, pair -> pair.getOne().equals(2));
+        Verify.assertAnySatisfy(pairs, pair -> pair.getOne().equals(3));
         numbers.withReadLockAndDelegate(bag ->
         {
             Verify.assertSize(2, bag.bottomOccurrences(1));
             Verify.assertAnySatisfy(
-                    bag.bottomOccurrences(1), pair -> pair.getOne().equals(new Integer(2)));
+                    bag.bottomOccurrences(1), pair -> pair.getOne().equals(2));
             Verify.assertAnySatisfy(
-                    bag.bottomOccurrences(1), pair -> pair.getOne().equals(new Integer(3)));
+                    bag.bottomOccurrences(1), pair -> pair.getOne().equals(3));
         });
     }
 
@@ -637,21 +637,21 @@ public class MultiReaderHashBagTest extends MultiReaderMutableCollectionTestCase
         MultiReaderHashBag<Integer> numbers = this.newWith(1, 1, 1, 2, 2, 3, 3);
         MutableBag<ObjectIntPair<Integer>> pairs =
                 numbers.collectWithOccurrences(PrimitiveTuples::pair);
-        Verify.assertAnySatisfy(pairs, pair -> pair.getOne().equals(new Integer(1))
+        Verify.assertAnySatisfy(pairs, pair -> pair.getOne().equals(1)
                 && pair.getTwo() == 3);
-        Verify.assertAnySatisfy(pairs, pair -> pair.getOne().equals(new Integer(2))
+        Verify.assertAnySatisfy(pairs, pair -> pair.getOne().equals(2)
                 && pair.getTwo() == 2);
-        Verify.assertAnySatisfy(pairs, pair -> pair.getOne().equals(new Integer(3))
+        Verify.assertAnySatisfy(pairs, pair -> pair.getOne().equals(3)
                 && pair.getTwo() == 2);
         numbers.withReadLockAndDelegate(bag ->
         {
             MutableBag<ObjectIntPair<Integer>> pairs2 =
                     bag.collectWithOccurrences(PrimitiveTuples::pair);
-            Verify.assertAnySatisfy(pairs2, pair -> pair.getOne().equals(new Integer(1))
+            Verify.assertAnySatisfy(pairs2, pair -> pair.getOne().equals(1)
                     && pair.getTwo() == 3);
-            Verify.assertAnySatisfy(pairs2, pair -> pair.getOne().equals(new Integer(2))
+            Verify.assertAnySatisfy(pairs2, pair -> pair.getOne().equals(2)
                     && pair.getTwo() == 2);
-            Verify.assertAnySatisfy(pairs2, pair -> pair.getOne().equals(new Integer(3))
+            Verify.assertAnySatisfy(pairs2, pair -> pair.getOne().equals(3)
                     && pair.getTwo() == 2);
         });
     }
@@ -662,21 +662,21 @@ public class MultiReaderHashBagTest extends MultiReaderMutableCollectionTestCase
         MultiReaderHashBag<Integer> numbers = this.newWith(1, 1, 1, 2, 2, 3, 3);
         MutableBag<ObjectIntPair<Integer>> pairs =
                 numbers.collectWithOccurrences(PrimitiveTuples::pair, Bags.mutable.empty());
-        Verify.assertAnySatisfy(pairs, pair -> pair.getOne().equals(new Integer(1))
+        Verify.assertAnySatisfy(pairs, pair -> pair.getOne().equals(1)
                 && pair.getTwo() == 3);
-        Verify.assertAnySatisfy(pairs, pair -> pair.getOne().equals(new Integer(2))
+        Verify.assertAnySatisfy(pairs, pair -> pair.getOne().equals(2)
                 && pair.getTwo() == 2);
-        Verify.assertAnySatisfy(pairs, pair -> pair.getOne().equals(new Integer(3))
+        Verify.assertAnySatisfy(pairs, pair -> pair.getOne().equals(3)
                 && pair.getTwo() == 2);
         numbers.withReadLockAndDelegate(bag ->
         {
             MutableBag<ObjectIntPair<Integer>> pairs2 =
                     bag.collectWithOccurrences(PrimitiveTuples::pair, Bags.mutable.empty());
-            Verify.assertAnySatisfy(pairs2, pair -> pair.getOne().equals(new Integer(1))
+            Verify.assertAnySatisfy(pairs2, pair -> pair.getOne().equals(1)
                     && pair.getTwo() == 3);
-            Verify.assertAnySatisfy(pairs2, pair -> pair.getOne().equals(new Integer(2))
+            Verify.assertAnySatisfy(pairs2, pair -> pair.getOne().equals(2)
                     && pair.getTwo() == 2);
-            Verify.assertAnySatisfy(pairs2, pair -> pair.getOne().equals(new Integer(3))
+            Verify.assertAnySatisfy(pairs2, pair -> pair.getOne().equals(3)
                     && pair.getTwo() == 2);
         });
     }
