@@ -29,7 +29,7 @@ import org.eclipse.collections.impl.math.Sum;
 import org.eclipse.collections.impl.math.SumProcedure;
 import org.eclipse.collections.impl.test.ClassComparer;
 import org.eclipse.collections.impl.test.Verify;
-import org.eclipse.collections.impl.test.domain.Key;
+import org.eclipse.collections.impl.test.domain.Holder;
 import org.eclipse.collections.impl.utility.ArrayIterate;
 import org.junit.jupiter.api.Test;
 
@@ -165,17 +165,17 @@ public class UnifiedSetTest extends AbstractMutableSetTestCase
     @Test
     public void get()
     {
-        UnifiedSet<Integer> set = UnifiedSet.<Integer>newSet(SIZE).withAll(COLLISIONS);
-        set.removeAll(COLLISIONS);
-        for (Integer integer : COLLISIONS)
+        MutableList<Holder<Integer>> holderCollisions = COLLISIONS.collect(Holder::new);
+        UnifiedSet<Holder<Integer>> set = UnifiedSet.<Holder<Integer>>newSet(SIZE).withAll(holderCollisions);
+        set.removeAll(holderCollisions);
+        for (Holder<Integer> holder : holderCollisions)
         {
-            assertNull(set.get(integer));
+            assertNull(set.get(holder));
             assertNull(set.get(null));
-            set.add(integer);
-            //noinspection UnnecessaryBoxing,CachedNumberConstructorCall,BoxingBoxedValue
-            assertSame(integer, set.get(new Integer(integer)));
+            set.add(holder);
+            assertSame(holder, set.get(new Holder<>(holder.getValue())));
         }
-        assertEquals(COLLISIONS.toSet(), set);
+        assertEquals(holderCollisions.toSet(), set);
 
         // the pool interface supports getting null keys
         UnifiedSet<Integer> chainedWithNull = UnifiedSet.newSetWith(null, COLLISION_1);
@@ -191,15 +191,15 @@ public class UnifiedSetTest extends AbstractMutableSetTestCase
     @Test
     public void put()
     {
-        int size = MORE_COLLISIONS.size();
+        MutableList<Holder<Integer>> holderCollisions = MORE_COLLISIONS.collect(Holder::new);
+        int size = holderCollisions.size();
         for (int i = 1; i <= size; i++)
         {
-            Pool<Integer> unifiedSet = UnifiedSet.<Integer>newSet(1).withAll(MORE_COLLISIONS.subList(0, i - 1));
-            Integer newValue = MORE_COLLISIONS.get(i - 1);
+            Pool<Holder<Integer>> unifiedSet = UnifiedSet.<Holder<Integer>>newSet(1).withAll(holderCollisions.subList(0, i - 1));
+            Holder<Integer> newValue = holderCollisions.get(i - 1);
 
             assertSame(newValue, unifiedSet.put(newValue));
-            //noinspection UnnecessaryBoxing,CachedNumberConstructorCall,BoxingBoxedValue
-            assertSame(newValue, unifiedSet.put(new Integer(newValue)));
+            assertSame(newValue, unifiedSet.put(new Holder<>(newValue.getValue())));
         }
 
         // assert that all redundant puts into each position of chain bucket return the original element added
@@ -537,24 +537,24 @@ public class UnifiedSetTest extends AbstractMutableSetTestCase
     @Test
     public void setKeyPreservation()
     {
-        Key key = new Key("key");
+        Holder<String> key = new Holder<>("key");
 
-        Key duplicateKey1 = new Key("key");
-        MutableSet<Key> set1 = UnifiedSet.<Key>newSet().with(key, duplicateKey1);
+        Holder<String> duplicateKey1 = new Holder<>("key");
+        MutableSet<Holder<String>> set1 = UnifiedSet.<Holder<String>>newSet().with(key, duplicateKey1);
         Verify.assertSize(1, set1);
         Verify.assertContains(key, set1);
         assertSame(key, set1.getFirst());
 
-        Key duplicateKey2 = new Key("key");
-        MutableSet<Key> set2 = UnifiedSet.<Key>newSet().with(key, duplicateKey1, duplicateKey2);
+        Holder<String> duplicateKey2 = new Holder<>("key");
+        MutableSet<Holder<String>> set2 = UnifiedSet.<Holder<String>>newSet().with(key, duplicateKey1, duplicateKey2);
         Verify.assertSize(1, set2);
         Verify.assertContains(key, set2);
         assertSame(key, set2.getFirst());
 
-        Key duplicateKey3 = new Key("key");
-        MutableSet<Key> set3 = UnifiedSet.<Key>newSet().with(key, new Key("not a dupe"), duplicateKey3);
+        Holder<String> duplicateKey3 = new Holder<>("key");
+        MutableSet<Holder<String>> set3 = UnifiedSet.<Holder<String>>newSet().with(key, new Holder<>("not a dupe"), duplicateKey3);
         Verify.assertSize(2, set3);
-        Verify.assertContainsAll(set3, key, new Key("not a dupe"));
+        Verify.assertContainsAll(set3, key, new Holder<>("not a dupe"));
         assertSame(key, set3.detect(key::equals));
     }
 

@@ -26,6 +26,7 @@ import org.eclipse.collections.impl.multimap.bag.AbstractMutableBagMultimapTestC
 import org.eclipse.collections.impl.multimap.bag.HashBagMultimap;
 import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import org.eclipse.collections.impl.test.Verify;
+import org.eclipse.collections.impl.test.domain.Holder;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -168,17 +169,17 @@ public class HashBagMultimapWithHashingStrategyTest extends AbstractMutableBagMu
     @Test
     public void testHashingStrategyConstructor()
     {
-        HashBagMultimapWithHashingStrategy<Integer, Integer> multimapWithIdentity =
+        HashBagMultimapWithHashingStrategy<Holder<Integer>, Integer> multimapWithIdentity =
                 HashBagMultimapWithHashingStrategy.newMultimap(HashingStrategies.identityStrategy());
 
-        multimapWithIdentity.put(new Integer(1), 1);
-        multimapWithIdentity.putAll(new Integer(1), Lists.fixedSize.of(2, 20, 1));
-        multimapWithIdentity.put(new Integer(1), 3);
+        multimapWithIdentity.put(new Holder<>(1), 1);
+        multimapWithIdentity.putAll(new Holder<>(1), Lists.fixedSize.of(2, 20, 1));
+        multimapWithIdentity.put(new Holder<>(1), 3);
 
         assertEquals(3, multimapWithIdentity.sizeDistinct());
         Verify.assertSize(5, multimapWithIdentity);
 
-        HashBagMultimapWithHashingStrategy<Integer, Integer> multimapWithDefault =
+        HashBagMultimapWithHashingStrategy<Holder<Integer>, Integer> multimapWithDefault =
                 HashBagMultimapWithHashingStrategy.newMultimap(
                         HashingStrategies.defaultStrategy(),
                         multimapWithIdentity);
@@ -190,7 +191,7 @@ public class HashBagMultimapWithHashingStrategyTest extends AbstractMutableBagMu
                 multimapWithIdentity.valuesView().toBag(),
                 multimapWithDefault.valuesView().toBag());
 
-        HashBagMultimapWithHashingStrategy<Integer, Integer> copyOfMultimapWithDefault =
+        HashBagMultimapWithHashingStrategy<Holder<Integer>, Integer> copyOfMultimapWithDefault =
                 HashBagMultimapWithHashingStrategy.newMultimap(multimapWithDefault);
 
         Verify.assertMapsEqual(multimapWithDefault.toMap(), copyOfMultimapWithDefault.toMap());

@@ -24,7 +24,7 @@ import org.eclipse.collections.api.map.ImmutableMap;
 import org.eclipse.collections.api.map.MutableMap;
 import org.eclipse.collections.impl.map.mutable.UnifiedMap;
 import org.eclipse.collections.impl.test.Verify;
-import org.eclipse.collections.impl.test.domain.Key;
+import org.eclipse.collections.impl.test.domain.Holder;
 import org.eclipse.collections.impl.tuple.Tuples;
 import org.junit.jupiter.api.Test;
 
@@ -155,24 +155,24 @@ public class MapsTest
     @Test
     public void mapKeyPreservation()
     {
-        Key key = new Key("key");
+        Holder<String> key = new Holder<>("key");
 
-        Key duplicateKey1 = new Key("key");
-        ImmutableMap<Key, Integer> map1 = Maps.immutable.of(key, 1, duplicateKey1, 2);
+        Holder<String> duplicateKey1 = new Holder<>("key");
+        ImmutableMap<Holder<String>, Integer> map1 = Maps.immutable.of(key, 1, duplicateKey1, 2);
         Verify.assertSize(1, map1);
         Verify.assertContainsKeyValue(key, 2, map1);
         assertSame(key, map1.keysView().getFirst());
 
-        Key duplicateKey2 = new Key("key");
-        ImmutableMap<Key, Integer> map2 = Maps.immutable.of(key, 1, duplicateKey1, 2, duplicateKey2, 3);
+        Holder<String> duplicateKey2 = new Holder<>("key");
+        ImmutableMap<Holder<String>, Integer> map2 = Maps.immutable.of(key, 1, duplicateKey1, 2, duplicateKey2, 3);
         Verify.assertSize(1, map2);
         Verify.assertContainsKeyValue(key, 3, map2);
         assertSame(key, map2.keysView().getFirst());
 
-        Key duplicateKey3 = new Key("key");
-        ImmutableMap<Key, Integer> map3 = Maps.immutable.of(key, 1, new Key("not a dupe"), 2, duplicateKey3, 3);
+        Holder<String> duplicateKey3 = new Holder<>("key");
+        ImmutableMap<Holder<String>, Integer> map3 = Maps.immutable.of(key, 1, new Holder<>("not a dupe"), 2, duplicateKey3, 3);
         Verify.assertSize(2, map3);
-        Verify.assertContainsAllKeyValues(map3, key, 3, new Key("not a dupe"), 2);
+        Verify.assertContainsAllKeyValues(map3, key, 3, new Holder<>("not a dupe"), 2);
         assertSame(key, map3.keysView().detect(key::equals));
     }
 

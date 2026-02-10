@@ -48,6 +48,7 @@ import org.eclipse.collections.impl.list.mutable.AddToList;
 import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import org.eclipse.collections.impl.test.Verify;
+import org.eclipse.collections.impl.test.domain.Holder;
 import org.eclipse.collections.impl.test.domain.Person;
 import org.eclipse.collections.impl.tuple.Tuples;
 import org.eclipse.collections.impl.tuple.primitive.PrimitiveTuples;
@@ -510,45 +511,6 @@ public abstract class AbstractSortedSetTestCase extends AbstractCollectionTestCa
         Verify.assertSize(7, actualWithTarget.keysView().toList());
     }
 
-    private static final class Holder
-    {
-        private final int number;
-
-        private Holder(int i)
-        {
-            this.number = i;
-        }
-
-        @Override
-        public boolean equals(Object o)
-        {
-            if (this == o)
-            {
-                return true;
-            }
-            if (o == null || this.getClass() != o.getClass())
-            {
-                return false;
-            }
-
-            Holder holder = (Holder) o;
-
-            return this.number == holder.number;
-        }
-
-        @Override
-        public int hashCode()
-        {
-            return this.number;
-        }
-
-        @Override
-        public String toString()
-        {
-            return String.valueOf(this.number);
-        }
-    }
-
     @Override
     @Test
     public void zip()
@@ -572,13 +534,13 @@ public abstract class AbstractSortedSetTestCase extends AbstractCollectionTestCa
         Person john = new Person("John", "Smith");
         Person johnDoe = new Person("John", "Doe");
         MutableSortedSet<Person> people = this.newWith(john, johnDoe);
-        MutableList<Holder> list = Lists.mutable.with(new Holder(1), new Holder(2), new Holder(3));
-        MutableList<Pair<Person, Holder>> pairs = people.zip(list);
+        MutableList<Holder<Integer>> list = Lists.mutable.with(new Holder<>(1), new Holder<>(2), new Holder<>(3));
+        MutableList<Pair<Person, Holder<Integer>>> pairs = people.zip(list);
         assertEquals(
-                Lists.mutable.with(Tuples.pair(johnDoe, new Holder(1)), Tuples.pair(john, new Holder(2))),
+                Lists.mutable.with(Tuples.pair(johnDoe, new Holder<>(1)), Tuples.pair(john, new Holder<>(2))),
                 pairs.toList());
-        assertTrue(pairs.add(Tuples.pair(new Person("Jack", "Baker"), new Holder(3))));
-        assertEquals(Tuples.pair(new Person("Jack", "Baker"), new Holder(3)), pairs.getLast());
+        assertTrue(pairs.add(Tuples.pair(new Person("Jack", "Baker"), new Holder<>(3))));
+        assertEquals(Tuples.pair(new Person("Jack", "Baker"), new Holder<>(3)), pairs.getLast());
     }
 
     @Override

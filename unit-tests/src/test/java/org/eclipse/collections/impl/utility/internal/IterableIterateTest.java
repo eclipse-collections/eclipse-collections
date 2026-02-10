@@ -39,6 +39,7 @@ import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.math.IntegerSum;
 import org.eclipse.collections.impl.math.Sum;
 import org.eclipse.collections.impl.test.Verify;
+import org.eclipse.collections.impl.test.domain.Holder;
 import org.eclipse.collections.impl.utility.Iterate;
 import org.eclipse.collections.impl.utility.ListIterate;
 import org.junit.jupiter.api.Test;
@@ -158,13 +159,11 @@ public class IterableIterateTest
     {
         Iterable<Integer> iterable = new IterableAdapter<>(this.getIntegerList());
         assertEquals(1, Iterate.detect(iterable, Integer.valueOf(1)::equals).intValue());
-        //noinspection CachedNumberConstructorCall,UnnecessaryBoxing
-        Integer firstInt = new Integer(2);
-        //noinspection CachedNumberConstructorCall,UnnecessaryBoxing
-        Integer secondInt = new Integer(2);
+        Holder<Integer> firstInt = new Holder<>(2);
+        Holder<Integer> secondInt = new Holder<>(2);
         assertNotSame(firstInt, secondInt);
-        ImmutableList<Integer> list2 = iList(1, firstInt, secondInt);
-        assertSame(list2.get(1), Iterate.detect(list2, Integer.valueOf(2)::equals));
+        ImmutableList<Holder<Integer>> list2 = iList(new Holder<>(1), firstInt, secondInt);
+        assertSame(list2.get(1), Iterate.detect(list2, new Holder<>(2)::equals));
     }
 
     @Test
@@ -180,13 +179,11 @@ public class IterableIterateTest
     {
         Iterable<Integer> iterable = new IterableAdapter<>(this.getIntegerList());
         assertEquals(1, Iterate.detectWith(iterable, Object::equals, 1).intValue());
-        //noinspection CachedNumberConstructorCall,UnnecessaryBoxing
-        Integer firstInt = new Integer(2);
-        //noinspection CachedNumberConstructorCall,UnnecessaryBoxing
-        Integer secondInt = new Integer(2);
+        Holder<Integer> firstInt = new Holder<>(2);
+        Holder<Integer> secondInt = new Holder<>(2);
         assertNotSame(firstInt, secondInt);
-        ImmutableList<Integer> list2 = iList(1, firstInt, secondInt);
-        assertSame(list2.get(1), Iterate.detectWith(list2, Object::equals, 2));
+        ImmutableList<Holder<Integer>> list2 = iList(new Holder<>(1), firstInt, secondInt);
+        assertSame(list2.get(1), Iterate.detectWith(list2, Object::equals, new Holder<>(2)));
     }
 
     @Test
@@ -201,16 +198,14 @@ public class IterableIterateTest
     {
         Iterable<Integer> iterable = new IterableAdapter<>(this.getIntegerList());
         assertEquals(Optional.of(1), Iterate.detectOptional(iterable, Integer.valueOf(1)::equals));
-        //noinspection CachedNumberConstructorCall,UnnecessaryBoxing
-        Integer firstInt = new Integer(2);
-        //noinspection CachedNumberConstructorCall,UnnecessaryBoxing
-        Integer secondInt = new Integer(2);
+        Holder<Integer> firstInt = new Holder<>(2);
+        Holder<Integer> secondInt = new Holder<>(2);
         assertNotSame(firstInt, secondInt);
-        ImmutableList<Integer> list2 = iList(1, firstInt, secondInt);
-        Optional<Integer> result = Iterate.detectOptional(list2, Integer.valueOf(2)::equals);
+        ImmutableList<Holder<Integer>> list2 = iList(new Holder<>(1), firstInt, secondInt);
+        Optional<Holder<Integer>> result = Iterate.detectOptional(list2, new Holder<>(2)::equals);
         assertTrue(result.isPresent());
         assertSame(list2.get(1), result.get());
-        assertEquals(Optional.empty(), Iterate.detectOptional(list2, Integer.valueOf(3)::equals));
+        assertEquals(Optional.empty(), Iterate.detectOptional(list2, new Holder<>(3)::equals));
     }
 
     @Test
@@ -236,16 +231,14 @@ public class IterableIterateTest
     {
         Iterable<Integer> iterable = new IterableAdapter<>(this.getIntegerList());
         assertEquals(1, Iterate.detectWith(iterable, Object::equals, 1).intValue());
-        //noinspection CachedNumberConstructorCall,UnnecessaryBoxing
-        Integer firstInt = new Integer(2);
-        //noinspection CachedNumberConstructorCall,UnnecessaryBoxing
-        Integer secondInt = new Integer(2);
+        Holder<Integer> firstInt = new Holder<>(2);
+        Holder<Integer> secondInt = new Holder<>(2);
         assertNotSame(firstInt, secondInt);
-        ImmutableList<Integer> list2 = iList(1, firstInt, secondInt);
-        Optional<Integer> result = Iterate.detectWithOptional(list2, Object::equals, 2);
+        ImmutableList<Holder<Integer>> list2 = iList(new Holder<>(1), firstInt, secondInt);
+        Optional<Holder<Integer>> result = Iterate.detectWithOptional(list2, Object::equals, new Holder<>(2));
         assertTrue(result.isPresent());
         assertSame(list2.get(1), result.get());
-        assertEquals(Optional.empty(), Iterate.detectOptional(list2, Integer.valueOf(3)::equals));
+        assertEquals(Optional.empty(), Iterate.detectOptional(list2, new Holder<>(3)::equals));
     }
 
     @Test
