@@ -28,6 +28,7 @@ import org.eclipse.collections.api.block.procedure.Procedure;
 import org.eclipse.collections.api.block.procedure.primitive.ObjectIntProcedure;
 import org.eclipse.collections.api.factory.SortedSets;
 import org.eclipse.collections.api.list.ImmutableList;
+import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.map.MapIterable;
 import org.eclipse.collections.api.multimap.sortedset.ImmutableSortedSetMultimap;
 import org.eclipse.collections.api.ordered.OrderedIterable;
@@ -44,6 +45,7 @@ import org.eclipse.collections.impl.lazy.parallel.set.sorted.FlatCollectSortedSe
 import org.eclipse.collections.impl.lazy.parallel.set.sorted.RootSortedSetBatch;
 import org.eclipse.collections.impl.lazy.parallel.set.sorted.SelectSortedSetBatch;
 import org.eclipse.collections.impl.lazy.parallel.set.sorted.SortedSetBatch;
+import org.eclipse.collections.impl.list.fixed.AbstractArrayAdapter;
 import org.eclipse.collections.impl.list.immutable.ImmutableReversibleArrayList;
 import org.eclipse.collections.impl.map.mutable.ConcurrentHashMap;
 import org.eclipse.collections.impl.utility.ArrayIterate;
@@ -66,68 +68,35 @@ final class ImmutableTreeSet<T>
         this.comparator = comparator;
     }
 
-    private ImmutableTreeSet(T[] input, Comparator<? super T> inputComparator)
+    private ImmutableTreeSet(SortedUniqueArray<T> input)
     {
-        if (ArrayIterate.contains(input, null))
-        {
-            throw new NullPointerException("Input array contains nulls!");
-        }
-
-        int length = input.length;
-
-        if (length > 0)
-        {
-            if (inputComparator == null && !(input[0] instanceof Comparable))
-            {
-                throw new ClassCastException("Comparator is null and input does not implement Comparable!");
-            }
-
-            Arrays.sort(input, inputComparator);
-
-            int uniqueCount = 1;
-            for (int i = 1; i < length; i++)
-            {
-                int compare = inputComparator == null
-                        ? ((Comparable<? super T>) input[uniqueCount - 1]).compareTo(input[i])
-                        : inputComparator.compare(input[uniqueCount - 1], input[i]);
-                if (compare < 0)
-                {
-                    input[uniqueCount] = input[i];
-                    uniqueCount++;
-                }
-            }
-            length = uniqueCount;
-        }
-
-        this.delegate = ImmutableReversibleArrayList.copyOfRange(input, 0, length);
-        this.comparator = inputComparator;
+        this.delegate = ImmutableReversibleArrayList.newList(input);
+        this.comparator = input.comparator();
     }
 
     public static <T> ImmutableSortedSet<T> newSetWith(T... elements)
     {
-        return new ImmutableTreeSet<>(elements.clone(), null);
+        return ImmutableTreeSet.newSetWith(null, elements);
     }
 
     public static <T> ImmutableSortedSet<T> newSetWith(Comparator<? super T> comparator, T... elements)
     {
-        return new ImmutableTreeSet<>(elements.clone(), comparator);
+        return new ImmutableTreeSet<>(SortedUniqueArray.wrap(elements, comparator));
     }
 
     public static <T> ImmutableSortedSet<T> newSet(SortedSet<? super T> set)
     {
-        return new ImmutableTreeSet<>(
-                (ImmutableReversibleArrayList<T>) ImmutableReversibleArrayList.newList(set),
-                set.comparator());
+        return new ImmutableTreeSet<>(SortedUniqueArray.wrap(set));
     }
 
     public static <T> ImmutableSortedSet<T> newSetFromIterable(Iterable<? extends T> iterable)
     {
-        return new ImmutableTreeSet<>((T[]) Iterate.toArray(iterable), null);
+        return ImmutableTreeSet.newSetFromIterable(null, iterable);
     }
 
     public static <T> ImmutableSortedSet<T> newSetFromIterable(Comparator<? super T> comparator, Iterable<? extends T> iterable)
     {
-        return new ImmutableTreeSet<>((T[]) Iterate.toArray(iterable), comparator);
+        return new ImmutableTreeSet<>(SortedUniqueArray.wrap(iterable, comparator));
     }
 
     @Override
@@ -654,5 +623,101 @@ final class ImmutableTreeSet<T>
             return SortedSets.immutable.empty(this.comparator());
         }
         return this.subSet(count, this.delegate.size());
+    }
+
+    /**
+     * Ephemeral wrapper used only during {@link ImmutableTreeSet} construction.
+     *
+     * <p>This class intentionally exposes its backing array through {@link #toArray()} without
+     * copying, so that {@link ImmutableReversibleArrayList#newList(Iterable)} — which calls
+     * {@link Iterate#toArray(Iterable)} — can take ownership of the array with zero additional
+     * copies. Each factory method ensures it already owns its array (via {@code clone()},
+     * {@code SortedSet.toArray()}, or {@code Iterate.toArray()}), so the hand-off is safe as
+     * long as the {@code SortedUniqueArray} is not retained after construction.
+     */
+    private static class SortedUniqueArray<T> extends AbstractArrayAdapter<T>
+    {
+        private final T[] array;
+        private final Comparator<? super T> comparator;
+
+        private SortedUniqueArray(T[] array, Comparator<? super T> comparator)
+        {
+            super(array);
+            this.array = array;
+            this.comparator = comparator;
+        }
+
+        static <T> SortedUniqueArray<T> wrap(SortedSet<? super T> sortedSet)
+        {
+            return new SortedUniqueArray<>((T[]) sortedSet.toArray(), sortedSet.comparator());
+        }
+
+        static <T> SortedUniqueArray<T> wrap(T[] array, Comparator<? super T> comparator)
+        {
+            return SortedUniqueArray.sortAndDeduplicate(array.clone(), comparator);
+        }
+
+        static <T> SortedUniqueArray<T> wrap(Iterable<? extends T> iterable, Comparator<? super T> comparator)
+        {
+            return SortedUniqueArray.sortAndDeduplicate((T[]) Iterate.toArray(iterable), comparator);
+        }
+
+        private static <T> SortedUniqueArray<T> sortAndDeduplicate(T[] input, Comparator<? super T> inputComparator)
+        {
+            int length = input.length;
+
+            if (length == 0)
+            {
+                return new SortedUniqueArray<>(input, inputComparator);
+            }
+            if (ArrayIterate.contains(input, null))
+            {
+                throw new NullPointerException("Input array contains nulls!");
+            }
+            if (inputComparator == null && !(input[0] instanceof Comparable))
+            {
+                throw new ClassCastException("Comparator is null and input does not implement Comparable!");
+            }
+            Arrays.sort(input, inputComparator);
+            int uniqueCount = 1;
+
+            for (int i = 1; i < length; i++)
+            {
+                int compare = inputComparator == null
+                        ? ((Comparable<? super T>) input[uniqueCount - 1]).compareTo(input[i])
+                        : inputComparator.compare(input[uniqueCount - 1], input[i]);
+                if (compare < 0)
+                {
+                    input[uniqueCount] = input[i];
+                    uniqueCount++;
+                }
+            }
+            return uniqueCount == length
+                    ? new SortedUniqueArray<>(input, inputComparator)
+                    : new SortedUniqueArray<>(Arrays.copyOfRange(input, 0, uniqueCount), inputComparator);
+        }
+
+        private Comparator<? super T> comparator()
+        {
+            return this.comparator;
+        }
+
+        @Override
+        public T[] toArray()
+        {
+            return this.array;
+        }
+
+        @Override
+        public T set(int i, T t)
+        {
+            throw new UnsupportedOperationException("Cannot call set() on " + this.getClass().getSimpleName());
+        }
+
+        @Override
+        public MutableList<T> clone()
+        {
+            throw new UnsupportedOperationException(new CloneNotSupportedException());
+        }
     }
 }

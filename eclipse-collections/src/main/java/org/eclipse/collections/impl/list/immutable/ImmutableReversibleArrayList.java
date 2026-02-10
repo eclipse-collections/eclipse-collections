@@ -74,11 +74,6 @@ public final class ImmutableReversibleArrayList<T>
         return new ImmutableReversibleArrayList<>(elements.clone());
     }
 
-    public static <E> ImmutableReversibleArrayList<E> copyOfRange(E[] array, int from, int to)
-    {
-        return new ImmutableReversibleArrayList<>(Arrays.copyOfRange(array, from, to));
-    }
-
     private int physicalIndex(int logicalIndex)
     {
         return this.ascending
