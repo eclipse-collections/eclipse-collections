@@ -24,9 +24,9 @@ public class MinAndMaxBlocksTest
     @Test
     public void minBlocks()
     {
-        assertEquals(new Double(1.0), MinFunction.DOUBLE.value(1.0, 2.0));
-        assertEquals(new Double(0.0), MinFunction.DOUBLE.value(0.0, 1.0));
-        assertEquals(new Double(-1.0), MinFunction.DOUBLE.value(1.0, -1.0));
+        assertEquals(Double.valueOf(1.0), MinFunction.DOUBLE.value(1.0, 2.0));
+        assertEquals(Double.valueOf(0.0), MinFunction.DOUBLE.value(0.0, 1.0));
+        assertEquals(Double.valueOf(-1.0), MinFunction.DOUBLE.value(1.0, -1.0));
 
         assertEquals(Integer.valueOf(1), MinFunction.INTEGER.value(1, 2));
         assertEquals(Integer.valueOf(0), MinFunction.INTEGER.value(0, 1));
@@ -56,9 +56,9 @@ public class MinAndMaxBlocksTest
     @Test
     public void maxBlocks()
     {
-        assertEquals(new Double(2.0), MaxFunction.DOUBLE.value(1.0, 2.0));
-        assertEquals(new Double(1.0), MaxFunction.DOUBLE.value(0.0, 1.0));
-        assertEquals(new Double(1.0), MaxFunction.DOUBLE.value(1.0, -1.0));
+        assertEquals(Double.valueOf(2.0), MaxFunction.DOUBLE.value(1.0, 2.0));
+        assertEquals(Double.valueOf(1.0), MaxFunction.DOUBLE.value(0.0, 1.0));
+        assertEquals(Double.valueOf(1.0), MaxFunction.DOUBLE.value(1.0, -1.0));
 
         assertEquals(Integer.valueOf(2), MaxFunction.INTEGER.value(1, 2));
         assertEquals(Integer.valueOf(1), MaxFunction.INTEGER.value(0, 1));

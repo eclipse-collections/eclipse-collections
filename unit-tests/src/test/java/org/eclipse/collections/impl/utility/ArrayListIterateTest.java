@@ -296,7 +296,7 @@ public class ArrayListIterateTest
         list.add(2.0);
         list.add(3.0);
         assertEquals(
-                new Double(7.0),
+                Double.valueOf(7.0),
                 ArrayListIterate.injectInto(1.0, list, AddFunction.DOUBLE));
     }
 
@@ -308,7 +308,7 @@ public class ArrayListIterateTest
         list.add(2.0f);
         list.add(3.0f);
         assertEquals(
-                new Float(7.0f),
+                Float.valueOf(7.0f),
                 ArrayListIterate.injectInto(1.0f, list, AddFunction.FLOAT));
     }
 

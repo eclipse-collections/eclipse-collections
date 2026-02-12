@@ -732,7 +732,7 @@ public class ListIterateTest
     {
         String abc = "abc";
         String def = "def";
-        MutableList<? extends Serializable> list = Lists.mutable.of(new Integer(1), abc, new Long(2), def);
+        MutableList<? extends Serializable> list = Lists.mutable.of(1, abc, 2L, def);
         MutableList<String> expected = Lists.mutable.of(abc, def);
         assertEquals(expected, ListIterate.selectInstancesOf(list, String.class));
         assertEquals(expected, ListIterate.selectInstancesOf(new LinkedList<>(list), String.class));

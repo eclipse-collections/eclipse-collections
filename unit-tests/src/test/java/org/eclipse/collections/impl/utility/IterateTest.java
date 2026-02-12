@@ -351,7 +351,7 @@ public class IterateTest
     @Test
     public void injectInto2()
     {
-        assertEquals(new Double(7), Iterate.injectInto(1.0, iList(1.0, 2.0, 3.0), AddFunction.DOUBLE));
+        assertEquals(Double.valueOf(7.0), Iterate.injectInto(1.0, iList(1.0, 2.0, 3.0), AddFunction.DOUBLE));
     }
 
     @Test

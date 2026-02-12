@@ -187,14 +187,14 @@ public class FastListTest extends AbstractListTestCase
     public void testInjectIntoDouble()
     {
         FastList<Double> list = this.newWith(1.0, 2.0, 3.0);
-        assertEquals(new Double(1.0 + 1.0 + 2.0 + 3.0), list.injectInto(new Double(1.0d), AddFunction.DOUBLE));
+        assertEquals(Double.valueOf(1.0 + 1.0 + 2.0 + 3.0), list.injectInto(Double.valueOf(1.0), AddFunction.DOUBLE));
     }
 
     @Test
     public void testInjectIntoFloat()
     {
         FastList<Float> list = this.newWith(1.0f, 2.0f, 3.0f);
-        assertEquals(new Float(7.0f), list.injectInto(new Float(1.0f), AddFunction.FLOAT));
+        assertEquals(Float.valueOf(7.0f), list.injectInto(Float.valueOf(1.0f), AddFunction.FLOAT));
     }
 
     @Test

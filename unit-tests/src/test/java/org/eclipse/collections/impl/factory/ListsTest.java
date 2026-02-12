@@ -373,11 +373,11 @@ public class ListsTest
     public void withNValues()
     {
         ImmutableList<Integer> expected =
-                IntInterval.oneTo(10).collect(each -> new Integer(1));
+                IntInterval.oneTo(10).collect(each -> 1);
         MutableList<Integer> mutable =
-                Lists.mutable.withNValues(10, () -> new Integer(1));
+                Lists.mutable.withNValues(10, () -> 1);
         MutableList<Integer> multiReader =
-                Lists.multiReader.withNValues(10, () -> new Integer(1));
+                Lists.multiReader.withNValues(10, () -> 1);
         assertEquals(expected, mutable);
         assertEquals(expected, multiReader);
     }
