@@ -708,7 +708,10 @@ public abstract class AbstractMutableList<T>
         @Override
         public void add(int index, T element)
         {
-            this.checkIfOutOfBounds(index);
+            if (index > this.size || index < 0)
+            {
+                throw new IndexOutOfBoundsException("Index: " + index + " Size: " + this.size);
+            }
             this.original.add(index + this.offset, element);
             this.size++;
             this.updateSize(1);

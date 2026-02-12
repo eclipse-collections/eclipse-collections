@@ -169,7 +169,7 @@ public interface ListTestCase extends CollectionTestCase
         assertIterablesEqual(Lists.immutable.with("F"), sublist);
         assertIterablesEqual(Lists.immutable.with(), sublist2);
 
-        sublist2.add("J");
+        sublist2.add(0, "J");
         assertIterablesEqual(Lists.immutable.with("A", "B", "C", "J", "F"), list);
         assertIterablesEqual(Lists.immutable.with("J", "F"), sublist);
         assertIterablesEqual(Lists.immutable.with("J"), sublist2);
