@@ -34,7 +34,7 @@ import org.eclipse.collections.impl.map.AbstractSynchronizedMapIterable;
 import org.eclipse.collections.impl.map.MapIterableTestCase;
 import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import org.eclipse.collections.impl.test.Verify;
-import org.eclipse.collections.impl.test.domain.Key;
+import org.eclipse.collections.impl.test.domain.Holder;
 import org.eclipse.collections.impl.tuple.ImmutableEntry;
 import org.eclipse.collections.impl.tuple.Tuples;
 import org.eclipse.collections.impl.utility.Iterate;
@@ -149,12 +149,13 @@ public abstract class MutableMapIterableTestCase extends MapIterableTestCase
                 ImmutableEntry.of("Four", 4))));
         assertEquals(UnifiedMap.newWithKeysValues("One", 1, "Three", 3), map);
 
-        MutableMapIterable<Integer, Integer> integers = this.newMapWithKeysValues(1, 1, 2, 2, 3, 3);
-        Integer copy = new Integer(1);
-        assertTrue(integers.entrySet().retainAll(mList(ImmutableEntry.of(copy, copy))));
-        assertEquals(iMap(copy, copy), integers);
-        assertNotSame(copy, Iterate.getOnly(integers.entrySet()).getKey());
-        assertNotSame(copy, Iterate.getOnly(integers.entrySet()).getValue());
+        MutableMapIterable<Holder<Integer>, Holder<Integer>> holders =
+                this.newMapWithKeysValues(new Holder<>(1), new Holder<>(1), new Holder<>(2), new Holder<>(2), new Holder<>(3), new Holder<>(3));
+        Holder<Integer> copy = new Holder<>(1);
+        assertTrue(holders.entrySet().retainAll(mList(ImmutableEntry.of(copy, copy))));
+        assertEquals(iMap(copy, copy), holders);
+        assertNotSame(copy, Iterate.getOnly(holders.entrySet()).getKey());
+        assertNotSame(copy, Iterate.getOnly(holders.entrySet()).getValue());
     }
 
     @Test
@@ -516,33 +517,33 @@ public abstract class MutableMapIterableTestCase extends MapIterableTestCase
     @Test
     public void keyPreservation()
     {
-        Key key = new Key("key");
+        Holder<String> key = new Holder<>("key");
 
-        Key duplicateKey1 = new Key("key");
-        MapIterable<Key, Integer> map1 = this.newMapWithKeysValues(key, 1, duplicateKey1, 2);
+        Holder<String> duplicateKey1 = new Holder<>("key");
+        MapIterable<Holder<String>, Integer> map1 = this.newMapWithKeysValues(key, 1, duplicateKey1, 2);
         Verify.assertSize(1, map1);
         Verify.assertContainsKeyValue(key, 2, map1);
         assertSame(key, map1.keysView().getFirst());
 
-        Key duplicateKey2 = new Key("key");
-        MapIterable<Key, Integer> map2 = this.newMapWithKeysValues(key, 1, duplicateKey1, 2, duplicateKey2, 3);
+        Holder<String> duplicateKey2 = new Holder<>("key");
+        MapIterable<Holder<String>, Integer> map2 = this.newMapWithKeysValues(key, 1, duplicateKey1, 2, duplicateKey2, 3);
         Verify.assertSize(1, map2);
         Verify.assertContainsKeyValue(key, 3, map2);
         assertSame(key, map1.keysView().getFirst());
 
-        Key duplicateKey3 = new Key("key");
-        MapIterable<Key, Integer> map3 = this.newMapWithKeysValues(key, 1, new Key("not a dupe"), 2, duplicateKey3, 3);
+        Holder<String> duplicateKey3 = new Holder<>("key");
+        MapIterable<Holder<String>, Integer> map3 = this.newMapWithKeysValues(key, 1, new Holder<>("not a dupe"), 2, duplicateKey3, 3);
         Verify.assertSize(2, map3);
-        Verify.assertContainsAllKeyValues(map3, key, 3, new Key("not a dupe"), 2);
+        Verify.assertContainsAllKeyValues(map3, key, 3, new Holder<>("not a dupe"), 2);
         assertSame(key, map3.keysView().detect(key::equals));
 
-        Key duplicateKey4 = new Key("key");
-        MapIterable<Key, Integer> map4 = this.newMapWithKeysValues(key, 1, new Key("still not a dupe"), 2, new Key("me neither"), 3, duplicateKey4, 4);
+        Holder<String> duplicateKey4 = new Holder<>("key");
+        MapIterable<Holder<String>, Integer> map4 = this.newMapWithKeysValues(key, 1, new Holder<>("still not a dupe"), 2, new Holder<>("me neither"), 3, duplicateKey4, 4);
         Verify.assertSize(3, map4);
-        Verify.assertContainsAllKeyValues(map4, key, 4, new Key("still not a dupe"), 2, new Key("me neither"), 3);
+        Verify.assertContainsAllKeyValues(map4, key, 4, new Holder<>("still not a dupe"), 2, new Holder<>("me neither"), 3);
         assertSame(key, map4.keysView().detect(key::equals));
 
-        MapIterable<Key, Integer> map5 = this.newMapWithKeysValues(key, 1, duplicateKey1, 2, duplicateKey3, 3, duplicateKey4, 4);
+        MapIterable<Holder<String>, Integer> map5 = this.newMapWithKeysValues(key, 1, duplicateKey1, 2, duplicateKey3, 3, duplicateKey4, 4);
         Verify.assertSize(1, map5);
         Verify.assertContainsKeyValue(key, 4, map5);
         assertSame(key, map5.keysView().getFirst());
