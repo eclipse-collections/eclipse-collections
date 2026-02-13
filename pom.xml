@@ -453,7 +453,7 @@ Arrays, Maps or Strings. The iteration protocol was inspired by the Smalltalk co
                 <plugin>
                     <groupId>org.eclipse.cbi.maven.plugins</groupId>
                     <artifactId>eclipse-jarsigner-plugin</artifactId>
-                    <version>1.3.2</version>
+                    <version>1.5.3</version>
                 </plugin>
                 <!--This plugin's configuration is used to store Eclipse m2e
                     settings only. It has no influence on the Maven build itself. -->
@@ -720,7 +720,7 @@ Arrays, Maps or Strings. The iteration protocol was inspired by the Smalltalk co
                     <plugin>
                         <groupId>org.eclipse.cbi.maven.plugins</groupId>
                         <artifactId>eclipse-jarsigner-plugin</artifactId>
-                        <version>1.3.4</version>
+                        <version>1.5.3</version>
                         <executions>
                             <execution>
                                 <id>jarsign</id>
