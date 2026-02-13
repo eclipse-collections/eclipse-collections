@@ -109,6 +109,12 @@ public class UnmodifiableMap<K, V> implements Map<K, V>, Serializable
     }
 
     @Override
+    public V merge(K key, V value, BiFunction<? super V, ? super V, ? extends V> remappingFunction)
+    {
+        throw new UnsupportedOperationException("Cannot call merge() on " + this.getClass().getSimpleName());
+    }
+
+    @Override
     public void replaceAll(BiFunction<? super K, ? super V, ? extends V> function)
     {
         throw new UnsupportedOperationException("Cannot call replaceAll() on " + this.getClass().getSimpleName());
