@@ -13,7 +13,6 @@ package org.eclipse.collections.impl.set.sorted.mutable;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -33,6 +32,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -201,7 +201,7 @@ public class SortedSetAdapterTest extends AbstractSortedSetTestCase
         super.getFirst();
         assertEquals(Integer.valueOf(1), this.newWith(1, 2, 3).getFirst());
         assertEquals(Integer.valueOf(3), this.newWith(Collections.reverseOrder(), 1, 2, 3).getFirst());
-        assertThrows(NoSuchElementException.class, () -> new SortedSetAdapter<>(new TreeSet<>()).getFirst());
+        assertNull(new SortedSetAdapter<>(new TreeSet<>()).getFirst());
     }
 
     @Override
@@ -212,7 +212,7 @@ public class SortedSetAdapterTest extends AbstractSortedSetTestCase
         assertNotNull(this.newWith(1, 2, 3).getLast());
         assertEquals(Integer.valueOf(3), this.newWith(1, 2, 3).getLast());
         assertEquals(Integer.valueOf(1), this.newWith(Collections.reverseOrder(), 1, 2, 3).getLast());
-        assertThrows(NoSuchElementException.class, () -> new SortedSetAdapter<>(new TreeSet<>()).getLast());
+        assertNull(new SortedSetAdapter<>(new TreeSet<>()).getLast());
     }
 
     @Override
