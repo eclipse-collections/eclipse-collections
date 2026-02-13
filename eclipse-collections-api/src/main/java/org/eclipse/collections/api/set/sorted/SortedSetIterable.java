@@ -11,6 +11,7 @@
 package org.eclipse.collections.api.set.sorted;
 
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.concurrent.ExecutorService;
 
 import org.eclipse.collections.api.annotation.Beta;
@@ -28,6 +29,7 @@ import org.eclipse.collections.api.block.function.primitive.ShortFunction;
 import org.eclipse.collections.api.block.predicate.Predicate;
 import org.eclipse.collections.api.block.predicate.Predicate2;
 import org.eclipse.collections.api.block.procedure.Procedure;
+import org.eclipse.collections.api.block.procedure.primitive.ObjectIntProcedure;
 import org.eclipse.collections.api.list.ListIterable;
 import org.eclipse.collections.api.list.primitive.BooleanList;
 import org.eclipse.collections.api.list.primitive.ByteList;
@@ -222,4 +224,65 @@ public interface SortedSetIterable<T>
     @Override
     @Beta
     ParallelSortedSetIterable<T> asParallel(ExecutorService executorService, int batchSize);
+
+    /**
+     * Returns the greatest element in this set strictly less than the given element, or {@code null} if there is no
+     * such element.
+     */
+    T lower(T e);
+
+    /**
+     * Returns the greatest element in this set less than or equal to the given element, or {@code null} if there is no
+     * such element.
+     */
+    T floor(T e);
+
+    /**
+     * Returns the least element in this set greater than or equal to the given element, or {@code null} if there is no
+     * such element.
+     */
+    T ceiling(T e);
+
+    /**
+     * Returns the least element in this set strictly greater than the given element, or {@code null} if there is no
+     * such element.
+     */
+    T higher(T e);
+
+    /**
+     * Returns an iterator over the elements in this set in descending order.
+     */
+    Iterator<T> descendingIterator();
+
+    /**
+     * Returns a reverse-order view of the elements contained in this set.
+     */
+    SortedSetIterable<T> descendingSet();
+
+    SortedSetIterable<T> subSet(T fromElement, boolean fromInclusive, T toElement, boolean toInclusive);
+
+    SortedSetIterable<T> headSet(T toElement, boolean inclusive);
+
+    SortedSetIterable<T> tailSet(T fromElement, boolean inclusive);
+
+    @Override
+    default void reverseForEach(Procedure<? super T> procedure)
+    {
+        this.descendingSet().forEach(procedure);
+    }
+
+    @Override
+    default void reverseForEachWithIndex(ObjectIntProcedure<? super T> procedure)
+    {
+        int size = this.size();
+        this.descendingSet().forEachWithIndex((each, index) -> procedure.value(each, size - 1 - index));
+    }
+
+    @Override
+    default int detectLastIndex(Predicate<? super T> predicate)
+    {
+        int size = this.size();
+        int index = this.descendingSet().detectIndex(predicate);
+        return index >= 0 ? size - 1 - index : -1;
+    }
 }

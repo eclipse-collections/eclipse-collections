@@ -991,8 +991,10 @@ public abstract class AbstractSortedSetTestCase extends AbstractCollectionTestCa
         assertEquals(-1, integers1.detectLastIndex(integer -> integer % 5 == 0));
 
         MutableSortedSet<Integer> integers2 = this.newWith(Comparators.reverseNaturalOrder(), 4, 3, 2, 1);
-        assertEquals(3, integers2.detectLastIndex(integer -> integer % 2 == 0));
-        assertEquals(2, integers2.detectLastIndex(integer -> integer % 2 != 0));
+        // reverse order: [4, 3, 2, 1] -> last even is 2 at index 2
+        assertEquals(2, integers2.detectLastIndex(integer -> integer % 2 == 0));
+        // last odd is 1 at index 3
+        assertEquals(3, integers2.detectLastIndex(integer -> integer % 2 != 0));
         assertEquals(-1, integers2.detectLastIndex(integer -> integer % 5 == 0));
     }
 
@@ -1002,7 +1004,7 @@ public abstract class AbstractSortedSetTestCase extends AbstractCollectionTestCa
         MutableSortedSet<Integer> integers = this.newWith(1, 2, 3, 4);
         MutableSortedSet<Integer> reversed = integers.toReversed();
         assertEquals(
-                SortedSets.mutable.with(Comparators.reverseNaturalOrder(), 3, 2, 1),
+                SortedSets.mutable.with(Comparators.reverseNaturalOrder(), 4, 3, 2, 1),
                 reversed);
     }
 
@@ -1021,7 +1023,8 @@ public abstract class AbstractSortedSetTestCase extends AbstractCollectionTestCa
         MutableList<Integer> list = Lists.mutable.empty();
         MutableSortedSet<Integer> integers = this.newWith(1, 2, 3, 4);
         integers.reverseForEachWithIndex((each, index) -> list.add(each + index));
-        assertEquals(Lists.mutable.with(7, 6, 5, 4), list);
+        // Iterates in reverse: (4,3), (3,2), (2,1), (1,0)
+        assertEquals(Lists.mutable.with(7, 5, 3, 1), list);
     }
 
     @Test

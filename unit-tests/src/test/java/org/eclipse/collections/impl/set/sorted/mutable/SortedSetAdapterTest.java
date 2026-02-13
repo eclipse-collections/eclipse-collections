@@ -79,33 +79,6 @@ public class SortedSetAdapterTest extends AbstractSortedSetTestCase
         Verify.assertSortedSetsEqual(set, list2);
     }
 
-    @Override
-    @Test
-    public void detectLastIndex()
-    {
-        assertThrows(UnsupportedOperationException.class, () -> this.newWith(1, 2, 3).detectLastIndex(each -> each % 2 == 0));
-    }
-
-    @Override
-    @Test
-    public void reverseForEach()
-    {
-        assertThrows(UnsupportedOperationException.class, () -> this.newWith(1, 2, 3).reverseForEach(each -> fail("Should not be evaluated")));
-    }
-
-    @Override
-    @Test
-    public void reverseForEachWithIndex()
-    {
-        assertThrows(UnsupportedOperationException.class, () -> this.newWith(1, 2, 3).reverseForEachWithIndex((each, index) -> fail("Should not be evaluated")));
-    }
-
-    @Override
-    @Test
-    public void toReversed()
-    {
-        assertThrows(UnsupportedOperationException.class, () -> this.newWith(1, 2, 3).toReversed());
-    }
 
     @Test
     public void adapt()
