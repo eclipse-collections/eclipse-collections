@@ -26,7 +26,9 @@ import org.eclipse.collections.test.list.ListTestCase;
 import org.junit.jupiter.api.Test;
 
 import static org.eclipse.collections.test.IterableTestCase.assertIterablesEqual;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public interface MutableListTestCase extends MutableCollectionTestCase, ListTestCase, ListIterableTestCase, MutableOrderedIterableTestCase
 {
@@ -96,5 +98,30 @@ public interface MutableListTestCase extends MutableCollectionTestCase, ListTest
         MutableList<Integer> sortedList = mutableList.sortThis(Comparators.reverseNaturalOrder());
         assertSame(mutableList, sortedList);
         assertIterablesEqual(Lists.immutable.with(5, 4, 3, 2, 1), sortedList);
+    }
+
+    @Test
+    default void MutableList_reversed()
+    {
+        MutableList<Integer> original = this.newWith(3, 3, 3, 2, 2, 1);
+        MutableList<Integer> reversed = original.reversed();
+        assertIterablesEqual(Lists.immutable.with(1, 2, 2, 3, 3, 3), reversed);
+        assertSame(original, reversed.reversed());
+
+        if (this.allowsAdd())
+        {
+            original.add(4);
+            assertIterablesEqual(Lists.mutable.with(4, 1, 2, 2, 3, 3, 3), reversed);
+
+            reversed.add(0);
+            assertIterablesEqual(Lists.mutable.with(0, 3, 3, 3, 2, 2, 1, 4), original);
+        }
+        else
+        {
+            assertThrows(UnsupportedOperationException.class, () -> reversed.add(4));
+        }
+
+        MutableList<Integer> empty = this.newWith();
+        assertNotSame(empty, empty.reversed());
     }
 }

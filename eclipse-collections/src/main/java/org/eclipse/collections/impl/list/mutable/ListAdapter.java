@@ -104,6 +104,12 @@ public final class ListAdapter<T>
     }
 
     @Override
+    public MutableList<T> reversed()
+    {
+        return new ReversedMutableList<>(this);
+    }
+
+    @Override
     public MutableList<T> clone()
     {
         return Lists.mutable.withAll(this.delegate);

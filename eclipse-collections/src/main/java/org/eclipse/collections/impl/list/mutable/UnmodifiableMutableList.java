@@ -184,6 +184,16 @@ public class UnmodifiableMutableList<T>
     }
 
     @Override
+    public MutableList<T> reversed()
+    {
+        if (this instanceof RandomAccess)
+        {
+            return new ReversedRandomAccessMutableList<>(this);
+        }
+        return new ReversedMutableList<>(this);
+    }
+
+    @Override
     public MutableList<T> toReversed()
     {
         return this.getMutableList().toReversed();

@@ -835,6 +835,16 @@ abstract class AbstractImmutableList<T>
     }
 
     @Override
+    public AbstractImmutableList<T> reversed()
+    {
+        if (this.isEmpty())
+        {
+            return this;
+        }
+        return new ReversedImmutableList<>(this);
+    }
+
+    @Override
     public ReverseIterable<T> asReversed()
     {
         return ReverseIterable.adapt(this);

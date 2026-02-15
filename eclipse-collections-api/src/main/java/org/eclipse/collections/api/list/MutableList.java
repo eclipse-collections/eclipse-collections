@@ -471,6 +471,12 @@ public interface MutableList<T>
         return this.toImmutable();
     }
 
+    /**
+     * Returns a reverse-order view of this list. Changes to the returned list write through to this list,
+     * and vice versa.
+     */
+    MutableList<T> reversed();
+
     @Override
     default int indexOf(Object o)
     {
