@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Goldman Sachs.
+ * Copyright (c) 2025 Goldman Sachs and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -10,13 +10,21 @@
 
 package org.eclipse.collections.impl.test.domain;
 
-public final class Key implements Comparable<Key>
-{
-    private final String value;
+import java.io.Serializable;
 
-    public Key(String value)
+public final class Holder<T extends Comparable<? super T>>
+        implements Comparable<Holder<T>>, Serializable
+{
+    private final T value;
+
+    public Holder(T value)
     {
         this.value = value;
+    }
+
+    public T getValue()
+    {
+        return this.value;
     }
 
     @Override
@@ -31,7 +39,7 @@ public final class Key implements Comparable<Key>
             return false;
         }
 
-        Key that = (Key) obj;
+        Holder<?> that = (Holder<?>) obj;
 
         return this.value.equals(that.value);
     }
@@ -45,11 +53,11 @@ public final class Key implements Comparable<Key>
     @Override
     public String toString()
     {
-        return "Key{ '" + this.value + "' }";
+        return "Holder{" + this.value + "}";
     }
 
     @Override
-    public int compareTo(Key o)
+    public int compareTo(Holder<T> o)
     {
         return this.value.compareTo(o.value);
     }

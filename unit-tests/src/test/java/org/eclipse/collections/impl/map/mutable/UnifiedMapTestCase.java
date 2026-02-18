@@ -31,6 +31,7 @@ import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import org.eclipse.collections.impl.test.SerializeTestHelper;
 import org.eclipse.collections.impl.test.Verify;
+import org.eclipse.collections.impl.test.domain.Holder;
 import org.eclipse.collections.impl.tuple.ImmutableEntry;
 import org.eclipse.collections.impl.utility.ArrayIterate;
 import org.eclipse.collections.impl.utility.Iterate;
@@ -426,14 +427,15 @@ public abstract class UnifiedMapTestCase extends MutableMapTestCase
             assertEquals(this.mapWithCollisionsOfSize(i - 1), map);
         }
 
-        for (Integer item : MORE_COLLISIONS)
+        MutableList<Holder<Integer>> holderCollisions = MORE_COLLISIONS.collect(Holder::new);
+        for (Holder<Integer> item : holderCollisions)
         {
-            MutableMap<Integer, Integer> integers = this.mapWithCollisionsOfSize(9);
-            @SuppressWarnings("BoxingBoxedValue")
-            Integer keyCopy = new Integer(item);
-            assertTrue(integers.entrySet().retainAll(mList(ImmutableEntry.of(keyCopy, keyCopy))));
-            assertEquals(iMap(keyCopy, keyCopy), integers);
-            assertNotSame(keyCopy, Iterate.getOnly(integers.entrySet()).getKey());
+            MutableMap<Holder<Integer>, Holder<Integer>> holders = this.<Holder<Integer>, Holder<Integer>>newMap();
+            holderCollisions.each(collision -> holders.put(collision, collision));
+            Holder<Integer> keyCopy = new Holder<>(item.getValue());
+            assertTrue(holders.entrySet().retainAll(mList(ImmutableEntry.of(keyCopy, keyCopy))));
+            assertEquals(iMap(keyCopy, keyCopy), holders);
+            assertNotSame(keyCopy, Iterate.getOnly(holders.entrySet()).getKey());
         }
 
         // simple map, collection to retain contains non-entry element

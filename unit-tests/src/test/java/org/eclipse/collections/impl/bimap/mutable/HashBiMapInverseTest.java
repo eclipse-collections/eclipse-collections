@@ -12,7 +12,7 @@ package org.eclipse.collections.impl.bimap.mutable;
 
 import org.eclipse.collections.api.bimap.MutableBiMap;
 import org.eclipse.collections.impl.test.Verify;
-import org.eclipse.collections.impl.test.domain.Key;
+import org.eclipse.collections.impl.test.domain.Holder;
 import org.junit.jupiter.api.Test;
 
 public class HashBiMapInverseTest extends AbstractMutableBiMapTestCase
@@ -67,15 +67,15 @@ public class HashBiMapInverseTest extends AbstractMutableBiMapTestCase
     @Test
     public void keyPreservation()
     {
-        Key key = new Key("key");
+        Holder<String> key = new Holder<>("key");
 
-        Key duplicateKey1 = new Key("key");
-        MutableBiMap<Integer, Key> map1 = HashBiMap.newWithKeysValues(key, 1, duplicateKey1, 2).inverse();
+        Holder<String> duplicateKey1 = new Holder<>("key");
+        MutableBiMap<Integer, Holder<String>> map1 = HashBiMap.newWithKeysValues(key, 1, duplicateKey1, 2).inverse();
         Verify.assertSize(1, map1);
         Verify.assertContainsKeyValue(2, key, map1);
 
-        Key duplicateKey2 = new Key("key");
-        MutableBiMap<Integer, Key> map2 = HashBiMap.newWithKeysValues(key, 1, duplicateKey1, 2, duplicateKey2, 3).inverse();
+        Holder<String> duplicateKey2 = new Holder<>("key");
+        MutableBiMap<Integer, Holder<String>> map2 = HashBiMap.newWithKeysValues(key, 1, duplicateKey1, 2, duplicateKey2, 3).inverse();
         Verify.assertSize(1, map2);
         Verify.assertContainsKeyValue(3, key, map2);
     }
