@@ -209,7 +209,7 @@ Arrays, Maps or Strings. The iteration protocol was inspired by the Smalltalk co
             <dependency>
                 <groupId>org.assertj</groupId>
                 <artifactId>assertj-core</artifactId>
-                <version>3.25.3</version>
+                <version>3.27.7</version>
                 <scope>test</scope>
             </dependency>
 
