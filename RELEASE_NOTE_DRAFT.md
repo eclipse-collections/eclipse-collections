@@ -7,6 +7,10 @@ This release focused on migrating the development baseline from Java 11 to Java 
 
 The Eclipse Collections team gives a huge thank you to everyone who participated in this release.
 
+# New Functionality
+----------------------
+* Added a ConcurrentHashMapWithHashingStrategy
+
 # Documentation Changes
 ----------------------
 * Improved mutablePrimitivePrimitiveMap's remove() and removeKey() Javadoc.
@@ -17,7 +21,6 @@ The Eclipse Collections team gives a huge thank you to everyone who participated
 * Build a maven p2 site from the reactor content. Fixes #1411, #288
 * Upgrade bnd plugin to 7.1.0.
 * Publish p2 artifacts to maven central. Fixes #294 . Example [here](https://central.sonatype.com/artifact/org.eclipse.collections/p2-site)
-
 
 # Bug Fixes
 -----------------
