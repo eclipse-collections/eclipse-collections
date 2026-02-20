@@ -730,7 +730,7 @@ final class ImmutableEmptyStack<T>
     @Override
     public ImmutableStack<T> takeWhile(Predicate<? super T> predicate)
     {
-        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".takeWhile() not implemented yet");
+        return this;
     }
 
     @Override

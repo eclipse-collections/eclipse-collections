@@ -218,6 +218,18 @@ public abstract class StackIterableTestCase
         assertFalse(stack.containsAllArguments(2, 1, 3, 5));
     }
 
+    @Test
+    public void takeWhile()
+    {
+        StackIterable<Integer> stack = this.newStackWith(1, 2, 3, 4, 5, 6, 7);
+        assertEquals(this.newStackWith(), stack.takeWhile(Predicates.alwaysFalse()));
+        assertEquals(this.newStackWith(1), stack.takeWhile(Predicates.lessThanOrEqualTo(1)));
+        assertEquals(this.newStackWith(1, 2), stack.takeWhile(Predicates.lessThanOrEqualTo(2)));
+        assertEquals(this.newStackWith(1, 2, 3, 4, 5, 6), stack.takeWhile(Predicates.lessThanOrEqualTo(stack.size() - 1)));
+        assertEquals(this.newStackWith(1, 2, 3, 4, 5, 6, 7), stack.takeWhile(Predicates.lessThanOrEqualTo(stack.size())));
+        assertEquals(this.newStackWith(1, 2, 3, 4, 5, 6, 7), stack.takeWhile(Predicates.alwaysTrue()));
+    }
+
     @Override
     @Test
     public void collect()
