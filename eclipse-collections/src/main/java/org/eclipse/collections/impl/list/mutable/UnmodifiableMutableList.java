@@ -64,7 +64,7 @@ public class UnmodifiableMutableList<T>
         extends AbstractUnmodifiableMutableCollection<T>
         implements MutableList<T>, Serializable
 {
-    UnmodifiableMutableList(MutableList<? extends T> mutableList)
+    protected UnmodifiableMutableList(MutableList<? extends T> mutableList)
     {
         super(mutableList);
     }
