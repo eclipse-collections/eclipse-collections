@@ -93,7 +93,7 @@ jobs:
     name: Unit Tests ${{ matrix.java-version }}
     strategy:
       matrix:
-        java-version: [17, 21, 24]
+        java-version: [17, 21, 25]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -136,12 +136,12 @@ jobs:
             maven-test-
             maven-
 
-      - name: Download JDK 25 from jdk.java.net
+      - name: Download JDK 26 from jdk.java.net
         uses: oracle-actions/setup-java@v1
         id: download-jdk
         with:
           website: jdk.java.net
-          release: 25
+          release: 26
       - name: 'Print outputs'
         shell: bash
         run: |
@@ -340,12 +340,12 @@ jobs:
             maven-
 
       - run: mvn --non-recursive wrapper:wrapper -Dmaven=3.9.6
-      - name: Download JDK 25 from jdk.java.net
+      - name: Download JDK 26 from jdk.java.net
         uses: oracle-actions/setup-java@v1
         id: download-jdk
         with:
           website: jdk.java.net
-          release: 25
+          release: 26
       - name: 'Print outputs'
         shell: bash
         run: |
