@@ -10,8 +10,8 @@
 
 package org.eclipse.collections.test.list.mutable;
 
-import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.collections.impl.test.Verify;
@@ -21,13 +21,13 @@ import org.junit.jupiter.api.Test;
 import static org.eclipse.collections.impl.test.Verify.assertNotSerializable;
 import static org.eclipse.collections.test.IterableTestCase.assertIterablesNotEqual;
 
-public class ArrayListSubListTest implements ListTestCase
+public class LinkedListSubListTest implements ListTestCase
 {
     @SafeVarargs
     @Override
     public final <T> List<T> newWith(T... elements)
     {
-        List<T> list = new ArrayList<>();
+        List<T> list = new LinkedList<>();
         list.add(null);
         Collections.addAll(list, elements);
         list.add(null);
