@@ -10,6 +10,8 @@
 
 package org.eclipse.collections.test.lazy;
 
+import java.util.Iterator;
+
 import org.eclipse.collections.api.LazyIterable;
 import org.eclipse.collections.impl.lazy.LazyIterableAdapter;
 import org.eclipse.collections.test.LazyNoIteratorTestCase;
@@ -20,6 +22,13 @@ public class LazyIterableAdapterTestNoIteratorTest implements LazyNoIteratorTest
     @Override
     public <T> LazyIterable<T> newWith(T... elements)
     {
-        return new LazyIterableAdapter<>(new FastListNoIterator<T>().with(elements));
+        return new LazyIterableAdapter<>(new FastListNoIterator<T>().with(elements))
+        {
+            @Override
+            public Iterator<T> iterator()
+            {
+                throw new UnsupportedOperationException("No iteration patterns should delegate to iterator()");
+            }
+        };
     }
 }

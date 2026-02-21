@@ -10,6 +10,8 @@
 
 package org.eclipse.collections.test.lazy;
 
+import java.util.Iterator;
+
 import org.eclipse.collections.api.LazyIterable;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.impl.lazy.DropWhileIterable;
@@ -26,6 +28,13 @@ public class DropWhileIterableNoIteratorTest implements LazyNoIteratorTestCase
         T object = (T) new Object();
         list.add(object);
         IterableTestCase.addAllTo(elements, list);
-        return new DropWhileIterable<>(list, each -> each == object);
+        return new DropWhileIterable<>(list, each -> each == object)
+        {
+            @Override
+            public Iterator<T> iterator()
+            {
+                throw new UnsupportedOperationException("No iteration patterns should delegate to iterator()");
+            }
+        };
     }
 }
