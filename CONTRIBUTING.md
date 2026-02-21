@@ -22,7 +22,7 @@ Please add a description of your changes to the [draft release notes](RELEASE_NO
 
 Finally, submit a pull request.
 
-Details on [working with GitHub for Eclipse Collections](https://github.com/eclipse/eclipse-collections/wiki/Working-with-GitHub) is located at the Wiki.
+Details on [working with GitHub for Eclipse Collections](https://github.com/eclipse-collections/eclipse-collections/wiki/Working-with-GitHub) is located at the Wiki.
 
 Contact us
 ----------
@@ -33,7 +33,7 @@ Build
 -----
 The Eclipse Collections build requires below as dependencies.
 
-- Java 11+
+- Java 17+
 - Maven 3.1.0+
 
 The Eclipse Collections build performs code generation to create primitive collections. Run the full build once before opening your IDE.
@@ -103,7 +103,7 @@ That's it! Thanks for contributing to Eclipse Collections!
 [semver]:          http://semver.org/
 [style-guide]:     https://google.github.io/styleguide/javaguide.html
 [rebase]:          https://github.com/edx/edx-solutions-edx-platform/wiki/How-to-Rebase-a-Pull-Request
-[github]:          https://github.com/eclipse/eclipse-collections/actions
+[github]:          https://github.com/eclipse-collections/eclipse-collections/actions
 [imperative-mood]: https://github.com/git/git/blob/master/Documentation/SubmittingPatches
 [github-issue]:    https://help.github.com/articles/closing-issues-via-commit-messages/
 [mailing-list]:    https://dev.eclipse.org/mailman/listinfo/collections-dev
