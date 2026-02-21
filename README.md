@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright (c) 2025 Goldman Sachs and others.
+  ~ Copyright (c) 2026 Goldman Sachs and others.
   ~ All rights reserved. This program and the accompanying materials
   ~ are made available under the terms of the Eclipse Public License v1.0
   ~ and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -22,12 +22,12 @@
 [![][actions checkstyle img]][actions checkstyle]
 [![][actions javadoc img]][actions javadoc]
 
-<a href="https://eclipse.dev/collections/"><img src="https://github.com/eclipse/eclipse-collections/blob/master/artwork/eclipse-collections-logo.png" height="50%" width="50%"></a>
+<a href="https://eclipse.dev/collections/"><img src="https://github.com/eclipse-collections/eclipse-collections/blob/master/artwork/eclipse-collections-logo.png" height="50%" width="50%"></a>
 
 #### [English](https://eclipse.dev/collections/) | [Deutsch](https://eclipse.dev/collections/de/index.html) | [Ελληνικά](https://eclipse.dev/collections/el/index.html) | [Español](https://eclipse.dev/collections/es/index.html) | [中文](https://eclipse.dev/collections/cn/index.html) | [Français](https://eclipse.dev/collections/fr/index.html) | [日本語](https://eclipse.dev/collections/ja/index.html) | [Norsk (bokmål)](https://eclipse.dev/collections/no-nb/index.html) | [Português-Brasil](https://eclipse.dev/collections/pt-br/index.html) | [Русский](https://eclipse.dev/collections/ru/index.html) | [हिंदी](https://eclipse.dev/collections/hi/index.html) | [Srpski (latinica)](https://eclipse.dev/collections/sr-rs-latn/index.html)
 Eclipse Collections is a comprehensive collections library for Java. The library enables productivity and performance by delivering an expressive and efficient set of APIs and types. The iteration protocol was inspired by the Smalltalk collection framework, and the collections are compatible with the Java Collection Framework types.
 
-The current GA release of Eclipse Collections (11.1.0) is compatible with Java 8+. Eclipse Collections 12.x will be compatible with Java 11+. Eclipse Collections is a part of the OpenJDK [Quality Outreach](https://wiki.openjdk.java.net/display/quality/Quality+Outreach) program, and it is validated for different versions of the OpenJDK.
+The current GA release of Eclipse Collections (13.0.0) is compatible with Java 17+. Eclipse Collections 12.x is compatible with Java 11+, for projects that are not ready to upgrade to Java 17. Eclipse Collections is a part of the OpenJDK [Quality Outreach](https://wiki.openjdk.java.net/display/quality/Quality+Outreach) program, and it is validated for different versions of the OpenJDK.
 
 ## Why Eclipse Collections?
 
@@ -61,19 +61,19 @@ The current GA release of Eclipse Collections (11.1.0) is compatible with Java 8
 * Blog Series: [The missing Java data structures no one ever told you about][BlogTheMissingJavaDataStructures]
 * Blog: [Java has Streams. Do we need third-party collections?][BlogJavaHasStreamsDoWeNeedCollections]
 * [Some Quick Code Examples](./README_EXAMPLES.md)
-* [Eclipse Collections Katas](https://github.com/eclipse/eclipse-collections-kata), a fun way to help you learn idiomatic Eclipse Collections usage.
-    * Start Here - [Pet Kata](https://eclipse.github.io/eclipse-collections-kata/pet-kata/#/)
-    * Continue Here - [Company Kata](https://eclipse.github.io/eclipse-collections-kata/company-kata/#/)
-* [Eclipse Collections Reference Guide](https://github.com/eclipse/eclipse-collections/blob/master/docs/0-RefGuide.adoc) and [Javadoc](https://eclipse.dev/collections/javadoc/11.1.0/index.html)
+* [Eclipse Collections Katas](https://github.com/eclipse-collections/eclipse-collections-kata), a fun way to help you learn idiomatic Eclipse Collections usage.
+    * Start Here - [Pet Kata](https://eclipse-collections.github.io/eclipse-collections-kata/pet-kata/#/)
+    * Continue Here - [Company Kata](https://eclipse-collections.github.io/eclipse-collections-kata/company-kata/#/)
+* [Eclipse Collections Reference Guide](https://github.com/eclipse-collections/eclipse-collections/blob/master/docs/0-RefGuide.adoc) and [Javadoc](https://eclipse.dev/collections/javadoc/11.1.0/index.html)
 * [Serializing Eclipse Collections with Jackson](./docs/jackson.md)
-* [Articles](https://github.com/eclipse/eclipse-collections/wiki/Articles) and [Blogs](https://medium.com/tag/eclipse-collections/latest)
+* [Articles](https://github.com/eclipse-collections/eclipse-collections/wiki/Articles) and [Blogs](https://medium.com/tag/eclipse-collections/latest)
 * Some OSS projects that use Eclipse Collections
   * [Neo4J](https://github.com/neo4j/neo4j), [FINOS Legend](https://github.com/finos/legend-pure), [Reladomo](https://github.com/goldmansachs/reladomo), [Liftwizard](https://github.com/motlin/liftwizard), [Exchange Core](https://github.com/mzheravin/exchange-core), [Dataframe EC](https://github.com/vmzakharov/dataframe-ec), [MapDB](https://github.com/jankotek/mapdb), [Code Browser](https://github.com/yawkat/code-browser), [Obevo](https://github.com/goldmansachs/obevo), [BNY Mellon Code Katas](https://github.com/BNYMellon/CodeKatas), [Eclipse Nebula NatTable](https://www.eclipse.org/nattable/index.php), [Eclipse VIATRA](https://github.com/viatra/org.eclipse.viatra), [Jackson Datatypes Collections](https://github.com/FasterXML/jackson-datatypes-collections)
   * If you work on an open source project that uses Eclipse Collections, let us know!
 
 ## Eclipse Collections and JDK Compatibility Matrix
 
-| EC     | JDK 5 - 7 | JDK 8   | JDK 9 - 10 | JDK 11 - 14 | JDK 15 - 17 | JDK 17 - 21 
+| EC     | JDK 5 - 7 | JDK 8   | JDK 9 - 10 | JDK 11 - 14 | JDK 15 - 16 | JDK 17 - 25 
 |--------|-----------|---------|------------|-------------|-------------|-------------
 | 7.x.x  | &check;   | &check; |            |             |             |
 | 8.x.x  |           | &check; |            |             |             |
@@ -129,28 +129,28 @@ We welcome contributions! We accept contributions via pull requests here in GitH
 * StackOverflow: https://stackoverflow.com/questions/tagged/eclipse-collections
 * Mailing lists: https://dev.eclipse.org/mailman/listinfo/collections-dev
 * Forum: https://www.eclipse.org/forums/index.php?t=thread&frm_id=329
-* Working with GitHub: https://github.com/eclipse/eclipse-collections/wiki/Working-with-GitHub
+* Working with GitHub: https://github.com/eclipse-collections/eclipse-collections/wiki/Working-with-GitHub
 
-[actions acceptance-tests]:https://github.com/eclipse/eclipse-collections/actions?query=workflow%3A%22Acceptance+Tests%22
-[actions acceptance-tests img]:https://github.com/eclipse/eclipse-collections/workflows/Acceptance%20Tests/badge.svg?branch=master
+[actions acceptance-tests]:https://github.com/eclipse-collections/eclipse-collections/actions?query=workflow%3A%22Acceptance+Tests%22
+[actions acceptance-tests img]:https://github.com/eclipse-collections/eclipse-collections/workflows/Acceptance%20Tests/badge.svg?branch=master
 
-[actions unit-tests]:https://github.com/eclipse/eclipse-collections/actions?query=workflow%3A%22Unit+tests%22
-[actions unit-tests img]:https://github.com/eclipse/eclipse-collections/workflows/Unit%20tests/badge.svg?branch=master
+[actions unit-tests]:https://github.com/eclipse-collections/eclipse-collections/actions?query=workflow%3A%22Unit+tests%22
+[actions unit-tests img]:https://github.com/eclipse-collections/eclipse-collections/workflows/Unit%20tests/badge.svg?branch=master
 
-[actions performance-tests]:https://github.com/eclipse/eclipse-collections/actions?query=workflow%3A%22Performance+Tests%22
-[actions performance-tests img]:https://github.com/eclipse/eclipse-collections/workflows/Performance%20Tests/badge.svg?branch=master
+[actions performance-tests]:https://github.com/eclipse-collections/eclipse-collections/actions?query=workflow%3A%22Performance+Tests%22
+[actions performance-tests img]:https://github.com/eclipse-collections/eclipse-collections/workflows/Performance%20Tests/badge.svg?branch=master
 
-[actions checkstyle]:https://github.com/eclipse/eclipse-collections/actions?query=workflow%3A%22Checkstyle%22
-[actions checkstyle img]:https://github.com/eclipse/eclipse-collections/workflows/Checkstyle/badge.svg?branch=master
+[actions checkstyle]:https://github.com/eclipse-collections/eclipse-collections/actions?query=workflow%3A%22Checkstyle%22
+[actions checkstyle img]:https://github.com/eclipse-collections/eclipse-collections/workflows/Checkstyle/badge.svg?branch=master
 
-[actions javadoc]:https://github.com/eclipse/eclipse-collections/actions?query=workflow%3A%22JavaDoc%22
-[actions javadoc img]:https://github.com/eclipse/eclipse-collections/workflows/JavaDoc/badge.svg?branch=master
+[actions javadoc]:https://github.com/eclipse-collections/eclipse-collections/actions?query=workflow%3A%22JavaDoc%22
+[actions javadoc img]:https://github.com/eclipse-collections/eclipse-collections/workflows/JavaDoc/badge.svg?branch=master
 
 [maven]:https://search.maven.org/#search|gav|1|g:"org.eclipse.collections"%20AND%20a:"eclipse-collections"
 [maven img]:https://maven-badges.herokuapp.com/maven-central/org.eclipse.collections/eclipse-collections/badge.svg
 
-[release]:https://github.com/eclipse/eclipse-collections/releases
-[release img]:https://img.shields.io/github/release/eclipse/eclipse-collections.svg
+[release]:https://github.com/eclipse-collections/eclipse-collections/releases
+[release img]:https://img.shields.io/github/release/eclipse-collections/eclipse-collections.svg
 
 [javadoc api]:https://javadoc.io/doc/org.eclipse.collections/eclipse-collections-api
 [javadoc api img]:https://javadoc.io/badge2/org.eclipse.collections/eclipse-collections-api/javadoc_eclipse_collections_api.svg
@@ -195,10 +195,10 @@ We welcome contributions! We accept contributions via pull requests here in GitH
 [BlogJavaHasStreamsDoWeNeedCollections]: https://motlin.medium.com/java-has-streams-do-we-need-third-party-collections-dd12f473d105
 
 [Factories]: https://eclipse.dev/collections/javadoc/11.1.0/org/eclipse/collections/impl/factory/package-summary.html
-[10-0-Release]: https://github.com/eclipse/eclipse-collections/releases/tag/10.0.0
-[10-1-Release]: https://github.com/eclipse/eclipse-collections/releases/tag/10.1.0
-[10-2-Release]: https://github.com/eclipse/eclipse-collections/releases/tag/10.2.0
-[10-3-Release]: https://github.com/eclipse/eclipse-collections/releases/tag/10.3.0
-[10-4-Release]: https://github.com/eclipse/eclipse-collections/releases/tag/10.4.0
-[11-0-Release]: https://github.com/eclipse/eclipse-collections/releases/tag/11.0.0
-[11-1-Release]: https://github.com/eclipse/eclipse-collections/releases/tag/11.1.0
+[10-0-Release]: https://github.com/eclipse-collections/eclipse-collections/releases/tag/10.0.0
+[10-1-Release]: https://github.com/eclipse-collections/eclipse-collections/releases/tag/10.1.0
+[10-2-Release]: https://github.com/eclipse-collections/eclipse-collections/releases/tag/10.2.0
+[10-3-Release]: https://github.com/eclipse-collections/eclipse-collections/releases/tag/10.3.0
+[10-4-Release]: https://github.com/eclipse-collections/eclipse-collections/releases/tag/10.4.0
+[11-0-Release]: https://github.com/eclipse-collections/eclipse-collections/releases/tag/11.0.0
+[11-1-Release]: https://github.com/eclipse-collections/eclipse-collections/releases/tag/11.1.0
