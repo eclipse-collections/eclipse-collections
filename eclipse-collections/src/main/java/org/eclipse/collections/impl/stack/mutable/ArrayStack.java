@@ -1186,7 +1186,7 @@ public class ArrayStack<T> implements MutableStack<T>, Externalizable
     @Override
     public MutableStack<T> takeWhile(Predicate<? super T> predicate)
     {
-        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".takeWhile() not implemented yet");
+        return ArrayStack.newStack(this.delegate.takeWhile(predicate));
     }
 
     @Override

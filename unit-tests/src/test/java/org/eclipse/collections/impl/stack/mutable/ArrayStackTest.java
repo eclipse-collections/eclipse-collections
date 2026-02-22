@@ -46,13 +46,6 @@ public class ArrayStackTest extends MutableStackTestCase
     }
 
     @Test
-    public void takeWhile()
-    {
-        ArrayStack<Object> arrayStack = new ArrayStack<>();
-        assertThrows(UnsupportedOperationException.class, () -> arrayStack.takeWhile(null));
-    }
-
-    @Test
     public void dropWhile()
     {
         ArrayStack<Object> arrayStack = new ArrayStack<>();
