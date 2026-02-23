@@ -230,6 +230,57 @@ public abstract class AbstractLazy<name>IterableTestCase
     }
 
     @Test
+    public void lazyCollectPrimitivesSizeIsEmptyNotEmpty()
+    {
+        assertEquals(3, this.classUnderTest().collectBoolean(e -> e % 2 == 0).size());
+        assertFalse(this.classUnderTest().collectBoolean(e -> e % 2 == 0).isEmpty());
+        assertTrue(this.classUnderTest().collectBoolean(e -> e % 2 == 0).notEmpty());
+        assertEquals(3, this.classUnderTest().asLazy().collectChar(e -> (char) (e + 1)).size());
+        assertFalse(this.classUnderTest().asLazy().collectChar(e -> (char) (e + 1)).isEmpty());
+        assertTrue(this.classUnderTest().asLazy().collectChar(e -> (char) (e + 1)).notEmpty());
+        assertEquals(3, this.classUnderTest().asLazy().collectByte(e -> (byte) (e + 1)).size());
+        assertFalse(this.classUnderTest().asLazy().collectByte(e -> (byte) (e + 1)).isEmpty());
+        assertTrue(this.classUnderTest().asLazy().collectByte(e -> (byte) (e + 1)).notEmpty());
+        assertEquals(3, this.classUnderTest().asLazy().collectShort(e -> (short) (e + 1)).size());
+        assertFalse(this.classUnderTest().asLazy().collectShort(e -> (short) (e + 1)).isEmpty());
+        assertTrue(this.classUnderTest().asLazy().collectShort(e -> (short) (e + 1)).notEmpty());
+        assertEquals(3, this.classUnderTest().asLazy().collectInt(e -> (int) (e + 1)).size());
+        assertFalse(this.classUnderTest().asLazy().collectInt(e -> (int) (e + 1)).isEmpty());
+        assertTrue(this.classUnderTest().asLazy().collectInt(e -> (int) (e + 1)).notEmpty());
+        assertEquals(3, this.classUnderTest().asLazy().collectFloat(e -> (float) (e + 1)).size());
+        assertFalse(this.classUnderTest().asLazy().collectFloat(e -> (float) (e + 1)).isEmpty());
+        assertTrue(this.classUnderTest().asLazy().collectFloat(e -> (float) (e + 1)).notEmpty());
+        assertEquals(3, this.classUnderTest().asLazy().collectLong(e -> (long) (e + 1)).size());
+        assertFalse(this.classUnderTest().asLazy().collectLong(e -> (long) (e + 1)).isEmpty());
+        assertTrue(this.classUnderTest().asLazy().collectLong(e -> (long) (e + 1)).notEmpty());
+        assertEquals(3, this.classUnderTest().asLazy().collectDouble(e -> (double) (e + 1)).size());
+        assertFalse(this.classUnderTest().asLazy().collectDouble(e -> (double) (e + 1)).isEmpty());
+        assertTrue(this.classUnderTest().asLazy().collectDouble(e -> (double) (e + 1)).notEmpty());
+    }
+
+    @Test
+    public void lazyCollectPrimitivesIteratorHasNextNext()
+    {
+        assertTrue(this.classUnderTest().collectBoolean(e -> e % 2 == 0).booleanIterator().hasNext());
+        assertTrue(this.classUnderTest().asLazy().collectChar(e -> (char) (e + 1)).charIterator().hasNext());
+        assertTrue(this.classUnderTest().asLazy().collectByte(e -> (byte) (e + 1)).byteIterator().hasNext());
+        assertTrue(this.classUnderTest().asLazy().collectShort(e -> (short) (e + 1)).shortIterator().hasNext());
+        assertTrue(this.classUnderTest().asLazy().collectInt(e -> (int) (e + 1)).intIterator().hasNext());
+        assertTrue(this.classUnderTest().asLazy().collectFloat(e -> (float) (e + 1)).floatIterator().hasNext());
+        assertTrue(this.classUnderTest().asLazy().collectLong(e -> (long) (e + 1)).longIterator().hasNext());
+        assertTrue(this.classUnderTest().asLazy().collectDouble(e -> (double) (e + 1)).doubleIterator().hasNext());
+
+        assertFalse(this.classUnderTest().collectBoolean(e -> e % 2 == 0).booleanIterator().next());
+        assertEquals((char) 2, this.classUnderTest().asLazy().collectChar(e -> (char) (e + 1)).charIterator().next());
+        assertEquals((byte) 2, this.classUnderTest().asLazy().collectByte(e -> (byte) (e + 1)).byteIterator().next());
+        assertEquals((short) 2, this.classUnderTest().asLazy().collectShort(e -> (short) (e + 1)).shortIterator().next());
+        assertEquals(2, this.classUnderTest().asLazy().collectInt(e -> (int) (e + 1)).intIterator().next());
+        assertEquals(2.0f, this.classUnderTest().asLazy().collectFloat(e -> (float) (e + 1)).floatIterator().next());
+        assertEquals(2L, this.classUnderTest().asLazy().collectLong(e -> (long) (e + 1)).longIterator().next());
+        assertEquals(2.0, this.classUnderTest().asLazy().collectDouble(e -> (double) (e + 1)).doubleIterator().next());
+    }
+
+    @Test
     public void sum()
     {
         assertEquals(<(wideLiteral.(type))("6")>, this.classUnderTest().sum()<(wideDelta.(type))>);
