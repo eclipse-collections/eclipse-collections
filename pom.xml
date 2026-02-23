@@ -125,7 +125,7 @@ Arrays, Maps or Strings. The iteration protocol was inspired by the Smalltalk co
         <hppc.version>0.10.0</hppc.version>
         <commons.lang.version>3.14.0</commons.lang.version>
         <checkstyle.version>10.18.2</checkstyle.version>
-        <checkstyle.plugin.version>3.5.0</checkstyle.plugin.version>
+        <checkstyle.plugin.version>3.6.0</checkstyle.plugin.version>
         <jacoco.plugin.version>0.8.12</jacoco.plugin.version>
         <junit.version>4.13.2</junit.version>
         <jmh.version>1.37</jmh.version>
