@@ -73,12 +73,12 @@ public class SynchronizedSortedSet<T>
 {
     private static final long serialVersionUID = 2L;
 
-    SynchronizedSortedSet(MutableSortedSet<T> set)
+    protected SynchronizedSortedSet(MutableSortedSet<T> set)
     {
         super(set);
     }
 
-    SynchronizedSortedSet(MutableSortedSet<T> set, Object newLock)
+    protected SynchronizedSortedSet(MutableSortedSet<T> set, Object newLock)
     {
         super(set, newLock);
     }

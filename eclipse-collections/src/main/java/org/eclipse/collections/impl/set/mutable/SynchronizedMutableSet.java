@@ -64,12 +64,12 @@ public class SynchronizedMutableSet<T>
 {
     private static final long serialVersionUID = 2L;
 
-    SynchronizedMutableSet(MutableSet<T> set)
+    protected SynchronizedMutableSet(MutableSet<T> set)
     {
         super(set);
     }
 
-    SynchronizedMutableSet(MutableSet<T> set, Object newLock)
+    protected SynchronizedMutableSet(MutableSet<T> set, Object newLock)
     {
         super(set, newLock);
     }
