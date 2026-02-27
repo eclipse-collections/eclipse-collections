@@ -13,8 +13,11 @@ package org.eclipse.collections.impl.set.sorted.immutable;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
+import java.util.SortedSet;
 import java.util.TreeSet;
 
+import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.factory.Sets;
 import org.eclipse.collections.api.set.sorted.ImmutableSortedSet;
 import org.eclipse.collections.api.set.sorted.SortedSetIterable;
@@ -36,7 +39,9 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ImmutableTreeSetTest
         extends AbstractImmutableSortedSetTestCase
@@ -95,21 +100,106 @@ public class ImmutableTreeSetTest
     @Test
     public void subSet()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.classUnderTest().castToSortedSet().subSet(1, 4));
+        SortedSet<Integer> subSet = this.classUnderTest().castToSortedSet().subSet(1, 4);
+        assertEquals(3, subSet.size());
+        assertTrue(subSet.contains(1));
+        assertTrue(subSet.contains(2));
+        assertTrue(subSet.contains(3));
     }
 
     @Override
     @Test
     public void headSet()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.classUnderTest().castToSortedSet().headSet(4));
+        SortedSet<Integer> headSet = this.classUnderTest().castToSortedSet().headSet(4);
+        assertEquals(3, headSet.size());
+        assertTrue(headSet.contains(1));
+        assertTrue(headSet.contains(2));
+        assertTrue(headSet.contains(3));
     }
 
     @Override
     @Test
     public void tailSet()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.classUnderTest().castToSortedSet().tailSet(1));
+        SortedSet<Integer> tailSet = this.classUnderTest().castToSortedSet().tailSet(2);
+        assertEquals(3, tailSet.size());
+        assertTrue(tailSet.contains(2));
+        assertTrue(tailSet.contains(3));
+        assertTrue(tailSet.contains(4));
+    }
+
+    @Test
+    public void testNavigationMethods()
+    {
+        ImmutableSortedSet<Integer> set = ImmutableTreeSet.newSetWith(1, 3, 5, 7, 9);
+        assertEquals(Integer.valueOf(3), set.lower(5));
+        assertEquals(Integer.valueOf(5), set.floor(5));
+        assertEquals(Integer.valueOf(5), set.ceiling(5));
+        assertEquals(Integer.valueOf(7), set.higher(5));
+
+        assertEquals(Integer.valueOf(5), set.lower(6));
+        assertEquals(Integer.valueOf(5), set.floor(6));
+        assertEquals(Integer.valueOf(7), set.ceiling(6));
+        assertEquals(Integer.valueOf(7), set.higher(6));
+
+        assertNull(set.lower(1));
+        assertNull(set.higher(9));
+    }
+
+    @Test
+    public void testDescendingSet()
+    {
+        ImmutableSortedSet<Integer> set = ImmutableTreeSet.newSetWith(1, 2, 3, 4, 5);
+        ImmutableSortedSet<Integer> desc = set.descendingSet();
+        assertEquals(Integer.valueOf(5), desc.getFirst());
+        assertEquals(Integer.valueOf(1), desc.getLast());
+        assertEquals(Lists.mutable.with(5, 4, 3, 2, 1), desc.toList());
+    }
+
+    @Test
+    public void testDescendingIterator()
+    {
+        ImmutableSortedSet<Integer> set = ImmutableTreeSet.newSetWith(1, 2, 3);
+        Iterator<Integer> iterator = set.descendingIterator();
+        assertEquals(Integer.valueOf(3), iterator.next());
+        assertEquals(Integer.valueOf(2), iterator.next());
+        assertEquals(Integer.valueOf(1), iterator.next());
+    }
+
+    @Test
+    public void testSubSetWithBooleans()
+    {
+        ImmutableSortedSet<Integer> set = ImmutableTreeSet.newSetWith(1, 2, 3, 4, 5);
+        ImmutableSortedSet<Integer> sub = set.subSet(2, true, 4, true);
+        assertEquals(3, sub.size());
+        assertTrue(sub.contains(2));
+        assertTrue(sub.contains(3));
+        assertTrue(sub.contains(4));
+
+        ImmutableSortedSet<Integer> subExcl = set.subSet(2, false, 4, false);
+        assertEquals(1, subExcl.size());
+        assertTrue(subExcl.contains(3));
+    }
+
+    @Test
+    public void testHeadSetWithBoolean()
+    {
+        ImmutableSortedSet<Integer> set = ImmutableTreeSet.newSetWith(1, 2, 3, 4, 5);
+        ImmutableSortedSet<Integer> head = set.headSet(3, true);
+        assertEquals(3, head.size());
+        ImmutableSortedSet<Integer> headExcl = set.headSet(3, false);
+        assertEquals(2, headExcl.size());
+    }
+
+    @Test
+    public void testTailSetWithBoolean()
+    {
+        ImmutableSortedSet<Integer> set = ImmutableTreeSet.newSetWith(1, 2, 3, 4, 5);
+        ImmutableSortedSet<Integer> tail = set.tailSet(3, true);
+        assertEquals(3, tail.size());
+        ImmutableSortedSet<Integer> tailExcl = set.tailSet(3, false);
+        assertEquals(2, tailExcl.size());
     }
 
     @Override

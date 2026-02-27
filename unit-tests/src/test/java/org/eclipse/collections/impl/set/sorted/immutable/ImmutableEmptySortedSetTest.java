@@ -14,6 +14,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.SortedSet;
 
 import org.eclipse.collections.api.LazyIterable;
 import org.eclipse.collections.api.factory.Lists;
@@ -752,21 +753,50 @@ public class ImmutableEmptySortedSetTest extends AbstractImmutableSortedSetTestC
     @Test
     public void subSet()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.classUnderTest().castToSortedSet().subSet(1, 4));
+        SortedSet<Integer> subSet = this.classUnderTest().castToSortedSet().subSet(1, 4);
+        assertTrue(subSet.isEmpty());
     }
 
     @Override
     @Test
     public void headSet()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.classUnderTest().castToSortedSet().headSet(4));
+        SortedSet<Integer> headSet = this.classUnderTest().castToSortedSet().headSet(4);
+        assertTrue(headSet.isEmpty());
     }
 
     @Override
     @Test
     public void tailSet()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.classUnderTest().castToSortedSet().tailSet(1));
+        SortedSet<Integer> tailSet = this.classUnderTest().castToSortedSet().tailSet(1);
+        assertTrue(tailSet.isEmpty());
+    }
+
+    @Test
+    public void testNavigationMethodsOnEmpty()
+    {
+        ImmutableSortedSet<Integer> set = this.classUnderTest();
+        assertNull(set.lower(5));
+        assertNull(set.floor(5));
+        assertNull(set.ceiling(5));
+        assertNull(set.higher(5));
+    }
+
+    @Test
+    public void testDescendingSetOnEmpty()
+    {
+        ImmutableSortedSet<Integer> set = this.classUnderTest();
+        ImmutableSortedSet<Integer> desc = set.descendingSet();
+        assertTrue(desc.isEmpty());
+    }
+
+    @Test
+    public void testDescendingIteratorOnEmpty()
+    {
+        ImmutableSortedSet<Integer> set = this.classUnderTest();
+        Iterator<Integer> iterator = set.descendingIterator();
+        assertFalse(iterator.hasNext());
     }
 
     @Override

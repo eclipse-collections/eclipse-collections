@@ -10,8 +10,11 @@
 
 package org.eclipse.collections.impl.set.sorted.mutable;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -21,6 +24,8 @@ import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.test.Verify;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -86,31 +91,96 @@ public class TreeSortedSetTest extends AbstractSortedSetTestCase
         Verify.assertPostSerializedEqualsAndHashCode(set);
     }
 
-    @Override
     @Test
-    public void detectLastIndex()
+    public void testNavigationMethods()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.newWith(1, 2, 3).detectLastIndex(each -> each % 2 == 0));
+        TreeSortedSet<Integer> set = TreeSortedSet.newSetWith(1, 3, 5, 7, 9);
+        assertEquals(Integer.valueOf(3), set.lower(5));
+        assertEquals(Integer.valueOf(5), set.floor(5));
+        assertEquals(Integer.valueOf(5), set.ceiling(5));
+        assertEquals(Integer.valueOf(7), set.higher(5));
+
+        assertEquals(Integer.valueOf(5), set.lower(6));
+        assertEquals(Integer.valueOf(5), set.floor(6));
+        assertEquals(Integer.valueOf(7), set.ceiling(6));
+        assertEquals(Integer.valueOf(7), set.higher(6));
+
+        assertNull(set.lower(1));
+        assertNull(set.higher(9));
     }
 
-    @Override
     @Test
-    public void reverseForEach()
+    public void testPollFirstAndPollLast()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.newWith(1, 2, 3).reverseForEach(each -> fail("Should not be evaluated")));
+        TreeSortedSet<Integer> set = TreeSortedSet.newSetWith(1, 2, 3, 4, 5);
+        assertEquals(Integer.valueOf(1), set.pollFirst());
+        assertEquals(Integer.valueOf(5), set.pollLast());
+        assertEquals(3, set.size());
     }
 
-    @Override
     @Test
-    public void reverseForEachWithIndex()
+    public void testDescendingIterator()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.newWith(1, 2, 3).reverseForEachWithIndex((each, index) -> fail("Should not be evaluated")));
+        TreeSortedSet<Integer> set = TreeSortedSet.newSetWith(1, 2, 3);
+        Iterator<Integer> iterator = set.descendingIterator();
+        assertEquals(Integer.valueOf(3), iterator.next());
+        assertEquals(Integer.valueOf(2), iterator.next());
+        assertEquals(Integer.valueOf(1), iterator.next());
     }
 
-    @Override
     @Test
-    public void toReversed()
+    public void testDescendingSet()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.newWith(1, 2, 3).toReversed());
+        TreeSortedSet<Integer> set = TreeSortedSet.newSetWith(1, 2, 3, 4, 5);
+        MutableSortedSet<Integer> desc = set.descendingSet();
+        assertEquals(Integer.valueOf(5), desc.first());
+        assertEquals(Integer.valueOf(1), desc.last());
+        List<Integer> list = new ArrayList<>();
+        desc.forEach(list::add);
+        assertEquals(List.of(5, 4, 3, 2, 1), list);
+    }
+
+    @Test
+    public void testSubSetWithBooleans()
+    {
+        TreeSortedSet<Integer> set = TreeSortedSet.newSetWith(1, 2, 3, 4, 5);
+        MutableSortedSet<Integer> sub = set.subSet(2, true, 4, true);
+        assertEquals(3, sub.size());
+        assertTrue(sub.contains(2));
+        assertTrue(sub.contains(3));
+        assertTrue(sub.contains(4));
+
+        MutableSortedSet<Integer> subExcl = set.subSet(2, false, 4, false);
+        assertEquals(1, subExcl.size());
+        assertTrue(subExcl.contains(3));
+    }
+
+    @Test
+    public void testHeadSetWithBoolean()
+    {
+        TreeSortedSet<Integer> set = TreeSortedSet.newSetWith(1, 2, 3, 4, 5);
+        MutableSortedSet<Integer> head = set.headSet(3, true);
+        assertEquals(3, head.size());
+        MutableSortedSet<Integer> headExcl = set.headSet(3, false);
+        assertEquals(2, headExcl.size());
+    }
+
+    @Test
+    public void testTailSetWithBoolean()
+    {
+        TreeSortedSet<Integer> set = TreeSortedSet.newSetWith(1, 2, 3, 4, 5);
+        MutableSortedSet<Integer> tail = set.tailSet(3, true);
+        assertEquals(3, tail.size());
+        MutableSortedSet<Integer> tailExcl = set.tailSet(3, false);
+        assertEquals(2, tailExcl.size());
+    }
+
+    @Test
+    public void testToReversedSubSet()
+    {
+        TreeSortedSet<Integer> set = TreeSortedSet.newSetWith(1, 2, 3, 4, 5);
+        MutableSortedSet<Integer> reversed = set.toReversed();
+        assertEquals(Integer.valueOf(5), reversed.first());
+        assertEquals(Integer.valueOf(1), reversed.last());
     }
 }
