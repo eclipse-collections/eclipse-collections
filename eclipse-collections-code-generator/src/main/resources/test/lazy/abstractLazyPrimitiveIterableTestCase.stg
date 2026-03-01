@@ -22,9 +22,17 @@ package org.eclipse.collections.impl.lazy.primitive;
 
 import java.util.Arrays;
 import java.util.NoSuchElementException;
+import java.util.function.BooleanSupplier;
 
 import org.eclipse.collections.api.Lazy<name>Iterable;
-import org.eclipse.collections.api.iterator.<name>Iterator;
+import org.eclipse.collections.api.iterator.BooleanIterator;
+import org.eclipse.collections.api.iterator.ByteIterator;
+import org.eclipse.collections.api.iterator.CharIterator;
+import org.eclipse.collections.api.iterator.FloatIterator;
+import org.eclipse.collections.api.iterator.IntIterator;
+import org.eclipse.collections.api.iterator.LongIterator;
+import org.eclipse.collections.api.iterator.ShortIterator;
+import org.eclipse.collections.api.iterator.DoubleIterator;
 import org.eclipse.collections.impl.bag.mutable.primitive.<name>HashBag;
 import org.eclipse.collections.impl.block.factory.primitive.<name>Predicates;
 import org.eclipse.collections.impl.factory.Lists;
@@ -278,6 +286,44 @@ public abstract class AbstractLazy<name>IterableTestCase
         assertEquals(2.0f, this.classUnderTest().asLazy().collectFloat(e -> (float) (e + 1)).floatIterator().next());
         assertEquals(2L, this.classUnderTest().asLazy().collectLong(e -> (long) (e + 1)).longIterator().next());
         assertEquals(2.0, this.classUnderTest().asLazy().collectDouble(e -> (double) (e + 1)).doubleIterator().next());
+    }
+
+    @Test
+    public void lazyCollectPrimitivesIteratorExceedingHasNextThrows()
+    {
+        BooleanIterator booleanIterator = this.classUnderTest().collectBoolean(e -> e % 2 == 0).booleanIterator();
+        this.assertThrowsAfterMultipleNextCalls(booleanIterator::next, booleanIterator::hasNext);
+
+        CharIterator charIterator = this.classUnderTest().asLazy().collectChar(e -> (char) (e + 1)).charIterator();
+        this.assertThrowsAfterMultipleNextCalls(charIterator::next, charIterator::hasNext);
+
+        ByteIterator byteIterator = this.classUnderTest().asLazy().collectByte(e -> (byte) (e + 1)).byteIterator();
+        this.assertThrowsAfterMultipleNextCalls(byteIterator::next, byteIterator::hasNext);
+
+        ShortIterator shortIterator = this.classUnderTest().asLazy().collectShort(e -> (short) (e + 1)).shortIterator();
+        this.assertThrowsAfterMultipleNextCalls(shortIterator::next, shortIterator::hasNext);
+
+        IntIterator intIterator = this.classUnderTest().asLazy().collectInt(e -> (int) (e + 1)).intIterator();
+        this.assertThrowsAfterMultipleNextCalls(intIterator::next, intIterator::hasNext);
+
+        FloatIterator floatIterator = this.classUnderTest().asLazy().collectFloat(e -> (float) (e + 1)).floatIterator();
+        this.assertThrowsAfterMultipleNextCalls(floatIterator::next, floatIterator::hasNext);
+
+        LongIterator longIterator = this.classUnderTest().asLazy().collectLong(e -> (long) (e + 1)).longIterator();
+        this.assertThrowsAfterMultipleNextCalls(longIterator::next, longIterator::hasNext);
+
+        DoubleIterator doubleIterator = this.classUnderTest().asLazy().collectDouble(e -> (double) (e + 1)).doubleIterator();
+        this.assertThrowsAfterMultipleNextCalls(doubleIterator::next, doubleIterator::hasNext);
+    }
+
+    public void assertThrowsAfterMultipleNextCalls(Runnable method, BooleanSupplier supplier)
+    {
+        method.run();
+        method.run();
+        method.run();
+        assertFalse(supplier.getAsBoolean());
+        assertThrows(NoSuchElementException.class, method::run);
+        assertThrows(NoSuchElementException.class, method::run);
     }
 
     @Test
