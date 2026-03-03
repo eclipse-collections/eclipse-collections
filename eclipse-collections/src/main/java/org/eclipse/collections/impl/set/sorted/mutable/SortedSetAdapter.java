@@ -14,6 +14,7 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.NavigableSet;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.SortedSet;
@@ -645,9 +646,113 @@ public final class SortedSetAdapter<T>
     }
 
     @Override
-    public MutableSortedSet<T> toReversed()
+    public T lower(T e)
     {
-        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".toReversed() not implemented yet");
+        if (this.delegate instanceof NavigableSet)
+        {
+            return ((NavigableSet<T>) this.delegate).lower(e);
+        }
+        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".lower() requires a NavigableSet delegate");
+    }
+
+    @Override
+    public T floor(T e)
+    {
+        if (this.delegate instanceof NavigableSet)
+        {
+            return ((NavigableSet<T>) this.delegate).floor(e);
+        }
+        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".floor() requires a NavigableSet delegate");
+    }
+
+    @Override
+    public T ceiling(T e)
+    {
+        if (this.delegate instanceof NavigableSet)
+        {
+            return ((NavigableSet<T>) this.delegate).ceiling(e);
+        }
+        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".ceiling() requires a NavigableSet delegate");
+    }
+
+    @Override
+    public T higher(T e)
+    {
+        if (this.delegate instanceof NavigableSet)
+        {
+            return ((NavigableSet<T>) this.delegate).higher(e);
+        }
+        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".higher() requires a NavigableSet delegate");
+    }
+
+    @Override
+    public T pollFirst()
+    {
+        if (this.delegate instanceof NavigableSet)
+        {
+            return ((NavigableSet<T>) this.delegate).pollFirst();
+        }
+        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".pollFirst() requires a NavigableSet delegate");
+    }
+
+    @Override
+    public T pollLast()
+    {
+        if (this.delegate instanceof NavigableSet)
+        {
+            return ((NavigableSet<T>) this.delegate).pollLast();
+        }
+        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".pollLast() requires a NavigableSet delegate");
+    }
+
+    @Override
+    public Iterator<T> descendingIterator()
+    {
+        if (this.delegate instanceof NavigableSet)
+        {
+            return ((NavigableSet<T>) this.delegate).descendingIterator();
+        }
+        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".descendingIterator() requires a NavigableSet delegate");
+    }
+
+    @Override
+    public MutableSortedSet<T> descendingSet()
+    {
+        if (this.delegate instanceof NavigableSet)
+        {
+            return SortedSetAdapter.adapt(((NavigableSet<T>) this.delegate).descendingSet());
+        }
+        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".descendingSet() requires a NavigableSet delegate");
+    }
+
+    @Override
+    public MutableSortedSet<T> subSet(T fromElement, boolean fromInclusive, T toElement, boolean toInclusive)
+    {
+        if (this.delegate instanceof NavigableSet)
+        {
+            return SortedSetAdapter.adapt(((NavigableSet<T>) this.delegate).subSet(fromElement, fromInclusive, toElement, toInclusive));
+        }
+        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".subSet(boolean) requires a NavigableSet delegate");
+    }
+
+    @Override
+    public MutableSortedSet<T> headSet(T toElement, boolean inclusive)
+    {
+        if (this.delegate instanceof NavigableSet)
+        {
+            return SortedSetAdapter.adapt(((NavigableSet<T>) this.delegate).headSet(toElement, inclusive));
+        }
+        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".headSet(boolean) requires a NavigableSet delegate");
+    }
+
+    @Override
+    public MutableSortedSet<T> tailSet(T fromElement, boolean inclusive)
+    {
+        if (this.delegate instanceof NavigableSet)
+        {
+            return SortedSetAdapter.adapt(((NavigableSet<T>) this.delegate).tailSet(fromElement, inclusive));
+        }
+        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".tailSet(boolean) requires a NavigableSet delegate");
     }
 
     @Override
@@ -660,23 +765,5 @@ public final class SortedSetAdapter<T>
     public MutableSortedSet<T> drop(int count)
     {
         return IterableIterate.drop(this.getDelegate(), count, TreeSortedSet.newSet(this.comparator()));
-    }
-
-    @Override
-    public void reverseForEach(Procedure<? super T> procedure)
-    {
-        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".reverseForEach() not implemented yet");
-    }
-
-    @Override
-    public void reverseForEachWithIndex(ObjectIntProcedure<? super T> procedure)
-    {
-        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".reverseForEachWithIndex() not implemented yet");
-    }
-
-    @Override
-    public int detectLastIndex(Predicate<? super T> predicate)
-    {
-        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".detectLastIndex() not implemented yet");
     }
 }
