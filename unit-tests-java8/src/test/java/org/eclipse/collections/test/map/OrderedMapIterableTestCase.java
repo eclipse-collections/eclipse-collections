@@ -99,4 +99,25 @@ public interface OrderedMapIterableTestCase extends MapIterableTestCase, Ordered
                 IllegalStateException.class,
                 () -> this.newWithKeysValues(1, "2", 2, "2").flipUniqueValues());
     }
+
+    @Override
+    @Test
+    default void OrderedIterable_takeWhile()
+    {
+        assertThrows(UnsupportedOperationException.class, () -> this.newWith(1, 2, 3).takeWhile(each -> true));
+    }
+
+    @Override
+    @Test
+    default void OrderedIterable_dropWhile()
+    {
+        assertThrows(UnsupportedOperationException.class, () -> this.newWith(1, 2, 3).dropWhile(each -> true));
+    }
+
+    @Override
+    @Test
+    default void OrderedIterable_partitionWhile()
+    {
+        assertThrows(UnsupportedOperationException.class, () -> this.newWith(1, 2, 3).partitionWhile(each -> true));
+    }
 }
