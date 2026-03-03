@@ -93,6 +93,7 @@ import org.eclipse.collections.impl.AbstractRichIterable;
 import org.eclipse.collections.impl.EmptyIterator;
 import org.eclipse.collections.impl.factory.Multimaps;
 import org.eclipse.collections.impl.partition.list.PartitionFastList;
+import org.eclipse.collections.impl.partition.stack.PartitionArrayStack;
 import org.eclipse.collections.impl.tuple.Tuples;
 
 final class ImmutableEmptyStack<T>
@@ -730,19 +731,19 @@ final class ImmutableEmptyStack<T>
     @Override
     public ImmutableStack<T> takeWhile(Predicate<? super T> predicate)
     {
-        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".takeWhile() not implemented yet");
+        return this;
     }
 
     @Override
     public ImmutableStack<T> dropWhile(Predicate<? super T> predicate)
     {
-        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".dropWhile() not implemented yet");
+        return this;
     }
 
     @Override
     public PartitionImmutableStack<T> partitionWhile(Predicate<? super T> predicate)
     {
-        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".partitionWhile() not implemented yet");
+        return new PartitionArrayStack<T>().toImmutable();
     }
 
     @Override

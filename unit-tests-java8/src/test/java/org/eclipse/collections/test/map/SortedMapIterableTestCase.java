@@ -21,6 +21,9 @@ import org.eclipse.collections.api.map.sorted.SortedMapIterable;
 import org.eclipse.collections.impl.map.ordered.mutable.OrderedMapAdapter;
 import org.eclipse.collections.test.OrderedIterableTestCase;
 import org.eclipse.collections.test.list.TransformsToListTrait;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public interface SortedMapIterableTestCase extends MapIterableTestCase, OrderedIterableTestCase, TransformsToListTrait
 {
@@ -57,5 +60,26 @@ public interface SortedMapIterableTestCase extends MapIterableTestCase, OrderedI
     default <T> MutableList<T> newMutableForFilter(T... elements)
     {
         return Lists.mutable.with(elements);
+    }
+
+    @Override
+    @Test
+    default void OrderedIterable_takeWhile()
+    {
+        assertThrows(UnsupportedOperationException.class, () -> this.newWith(1, 2, 3).takeWhile(each -> true));
+    }
+
+    @Override
+    @Test
+    default void OrderedIterable_dropWhile()
+    {
+        assertThrows(UnsupportedOperationException.class, () -> this.newWith(1, 2, 3).dropWhile(each -> true));
+    }
+
+    @Override
+    @Test
+    default void OrderedIterable_partitionWhile()
+    {
+        assertThrows(UnsupportedOperationException.class, () -> this.newWith(1, 2, 3).partitionWhile(each -> true));
     }
 }

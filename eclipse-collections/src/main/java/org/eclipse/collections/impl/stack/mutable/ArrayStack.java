@@ -105,6 +105,7 @@ import org.eclipse.collections.impl.map.mutable.UnifiedMap;
 import org.eclipse.collections.impl.multimap.list.FastListMultimap;
 import org.eclipse.collections.impl.partition.stack.PartitionArrayStack;
 import org.eclipse.collections.impl.utility.LazyIterate;
+import org.eclipse.collections.impl.utility.internal.IteratorIterate;
 
 /**
  * ArrayStack is a MutableStack which contains a FastList of data. ArrayStack iterates from top to bottom (LIFO order).
@@ -1186,19 +1187,25 @@ public class ArrayStack<T> implements MutableStack<T>, Externalizable
     @Override
     public MutableStack<T> takeWhile(Predicate<? super T> predicate)
     {
-        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".takeWhile() not implemented yet");
+        MutableList<T> result = Lists.mutable.empty();
+        IteratorIterate.takeWhile(this.delegate.asReversed().iterator(), predicate, result);
+        return ArrayStack.newStackFromTopToBottom(result);
     }
 
     @Override
     public MutableStack<T> dropWhile(Predicate<? super T> predicate)
     {
-        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".dropWhile() not implemented yet");
+        MutableList<T> result = Lists.mutable.empty();
+        IteratorIterate.dropWhile(this.delegate.asReversed().iterator(), predicate, result);
+        return ArrayStack.newStackFromTopToBottom(result);
     }
 
     @Override
     public PartitionMutableStack<T> partitionWhile(Predicate<? super T> predicate)
     {
-        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".partitionWhile() not implemented yet");
+        PartitionArrayStack<T> result = new PartitionArrayStack<>();
+        this.delegate.asReversed().forEach(new PartitionArrayStack.PartitionWhileProcedure<>(predicate, result));
+        return result;
     }
 
     @Override

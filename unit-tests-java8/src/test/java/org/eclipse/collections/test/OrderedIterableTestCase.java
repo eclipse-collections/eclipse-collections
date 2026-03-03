@@ -18,6 +18,7 @@ import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.factory.Sets;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.ordered.OrderedIterable;
+import org.eclipse.collections.api.partition.ordered.PartitionOrderedIterable;
 import org.eclipse.collections.api.tuple.Pair;
 import org.eclipse.collections.api.tuple.primitive.ObjectIntPair;
 import org.eclipse.collections.impl.block.factory.Comparators;
@@ -235,5 +236,72 @@ public interface OrderedIterableTestCase extends RichIterableTestCase
         assertEquals(Integer.valueOf(4), iterable.injectIntoWithIndex(
                 0,
                 (sum, each, index) -> sum + each * index));
+    }
+
+    @Test
+    default void OrderedIterable_partitionWhile()
+    {
+        OrderedIterable<Integer> iterable = (OrderedIterable<Integer>) this.newWith(6, 6, 4, 4, 5, 5, 3, 3, 2, 2, 1, 1);
+        PartitionOrderedIterable<Integer> partition1 = iterable.partitionWhile(each -> each % 2 == 0);
+        assertEquals(this.newWith(6, 6, 4, 4), partition1.getSelected());
+        assertEquals(this.newWith(5, 5, 3, 3, 2, 2, 1, 1), partition1.getRejected());
+
+        PartitionOrderedIterable<Integer> partition2 = iterable.partitionWhile(each -> true);
+        assertEquals(iterable, partition2.getSelected());
+        assertEquals(this.newWith(), partition2.getRejected());
+
+        PartitionOrderedIterable<Integer> partition3 = iterable.partitionWhile(each -> false);
+        assertEquals(this.newWith(), partition3.getSelected());
+        assertEquals(iterable, partition3.getRejected());
+
+        OrderedIterable<Object> empty = (OrderedIterable<Object>) this.newWith();
+        PartitionOrderedIterable<Object> partition4 = empty.partitionWhile(each -> {
+            fail("Should not evaluate the predicate");
+            return true;
+        });
+        assertEquals(this.newWith(), partition4.getSelected());
+        assertEquals(this.newWith(), partition4.getRejected());
+    }
+
+    @Test
+    default void OrderedIterable_takeWhile()
+    {
+        OrderedIterable<Integer> iterable = (OrderedIterable<Integer>) this.newWith(6, 6, 4, 4, 5, 5, 3, 3, 2, 2, 1, 1);
+        OrderedIterable<Integer> take1 = iterable.takeWhile(each -> each % 2 == 0);
+        assertEquals(this.newWith(6, 6, 4, 4), take1);
+
+        OrderedIterable<Integer> take2 = iterable.takeWhile(each -> true);
+        assertEquals(iterable, take2);
+
+        OrderedIterable<Integer> take3 = iterable.takeWhile(each -> false);
+        assertEquals(this.newWith(), take3);
+
+        OrderedIterable<Object> empty = (OrderedIterable<Object>) this.newWith();
+        OrderedIterable<Object> take4 = empty.takeWhile(each -> {
+            fail("Should not evaluate the predicate");
+            return true;
+        });
+        assertEquals(this.newWith(), take4);
+    }
+
+    @Test
+    default void OrderedIterable_dropWhile()
+    {
+        OrderedIterable<Integer> iterable = (OrderedIterable<Integer>) this.newWith(6, 6, 4, 4, 5, 5, 3, 3, 2, 2, 1, 1);
+        OrderedIterable<Integer> drop1 = iterable.dropWhile(each -> each % 2 == 0);
+        assertEquals(this.newWith(5, 5, 3, 3, 2, 2, 1, 1), drop1);
+
+        OrderedIterable<Integer> drop2 = iterable.dropWhile(each -> true);
+        assertEquals(this.newWith(), drop2);
+
+        OrderedIterable<Integer> drop3 = iterable.dropWhile(each -> false);
+        assertEquals(iterable, drop3);
+
+        OrderedIterable<Object> empty = (OrderedIterable<Object>) this.newWith();
+        OrderedIterable<Object> drop4 = empty.dropWhile(each -> {
+            fail("Should not evaluate the predicate");
+            return true;
+        });
+        assertEquals(this.newWith(), drop4);
     }
 }
