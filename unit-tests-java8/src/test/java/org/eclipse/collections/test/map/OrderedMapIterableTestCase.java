@@ -18,6 +18,7 @@ import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.map.MapIterable;
 import org.eclipse.collections.api.map.MutableOrderedMap;
 import org.eclipse.collections.api.map.OrderedMap;
+import org.eclipse.collections.api.partition.ordered.PartitionOrderedIterable;
 import org.eclipse.collections.impl.map.ordered.mutable.OrderedMapAdapter;
 import org.eclipse.collections.test.OrderedIterableTestCase;
 import org.eclipse.collections.test.list.TransformsToListTrait;
@@ -25,6 +26,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.eclipse.collections.test.IterableTestCase.assertIterablesEqual;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public interface OrderedMapIterableTestCase extends MapIterableTestCase, OrderedIterableTestCase, TransformsToListTrait
 {
@@ -100,27 +102,75 @@ public interface OrderedMapIterableTestCase extends MapIterableTestCase, Ordered
                 () -> this.newWithKeysValues(1, "2", 2, "2").flipUniqueValues());
     }
 
+    // Cannot call super tests for takeWhile/dropWhile/partitionWhile because map equals
+    // compares entries (keys + values). The super test uses newWith() which assigns
+    // auto-generated keys, so the expected and actual maps have different keys even
+    // when values match. We use newWithKeysValues for takeWhile/dropWhile to ensure
+    // key-value pairs match, and Lists for partitionWhile which returns value-only lists.
+
     @Override
     @Test
     default void OrderedIterable_takeWhile()
     {
-        // Ordered maps do not yet implement takeWhile.
-        assertThrows(UnsupportedOperationException.class, () -> this.newWith(1, 2, 3).takeWhile(each -> true));
+        // Insertion order: (1,6), (2,6), (3,4), (4,4), (5,5), (6,5), (7,3), (8,3), (9,2), (10,2), (11,1), (12,1)
+        OrderedMap<Integer, Integer> map = this.newWithKeysValues(
+                1, 6, 2, 6, 3, 4, 4, 4, 5, 5, 6, 5, 7, 3, 8, 3, 9, 2, 10, 2, 11, 1, 12, 1);
+        assertIterablesEqual(
+                this.newWithKeysValues(1, 6, 2, 6, 3, 4, 4, 4),
+                map.takeWhile(each -> each % 2 == 0));
+        assertIterablesEqual(map, map.takeWhile(each -> true));
+        assertIterablesEqual(this.newWithKeysValues(), map.takeWhile(each -> false));
+
+        OrderedMap<Object, Object> empty = this.newWithKeysValues();
+        assertIterablesEqual(this.newWithKeysValues(), empty.takeWhile(each -> {
+            fail("Should not evaluate the predicate");
+            return true;
+        }));
     }
 
     @Override
     @Test
     default void OrderedIterable_dropWhile()
     {
-        // Ordered maps do not yet implement dropWhile.
-        assertThrows(UnsupportedOperationException.class, () -> this.newWith(1, 2, 3).dropWhile(each -> true));
+        OrderedMap<Integer, Integer> map = this.newWithKeysValues(
+                1, 6, 2, 6, 3, 4, 4, 4, 5, 5, 6, 5, 7, 3, 8, 3, 9, 2, 10, 2, 11, 1, 12, 1);
+        assertIterablesEqual(
+                this.newWithKeysValues(5, 5, 6, 5, 7, 3, 8, 3, 9, 2, 10, 2, 11, 1, 12, 1),
+                map.dropWhile(each -> each % 2 == 0));
+        assertIterablesEqual(this.newWithKeysValues(), map.dropWhile(each -> true));
+        assertIterablesEqual(map, map.dropWhile(each -> false));
+
+        OrderedMap<Object, Object> empty = this.newWithKeysValues();
+        assertIterablesEqual(this.newWithKeysValues(), empty.dropWhile(each -> {
+            fail("Should not evaluate the predicate");
+            return true;
+        }));
     }
 
     @Override
     @Test
     default void OrderedIterable_partitionWhile()
     {
-        // Ordered maps do not yet implement partitionWhile.
-        assertThrows(UnsupportedOperationException.class, () -> this.newWith(1, 2, 3).partitionWhile(each -> true));
+        OrderedMap<Integer, Integer> map = this.newWithKeysValues(
+                1, 6, 2, 6, 3, 4, 4, 4, 5, 5, 6, 5, 7, 3, 8, 3, 9, 2, 10, 2, 11, 1, 12, 1);
+        PartitionOrderedIterable<Integer> partition1 = map.partitionWhile(each -> each % 2 == 0);
+        assertIterablesEqual(Lists.immutable.with(6, 6, 4, 4), partition1.getSelected());
+        assertIterablesEqual(Lists.immutable.with(5, 5, 3, 3, 2, 2, 1, 1), partition1.getRejected());
+
+        PartitionOrderedIterable<Integer> partition2 = map.partitionWhile(each -> true);
+        assertIterablesEqual(Lists.immutable.with(6, 6, 4, 4, 5, 5, 3, 3, 2, 2, 1, 1), partition2.getSelected());
+        assertIterablesEqual(Lists.immutable.empty(), partition2.getRejected());
+
+        PartitionOrderedIterable<Integer> partition3 = map.partitionWhile(each -> false);
+        assertIterablesEqual(Lists.immutable.empty(), partition3.getSelected());
+        assertIterablesEqual(Lists.immutable.with(6, 6, 4, 4, 5, 5, 3, 3, 2, 2, 1, 1), partition3.getRejected());
+
+        OrderedMap<Object, Object> empty = this.newWithKeysValues();
+        PartitionOrderedIterable<Object> partition4 = empty.partitionWhile(each -> {
+            fail("Should not evaluate the predicate");
+            return true;
+        });
+        assertIterablesEqual(Lists.immutable.empty(), partition4.getSelected());
+        assertIterablesEqual(Lists.immutable.empty(), partition4.getRejected());
     }
 }
