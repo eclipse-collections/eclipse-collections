@@ -557,24 +557,6 @@ public abstract class AbstractImmutableSortedMap<K, V>
     }
 
     @Override
-    public ImmutableSortedMap<K, V> takeWhile(Predicate<? super V> predicate)
-    {
-        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".takeWhile() not implemented yet");
-    }
-
-    @Override
-    public ImmutableSortedMap<K, V> dropWhile(Predicate<? super V> predicate)
-    {
-        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".dropWhile() not implemented yet");
-    }
-
-    @Override
-    public PartitionImmutableList<V> partitionWhile(Predicate<? super V> predicate)
-    {
-        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".partitionWhile() not implemented yet");
-    }
-
-    @Override
     public ImmutableList<V> distinct()
     {
         throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".distinct() not implemented yet");

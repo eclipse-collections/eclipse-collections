@@ -104,6 +104,7 @@ public interface OrderedMapIterableTestCase extends MapIterableTestCase, Ordered
     @Test
     default void OrderedIterable_takeWhile()
     {
+        // Ordered maps do not yet implement takeWhile.
         assertThrows(UnsupportedOperationException.class, () -> this.newWith(1, 2, 3).takeWhile(each -> true));
     }
 
@@ -111,6 +112,7 @@ public interface OrderedMapIterableTestCase extends MapIterableTestCase, Ordered
     @Test
     default void OrderedIterable_dropWhile()
     {
+        // Ordered maps do not yet implement dropWhile.
         assertThrows(UnsupportedOperationException.class, () -> this.newWith(1, 2, 3).dropWhile(each -> true));
     }
 
@@ -118,6 +120,7 @@ public interface OrderedMapIterableTestCase extends MapIterableTestCase, Ordered
     @Test
     default void OrderedIterable_partitionWhile()
     {
+        // Ordered maps do not yet implement partitionWhile.
         assertThrows(UnsupportedOperationException.class, () -> this.newWith(1, 2, 3).partitionWhile(each -> true));
     }
 }

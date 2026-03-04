@@ -49,6 +49,8 @@ public interface SortedIterableTestCase extends OrderedIterableTestCase, NoDetec
     @Override
     default void OrderedIterable_partitionWhile()
     {
+        // Super test uses each % 2 == 0 which assumes insertion order; sorted iterables reorder elements,
+        // so we need a monotonic predicate (each > 2) that respects the sort order.
         SortedIterable<Integer> iterable = this.newWith(6, 6, 5, 5, 4, 4, 3, 3, 2, 2, 1, 1);
         PartitionSortedIterable<Integer> partition1 = iterable.partitionWhile(each -> each > 2);
         assertIterablesEqual(this.newWith(6, 6, 5, 5, 4, 4, 3, 3), partition1.getSelected());
@@ -74,6 +76,8 @@ public interface SortedIterableTestCase extends OrderedIterableTestCase, NoDetec
     @Override
     default void OrderedIterable_takeWhile()
     {
+        // Super test uses each % 2 == 0 which assumes insertion order; sorted iterables reorder elements,
+        // so we need a monotonic predicate (each > 2) that respects the sort order.
         SortedIterable<Integer> iterable = this.newWith(6, 6, 5, 5, 4, 4, 3, 3);
         SortedIterable<Integer> take1 = iterable.takeWhile(each -> each > 2);
         assertIterablesEqual(this.newWith(6, 6, 5, 5, 4, 4, 3, 3), take1);
@@ -97,6 +101,8 @@ public interface SortedIterableTestCase extends OrderedIterableTestCase, NoDetec
     @Override
     default void OrderedIterable_dropWhile()
     {
+        // Super test uses each % 2 == 0 which assumes insertion order; sorted iterables reorder elements,
+        // so we need a monotonic predicate (each > 2) that respects the sort order.
         SortedIterable<Integer> iterable = this.newWith(6, 6, 4, 4, 5, 5, 3, 3, 2, 2, 1, 1);
         SortedIterable<Integer> drop1 = iterable.dropWhile(each -> each > 2);
         assertIterablesEqual(this.newWith(2, 2, 1, 1), drop1);
