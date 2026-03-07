@@ -19,6 +19,11 @@ The Eclipse Collections team gives a huge thank you to everyone who participated
 * Publish p2 artifacts to maven central. Fixes #294 . Example [here](https://central.sonatype.com/artifact/org.eclipse.collections/p2-site)
 
 
+# API Changes
+-----------------
+* Added `injectIntoWithIndex` to `OrderedIterable`. Fixes #1203.
+
+
 # Bug Fixes
 -----------------
 * Fixed ConcurrentHashMap keySet(), values(), and entrySet() spliterators to ensure they are CONCURRENT and not SIZED. Fixes #1801.
