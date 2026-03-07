@@ -529,6 +529,71 @@ public interface SortedNaturalOrderTestCase extends OrderedIterableTestCase
                 iterable.collectWithIndex(PrimitiveTuples::pair, Lists.mutable.empty()));
     }
 
+    /**
+     * @since 14.0
+     */
+    @Override
+    @Test
+    default void OrderedIterable_injectIntoWithIndex()
+    {
+        OrderedIterable<Integer> iterable = (OrderedIterable<Integer>) this.newWith(1, 2, 2, 3, 3, 3, 4, 4, 4, 4);
+        MutableList<Pair<Integer, Integer>> injected = Lists.mutable.empty();
+        MutableList<Pair<Integer, Integer>> result = iterable.injectIntoWithIndex(
+                injected,
+                (coll, each, index) ->
+                {
+                    coll.add(Tuples.pair(each, index));
+                    return coll;
+                });
+        assertEquals(
+                Lists.immutable.with(
+                        Tuples.pair(1, 0),
+                        Tuples.pair(2, 1),
+                        Tuples.pair(2, 2),
+                        Tuples.pair(3, 3),
+                        Tuples.pair(3, 4),
+                        Tuples.pair(3, 5),
+                        Tuples.pair(4, 6),
+                        Tuples.pair(4, 7),
+                        Tuples.pair(4, 8),
+                        Tuples.pair(4, 9)),
+                result);
+        assertSame(injected, result);
+    }
+
+    /**
+     * @since 14.0
+     */
+    @Override
+    @Test
+    default void OrderedIterable_injectIntoWithIndex_target()
+    {
+        MutableList<Pair<Integer, Integer>> initialValue = Lists.mutable.empty();
+        initialValue.add(Tuples.pair(99, 99));
+        MutableList<Pair<Integer, Integer>> result = ((OrderedIterable<Integer>) this.newWith(1, 2, 2, 3, 3, 3, 4, 4, 4, 4)).injectIntoWithIndex(
+                initialValue,
+                (coll, each, index) ->
+                {
+                    coll.add(Tuples.pair(each, index));
+                    return coll;
+                });
+        assertSame(initialValue, result);
+        assertEquals(
+                Lists.immutable.with(
+                        Tuples.pair(99, 99),
+                        Tuples.pair(1, 0),
+                        Tuples.pair(2, 1),
+                        Tuples.pair(2, 2),
+                        Tuples.pair(3, 3),
+                        Tuples.pair(3, 4),
+                        Tuples.pair(3, 5),
+                        Tuples.pair(4, 6),
+                        Tuples.pair(4, 7),
+                        Tuples.pair(4, 8),
+                        Tuples.pair(4, 9)),
+                result);
+    }
+
     @Override
     @Test
     default void OrderedIterable_zipWithIndex()
