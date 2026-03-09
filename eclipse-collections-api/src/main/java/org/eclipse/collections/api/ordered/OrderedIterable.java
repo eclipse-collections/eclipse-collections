@@ -301,7 +301,7 @@ public interface OrderedIterable<T> extends RichIterable<T>
      * evaluation, each element, and its relative index. The initialValue is used as the accumulated value for the
      * first evaluation.
      *
-     * @since 13.0
+     * @since 14.0
      */
     default <IV> IV injectIntoWithIndex(IV initialValue, Function3<? super IV, ? super T, Integer, ? extends IV> function)
     {
