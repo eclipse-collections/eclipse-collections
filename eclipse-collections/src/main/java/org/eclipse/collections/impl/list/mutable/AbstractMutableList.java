@@ -899,7 +899,7 @@ public abstract class AbstractMutableList<T>
     @Override
     public boolean containsAll(Collection<?> source)
     {
-        return Iterate.allSatisfyWith(source, Predicates2.in(), this);
+        return this.containsAllIterable(source);
     }
 
     @Override

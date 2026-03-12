@@ -557,7 +557,7 @@ final class ImmutableArrayList<T>
     @Override
     public boolean containsAll(Collection<?> collection)
     {
-        return Iterate.allSatisfy(collection, Predicates.in(this.items));
+        return this.containsAllIterable(collection);
     }
 
     @Override

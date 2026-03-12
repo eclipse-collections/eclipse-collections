@@ -51,6 +51,7 @@ import org.eclipse.collections.api.map.MutableMapIterable;
 import org.eclipse.collections.api.map.sorted.MutableSortedMap;
 import org.eclipse.collections.api.multimap.MutableMultimap;
 import org.eclipse.collections.api.set.MutableSet;
+import org.eclipse.collections.api.set.SetIterable;
 import org.eclipse.collections.api.set.sorted.MutableSortedSet;
 import org.eclipse.collections.api.tuple.Pair;
 import org.eclipse.collections.impl.block.factory.Comparators;
@@ -103,13 +104,23 @@ public abstract class AbstractRichIterable<T> implements RichIterable<T>
     @Override
     public boolean containsAllIterable(Iterable<?> source)
     {
-        return Iterate.allSatisfyWith(source, Predicates2.in(), this);
+        return RichIterable.super.containsAllIterable(source);
     }
 
     @Override
     public boolean containsAllArguments(Object... elements)
     {
-        return ArrayIterate.allSatisfyWith(elements, Predicates2.in(), this);
+        if (elements.length == 0)
+        {
+            return true;
+        }
+
+        RichIterable<?> lookupCollection = this;
+        if (elements.length >= 4 && this.size() > 32 && !(this instanceof SetIterable))
+        {
+            lookupCollection = this.toSet();
+        }
+        return ArrayIterate.allSatisfyWith(elements, Predicates2.in(), lookupCollection);
     }
 
     @Override
@@ -600,7 +611,7 @@ public abstract class AbstractRichIterable<T> implements RichIterable<T>
     @Override
     public boolean containsAll(Collection<?> collection)
     {
-        return this.containsAllIterable(collection);
+        return RichIterable.super.containsAll(collection);
     }
 
     /**

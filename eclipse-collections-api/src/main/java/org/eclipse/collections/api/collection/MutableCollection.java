@@ -71,6 +71,12 @@ public interface MutableCollection<T>
         extends Collection<T>, RichIterable<T>
 {
     @Override
+    default boolean containsAll(Collection<?> source)
+    {
+        return RichIterable.super.containsAll(source);
+    }
+
+    @Override
     default Object[] toArray()
     {
         return RichIterable.super.toArray();

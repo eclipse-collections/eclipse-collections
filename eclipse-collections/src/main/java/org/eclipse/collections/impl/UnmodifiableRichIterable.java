@@ -192,7 +192,7 @@ public class UnmodifiableRichIterable<T>
     @Override
     public boolean containsAll(Collection<?> source)
     {
-        return this.iterable.containsAll(source);
+        return this.iterable.containsAllIterable(source);
     }
 
     @Override

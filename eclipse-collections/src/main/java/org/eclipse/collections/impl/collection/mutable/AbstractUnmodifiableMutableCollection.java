@@ -142,7 +142,7 @@ public class AbstractUnmodifiableMutableCollection<T> implements MutableCollecti
     @Override
     public boolean containsAll(Collection<?> c)
     {
-        return this.collection.containsAll(c);
+        return this.getMutableCollection().containsAllIterable(c);
     }
 
     @Override

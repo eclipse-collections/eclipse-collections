@@ -259,7 +259,7 @@ public class UnmodifiableBiMap<K, V> implements MutableBiMap<K, V>, Serializable
     @Override
     public boolean containsAll(Collection<?> source)
     {
-        return this.delegate.containsAll(source);
+        return this.delegate.containsAllIterable(source);
     }
 
     @Override

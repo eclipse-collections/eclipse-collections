@@ -246,7 +246,7 @@ public final class CompositeFastList<E>
     @Override
     public boolean containsAll(Collection<?> collection)
     {
-        return Iterate.allSatisfy(collection, Predicates.in(this));
+        return this.containsAllIterable(collection);
     }
 
     @Override

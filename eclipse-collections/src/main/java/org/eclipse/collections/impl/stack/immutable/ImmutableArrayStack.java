@@ -306,7 +306,7 @@ final class ImmutableArrayStack<T> implements ImmutableStack<T>, Serializable
     @Override
     public boolean containsAll(Collection<?> source)
     {
-        return this.delegate.asReversed().containsAll(source);
+        return this.delegate.asReversed().containsAllIterable(source);
     }
 
     @Override
