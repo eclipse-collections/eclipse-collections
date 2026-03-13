@@ -611,7 +611,7 @@ public abstract class AbstractRichIterable<T> implements RichIterable<T>
     @Override
     public boolean containsAll(Collection<?> collection)
     {
-        return RichIterable.super.containsAll(collection);
+        return this.containsAllIterable(collection);
     }
 
     /**
