@@ -119,7 +119,7 @@ Arrays, Maps or Strings. The iteration protocol was inspired by the Smalltalk co
         <slf4j.version>2.0.17</slf4j.version>
         <clover.version>4.4.1</clover.version>
         <scala.version>2.13.15</scala.version>
-        <guava.version>33.1.0-jre</guava.version>
+        <guava.version>33.5.0-jre</guava.version>
         <trove4j.version>3.1.0</trove4j.version>
         <koloboke.version>1.0.0</koloboke.version>
         <hppc.version>0.10.0</hppc.version>
