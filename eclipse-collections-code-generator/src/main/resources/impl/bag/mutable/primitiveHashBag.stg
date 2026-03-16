@@ -721,6 +721,16 @@ public class <name>HashBag
 
     <endif>
     @Override
+    public <(wideStatistics.(type))> summaryStatistics()
+{
+    if (this.isEmpty())
+    {
+        return new <(wideStatistics.(type))>();
+    }
+    return new <(wideStatistics.(type))>(this.size(), this.min(), this.max(), this.sum());
+}
+
+    @Override
     public <type>[] toArray()
     {
         <type>[] array = new <type>[this.size()];

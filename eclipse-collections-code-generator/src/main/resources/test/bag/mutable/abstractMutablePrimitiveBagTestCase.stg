@@ -408,6 +408,28 @@ public abstract class AbstractMutable<name>BagTestCase extends AbstractMutable<n
         String actual = this.newWith(<["100", "101", "101"]:(literal.(type))(); separator=", ">).toStringOfItemToCount();
         assertTrue(("{" + <(literal.(type))("100")> + "=1, " + <(literal.(type))("101")> + "=2}").equals(actual) || ("{" + <(literal.(type))("101")> + "=2, " + <(literal.(type))("100")> + "=1}").equals(actual));
     }
+
+    /**
+     * Verifies that summaryStatistics() correctly accounts for duplicate elements in the bag.
+     * The count must equal the total number of occurrences (not just distinct values).
+     */
+    @Test
+    public void summaryStatistics_withDuplicates()
+    {
+        // Bag with duplicates: [1, 1, 1, 2, 2, 3] -> count=6, sum=10
+        Mutable<name>Bag bag = this.newWith(<["1", "1", "1", "2", "2", "3"]:(literal.(type))(); separator=", ">);
+        <(wideStatistics.(type))> stats = bag.summaryStatistics();
+        assertEquals(6L, stats.getCount());
+        assertEquals(<(wideLiteral.(type))("10")>, stats.getSum()<(wideDelta.(type))>);
+
+        // Empty bag
+        assertEquals(0L, this.newWith().summaryStatistics().getCount());
+
+        // Single distinct element repeated: [5, 5, 5] -> count=3, sum=15
+        <(wideStatistics.(type))> triples = this.newWith(<["5", "5", "5"]:(literal.(type))(); separator=", ">).summaryStatistics();
+        assertEquals(3L, triples.getCount());
+        assertEquals(<(wideLiteral.(type))("15")>, triples.getSum()<(wideDelta.(type))>);
+    }
 }
 
 >>
