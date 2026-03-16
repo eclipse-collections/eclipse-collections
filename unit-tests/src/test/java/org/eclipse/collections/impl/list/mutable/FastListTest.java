@@ -52,6 +52,7 @@ import org.eclipse.collections.impl.test.Verify;
 import org.eclipse.collections.impl.tuple.Tuples;
 import org.eclipse.collections.impl.utility.LazyIterate;
 import org.eclipse.collections.impl.utility.ListIterate;
+import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 
 import static org.eclipse.collections.impl.factory.Iterables.iList;
@@ -1239,5 +1240,13 @@ public class FastListTest extends AbstractListTestCase
     public void testNegativeInitialCapacity()
     {
         assertThrows(IllegalArgumentException.class, () -> new FastList<>(-1));
+    }
+    @Test
+    public void removeIf_java8()
+    {
+        FastList<Integer> list = FastList.newListWith(1, 2, 3, 4, 5);
+        boolean changed = list.removeIf(i -> i % 2 == 0);
+        Assert.assertTrue(changed);
+        Assert.assertEquals(FastList.newListWith(1, 3, 5), list);
     }
 }

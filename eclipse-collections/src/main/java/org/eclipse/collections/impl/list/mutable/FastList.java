@@ -116,6 +116,25 @@ public class FastList<T>
         implements Externalizable, RandomAccess, BatchIterable<T>
 {
     private static final long serialVersionUID = 1L;
+
+    @Override
+    public boolean removeIf(java.util.function.Predicate<? super T> filter)
+    {
+        int currentIndex = 0;
+        for(int i = 0 ; i < this.size ; i++)
+        {
+            T val = this.items[i];
+            if(!filter.test(val))
+            {
+                this.items[currentIndex] = val;
+                currentIndex++;
+            }
+        }
+        boolean changed = currentIndex != this.size;
+        this.wipeAndResetTheEnd(currentIndex);
+        return changed;
+    }
+
     private static final Object[] DEFAULT_SIZED_EMPTY_ARRAY = {};
     private static final Object[] ZERO_SIZED_ARRAY = {};
     private static final int MAXIMUM_ARRAY_SIZE = Integer.MAX_VALUE - 8;
