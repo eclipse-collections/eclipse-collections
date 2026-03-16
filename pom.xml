@@ -321,6 +321,11 @@ Arrays, Maps or Strings. The iteration protocol was inspired by the Smalltalk co
                 </plugin>
 
                 <plugin>
+                    <artifactId>maven-enforcer-plugin</artifactId>
+                    <version>3.5.0</version>
+                </plugin>
+
+                <plugin>
                     <artifactId>maven-install-plugin</artifactId>
                     <version>3.1.4</version>
                 </plugin>
@@ -812,7 +817,6 @@ Arrays, Maps or Strings. The iteration protocol was inspired by the Smalltalk co
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-enforcer-plugin</artifactId>
-                        <version>3.5.0</version>
                         <dependencies>
                             <dependency>
                                 <groupId>org.codehaus.mojo</groupId>
