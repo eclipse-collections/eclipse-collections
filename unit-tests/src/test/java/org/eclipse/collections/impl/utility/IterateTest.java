@@ -67,7 +67,6 @@ import org.eclipse.collections.api.tuple.Twin;
 import org.eclipse.collections.impl.bag.mutable.HashBag;
 import org.eclipse.collections.impl.block.factory.Comparators;
 import org.eclipse.collections.impl.block.factory.Functions;
-import org.eclipse.collections.impl.block.factory.IntegerPredicates;
 import org.eclipse.collections.impl.block.factory.ObjectIntProcedures;
 import org.eclipse.collections.impl.block.factory.Predicates;
 import org.eclipse.collections.impl.block.factory.Predicates2;
@@ -1613,9 +1612,10 @@ public class IterateTest
 
     private void assertRemoveIfFromList(List<Integer> newIntegers)
     {
-        assertTrue(Iterate.removeIf(newIntegers, IntegerPredicates.isEven()));
-        assertFalse(Iterate.removeIf(FastList.newListWith(1, 3, 5), IntegerPredicates.isEven()));
-        assertFalse(Iterate.removeIf(FastList.newList(), IntegerPredicates.isEven()));
+        java.util.function.Predicate<Integer> isEven = each -> each % 2 == 0;
+        assertTrue(Iterate.removeIf(newIntegers, isEven));
+        assertFalse(Iterate.removeIf(FastList.newListWith(1, 3, 5), isEven));
+        assertFalse(Iterate.removeIf(FastList.newList(), isEven));
         Verify.assertContainsAll(newIntegers, 1, 3, 5);
         Verify.assertSize(3, newIntegers);
     }
@@ -1647,7 +1647,8 @@ public class IterateTest
     public void removeIfFromSet()
     {
         MutableSet<Integer> integers = Interval.toSet(1, 5);
-        assertTrue(Iterate.removeIf(integers, IntegerPredicates.isEven()));
+        java.util.function.Predicate<Integer> isEven = each -> each % 2 == 0;
+        assertTrue(Iterate.removeIf(integers, isEven));
         Verify.assertContainsAll(integers, 1, 3, 5);
         Verify.assertSize(3, integers);
     }

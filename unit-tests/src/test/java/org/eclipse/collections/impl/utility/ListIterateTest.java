@@ -1072,17 +1072,19 @@ public class ListIterateTest
         MutableList<Integer> list1 = FastList.newListWith(1, 2, 3, 4, 5);
         List<Integer> list2 = new LinkedList<>(list1);
 
-        assertTrue(ListIterate.removeIf(list1, IntegerPredicates.isEven()));
+        java.util.function.Predicate<Integer> isEven = each -> each % 2 == 0;
+        java.util.function.Predicate<Integer> isZero = each -> each == 0;
+        assertTrue(ListIterate.removeIf(list1, isEven));
         MutableList<Integer> expected = Lists.mutable.of(1, 3, 5);
         assertEquals(expected, list1);
 
-        assertTrue(ListIterate.removeIf(list2, IntegerPredicates.isEven()));
+        assertTrue(ListIterate.removeIf(list2, isEven));
         assertEquals(expected, list2);
 
-        assertFalse(ListIterate.removeIf(list1, IntegerPredicates.isZero()));
+        assertFalse(ListIterate.removeIf(list1, isZero));
         assertEquals(expected, list1);
 
-        assertFalse(ListIterate.removeIf(list2, IntegerPredicates.isZero()));
+        assertFalse(ListIterate.removeIf(list2, isZero));
         assertEquals(expected, list2);
     }
 

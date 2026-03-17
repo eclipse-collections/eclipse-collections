@@ -199,6 +199,12 @@ public abstract class AbstractMutableList<T>
     }
 
     @Override
+    public boolean removeIf(java.util.function.Predicate<? super T> filter)
+    {
+        return ListIterate.removeIf(this, filter);
+    }
+
+    @Override
     public <P> boolean removeIfWith(Predicate2<? super T, ? super P> predicate, P parameter)
     {
         return ListIterate.removeIfWith(this, predicate, parameter);

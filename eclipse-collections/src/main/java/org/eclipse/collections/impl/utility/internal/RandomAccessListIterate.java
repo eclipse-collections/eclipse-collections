@@ -1111,11 +1111,16 @@ public final class RandomAccessListIterate
 
     public static <T> boolean removeIf(List<T> list, Predicate<? super T> predicate)
     {
+        return RandomAccessListIterate.removeIf(list, (java.util.function.Predicate<? super T>) predicate);
+    }
+
+    public static <T> boolean removeIf(List<T> list, java.util.function.Predicate<? super T> predicate)
+    {
         boolean changed = false;
         for (int i = 0; i < list.size(); i++)
         {
             T each = list.get(i);
-            if (predicate.accept(each))
+            if (predicate.test(each))
             {
                 list.remove(i--);
                 changed = true;

@@ -375,6 +375,15 @@ public abstract class AbstractSynchronizedMutableCollection<T>
     }
 
     @Override
+    public boolean removeIf(java.util.function.Predicate<? super T> filter)
+    {
+        synchronized (this.lock)
+        {
+            return this.getDelegate().removeIf(filter);
+        }
+    }
+
+    @Override
     public <P> boolean removeIfWith(Predicate2<? super T, ? super P> predicate, P parameter)
     {
         synchronized (this.lock)

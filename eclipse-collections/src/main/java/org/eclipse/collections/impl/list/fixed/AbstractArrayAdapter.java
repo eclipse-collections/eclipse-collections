@@ -115,6 +115,12 @@ public abstract class AbstractArrayAdapter<T>
     }
 
     @Override
+    public boolean removeIf(java.util.function.Predicate<? super T> filter)
+    {
+        throw new UnsupportedOperationException("Cannot call removeIf() on " + this.getClass().getSimpleName());
+    }
+
+    @Override
     public <P> boolean removeIfWith(Predicate2<? super T, ? super P> predicate, P parameter)
     {
         throw new UnsupportedOperationException("Cannot call removeIfWith() on " + this.getClass().getSimpleName());

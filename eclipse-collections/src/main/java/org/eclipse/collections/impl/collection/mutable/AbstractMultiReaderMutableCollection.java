@@ -1092,6 +1092,15 @@ public abstract class AbstractMultiReaderMutableCollection<T> implements Mutable
     }
 
     @Override
+    public boolean removeIf(java.util.function.Predicate<? super T> filter)
+    {
+        try (LockWrapper wrapper = this.lockWrapper.acquireWriteLock())
+        {
+            return this.getDelegate().removeIf(filter);
+        }
+    }
+
+    @Override
     public <P> boolean removeIfWith(
             Predicate2<? super T, ? super P> predicate,
             P parameter)
@@ -2052,6 +2061,12 @@ public abstract class AbstractMultiReaderMutableCollection<T> implements Mutable
         public boolean removeIf(Predicate<? super T> predicate)
         {
             return this.delegate.removeIf(predicate);
+        }
+
+        @Override
+        public boolean removeIf(java.util.function.Predicate<? super T> filter)
+        {
+            return this.delegate.removeIf(filter);
         }
 
         @Override

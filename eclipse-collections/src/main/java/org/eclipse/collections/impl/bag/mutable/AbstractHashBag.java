@@ -275,11 +275,17 @@ public abstract class AbstractHashBag<T> extends AbstractMutableBag<T>
     @Override
     public boolean removeIf(Predicate<? super T> predicate)
     {
+        return this.removeIf((java.util.function.Predicate<? super T>) predicate);
+    }
+
+    @Override
+    public boolean removeIf(java.util.function.Predicate<? super T> predicate)
+    {
         boolean changed = false;
         for (Iterator<T> iterator = this.items.keySet().iterator(); iterator.hasNext(); )
         {
             T key = iterator.next();
-            if (predicate.accept(key))
+            if (predicate.test(key))
             {
                 this.size -= this.items.get(key);
                 iterator.remove();

@@ -782,6 +782,14 @@ public final class Iterate
      */
     public static <T> boolean removeIf(Iterable<T> iterable, Predicate<? super T> predicate)
     {
+        return Iterate.removeIf(iterable, (java.util.function.Predicate<? super T>) predicate);
+    }
+
+    /**
+     * Removes all elements from the iterable that evaluate to true for the specified predicate.
+     */
+    public static <T> boolean removeIf(Iterable<T> iterable, java.util.function.Predicate<? super T> predicate)
+    {
         if (iterable instanceof MutableCollection)
         {
             return ((MutableCollection<T>) iterable).removeIf(predicate);
