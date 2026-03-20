@@ -11,7 +11,6 @@
 package org.eclipse.collections.test;
 
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 
 import org.eclipse.collections.api.RichIterable;
 import org.eclipse.collections.api.collection.MutableCollection;
@@ -28,7 +27,6 @@ import static org.eclipse.collections.test.IterableTestCase.assertIterablesEqual
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SuppressWarnings("UnnecessaryCodeBlock")
 public interface SortedNaturalOrderTestCase extends OrderedIterableTestCase
@@ -93,17 +91,6 @@ public interface SortedNaturalOrderTestCase extends OrderedIterableTestCase
         MutableCollection<Integer> result = iterable.collectIf(i -> i % 2 != 0, i -> i % 10, target);
         assertIterablesEqual(this.newMutableForTransform(1, 1, 3, 3, 1, 1, 3, 3), result);
         assertSame(target, result);
-    }
-
-    @Override
-    @Test
-    default void RichIterable_minBy_maxBy()
-    {
-        assertEquals("ca", this.newWith("ab", "bc", "ca", "da", "ed").minBy(string -> string.charAt(string.length() - 1)));
-        assertThrows(NoSuchElementException.class, () -> this.<String>newWith().minBy(string -> string.charAt(string.length() - 1)));
-
-        assertEquals("cz", this.newWith("ew", "dz", "cz", "bx", "ay").maxBy(string -> string.charAt(string.length() - 1)));
-        assertThrows(NoSuchElementException.class, () -> this.<String>newWith().maxBy(string -> string.charAt(string.length() - 1)));
     }
 
     @Override

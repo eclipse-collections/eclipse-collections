@@ -2753,10 +2753,21 @@ public interface RichIterableTestCase extends IterableTestCase
     @Test
     default void RichIterable_minBy_maxBy()
     {
-        assertEquals("da", this.newWith("ed", "da", "ca", "bc", "ab").minBy(string -> string.charAt(string.length() - 1)));
+        switch (this.getOrderingType())
+        {
+            case INSERTION_ORDER, SORTED_REVERSE_NATURAL ->
+            {
+                assertEquals("da", this.newWith("ed", "da", "ca", "bc", "ab").minBy(string -> string.charAt(string.length() - 1)));
+                assertEquals("dz", this.newWith("ew", "dz", "cz", "bx", "ay").maxBy(string -> string.charAt(string.length() - 1)));
+            }
+            case SORTED_NATURAL ->
+            {
+                assertEquals("ca", this.newWith("ed", "da", "ca", "bc", "ab").minBy(string -> string.charAt(string.length() - 1)));
+                assertEquals("cz", this.newWith("ew", "dz", "cz", "bx", "ay").maxBy(string -> string.charAt(string.length() - 1)));
+            }
+            default -> throw new IllegalStateException("Unexpected ordering type");
+        }
         assertThrows(NoSuchElementException.class, () -> this.<String>newWith().minBy(string -> string.charAt(string.length() - 1)));
-
-        assertEquals("dz", this.newWith("ew", "dz", "cz", "bx", "ay").maxBy(string -> string.charAt(string.length() - 1)));
         assertThrows(NoSuchElementException.class, () -> this.<String>newWith().maxBy(string -> string.charAt(string.length() - 1)));
 
         if (!this.allowsDuplicates())
@@ -2764,8 +2775,20 @@ public interface RichIterableTestCase extends IterableTestCase
             return;
         }
 
-        assertEquals("da", this.newWith("ed", "ed", "da", "da", "ca", "ca", "bc", "bc", "ab", "ab").minBy(string -> string.charAt(string.length() - 1)));
-        assertEquals("dz", this.newWith("ew", "ew", "dz", "dz", "cz", "cz", "bx", "bx", "ay", "ay").maxBy(string -> string.charAt(string.length() - 1)));
+        switch (this.getOrderingType())
+        {
+            case INSERTION_ORDER, SORTED_REVERSE_NATURAL ->
+            {
+                assertEquals("da", this.newWith("ed", "ed", "da", "da", "ca", "ca", "bc", "bc", "ab", "ab").minBy(string -> string.charAt(string.length() - 1)));
+                assertEquals("dz", this.newWith("ew", "ew", "dz", "dz", "cz", "cz", "bx", "bx", "ay", "ay").maxBy(string -> string.charAt(string.length() - 1)));
+            }
+            case SORTED_NATURAL ->
+            {
+                assertEquals("ca", this.newWith("ed", "ed", "da", "da", "ca", "ca", "bc", "bc", "ab", "ab").minBy(string -> string.charAt(string.length() - 1)));
+                assertEquals("cz", this.newWith("ew", "ew", "dz", "dz", "cz", "cz", "bx", "bx", "ay", "ay").maxBy(string -> string.charAt(string.length() - 1)));
+            }
+            default -> throw new IllegalStateException("Unexpected ordering type");
+        }
     }
 
     @Test
