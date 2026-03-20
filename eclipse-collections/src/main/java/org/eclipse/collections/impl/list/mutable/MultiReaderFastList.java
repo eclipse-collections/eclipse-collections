@@ -821,13 +821,13 @@ public final class MultiReaderFastList<T>
         @Override
         public MutableList<T> asSynchronized()
         {
-            throw new UnsupportedOperationException("Cannot call asSynchronized() on " + this.getClass().getSimpleName());
+            return SynchronizedMutableList.of(this);
         }
 
         @Override
         public MutableList<T> asUnmodifiable()
         {
-            throw new UnsupportedOperationException("Cannot call asUnmodifiable() on " + this.getClass().getSimpleName());
+            return UnmodifiableMutableList.of(this);
         }
 
         @Override
