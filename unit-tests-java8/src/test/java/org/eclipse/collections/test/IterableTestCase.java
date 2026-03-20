@@ -79,6 +79,19 @@ public interface IterableTestCase
         return true;
     }
 
+    enum OrderingType
+    {
+        UNORDERED,
+        INSERTION_ORDER,
+        SORTED_NATURAL,
+        SORTED_REVERSE_NATURAL,
+    }
+
+    default OrderingType getOrderingType()
+    {
+        return OrderingType.INSERTION_ORDER;
+    }
+
     static void assertIterablesEqual(Object o1, Object o2)
     {
         if (!(o1 instanceof Iterable)

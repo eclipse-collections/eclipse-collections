@@ -57,6 +57,12 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public interface SortedNaturalOrderTestCase extends OrderedIterableTestCase
 {
     @Override
+    default OrderingType getOrderingType()
+    {
+        return OrderingType.SORTED_NATURAL;
+    }
+
+    @Override
     @Test
     default void Iterable_toString()
     {
@@ -109,99 +115,6 @@ public interface SortedNaturalOrderTestCase extends OrderedIterableTestCase
         MutableCollection<Integer> target = this.newMutableForTransform();
         MutableCollection<Integer> result = iterable.collectIf(i -> i % 2 != 0, i -> i % 10, target);
         assertIterablesEqual(this.newMutableForTransform(1, 1, 3, 3, 1, 1, 3, 3), result);
-        assertSame(target, result);
-    }
-
-    @Override
-    @Test
-    default void RichIterable_collectPrimitive()
-    {
-        assertIterablesEqual(
-                this.getExpectedBoolean(false, false, true, true, false, false),
-                this.newWith(1, 1, 2, 2, 3, 3).collectBoolean(each -> each % 2 == 0));
-
-        {
-            MutableBooleanCollection target = this.newBooleanForTransform();
-            MutableBooleanCollection result = this.newWith(1, 1, 2, 2, 3, 3).collectBoolean(each -> each % 2 == 0, target);
-            assertIterablesEqual(this.newBooleanForTransform(false, false, true, true, false, false), result);
-            assertSame(target, result);
-        }
-
-        RichIterable<Integer> iterable = this.newWith(1, 1, 2, 2, 3, 3, 11, 11, 12, 12, 13, 13);
-
-        assertIterablesEqual(
-                this.getExpectedByte((byte) 1, (byte) 1, (byte) 2, (byte) 2, (byte) 3, (byte) 3, (byte) 1, (byte) 1, (byte) 2, (byte) 2, (byte) 3, (byte) 3),
-                iterable.collectByte(each -> (byte) (each % 10)));
-
-        {
-            MutableByteCollection target = this.newByteForTransform();
-            MutableByteCollection result = iterable.collectByte(each -> (byte) (each % 10), target);
-            assertIterablesEqual(this.newByteForTransform((byte) 1, (byte) 1, (byte) 2, (byte) 2, (byte) 3, (byte) 3, (byte) 1, (byte) 1, (byte) 2, (byte) 2, (byte) 3, (byte) 3), result);
-            assertSame(target, result);
-        }
-
-        assertIterablesEqual(
-                this.getExpectedChar((char) 1, (char) 1, (char) 2, (char) 2, (char) 3, (char) 3, (char) 1, (char) 1, (char) 2, (char) 2, (char) 3, (char) 3),
-                iterable.collectChar(each -> (char) (each % 10)));
-
-        {
-            MutableCharCollection target = this.newCharForTransform();
-            MutableCharCollection result = iterable.collectChar(each -> (char) (each % 10), target);
-            assertIterablesEqual(this.newCharForTransform((char) 1, (char) 1, (char) 2, (char) 2, (char) 3, (char) 3, (char) 1, (char) 1, (char) 2, (char) 2, (char) 3, (char) 3), result);
-            assertSame(target, result);
-        }
-
-        assertIterablesEqual(
-                this.getExpectedDouble(1.0, 1.0, 2.0, 2.0, 3.0, 3.0, 1.0, 1.0, 2.0, 2.0, 3.0, 3.0),
-                iterable.collectDouble(each -> (double) (each % 10)));
-
-        {
-            MutableDoubleCollection target = this.newDoubleForTransform();
-            MutableDoubleCollection result = iterable.collectDouble(each -> (double) (each % 10), target);
-            assertIterablesEqual(this.newDoubleForTransform(1.0, 1.0, 2.0, 2.0, 3.0, 3.0, 1.0, 1.0, 2.0, 2.0, 3.0, 3.0), result);
-            assertSame(target, result);
-        }
-
-        assertIterablesEqual(
-                this.getExpectedFloat(1.0f, 1.0f, 2.0f, 2.0f, 3.0f, 3.0f, 1.0f, 1.0f, 2.0f, 2.0f, 3.0f, 3.0f),
-                iterable.collectFloat(each -> (float) (each % 10)));
-
-        {
-            MutableFloatCollection target = this.newFloatForTransform();
-            MutableFloatCollection result = iterable.collectFloat(each -> (float) (each % 10), target);
-            assertIterablesEqual(this.newFloatForTransform(1.0f, 1.0f, 2.0f, 2.0f, 3.0f, 3.0f, 1.0f, 1.0f, 2.0f, 2.0f, 3.0f, 3.0f), result);
-            assertSame(target, result);
-        }
-
-        assertIterablesEqual(
-                this.getExpectedInt(1, 1, 2, 2, 3, 3, 1, 1, 2, 2, 3, 3),
-                iterable.collectInt(each -> each % 10));
-
-        {
-            MutableIntCollection target = this.newIntForTransform();
-            MutableIntCollection result = iterable.collectInt(each -> each % 10, target);
-            assertIterablesEqual(this.newIntForTransform(1, 1, 2, 2, 3, 3, 1, 1, 2, 2, 3, 3), result);
-            assertSame(target, result);
-        }
-
-        assertIterablesEqual(
-                this.getExpectedLong(1, 1, 2, 2, 3, 3, 1, 1, 2, 2, 3, 3),
-                iterable.collectLong(each -> each % 10));
-
-        {
-            MutableLongCollection target = this.newLongForTransform();
-            MutableLongCollection result = iterable.collectLong(each -> each % 10, target);
-            assertIterablesEqual(this.newLongForTransform(1, 1, 2, 2, 3, 3, 1, 1, 2, 2, 3, 3), result);
-            assertSame(target, result);
-        }
-
-        assertIterablesEqual(
-                this.getExpectedShort((short) 1, (short) 1, (short) 2, (short) 2, (short) 3, (short) 3, (short) 1, (short) 1, (short) 2, (short) 2, (short) 3, (short) 3),
-                iterable.collectShort(each -> (short) (each % 10)));
-
-        MutableShortCollection target = this.newShortForTransform();
-        MutableShortCollection result = iterable.collectShort(each -> (short) (each % 10), target);
-        assertIterablesEqual(this.newShortForTransform((short) 1, (short) 1, (short) 2, (short) 2, (short) 3, (short) 3, (short) 1, (short) 1, (short) 2, (short) 2, (short) 3, (short) 3), result);
         assertSame(target, result);
     }
 
