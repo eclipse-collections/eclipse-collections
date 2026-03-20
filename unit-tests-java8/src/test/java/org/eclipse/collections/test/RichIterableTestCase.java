@@ -3613,9 +3613,19 @@ public interface RichIterableTestCase extends IterableTestCase
     default void RichIterable_toList()
     {
         RichIterable<Integer> iterable = this.newWith(4, 3, 2, 1);
-        assertIterablesEqual(
-                Lists.immutable.with(4, 3, 2, 1),
-                iterable.toList());
+
+        switch (this.getOrderingType())
+        {
+            case INSERTION_ORDER, SORTED_REVERSE_NATURAL ->
+                    assertIterablesEqual(
+                            Lists.immutable.with(4, 3, 2, 1),
+                            iterable.toList());
+            case SORTED_NATURAL ->
+                    assertIterablesEqual(
+                            Lists.immutable.with(1, 2, 3, 4),
+                            iterable.toList());
+            default -> throw new IllegalStateException("Unexpected ordering type");
+        }
 
         MutableList<Integer> target = Lists.mutable.empty();
         iterable.each(target::add);
@@ -3629,9 +3639,19 @@ public interface RichIterableTestCase extends IterableTestCase
         }
 
         RichIterable<Integer> duplicateIterable = this.newWith(4, 4, 4, 4, 3, 3, 3, 2, 2, 1);
-        assertIterablesEqual(
-                Lists.immutable.with(4, 4, 4, 4, 3, 3, 3, 2, 2, 1),
-                duplicateIterable.toList());
+
+        switch (this.getOrderingType())
+        {
+            case INSERTION_ORDER, SORTED_REVERSE_NATURAL ->
+                    assertIterablesEqual(
+                            Lists.immutable.with(4, 4, 4, 4, 3, 3, 3, 2, 2, 1),
+                            duplicateIterable.toList());
+            case SORTED_NATURAL ->
+                    assertIterablesEqual(
+                            Lists.immutable.with(1, 2, 2, 3, 3, 3, 4, 4, 4, 4),
+                            duplicateIterable.toList());
+            default -> throw new IllegalStateException("Unexpected ordering type");
+        }
 
         MutableList<Integer> duplicateTarget = Lists.mutable.empty();
         duplicateIterable.each(duplicateTarget::add);
