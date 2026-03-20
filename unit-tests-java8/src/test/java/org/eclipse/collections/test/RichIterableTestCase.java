@@ -2040,79 +2040,159 @@ public interface RichIterableTestCase extends IterableTestCase
 
         RichIterable<Integer> iterable = this.newWith(13, 12, 11, 3, 2, 1);
 
+        switch (this.getOrderingType())
         {
-            MutableByteCollection target = this.newByteForTransform();
-            MutableByteCollection result = iterable.flatCollectByte(
-                    each -> ByteLists.immutable.with((byte) (each % 10), (byte) (each % 10)),
-                    target);
-            assertIterablesEqual(
-                    this.newByteForTransform((byte) 3, (byte) 3, (byte) 2, (byte) 2, (byte) 1, (byte) 1, (byte) 3, (byte) 3, (byte) 2, (byte) 2, (byte) 1, (byte) 1),
-                    result);
-            assertSame(target, result);
-        }
+            case UNORDERED, INSERTION_ORDER, SORTED_REVERSE_NATURAL ->
+            {
+                {
+                    MutableByteCollection target = this.newByteForTransform();
+                    MutableByteCollection result = iterable.flatCollectByte(
+                            each -> ByteLists.immutable.with((byte) (each % 10), (byte) (each % 10)),
+                            target);
+                    assertIterablesEqual(
+                            this.newByteForTransform((byte) 3, (byte) 3, (byte) 2, (byte) 2, (byte) 1, (byte) 1, (byte) 3, (byte) 3, (byte) 2, (byte) 2, (byte) 1, (byte) 1),
+                            result);
+                    assertSame(target, result);
+                }
 
-        {
-            MutableCharCollection target = this.newCharForTransform();
-            MutableCharCollection result = iterable.flatCollectChar(
-                    each -> CharLists.immutable.with((char) (each % 10), (char) (each % 10)),
-                    target);
-            assertIterablesEqual(
-                    this.newCharForTransform((char) 3, (char) 3, (char) 2, (char) 2, (char) 1, (char) 1, (char) 3, (char) 3, (char) 2, (char) 2, (char) 1, (char) 1),
-                    result);
-            assertSame(target, result);
-        }
+                {
+                    MutableCharCollection target = this.newCharForTransform();
+                    MutableCharCollection result = iterable.flatCollectChar(
+                            each -> CharLists.immutable.with((char) (each % 10), (char) (each % 10)),
+                            target);
+                    assertIterablesEqual(
+                            this.newCharForTransform((char) 3, (char) 3, (char) 2, (char) 2, (char) 1, (char) 1, (char) 3, (char) 3, (char) 2, (char) 2, (char) 1, (char) 1),
+                            result);
+                    assertSame(target, result);
+                }
 
-        {
-            MutableDoubleCollection target = this.newDoubleForTransform();
-            MutableDoubleCollection result = iterable.flatCollectDouble(each -> DoubleLists.immutable.with(
-                    (double) (each % 10),
-                    (double) (each % 10)), target);
-            assertIterablesEqual(
-                    this.newDoubleForTransform(3.0, 3.0, 2.0, 2.0, 1.0, 1.0, 3.0, 3.0, 2.0, 2.0, 1.0, 1.0),
-                    result);
-            assertSame(target, result);
-        }
+                {
+                    MutableDoubleCollection target = this.newDoubleForTransform();
+                    MutableDoubleCollection result = iterable.flatCollectDouble(each -> DoubleLists.immutable.with(
+                            (double) (each % 10),
+                            (double) (each % 10)), target);
+                    assertIterablesEqual(
+                            this.newDoubleForTransform(3.0, 3.0, 2.0, 2.0, 1.0, 1.0, 3.0, 3.0, 2.0, 2.0, 1.0, 1.0),
+                            result);
+                    assertSame(target, result);
+                }
 
-        {
-            MutableFloatCollection target = this.newFloatForTransform();
-            MutableFloatCollection result = iterable.flatCollectFloat(each -> FloatLists.immutable.with(
-                    (float) (each % 10),
-                    (float) (each % 10)), target);
-            assertIterablesEqual(
-                    this.newFloatForTransform(3.0f, 3.0f, 2.0f, 2.0f, 1.0f, 1.0f, 3.0f, 3.0f, 2.0f, 2.0f, 1.0f, 1.0f),
-                    result);
-            assertSame(target, result);
-        }
+                {
+                    MutableFloatCollection target = this.newFloatForTransform();
+                    MutableFloatCollection result = iterable.flatCollectFloat(each -> FloatLists.immutable.with(
+                            (float) (each % 10),
+                            (float) (each % 10)), target);
+                    assertIterablesEqual(
+                            this.newFloatForTransform(3.0f, 3.0f, 2.0f, 2.0f, 1.0f, 1.0f, 3.0f, 3.0f, 2.0f, 2.0f, 1.0f, 1.0f),
+                            result);
+                    assertSame(target, result);
+                }
 
-        {
-            MutableIntCollection target = this.newIntForTransform();
-            MutableIntCollection result =
-                    iterable.flatCollectInt(each -> IntLists.immutable.with(each % 10, each % 10), target);
-            assertIterablesEqual(
-                    this.newIntForTransform(3, 3, 2, 2, 1, 1, 3, 3, 2, 2, 1, 1),
-                    result);
-            assertSame(target, result);
-        }
+                {
+                    MutableIntCollection target = this.newIntForTransform();
+                    MutableIntCollection result =
+                            iterable.flatCollectInt(each -> IntLists.immutable.with(each % 10, each % 10), target);
+                    assertIterablesEqual(
+                            this.newIntForTransform(3, 3, 2, 2, 1, 1, 3, 3, 2, 2, 1, 1),
+                            result);
+                    assertSame(target, result);
+                }
 
-        {
-            MutableLongCollection target = this.newLongForTransform();
-            MutableLongCollection result =
-                    iterable.flatCollectLong(each -> LongLists.immutable.with(each % 10, each % 10), target);
-            assertIterablesEqual(
-                    this.newLongForTransform(3, 3, 2, 2, 1, 1, 3, 3, 2, 2, 1, 1),
-                    result);
-            assertSame(target, result);
-        }
+                {
+                    MutableLongCollection target = this.newLongForTransform();
+                    MutableLongCollection result =
+                            iterable.flatCollectLong(each -> LongLists.immutable.with(each % 10, each % 10), target);
+                    assertIterablesEqual(
+                            this.newLongForTransform(3, 3, 2, 2, 1, 1, 3, 3, 2, 2, 1, 1),
+                            result);
+                    assertSame(target, result);
+                }
 
-        {
-            MutableShortCollection target = this.newShortForTransform();
-            MutableShortCollection result = iterable.flatCollectShort(each -> ShortLists.immutable.with(
-                    (short) (each % 10),
-                    (short) (each % 10)), target);
-            assertIterablesEqual(
-                    this.newShortForTransform((short) 3, (short) 3, (short) 2, (short) 2, (short) 1, (short) 1, (short) 3, (short) 3, (short) 2, (short) 2, (short) 1, (short) 1),
-                    result);
-            assertSame(target, result);
+                MutableShortCollection target = this.newShortForTransform();
+                MutableShortCollection result = iterable.flatCollectShort(each -> ShortLists.immutable.with(
+                        (short) (each % 10),
+                        (short) (each % 10)), target);
+                assertIterablesEqual(
+                        this.newShortForTransform((short) 3, (short) 3, (short) 2, (short) 2, (short) 1, (short) 1, (short) 3, (short) 3, (short) 2, (short) 2, (short) 1, (short) 1),
+                        result);
+                assertSame(target, result);
+            }
+            case SORTED_NATURAL ->
+            {
+                {
+                    MutableByteCollection target = this.newByteForTransform();
+                    MutableByteCollection result = iterable.flatCollectByte(
+                            each -> ByteLists.immutable.with((byte) (each % 10), (byte) (each % 10)),
+                            target);
+                    assertIterablesEqual(
+                            this.newByteForTransform((byte) 1, (byte) 1, (byte) 2, (byte) 2, (byte) 3, (byte) 3, (byte) 1, (byte) 1, (byte) 2, (byte) 2, (byte) 3, (byte) 3),
+                            result);
+                    assertSame(target, result);
+                }
+
+                {
+                    MutableCharCollection target = this.newCharForTransform();
+                    MutableCharCollection result = iterable.flatCollectChar(
+                            each -> CharLists.immutable.with((char) (each % 10), (char) (each % 10)),
+                            target);
+                    assertIterablesEqual(
+                            this.newCharForTransform((char) 1, (char) 1, (char) 2, (char) 2, (char) 3, (char) 3, (char) 1, (char) 1, (char) 2, (char) 2, (char) 3, (char) 3),
+                            result);
+                    assertSame(target, result);
+                }
+
+                {
+                    MutableDoubleCollection target = this.newDoubleForTransform();
+                    MutableDoubleCollection result = iterable.flatCollectDouble(each -> DoubleLists.immutable.with(
+                            (double) (each % 10),
+                            (double) (each % 10)), target);
+                    assertIterablesEqual(
+                            this.newDoubleForTransform(1.0, 1.0, 2.0, 2.0, 3.0, 3.0, 1.0, 1.0, 2.0, 2.0, 3.0, 3.0),
+                            result);
+                    assertSame(target, result);
+                }
+
+                {
+                    MutableFloatCollection target = this.newFloatForTransform();
+                    MutableFloatCollection result = iterable.flatCollectFloat(each -> FloatLists.immutable.with(
+                            (float) (each % 10),
+                            (float) (each % 10)), target);
+                    assertIterablesEqual(
+                            this.newFloatForTransform(1.0f, 1.0f, 2.0f, 2.0f, 3.0f, 3.0f, 1.0f, 1.0f, 2.0f, 2.0f, 3.0f, 3.0f),
+                            result);
+                    assertSame(target, result);
+                }
+
+                {
+                    MutableIntCollection target = this.newIntForTransform();
+                    MutableIntCollection result =
+                            iterable.flatCollectInt(each -> IntLists.immutable.with(each % 10, each % 10), target);
+                    assertIterablesEqual(
+                            this.newIntForTransform(1, 1, 2, 2, 3, 3, 1, 1, 2, 2, 3, 3),
+                            result);
+                    assertSame(target, result);
+                }
+
+                {
+                    MutableLongCollection target = this.newLongForTransform();
+                    MutableLongCollection result =
+                            iterable.flatCollectLong(each -> LongLists.immutable.with(each % 10, each % 10), target);
+                    assertIterablesEqual(
+                            this.newLongForTransform(1, 1, 2, 2, 3, 3, 1, 1, 2, 2, 3, 3),
+                            result);
+                    assertSame(target, result);
+                }
+
+                MutableShortCollection target = this.newShortForTransform();
+                MutableShortCollection result = iterable.flatCollectShort(each -> ShortLists.immutable.with(
+                        (short) (each % 10),
+                        (short) (each % 10)), target);
+                assertIterablesEqual(
+                        this.newShortForTransform((short) 1, (short) 1, (short) 2, (short) 2, (short) 3, (short) 3, (short) 1, (short) 1, (short) 2, (short) 2, (short) 3, (short) 3),
+                        result);
+                assertSame(target, result);
+            }
+            default -> fail("Unexpected value: " + this.getOrderingType());
         }
 
         if (!this.allowsDuplicates())
@@ -2131,81 +2211,163 @@ public interface RichIterableTestCase extends IterableTestCase
 
         RichIterable<Integer> iterableDup = this.newWith(13, 13, 12, 12, 11, 11, 3, 3, 2, 2, 1, 1);
 
+        switch (this.getOrderingType())
         {
-            MutableByteCollection targetDup = this.newByteForTransform();
-            MutableByteCollection resultDup = iterableDup.flatCollectByte(
-                    each -> ByteLists.immutable.with((byte) (each % 10), (byte) (each % 10)),
-                    targetDup);
-            assertIterablesEqual(
-                    this.newByteForTransform((byte) 3, (byte) 3, (byte) 3, (byte) 3, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 1, (byte) 1, (byte) 1, (byte) 1, (byte) 3, (byte) 3, (byte) 3, (byte) 3, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 1, (byte) 1, (byte) 1, (byte) 1),
-                    resultDup);
-            assertSame(targetDup, resultDup);
-        }
+            case UNORDERED, INSERTION_ORDER, SORTED_REVERSE_NATURAL ->
+            {
+                {
+                    MutableByteCollection targetDup = this.newByteForTransform();
+                    MutableByteCollection resultDup = iterableDup.flatCollectByte(
+                            each -> ByteLists.immutable.with((byte) (each % 10), (byte) (each % 10)),
+                            targetDup);
+                    assertIterablesEqual(
+                            this.newByteForTransform((byte) 3, (byte) 3, (byte) 3, (byte) 3, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 1, (byte) 1, (byte) 1, (byte) 1, (byte) 3, (byte) 3, (byte) 3, (byte) 3, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 1, (byte) 1, (byte) 1, (byte) 1),
+                            resultDup);
+                    assertSame(targetDup, resultDup);
+                }
 
-        {
-            MutableCharCollection targetDup = this.newCharForTransform();
-            MutableCharCollection resultDup = iterableDup.flatCollectChar(
-                    each -> CharLists.immutable.with((char) (each % 10), (char) (each % 10)),
-                    targetDup);
-            assertIterablesEqual(
-                    this.newCharForTransform((char) 3, (char) 3, (char) 3, (char) 3, (char) 2, (char) 2, (char) 2, (char) 2, (char) 1, (char) 1, (char) 1, (char) 1, (char) 3, (char) 3, (char) 3, (char) 3, (char) 2, (char) 2, (char) 2, (char) 2, (char) 1, (char) 1, (char) 1, (char) 1),
-                    resultDup);
-            assertSame(targetDup, resultDup);
-        }
+                {
+                    MutableCharCollection targetDup = this.newCharForTransform();
+                    MutableCharCollection resultDup = iterableDup.flatCollectChar(
+                            each -> CharLists.immutable.with((char) (each % 10), (char) (each % 10)),
+                            targetDup);
+                    assertIterablesEqual(
+                            this.newCharForTransform((char) 3, (char) 3, (char) 3, (char) 3, (char) 2, (char) 2, (char) 2, (char) 2, (char) 1, (char) 1, (char) 1, (char) 1, (char) 3, (char) 3, (char) 3, (char) 3, (char) 2, (char) 2, (char) 2, (char) 2, (char) 1, (char) 1, (char) 1, (char) 1),
+                            resultDup);
+                    assertSame(targetDup, resultDup);
+                }
 
-        {
-            MutableDoubleCollection targetDup = this.newDoubleForTransform();
-            MutableDoubleCollection resultDup = iterableDup.flatCollectDouble(
-                    each -> DoubleLists.immutable.with((double) (each % 10), (double) (each % 10)),
-                    targetDup);
-            assertIterablesEqual(
-                    this.newDoubleForTransform(3.0, 3.0, 3.0, 3.0, 2.0, 2.0, 2.0, 2.0, 1.0, 1.0, 1.0, 1.0, 3.0, 3.0, 3.0, 3.0, 2.0, 2.0, 2.0, 2.0, 1.0, 1.0, 1.0, 1.0),
-                    resultDup);
-            assertSame(targetDup, resultDup);
-        }
+                {
+                    MutableDoubleCollection targetDup = this.newDoubleForTransform();
+                    MutableDoubleCollection resultDup = iterableDup.flatCollectDouble(
+                            each -> DoubleLists.immutable.with((double) (each % 10), (double) (each % 10)),
+                            targetDup);
+                    assertIterablesEqual(
+                            this.newDoubleForTransform(3.0, 3.0, 3.0, 3.0, 2.0, 2.0, 2.0, 2.0, 1.0, 1.0, 1.0, 1.0, 3.0, 3.0, 3.0, 3.0, 2.0, 2.0, 2.0, 2.0, 1.0, 1.0, 1.0, 1.0),
+                            resultDup);
+                    assertSame(targetDup, resultDup);
+                }
 
-        {
-            MutableFloatCollection targetDup = this.newFloatForTransform();
-            MutableFloatCollection resultDup = iterableDup.flatCollectFloat(
-                    each -> FloatLists.immutable.with((float) (each % 10), (float) (each % 10)),
-                    targetDup);
-            assertIterablesEqual(
-                    this.newFloatForTransform(3.0f, 3.0f, 3.0f, 3.0f, 2.0f, 2.0f, 2.0f, 2.0f, 1.0f, 1.0f, 1.0f, 1.0f, 3.0f, 3.0f, 3.0f, 3.0f, 2.0f, 2.0f, 2.0f, 2.0f, 1.0f, 1.0f, 1.0f, 1.0f),
-                    resultDup);
-            assertSame(targetDup, resultDup);
-        }
+                {
+                    MutableFloatCollection targetDup = this.newFloatForTransform();
+                    MutableFloatCollection resultDup = iterableDup.flatCollectFloat(
+                            each -> FloatLists.immutable.with((float) (each % 10), (float) (each % 10)),
+                            targetDup);
+                    assertIterablesEqual(
+                            this.newFloatForTransform(3.0f, 3.0f, 3.0f, 3.0f, 2.0f, 2.0f, 2.0f, 2.0f, 1.0f, 1.0f, 1.0f, 1.0f, 3.0f, 3.0f, 3.0f, 3.0f, 2.0f, 2.0f, 2.0f, 2.0f, 1.0f, 1.0f, 1.0f, 1.0f),
+                            resultDup);
+                    assertSame(targetDup, resultDup);
+                }
 
-        {
-            MutableIntCollection targetDup = this.newIntForTransform();
-            MutableIntCollection resultDup = iterableDup.flatCollectInt(
-                    each -> IntLists.immutable.with(each % 10, each % 10),
-                    targetDup);
-            assertIterablesEqual(
-                    this.newIntForTransform(3, 3, 3, 3, 2, 2, 2, 2, 1, 1, 1, 1, 3, 3, 3, 3, 2, 2, 2, 2, 1, 1, 1, 1),
-                    resultDup);
-            assertSame(targetDup, resultDup);
-        }
+                {
+                    MutableIntCollection targetDup = this.newIntForTransform();
+                    MutableIntCollection resultDup = iterableDup.flatCollectInt(
+                            each -> IntLists.immutable.with(each % 10, each % 10),
+                            targetDup);
+                    assertIterablesEqual(
+                            this.newIntForTransform(3, 3, 3, 3, 2, 2, 2, 2, 1, 1, 1, 1, 3, 3, 3, 3, 2, 2, 2, 2, 1, 1, 1, 1),
+                            resultDup);
+                    assertSame(targetDup, resultDup);
+                }
 
-        {
-            MutableLongCollection targetDup = this.newLongForTransform();
-            MutableLongCollection resultDup = iterableDup.flatCollectLong(
-                    each -> LongLists.immutable.with(each % 10, each % 10),
-                    targetDup);
-            assertIterablesEqual(
-                    this.newLongForTransform(3, 3, 3, 3, 2, 2, 2, 2, 1, 1, 1, 1, 3, 3, 3, 3, 2, 2, 2, 2, 1, 1, 1, 1),
-                    resultDup);
-            assertSame(targetDup, resultDup);
-        }
+                {
+                    MutableLongCollection targetDup = this.newLongForTransform();
+                    MutableLongCollection resultDup = iterableDup.flatCollectLong(
+                            each -> LongLists.immutable.with(each % 10, each % 10),
+                            targetDup);
+                    assertIterablesEqual(
+                            this.newLongForTransform(3, 3, 3, 3, 2, 2, 2, 2, 1, 1, 1, 1, 3, 3, 3, 3, 2, 2, 2, 2, 1, 1, 1, 1),
+                            resultDup);
+                    assertSame(targetDup, resultDup);
+                }
 
-        {
-            MutableShortCollection targetDup = this.newShortForTransform();
-            MutableShortCollection resultDup = iterableDup.flatCollectShort(
-                    each -> ShortLists.immutable.with((short) (each % 10), (short) (each % 10)),
-                    targetDup);
-            assertIterablesEqual(
-                    this.newShortForTransform((short) 3, (short) 3, (short) 3, (short) 3, (short) 2, (short) 2, (short) 2, (short) 2, (short) 1, (short) 1, (short) 1, (short) 1, (short) 3, (short) 3, (short) 3, (short) 3, (short) 2, (short) 2, (short) 2, (short) 2, (short) 1, (short) 1, (short) 1, (short) 1),
-                    resultDup);
-            assertSame(targetDup, resultDup);
+                MutableShortCollection targetDup = this.newShortForTransform();
+                MutableShortCollection resultDup = iterableDup.flatCollectShort(
+                        each -> ShortLists.immutable.with((short) (each % 10), (short) (each % 10)),
+                        targetDup);
+                assertIterablesEqual(
+                        this.newShortForTransform((short) 3, (short) 3, (short) 3, (short) 3, (short) 2, (short) 2, (short) 2, (short) 2, (short) 1, (short) 1, (short) 1, (short) 1, (short) 3, (short) 3, (short) 3, (short) 3, (short) 2, (short) 2, (short) 2, (short) 2, (short) 1, (short) 1, (short) 1, (short) 1),
+                        resultDup);
+                assertSame(targetDup, resultDup);
+            }
+            case SORTED_NATURAL ->
+            {
+                {
+                    MutableByteCollection targetDup = this.newByteForTransform();
+                    MutableByteCollection resultDup = iterableDup.flatCollectByte(
+                            each -> ByteLists.immutable.with((byte) (each % 10), (byte) (each % 10)),
+                            targetDup);
+                    assertIterablesEqual(
+                            this.newByteForTransform((byte) 1, (byte) 1, (byte) 1, (byte) 1, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 3, (byte) 3, (byte) 3, (byte) 3, (byte) 1, (byte) 1, (byte) 1, (byte) 1, (byte) 2, (byte) 2, (byte) 2, (byte) 2, (byte) 3, (byte) 3, (byte) 3, (byte) 3),
+                            resultDup);
+                    assertSame(targetDup, resultDup);
+                }
+
+                {
+                    MutableCharCollection targetDup = this.newCharForTransform();
+                    MutableCharCollection resultDup = iterableDup.flatCollectChar(
+                            each -> CharLists.immutable.with((char) (each % 10), (char) (each % 10)),
+                            targetDup);
+                    assertIterablesEqual(
+                            this.newCharForTransform((char) 1, (char) 1, (char) 1, (char) 1, (char) 2, (char) 2, (char) 2, (char) 2, (char) 3, (char) 3, (char) 3, (char) 3, (char) 1, (char) 1, (char) 1, (char) 1, (char) 2, (char) 2, (char) 2, (char) 2, (char) 3, (char) 3, (char) 3, (char) 3),
+                            resultDup);
+                    assertSame(targetDup, resultDup);
+                }
+
+                {
+                    MutableDoubleCollection targetDup = this.newDoubleForTransform();
+                    MutableDoubleCollection resultDup = iterableDup.flatCollectDouble(
+                            each -> DoubleLists.immutable.with((double) (each % 10), (double) (each % 10)),
+                            targetDup);
+                    assertIterablesEqual(
+                            this.newDoubleForTransform(1.0, 1.0, 1.0, 1.0, 2.0, 2.0, 2.0, 2.0, 3.0, 3.0, 3.0, 3.0, 1.0, 1.0, 1.0, 1.0, 2.0, 2.0, 2.0, 2.0, 3.0, 3.0, 3.0, 3.0),
+                            resultDup);
+                    assertSame(targetDup, resultDup);
+                }
+
+                {
+                    MutableFloatCollection targetDup = this.newFloatForTransform();
+                    MutableFloatCollection resultDup = iterableDup.flatCollectFloat(
+                            each -> FloatLists.immutable.with((float) (each % 10), (float) (each % 10)),
+                            targetDup);
+                    assertIterablesEqual(
+                            this.newFloatForTransform(1.0f, 1.0f, 1.0f, 1.0f, 2.0f, 2.0f, 2.0f, 2.0f, 3.0f, 3.0f, 3.0f, 3.0f, 1.0f, 1.0f, 1.0f, 1.0f, 2.0f, 2.0f, 2.0f, 2.0f, 3.0f, 3.0f, 3.0f, 3.0f),
+                            resultDup);
+                    assertSame(targetDup, resultDup);
+                }
+
+                {
+                    MutableIntCollection targetDup = this.newIntForTransform();
+                    MutableIntCollection resultDup = iterableDup.flatCollectInt(
+                            each -> IntLists.immutable.with(each % 10, each % 10),
+                            targetDup);
+                    assertIterablesEqual(
+                            this.newIntForTransform(1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3),
+                            resultDup);
+                    assertSame(targetDup, resultDup);
+                }
+
+                {
+                    MutableLongCollection targetDup = this.newLongForTransform();
+                    MutableLongCollection resultDup = iterableDup.flatCollectLong(
+                            each -> LongLists.immutable.with(each % 10, each % 10),
+                            targetDup);
+                    assertIterablesEqual(
+                            this.newLongForTransform(1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3),
+                            resultDup);
+                    assertSame(targetDup, resultDup);
+                }
+
+                MutableShortCollection targetDup = this.newShortForTransform();
+                MutableShortCollection resultDup = iterableDup.flatCollectShort(
+                        each -> ShortLists.immutable.with((short) (each % 10), (short) (each % 10)),
+                        targetDup);
+                assertIterablesEqual(
+                        this.newShortForTransform((short) 1, (short) 1, (short) 1, (short) 1, (short) 2, (short) 2, (short) 2, (short) 2, (short) 3, (short) 3, (short) 3, (short) 3, (short) 1, (short) 1, (short) 1, (short) 1, (short) 2, (short) 2, (short) 2, (short) 2, (short) 3, (short) 3, (short) 3, (short) 3),
+                        targetDup);
+                assertSame(targetDup, resultDup);
+            }
+            default -> fail("Unexpected value: " + this.getOrderingType());
         }
     }
 
