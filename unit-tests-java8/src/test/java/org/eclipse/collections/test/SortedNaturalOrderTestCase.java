@@ -20,7 +20,6 @@ import org.eclipse.collections.api.ordered.OrderedIterable;
 import org.eclipse.collections.api.ordered.SortedIterable;
 import org.eclipse.collections.api.tuple.Pair;
 import org.eclipse.collections.impl.tuple.Tuples;
-import org.eclipse.collections.impl.tuple.primitive.PrimitiveTuples;
 import org.junit.jupiter.api.Test;
 
 import static org.eclipse.collections.test.IterableTestCase.assertIterablesEqual;
@@ -115,52 +114,6 @@ public interface SortedNaturalOrderTestCase extends OrderedIterableTestCase
         assertEquals(Integer.valueOf(1), iterator.next());
         assertEquals(Integer.valueOf(2), iterator.next());
         assertEquals(Integer.valueOf(3), iterator.next());
-    }
-
-    /**
-     * @since 9.1.
-     */
-    @Override
-    @Test
-    default void OrderedIterable_collectWithIndex()
-    {
-        OrderedIterable<Integer> iterable = (OrderedIterable<Integer>) this.newWith(1, 2, 2, 3, 3, 3, 4, 4, 4, 4);
-        assertEquals(
-                Lists.immutable.with(
-                        PrimitiveTuples.pair(Integer.valueOf(1), 0),
-                        PrimitiveTuples.pair(Integer.valueOf(2), 1),
-                        PrimitiveTuples.pair(Integer.valueOf(2), 2),
-                        PrimitiveTuples.pair(Integer.valueOf(3), 3),
-                        PrimitiveTuples.pair(Integer.valueOf(3), 4),
-                        PrimitiveTuples.pair(Integer.valueOf(3), 5),
-                        PrimitiveTuples.pair(Integer.valueOf(4), 6),
-                        PrimitiveTuples.pair(Integer.valueOf(4), 7),
-                        PrimitiveTuples.pair(Integer.valueOf(4), 8),
-                        PrimitiveTuples.pair(Integer.valueOf(4), 9)),
-                iterable.collectWithIndex(PrimitiveTuples::pair).toList());
-    }
-
-    /**
-     * @since 9.1.
-     */
-    @Override
-    @Test
-    default void OrderedIterable_collectWithIndexWithTarget()
-    {
-        OrderedIterable<Integer> iterable = (OrderedIterable<Integer>) this.newWith(1, 2, 2, 3, 3, 3, 4, 4, 4, 4);
-        assertEquals(
-                Lists.immutable.with(
-                        PrimitiveTuples.pair(Integer.valueOf(1), 0),
-                        PrimitiveTuples.pair(Integer.valueOf(2), 1),
-                        PrimitiveTuples.pair(Integer.valueOf(2), 2),
-                        PrimitiveTuples.pair(Integer.valueOf(3), 3),
-                        PrimitiveTuples.pair(Integer.valueOf(3), 4),
-                        PrimitiveTuples.pair(Integer.valueOf(3), 5),
-                        PrimitiveTuples.pair(Integer.valueOf(4), 6),
-                        PrimitiveTuples.pair(Integer.valueOf(4), 7),
-                        PrimitiveTuples.pair(Integer.valueOf(4), 8),
-                        PrimitiveTuples.pair(Integer.valueOf(4), 9)),
-                iterable.collectWithIndex(PrimitiveTuples::pair, Lists.mutable.empty()));
     }
 
     @Override
