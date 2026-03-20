@@ -3663,18 +3663,36 @@ public interface RichIterableTestCase extends IterableTestCase
     @Test
     default void RichIterable_into()
     {
-        assertIterablesEqual(
-                Lists.immutable.with(0, 4, 3, 2, 1),
-                this.newWith(4, 3, 2, 1).into(Lists.mutable.with(0)));
+        switch (this.getOrderingType())
+        {
+            case INSERTION_ORDER, SORTED_REVERSE_NATURAL ->
+                    assertIterablesEqual(
+                            Lists.immutable.with(0, 4, 3, 2, 1),
+                            this.newWith(4, 3, 2, 1).into(Lists.mutable.with(0)));
+            case SORTED_NATURAL ->
+                    assertIterablesEqual(
+                            Lists.immutable.with(0, 1, 2, 3, 4),
+                            this.newWith(4, 3, 2, 1).into(Lists.mutable.with(0)));
+            default -> throw new IllegalStateException("Unexpected ordering type");
+        }
 
         if (!this.allowsDuplicates())
         {
             return;
         }
 
-        assertIterablesEqual(
-                Lists.immutable.with(0, 4, 4, 4, 4, 3, 3, 3, 2, 2, 1),
-                this.newWith(4, 4, 4, 4, 3, 3, 3, 2, 2, 1).into(Lists.mutable.with(0)));
+        switch (this.getOrderingType())
+        {
+            case INSERTION_ORDER, SORTED_REVERSE_NATURAL ->
+                    assertIterablesEqual(
+                            Lists.immutable.with(0, 4, 4, 4, 4, 3, 3, 3, 2, 2, 1),
+                            this.newWith(4, 4, 4, 4, 3, 3, 3, 2, 2, 1).into(Lists.mutable.with(0)));
+            case SORTED_NATURAL ->
+                    assertIterablesEqual(
+                            Lists.immutable.with(0, 1, 2, 2, 3, 3, 3, 4, 4, 4, 4),
+                            this.newWith(4, 4, 4, 4, 3, 3, 3, 2, 2, 1).into(Lists.mutable.with(0)));
+            default -> throw new IllegalStateException("Unexpected ordering type");
+        }
     }
 
     @Test
