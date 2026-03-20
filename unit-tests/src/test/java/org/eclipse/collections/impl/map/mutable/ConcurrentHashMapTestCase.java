@@ -20,6 +20,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.IntStream;
 
+import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.map.ConcurrentMutableMap;
 import org.eclipse.collections.impl.bag.mutable.HashBag;
@@ -150,6 +151,49 @@ public abstract class ConcurrentHashMapTestCase extends MutableMapTestCase
         assertFalse(es.hasCharacteristics(Spliterator.IMMUTABLE));
         assertTrue(es.hasCharacteristics(Spliterator.CONCURRENT));
         assertFalse(es.hasCharacteristics(Spliterator.SUBSIZED));
+    }
+
+    @Test
+    public void computeIfAbsent()
+    {
+        ConcurrentMutableMap<Integer, Integer> map = this.newMap();
+        ParallelIterate.forEach(Interval.oneTo(100), each ->
+        {
+            map.computeIfAbsent(each % 10, k -> k + 1);
+        }, 1, this.executor);
+        assertEquals(Interval.zeroTo(9).toSet(), map.keySet());
+        for (int i = 0; i < 10; i++)
+        {
+            assertEquals(Integer.valueOf(i + 1), map.get(i));
+        }
+    }
+
+    @Test
+    public void computeIfPresent()
+    {
+        ConcurrentMutableMap<Integer, Integer> map = this.newMap();
+        for (int i = 0; i < 10; i++)
+        {
+            map.put(i, 0);
+        }
+        ParallelIterate.forEach(Interval.oneTo(100), each ->
+        {
+            map.computeIfPresent(each % 10, (k, v) -> v + 1);
+        }, 1, this.executor);
+        assertEquals(Interval.zeroTo(9).toSet(), map.keySet());
+        assertEquals(Collections.nCopies(10, 10), Lists.mutable.withAll(map.values()));
+    }
+
+    @Test
+    public void compute()
+    {
+        ConcurrentMutableMap<Integer, Integer> map = this.newMap();
+        ParallelIterate.forEach(Interval.oneTo(100), each ->
+        {
+            map.compute(each % 10, (k, v) -> v == null ? 1 : v + 1);
+        }, 1, this.executor);
+        assertEquals(Interval.zeroTo(9).toSet(), map.keySet());
+        assertEquals(Collections.nCopies(10, 10), Lists.mutable.withAll(map.values()));
     }
 
     @Test
