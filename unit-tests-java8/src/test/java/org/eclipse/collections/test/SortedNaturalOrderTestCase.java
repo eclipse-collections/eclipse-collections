@@ -95,42 +95,6 @@ public interface SortedNaturalOrderTestCase extends OrderedIterableTestCase
 
     @Override
     @Test
-    default void RichIterable_makeString_appendString()
-    {
-        RichIterable<Integer> iterable = this.newWith(1, 2, 2, 3, 3, 3, 4, 4, 4, 4);
-        assertEquals(
-                "1, 2, 2, 3, 3, 3, 4, 4, 4, 4",
-                iterable.makeString());
-
-        assertEquals(
-                "1/2/2/3/3/3/4/4/4/4",
-                iterable.makeString("/"));
-
-        assertEquals(
-                "[1/2/2/3/3/3/4/4/4/4]",
-                iterable.makeString("[", "/", "]"));
-
-        StringBuilder builder1 = new StringBuilder();
-        iterable.appendString(builder1);
-        assertEquals(
-                "1, 2, 2, 3, 3, 3, 4, 4, 4, 4",
-                builder1.toString());
-
-        StringBuilder builder2 = new StringBuilder();
-        iterable.appendString(builder2, "/");
-        assertEquals(
-                "1/2/2/3/3/3/4/4/4/4",
-                builder2.toString());
-
-        StringBuilder builder3 = new StringBuilder();
-        iterable.appendString(builder3, "[", "/", "]");
-        assertEquals(
-                "[1/2/2/3/3/3/4/4/4/4]",
-                builder3.toString());
-    }
-
-    @Override
-    @Test
     default void RichIterable_toList()
     {
         RichIterable<Integer> iterable = this.newWith(1, 2, 2, 3, 3, 3, 4, 4, 4, 4);

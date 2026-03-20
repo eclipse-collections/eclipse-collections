@@ -3445,21 +3445,46 @@ public interface RichIterableTestCase extends IterableTestCase
     {
         RichIterable<Integer> iterable = this.newWith(4, 3, 2, 1);
 
-        assertEquals("4, 3, 2, 1", iterable.makeString());
-        assertEquals("4/3/2/1", iterable.makeString("/"));
-        assertEquals("[4/3/2/1]", iterable.makeString("[", "/", "]"));
+        switch (this.getOrderingType())
+        {
+            case INSERTION_ORDER, SORTED_REVERSE_NATURAL ->
+            {
+                assertEquals("4, 3, 2, 1", iterable.makeString());
+                assertEquals("4/3/2/1", iterable.makeString("/"));
+                assertEquals("[4/3/2/1]", iterable.makeString("[", "/", "]"));
 
-        StringBuilder stringBuilder1 = new StringBuilder();
-        iterable.appendString(stringBuilder1);
-        assertEquals("4, 3, 2, 1", stringBuilder1.toString());
+                StringBuilder stringBuilder1 = new StringBuilder();
+                iterable.appendString(stringBuilder1);
+                assertEquals("4, 3, 2, 1", stringBuilder1.toString());
 
-        StringBuilder stringBuilder2 = new StringBuilder();
-        iterable.appendString(stringBuilder2, "/");
-        assertEquals("4/3/2/1", stringBuilder2.toString());
+                StringBuilder stringBuilder2 = new StringBuilder();
+                iterable.appendString(stringBuilder2, "/");
+                assertEquals("4/3/2/1", stringBuilder2.toString());
 
-        StringBuilder stringBuilder3 = new StringBuilder();
-        iterable.appendString(stringBuilder3, "[", "/", "]");
-        assertEquals("[4/3/2/1]", stringBuilder3.toString());
+                StringBuilder stringBuilder3 = new StringBuilder();
+                iterable.appendString(stringBuilder3, "[", "/", "]");
+                assertEquals("[4/3/2/1]", stringBuilder3.toString());
+            }
+            case SORTED_NATURAL ->
+            {
+                assertEquals("1, 2, 3, 4", iterable.makeString());
+                assertEquals("1/2/3/4", iterable.makeString("/"));
+                assertEquals("[1/2/3/4]", iterable.makeString("[", "/", "]"));
+
+                StringBuilder stringBuilder1 = new StringBuilder();
+                iterable.appendString(stringBuilder1);
+                assertEquals("1, 2, 3, 4", stringBuilder1.toString());
+
+                StringBuilder stringBuilder2 = new StringBuilder();
+                iterable.appendString(stringBuilder2, "/");
+                assertEquals("1/2/3/4", stringBuilder2.toString());
+
+                StringBuilder stringBuilder3 = new StringBuilder();
+                iterable.appendString(stringBuilder3, "[", "/", "]");
+                assertEquals("[1/2/3/4]", stringBuilder3.toString());
+            }
+            default -> throw new IllegalStateException("Unexpected ordering type");
+        }
 
         if (!this.allowsDuplicates())
         {
@@ -3467,47 +3492,99 @@ public interface RichIterableTestCase extends IterableTestCase
         }
 
         RichIterable<Integer> iterable2 = this.newWith(4, 4, 4, 4, 3, 3, 3, 2, 2, 1);
-        assertEquals(
-                "4, 4, 4, 4, 3, 3, 3, 2, 2, 1",
-                iterable2.makeString());
 
-        assertEquals(
-                iterable2.makeString(),
-                iterable2.reduceInPlace(Collectors2.makeString()));
+        switch (this.getOrderingType())
+        {
+            case INSERTION_ORDER, SORTED_REVERSE_NATURAL ->
+            {
+                assertEquals(
+                        "4, 4, 4, 4, 3, 3, 3, 2, 2, 1",
+                        iterable2.makeString());
 
-        assertEquals(
-                "4/4/4/4/3/3/3/2/2/1",
-                iterable2.makeString("/"));
+                assertEquals(
+                        iterable2.makeString(),
+                        iterable2.reduceInPlace(Collectors2.makeString()));
 
-        assertEquals(
-                iterable2.makeString("/"),
-                iterable2.reduceInPlace(Collectors2.makeString("/")));
+                assertEquals(
+                        "4/4/4/4/3/3/3/2/2/1",
+                        iterable2.makeString("/"));
 
-        assertEquals(
-                "[4/4/4/4/3/3/3/2/2/1]",
-                iterable2.makeString("[", "/", "]"));
+                assertEquals(
+                        iterable2.makeString("/"),
+                        iterable2.reduceInPlace(Collectors2.makeString("/")));
 
-        assertEquals(
-                iterable2.makeString("[", "/", "]"),
-                iterable2.reduceInPlace(Collectors2.makeString("[", "/", "]")));
+                assertEquals(
+                        "[4/4/4/4/3/3/3/2/2/1]",
+                        iterable2.makeString("[", "/", "]"));
 
-        StringBuilder builder1 = new StringBuilder();
-        iterable2.appendString(builder1);
-        assertEquals(
-                "4, 4, 4, 4, 3, 3, 3, 2, 2, 1",
-                builder1.toString());
+                assertEquals(
+                        iterable2.makeString("[", "/", "]"),
+                        iterable2.reduceInPlace(Collectors2.makeString("[", "/", "]")));
 
-        StringBuilder builder2 = new StringBuilder();
-        iterable2.appendString(builder2, "/");
-        assertEquals(
-                "4/4/4/4/3/3/3/2/2/1",
-                builder2.toString());
+                StringBuilder builder1 = new StringBuilder();
+                iterable2.appendString(builder1);
+                assertEquals(
+                        "4, 4, 4, 4, 3, 3, 3, 2, 2, 1",
+                        builder1.toString());
 
-        StringBuilder builder3 = new StringBuilder();
-        iterable2.appendString(builder3, "[", "/", "]");
-        assertEquals(
-                "[4/4/4/4/3/3/3/2/2/1]",
-                builder3.toString());
+                StringBuilder builder2 = new StringBuilder();
+                iterable2.appendString(builder2, "/");
+                assertEquals(
+                        "4/4/4/4/3/3/3/2/2/1",
+                        builder2.toString());
+
+                StringBuilder builder3 = new StringBuilder();
+                iterable2.appendString(builder3, "[", "/", "]");
+                assertEquals(
+                        "[4/4/4/4/3/3/3/2/2/1]",
+                        builder3.toString());
+            }
+            case SORTED_NATURAL ->
+            {
+                assertEquals(
+                        "1, 2, 2, 3, 3, 3, 4, 4, 4, 4",
+                        iterable2.makeString());
+
+                assertEquals(
+                        iterable2.makeString(),
+                        iterable2.reduceInPlace(Collectors2.makeString()));
+
+                assertEquals(
+                        "1/2/2/3/3/3/4/4/4/4",
+                        iterable2.makeString("/"));
+
+                assertEquals(
+                        iterable2.makeString("/"),
+                        iterable2.reduceInPlace(Collectors2.makeString("/")));
+
+                assertEquals(
+                        "[1/2/2/3/3/3/4/4/4/4]",
+                        iterable2.makeString("[", "/", "]"));
+
+                assertEquals(
+                        iterable2.makeString("[", "/", "]"),
+                        iterable2.reduceInPlace(Collectors2.makeString("[", "/", "]")));
+
+                StringBuilder builder1 = new StringBuilder();
+                iterable2.appendString(builder1);
+                assertEquals(
+                        "1, 2, 2, 3, 3, 3, 4, 4, 4, 4",
+                        builder1.toString());
+
+                StringBuilder builder2 = new StringBuilder();
+                iterable2.appendString(builder2, "/");
+                assertEquals(
+                        "1/2/2/3/3/3/4/4/4/4",
+                        builder2.toString());
+
+                StringBuilder builder3 = new StringBuilder();
+                iterable2.appendString(builder3, "[", "/", "]");
+                assertEquals(
+                        "[1/2/2/3/3/3/4/4/4/4]",
+                        builder3.toString());
+            }
+            default -> throw new IllegalStateException("Unexpected ordering type");
+        }
     }
 
     @Override
