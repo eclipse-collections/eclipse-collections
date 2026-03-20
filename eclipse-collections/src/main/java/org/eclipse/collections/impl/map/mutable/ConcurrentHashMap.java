@@ -2412,6 +2412,170 @@ public final class ConcurrentHashMap<K, V>
     }
 
     @Override
+    public V computeIfAbsent(K key, java.util.function.Function<? super K, ? extends V> mappingFunction)
+    {
+        Objects.requireNonNull(mappingFunction);
+        int hash = this.hash(key);
+        AtomicReferenceArray currentArray = this.table;
+        V newValue = null;
+        boolean createdValue = false;
+        while (true)
+        {
+            int length = currentArray.length();
+            int index = ConcurrentHashMap.indexFor(hash, length);
+            Object o = currentArray.get(index);
+            if (o == RESIZED || o == RESIZING)
+            {
+                currentArray = this.helpWithResizeWhileCurrentIndex(currentArray, index);
+            }
+            else
+            {
+                Entry<K, V> e = (Entry<K, V>) o;
+                while (e != null)
+                {
+                    K candidate = e.getKey();
+                    if (candidate.equals(key))
+                    {
+                        return e.getValue();
+                    }
+                    e = e.getNext();
+                }
+                if (!createdValue)
+                {
+                    createdValue = true;
+                    newValue = mappingFunction.apply(key);
+                    if (newValue == null)
+                    {
+                        return null;
+                    }
+                }
+                Entry<K, V> newEntry = new Entry<>(key, newValue, (Entry<K, V>) o);
+                if (currentArray.compareAndSet(index, o, newEntry))
+                {
+                    this.incrementSizeAndPossiblyResize(currentArray, length, o);
+                    return newValue;
+                }
+            }
+        }
+    }
+
+    @Override
+    public V computeIfPresent(K key, BiFunction<? super K, ? super V, ? extends V> remappingFunction)
+    {
+        Objects.requireNonNull(remappingFunction);
+        int hash = this.hash(key);
+        AtomicReferenceArray currentArray = this.table;
+        //noinspection LabeledStatement
+        outer:
+        while (true)
+        {
+            int length = currentArray.length();
+            int index = ConcurrentHashMap.indexFor(hash, length);
+            Object o = currentArray.get(index);
+            if (o == RESIZED || o == RESIZING)
+            {
+                currentArray = this.helpWithResizeWhileCurrentIndex(currentArray, index);
+            }
+            else
+            {
+                Entry<K, V> e = (Entry<K, V>) o;
+                while (e != null)
+                {
+                    K candidate = e.getKey();
+                    if (candidate.equals(key))
+                    {
+                        V oldValue = e.getValue();
+                        V newValue = remappingFunction.apply(key, oldValue);
+                        Entry<K, V> replacement = this.createReplacementChainForRemoval((Entry<K, V>) o, e);
+                        if (newValue == null)
+                        {
+                            if (!currentArray.compareAndSet(index, o, replacement))
+                            {
+                                //noinspection ContinueStatementWithLabel
+                                continue outer;
+                            }
+                            this.addToSize(-1);
+                            return null;
+                        }
+                        Entry<K, V> newEntry = new Entry<>(e.getKey(), newValue, replacement);
+                        if (!currentArray.compareAndSet(index, o, newEntry))
+                        {
+                            //noinspection ContinueStatementWithLabel
+                            continue outer;
+                        }
+                        return newValue;
+                    }
+                    e = e.getNext();
+                }
+                return null;
+            }
+        }
+    }
+
+    @Override
+    public V compute(K key, BiFunction<? super K, ? super V, ? extends V> remappingFunction)
+    {
+        Objects.requireNonNull(remappingFunction);
+        int hash = this.hash(key);
+        AtomicReferenceArray currentArray = this.table;
+        //noinspection LabeledStatement
+        outer:
+        while (true)
+        {
+            int length = currentArray.length();
+            int index = ConcurrentHashMap.indexFor(hash, length);
+            Object o = currentArray.get(index);
+            if (o == RESIZED || o == RESIZING)
+            {
+                currentArray = this.helpWithResizeWhileCurrentIndex(currentArray, index);
+            }
+            else
+            {
+                Entry<K, V> e = (Entry<K, V>) o;
+                while (e != null)
+                {
+                    K candidate = e.getKey();
+                    if (candidate.equals(key))
+                    {
+                        V oldValue = e.getValue();
+                        V newValue = remappingFunction.apply(key, oldValue);
+                        Entry<K, V> replacement = this.createReplacementChainForRemoval((Entry<K, V>) o, e);
+                        if (newValue == null)
+                        {
+                            if (!currentArray.compareAndSet(index, o, replacement))
+                            {
+                                //noinspection ContinueStatementWithLabel
+                                continue outer;
+                            }
+                            this.addToSize(-1);
+                            return null;
+                        }
+                        Entry<K, V> newEntry = new Entry<>(e.getKey(), newValue, replacement);
+                        if (!currentArray.compareAndSet(index, o, newEntry))
+                        {
+                            //noinspection ContinueStatementWithLabel
+                            continue outer;
+                        }
+                        return newValue;
+                    }
+                    e = e.getNext();
+                }
+                V newValue = remappingFunction.apply(key, null);
+                if (newValue == null)
+                {
+                    return null;
+                }
+                Entry<K, V> newEntry = new Entry<>(key, newValue, (Entry<K, V>) o);
+                if (currentArray.compareAndSet(index, o, newEntry))
+                {
+                    this.incrementSizeAndPossiblyResize(currentArray, length, o);
+                    return newValue;
+                }
+            }
+        }
+    }
+
+    @Override
     public ImmutableMap<K, V> toImmutable()
     {
         return Maps.immutable.ofMap(this);
