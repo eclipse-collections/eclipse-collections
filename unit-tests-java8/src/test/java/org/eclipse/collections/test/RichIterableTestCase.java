@@ -2521,65 +2521,110 @@ public interface RichIterableTestCase extends IterableTestCase
     {
         RichIterable<Integer> iterable = this.newWith(3, 2, 1);
 
-        assertThat(iterable.detect(Predicates.greaterThan(0)), is(3));
-        assertThat(iterable.detect(Predicates.greaterThan(1)), is(3));
-        assertThat(iterable.detect(Predicates.greaterThan(2)), is(3));
         assertThat(iterable.detect(Predicates.greaterThan(3)), nullValue());
-
         assertThat(iterable.detect(Predicates.lessThan(1)), nullValue());
         assertThat(iterable.detect(Predicates.lessThan(2)), is(1));
-        assertThat(iterable.detect(Predicates.lessThan(3)), is(2));
-        assertThat(iterable.detect(Predicates.lessThan(4)), is(3));
 
-        assertThat(iterable.detectWith(Predicates2.greaterThan(), 0), is(3));
-        assertThat(iterable.detectWith(Predicates2.greaterThan(), 1), is(3));
-        assertThat(iterable.detectWith(Predicates2.greaterThan(), 2), is(3));
         assertThat(iterable.detectWith(Predicates2.greaterThan(), 3), nullValue());
-
         assertThat(iterable.detectWith(Predicates2.lessThan(), 1), nullValue());
         assertThat(iterable.detectWith(Predicates2.lessThan(), 2), is(1));
-        assertThat(iterable.detectWith(Predicates2.lessThan(), 3), is(2));
-        assertThat(iterable.detectWith(Predicates2.lessThan(), 4), is(3));
 
-        assertThat(iterable.detectIfNone(Predicates.greaterThan(0), () -> 4), is(3));
-        assertThat(iterable.detectIfNone(Predicates.greaterThan(1), () -> 4), is(3));
-        assertThat(iterable.detectIfNone(Predicates.greaterThan(2), () -> 4), is(3));
         assertThat(iterable.detectIfNone(Predicates.greaterThan(3), () -> 4), is(4));
-
         assertThat(iterable.detectIfNone(Predicates.lessThan(1), () -> 4), is(4));
         assertThat(iterable.detectIfNone(Predicates.lessThan(2), () -> 4), is(1));
-        assertThat(iterable.detectIfNone(Predicates.lessThan(3), () -> 4), is(2));
-        assertThat(iterable.detectIfNone(Predicates.lessThan(4), () -> 4), is(3));
 
-        assertThat(iterable.detectWithIfNone(Predicates2.greaterThan(), 0, () -> 4), is(3));
-        assertThat(iterable.detectWithIfNone(Predicates2.greaterThan(), 1, () -> 4), is(3));
-        assertThat(iterable.detectWithIfNone(Predicates2.greaterThan(), 2, () -> 4), is(3));
         assertThat(iterable.detectWithIfNone(Predicates2.greaterThan(), 3, () -> 4), is(4));
-
         assertThat(iterable.detectWithIfNone(Predicates2.lessThan(), 1, () -> 4), is(4));
         assertThat(iterable.detectWithIfNone(Predicates2.lessThan(), 2, () -> 4), is(1));
-        assertThat(iterable.detectWithIfNone(Predicates2.lessThan(), 3, () -> 4), is(2));
-        assertThat(iterable.detectWithIfNone(Predicates2.lessThan(), 4, () -> 4), is(3));
 
-        assertThat(iterable.detectOptional(Predicates.greaterThan(0)), is(Optional.of(3)));
-        assertThat(iterable.detectOptional(Predicates.greaterThan(1)), is(Optional.of(3)));
-        assertThat(iterable.detectOptional(Predicates.greaterThan(2)), is(Optional.of(3)));
         assertThat(iterable.detectOptional(Predicates.greaterThan(3)), is(Optional.empty()));
-
         assertThat(iterable.detectOptional(Predicates.lessThan(1)), is(Optional.empty()));
         assertThat(iterable.detectOptional(Predicates.lessThan(2)), is(Optional.of(1)));
-        assertThat(iterable.detectOptional(Predicates.lessThan(3)), is(Optional.of(2)));
-        assertThat(iterable.detectOptional(Predicates.lessThan(4)), is(Optional.of(3)));
 
-        assertThat(iterable.detectWithOptional(Predicates2.greaterThan(), 0), is(Optional.of(3)));
-        assertThat(iterable.detectWithOptional(Predicates2.greaterThan(), 1), is(Optional.of(3)));
-        assertThat(iterable.detectWithOptional(Predicates2.greaterThan(), 2), is(Optional.of(3)));
         assertThat(iterable.detectWithOptional(Predicates2.greaterThan(), 3), is(Optional.empty()));
-
         assertThat(iterable.detectWithOptional(Predicates2.lessThan(), 1), is(Optional.empty()));
         assertThat(iterable.detectWithOptional(Predicates2.lessThan(), 2), is(Optional.of(1)));
-        assertThat(iterable.detectWithOptional(Predicates2.lessThan(), 3), is(Optional.of(2)));
-        assertThat(iterable.detectWithOptional(Predicates2.lessThan(), 4), is(Optional.of(3)));
+
+        switch (this.getOrderingType())
+        {
+            case INSERTION_ORDER, SORTED_REVERSE_NATURAL ->
+            {
+                assertThat(iterable.detect(Predicates.greaterThan(0)), is(3));
+                assertThat(iterable.detect(Predicates.greaterThan(1)), is(3));
+                assertThat(iterable.detect(Predicates.greaterThan(2)), is(3));
+                assertThat(iterable.detect(Predicates.lessThan(3)), is(2));
+                assertThat(iterable.detect(Predicates.lessThan(4)), is(3));
+
+                assertThat(iterable.detectWith(Predicates2.greaterThan(), 0), is(3));
+                assertThat(iterable.detectWith(Predicates2.greaterThan(), 1), is(3));
+                assertThat(iterable.detectWith(Predicates2.greaterThan(), 2), is(3));
+                assertThat(iterable.detectWith(Predicates2.lessThan(), 3), is(2));
+                assertThat(iterable.detectWith(Predicates2.lessThan(), 4), is(3));
+
+                assertThat(iterable.detectIfNone(Predicates.greaterThan(0), () -> 4), is(3));
+                assertThat(iterable.detectIfNone(Predicates.greaterThan(1), () -> 4), is(3));
+                assertThat(iterable.detectIfNone(Predicates.greaterThan(2), () -> 4), is(3));
+                assertThat(iterable.detectIfNone(Predicates.lessThan(3), () -> 4), is(2));
+                assertThat(iterable.detectIfNone(Predicates.lessThan(4), () -> 4), is(3));
+
+                assertThat(iterable.detectWithIfNone(Predicates2.greaterThan(), 0, () -> 4), is(3));
+                assertThat(iterable.detectWithIfNone(Predicates2.greaterThan(), 1, () -> 4), is(3));
+                assertThat(iterable.detectWithIfNone(Predicates2.greaterThan(), 2, () -> 4), is(3));
+                assertThat(iterable.detectWithIfNone(Predicates2.lessThan(), 3, () -> 4), is(2));
+                assertThat(iterable.detectWithIfNone(Predicates2.lessThan(), 4, () -> 4), is(3));
+
+                assertThat(iterable.detectOptional(Predicates.greaterThan(0)), is(Optional.of(3)));
+                assertThat(iterable.detectOptional(Predicates.greaterThan(1)), is(Optional.of(3)));
+                assertThat(iterable.detectOptional(Predicates.greaterThan(2)), is(Optional.of(3)));
+                assertThat(iterable.detectOptional(Predicates.lessThan(3)), is(Optional.of(2)));
+                assertThat(iterable.detectOptional(Predicates.lessThan(4)), is(Optional.of(3)));
+
+                assertThat(iterable.detectWithOptional(Predicates2.greaterThan(), 0), is(Optional.of(3)));
+                assertThat(iterable.detectWithOptional(Predicates2.greaterThan(), 1), is(Optional.of(3)));
+                assertThat(iterable.detectWithOptional(Predicates2.greaterThan(), 2), is(Optional.of(3)));
+                assertThat(iterable.detectWithOptional(Predicates2.lessThan(), 3), is(Optional.of(2)));
+                assertThat(iterable.detectWithOptional(Predicates2.lessThan(), 4), is(Optional.of(3)));
+            }
+            case SORTED_NATURAL ->
+            {
+                assertThat(iterable.detect(Predicates.greaterThan(0)), is(1));
+                assertThat(iterable.detect(Predicates.greaterThan(1)), is(2));
+                assertThat(iterable.detect(Predicates.greaterThan(2)), is(3));
+                assertThat(iterable.detect(Predicates.lessThan(3)), is(1));
+                assertThat(iterable.detect(Predicates.lessThan(4)), is(1));
+
+                assertThat(iterable.detectWith(Predicates2.greaterThan(), 0), is(1));
+                assertThat(iterable.detectWith(Predicates2.greaterThan(), 1), is(2));
+                assertThat(iterable.detectWith(Predicates2.greaterThan(), 2), is(3));
+                assertThat(iterable.detectWith(Predicates2.lessThan(), 3), is(1));
+                assertThat(iterable.detectWith(Predicates2.lessThan(), 4), is(1));
+
+                assertThat(iterable.detectIfNone(Predicates.greaterThan(0), () -> 4), is(1));
+                assertThat(iterable.detectIfNone(Predicates.greaterThan(1), () -> 4), is(2));
+                assertThat(iterable.detectIfNone(Predicates.greaterThan(2), () -> 4), is(3));
+                assertThat(iterable.detectIfNone(Predicates.lessThan(3), () -> 4), is(1));
+                assertThat(iterable.detectIfNone(Predicates.lessThan(4), () -> 4), is(1));
+
+                assertThat(iterable.detectWithIfNone(Predicates2.greaterThan(), 0, () -> 4), is(1));
+                assertThat(iterable.detectWithIfNone(Predicates2.greaterThan(), 1, () -> 4), is(2));
+                assertThat(iterable.detectWithIfNone(Predicates2.greaterThan(), 2, () -> 4), is(3));
+                assertThat(iterable.detectWithIfNone(Predicates2.lessThan(), 3, () -> 4), is(1));
+                assertThat(iterable.detectWithIfNone(Predicates2.lessThan(), 4, () -> 4), is(1));
+
+                assertThat(iterable.detectOptional(Predicates.greaterThan(0)), is(Optional.of(1)));
+                assertThat(iterable.detectOptional(Predicates.greaterThan(1)), is(Optional.of(2)));
+                assertThat(iterable.detectOptional(Predicates.greaterThan(2)), is(Optional.of(3)));
+                assertThat(iterable.detectOptional(Predicates.lessThan(3)), is(Optional.of(1)));
+                assertThat(iterable.detectOptional(Predicates.lessThan(4)), is(Optional.of(1)));
+
+                assertThat(iterable.detectWithOptional(Predicates2.greaterThan(), 0), is(Optional.of(1)));
+                assertThat(iterable.detectWithOptional(Predicates2.greaterThan(), 1), is(Optional.of(2)));
+                assertThat(iterable.detectWithOptional(Predicates2.greaterThan(), 2), is(Optional.of(3)));
+                assertThat(iterable.detectWithOptional(Predicates2.lessThan(), 3), is(Optional.of(1)));
+                assertThat(iterable.detectWithOptional(Predicates2.lessThan(), 4), is(Optional.of(1)));
+            }
+            default -> fail("Unexpected value: " + this.getOrderingType());
+        }
     }
 
     @Test

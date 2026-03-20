@@ -12,7 +12,6 @@ package org.eclipse.collections.test;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 import org.eclipse.collections.api.RichIterable;
 import org.eclipse.collections.api.collection.MutableCollection;
@@ -21,16 +20,11 @@ import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.ordered.OrderedIterable;
 import org.eclipse.collections.api.ordered.SortedIterable;
 import org.eclipse.collections.api.tuple.Pair;
-import org.eclipse.collections.impl.block.factory.Predicates;
-import org.eclipse.collections.impl.block.factory.Predicates2;
 import org.eclipse.collections.impl.tuple.Tuples;
 import org.eclipse.collections.impl.tuple.primitive.PrimitiveTuples;
 import org.junit.jupiter.api.Test;
 
 import static org.eclipse.collections.test.IterableTestCase.assertIterablesEqual;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -99,74 +93,6 @@ public interface SortedNaturalOrderTestCase extends OrderedIterableTestCase
         MutableCollection<Integer> result = iterable.collectIf(i -> i % 2 != 0, i -> i % 10, target);
         assertIterablesEqual(this.newMutableForTransform(1, 1, 3, 3, 1, 1, 3, 3), result);
         assertSame(target, result);
-    }
-
-
-    @Override
-    @Test
-    default void RichIterable_detect()
-    {
-        RichIterable<Integer> iterable = this.newWith(1, 2, 3);
-
-        assertThat(iterable.detect(Predicates.greaterThan(0)), is(1));
-        assertThat(iterable.detect(Predicates.greaterThan(1)), is(2));
-        assertThat(iterable.detect(Predicates.greaterThan(2)), is(3));
-        assertThat(iterable.detect(Predicates.greaterThan(3)), nullValue());
-
-        assertThat(iterable.detect(Predicates.lessThan(1)), nullValue());
-        assertThat(iterable.detect(Predicates.lessThan(2)), is(1));
-        assertThat(iterable.detect(Predicates.lessThan(3)), is(1));
-        assertThat(iterable.detect(Predicates.lessThan(4)), is(1));
-
-        assertThat(iterable.detectWith(Predicates2.greaterThan(), 0), is(1));
-        assertThat(iterable.detectWith(Predicates2.greaterThan(), 1), is(2));
-        assertThat(iterable.detectWith(Predicates2.greaterThan(), 2), is(3));
-        assertThat(iterable.detectWith(Predicates2.greaterThan(), 3), nullValue());
-
-        assertThat(iterable.detectWith(Predicates2.lessThan(), 1), nullValue());
-        assertThat(iterable.detectWith(Predicates2.lessThan(), 2), is(1));
-        assertThat(iterable.detectWith(Predicates2.lessThan(), 3), is(1));
-        assertThat(iterable.detectWith(Predicates2.lessThan(), 4), is(1));
-
-        assertThat(iterable.detectIfNone(Predicates.greaterThan(0), () -> 4), is(1));
-        assertThat(iterable.detectIfNone(Predicates.greaterThan(1), () -> 4), is(2));
-        assertThat(iterable.detectIfNone(Predicates.greaterThan(2), () -> 4), is(3));
-        assertThat(iterable.detectIfNone(Predicates.greaterThan(3), () -> 4), is(4));
-
-        assertThat(iterable.detectIfNone(Predicates.lessThan(1), () -> 4), is(4));
-        assertThat(iterable.detectIfNone(Predicates.lessThan(2), () -> 4), is(1));
-        assertThat(iterable.detectIfNone(Predicates.lessThan(3), () -> 4), is(1));
-        assertThat(iterable.detectIfNone(Predicates.lessThan(4), () -> 4), is(1));
-
-        assertThat(iterable.detectWithIfNone(Predicates2.greaterThan(), 0, () -> 4), is(1));
-        assertThat(iterable.detectWithIfNone(Predicates2.greaterThan(), 1, () -> 4), is(2));
-        assertThat(iterable.detectWithIfNone(Predicates2.greaterThan(), 2, () -> 4), is(3));
-        assertThat(iterable.detectWithIfNone(Predicates2.greaterThan(), 3, () -> 4), is(4));
-
-        assertThat(iterable.detectWithIfNone(Predicates2.lessThan(), 1, () -> 4), is(4));
-        assertThat(iterable.detectWithIfNone(Predicates2.lessThan(), 2, () -> 4), is(1));
-        assertThat(iterable.detectWithIfNone(Predicates2.lessThan(), 3, () -> 4), is(1));
-        assertThat(iterable.detectWithIfNone(Predicates2.lessThan(), 4, () -> 4), is(1));
-
-        assertThat(iterable.detectOptional(Predicates.greaterThan(0)), is(Optional.of(1)));
-        assertThat(iterable.detectOptional(Predicates.greaterThan(1)), is(Optional.of(2)));
-        assertThat(iterable.detectOptional(Predicates.greaterThan(2)), is(Optional.of(3)));
-        assertThat(iterable.detectOptional(Predicates.greaterThan(3)), is(Optional.empty()));
-
-        assertThat(iterable.detectOptional(Predicates.lessThan(1)), is(Optional.empty()));
-        assertThat(iterable.detectOptional(Predicates.lessThan(2)), is(Optional.of(1)));
-        assertThat(iterable.detectOptional(Predicates.lessThan(3)), is(Optional.of(1)));
-        assertThat(iterable.detectOptional(Predicates.lessThan(4)), is(Optional.of(1)));
-
-        assertThat(iterable.detectWithOptional(Predicates2.greaterThan(), 0), is(Optional.of(1)));
-        assertThat(iterable.detectWithOptional(Predicates2.greaterThan(), 1), is(Optional.of(2)));
-        assertThat(iterable.detectWithOptional(Predicates2.greaterThan(), 2), is(Optional.of(3)));
-        assertThat(iterable.detectWithOptional(Predicates2.greaterThan(), 3), is(Optional.empty()));
-
-        assertThat(iterable.detectWithOptional(Predicates2.lessThan(), 1), is(Optional.empty()));
-        assertThat(iterable.detectWithOptional(Predicates2.lessThan(), 2), is(Optional.of(1)));
-        assertThat(iterable.detectWithOptional(Predicates2.lessThan(), 3), is(Optional.of(1)));
-        assertThat(iterable.detectWithOptional(Predicates2.lessThan(), 4), is(Optional.of(1)));
     }
 
     @Override
