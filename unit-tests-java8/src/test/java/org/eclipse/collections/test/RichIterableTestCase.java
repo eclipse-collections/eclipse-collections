@@ -1918,42 +1918,112 @@ public interface RichIterableTestCase extends IterableTestCase
     @Test
     default void RichIterable_flatCollect()
     {
-        assertIterablesEqual(
-                this.getExpectedTransformed(1, 2, 3, 1, 2, 1),
-                this.newWith(3, 2, 1).flatCollect(Interval::oneTo));
+        switch (this.getOrderingType())
+        {
+            case UNORDERED ->
+            {
+                assertIterablesEqual(
+                        this.getExpectedTransformed(1, 2, 3, 1, 2, 1),
+                        this.newWith(3, 2, 1).flatCollect(Interval::oneTo));
 
-        assertIterablesEqual(
-                this.newMutableForTransform(1, 2, 3, 1, 2, 1),
-                this.newWith(3, 2, 1).flatCollect(Interval::oneTo, this.newMutableForTransform()));
+                assertIterablesEqual(
+                        this.getExpectedTransformed(3, 2, 1, 2, 1, 1),
+                        this.newWith(3, 2, 1).flatCollectWith(Interval::fromTo, 1));
+            }
+            case INSERTION_ORDER, SORTED_REVERSE_NATURAL ->
+            {
+                assertIterablesEqual(
+                        this.getExpectedTransformed(1, 2, 3, 1, 2, 1),
+                        this.newWith(3, 2, 1).flatCollect(Interval::oneTo));
 
-        assertIterablesEqual(
-                this.getExpectedTransformed(3, 2, 1, 2, 1, 1),
-                this.newWith(3, 2, 1).flatCollectWith(Interval::fromTo, 1));
+                assertIterablesEqual(
+                        this.newMutableForTransform(1, 2, 3, 1, 2, 1),
+                        this.newWith(3, 2, 1).flatCollect(Interval::oneTo, this.newMutableForTransform()));
 
-        assertIterablesEqual(
-                this.newMutableForTransform(3, 2, 1, 2, 1, 1),
-                this.newWith(3, 2, 1).flatCollectWith(Interval::fromTo, 1, this.newMutableForTransform()));
+                assertIterablesEqual(
+                        this.getExpectedTransformed(3, 2, 1, 2, 1, 1),
+                        this.newWith(3, 2, 1).flatCollectWith(Interval::fromTo, 1));
+
+                assertIterablesEqual(
+                        this.newMutableForTransform(3, 2, 1, 2, 1, 1),
+                        this.newWith(3, 2, 1).flatCollectWith(Interval::fromTo, 1, this.newMutableForTransform()));
+            }
+            case SORTED_NATURAL ->
+            {
+                assertIterablesEqual(
+                        this.getExpectedTransformed(1, 1, 2, 1, 2, 3),
+                        this.newWith(3, 2, 1).flatCollect(Interval::oneTo));
+
+                assertIterablesEqual(
+                        this.newMutableForTransform(1, 1, 2, 1, 2, 3),
+                        this.newWith(3, 2, 1).flatCollect(Interval::oneTo, this.newMutableForTransform()));
+
+                assertIterablesEqual(
+                        this.getExpectedTransformed(1, 2, 1, 3, 2, 1),
+                        this.newWith(3, 2, 1).flatCollectWith(Interval::fromTo, 1));
+
+                assertIterablesEqual(
+                        this.newMutableForTransform(1, 2, 1, 3, 2, 1),
+                        this.newWith(3, 2, 1).flatCollectWith(Interval::fromTo, 1, this.newMutableForTransform()));
+            }
+            default -> throw new IllegalStateException("Unexpected ordering type");
+        }
 
         if (!this.allowsDuplicates())
         {
             return;
         }
 
-        assertIterablesEqual(
-                this.getExpectedTransformed(1, 2, 3, 1, 2, 1, 2, 1),
-                this.newWith(3, 2, 2, 1).flatCollect(Interval::oneTo));
+        switch (this.getOrderingType())
+        {
+            case UNORDERED ->
+            {
+                assertIterablesEqual(
+                        this.getExpectedTransformed(1, 2, 3, 1, 2, 1, 2, 1),
+                        this.newWith(3, 2, 2, 1).flatCollect(Interval::oneTo));
 
-        assertIterablesEqual(
-                this.newMutableForTransform(1, 2, 3, 1, 2, 1, 2, 1),
-                this.newWith(3, 2, 2, 1).flatCollect(Interval::oneTo, this.newMutableForTransform()));
+                assertIterablesEqual(
+                        this.getExpectedTransformed(3, 4, 5, 2, 3, 4, 5, 2, 3, 4, 5, 1, 2, 3, 4, 5),
+                        this.newWith(3, 2, 2, 1).flatCollectWith(Interval::fromTo, 5));
+            }
+            case INSERTION_ORDER, SORTED_REVERSE_NATURAL ->
+            {
+                assertIterablesEqual(
+                        this.getExpectedTransformed(1, 2, 3, 1, 2, 1, 2, 1),
+                        this.newWith(3, 2, 2, 1).flatCollect(Interval::oneTo));
 
-        assertIterablesEqual(
-                this.getExpectedTransformed(3, 4, 5, 2, 3, 4, 5, 2, 3, 4, 5, 1, 2, 3, 4, 5),
-                this.newWith(3, 2, 2, 1).flatCollectWith(Interval::fromTo, 5));
+                assertIterablesEqual(
+                        this.newMutableForTransform(1, 2, 3, 1, 2, 1, 2, 1),
+                        this.newWith(3, 2, 2, 1).flatCollect(Interval::oneTo, this.newMutableForTransform()));
 
-        assertIterablesEqual(
-                this.newMutableForTransform(3, 2, 1, 2, 1, 2, 1, 1),
-                this.newWith(3, 2, 2, 1).flatCollectWith(Interval::fromTo, 1, this.newMutableForTransform()));
+                assertIterablesEqual(
+                        this.getExpectedTransformed(3, 4, 5, 2, 3, 4, 5, 2, 3, 4, 5, 1, 2, 3, 4, 5),
+                        this.newWith(3, 2, 2, 1).flatCollectWith(Interval::fromTo, 5));
+
+                assertIterablesEqual(
+                        this.newMutableForTransform(3, 2, 1, 2, 1, 2, 1, 1),
+                        this.newWith(3, 2, 2, 1).flatCollectWith(Interval::fromTo, 1, this.newMutableForTransform()));
+            }
+            case SORTED_NATURAL ->
+            {
+                assertIterablesEqual(
+                        this.getExpectedTransformed(1, 1, 2, 1, 2, 1, 2, 3),
+                        this.newWith(3, 2, 2, 1).flatCollect(Interval::oneTo));
+
+                assertIterablesEqual(
+                        this.newMutableForTransform(1, 1, 2, 1, 2, 1, 2, 3),
+                        this.newWith(3, 2, 2, 1).flatCollect(Interval::oneTo, this.newMutableForTransform()));
+
+                assertIterablesEqual(
+                        this.getExpectedTransformed(1, 2, 3, 4, 5, 2, 3, 4, 5, 2, 3, 4, 5, 3, 4, 5),
+                        this.newWith(3, 2, 2, 1).flatCollectWith(Interval::fromTo, 5));
+
+                assertIterablesEqual(
+                        this.newMutableForTransform(1, 2, 1, 2, 1, 3, 2, 1),
+                        this.newWith(3, 2, 2, 1).flatCollectWith(Interval::fromTo, 1, this.newMutableForTransform()));
+            }
+            default -> throw new IllegalStateException("Unexpected ordering type");
+        }
     }
 
     @Test

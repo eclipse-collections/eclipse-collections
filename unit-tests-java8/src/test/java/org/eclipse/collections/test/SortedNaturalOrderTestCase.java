@@ -39,7 +39,6 @@ import org.eclipse.collections.api.ordered.SortedIterable;
 import org.eclipse.collections.api.tuple.Pair;
 import org.eclipse.collections.impl.block.factory.Predicates;
 import org.eclipse.collections.impl.block.factory.Predicates2;
-import org.eclipse.collections.impl.list.Interval;
 import org.eclipse.collections.impl.tuple.Tuples;
 import org.eclipse.collections.impl.tuple.primitive.PrimitiveTuples;
 import org.junit.jupiter.api.Test;
@@ -116,27 +115,6 @@ public interface SortedNaturalOrderTestCase extends OrderedIterableTestCase
         MutableCollection<Integer> result = iterable.collectIf(i -> i % 2 != 0, i -> i % 10, target);
         assertIterablesEqual(this.newMutableForTransform(1, 1, 3, 3, 1, 1, 3, 3), result);
         assertSame(target, result);
-    }
-
-    @Override
-    @Test
-    default void RichIterable_flatCollect()
-    {
-        assertIterablesEqual(
-                this.getExpectedTransformed(1, 1, 2, 1, 2, 1, 2, 3),
-                this.newWith(1, 2, 2, 3).flatCollect(Interval::oneTo));
-
-        assertIterablesEqual(
-                this.newMutableForTransform(1, 1, 2, 1, 2, 1, 2, 3),
-                this.newWith(1, 2, 2, 3).flatCollect(Interval::oneTo, this.newMutableForTransform()));
-
-        assertIterablesEqual(
-                this.getExpectedTransformed(1, 2, 3, 4, 5, 2, 3, 4, 5, 2, 3, 4, 5, 3, 4, 5),
-                this.newWith(1, 2, 2, 3).flatCollectWith(Interval::fromTo, 5));
-
-        assertIterablesEqual(
-                this.newMutableForTransform(1, 2, 1, 2, 1, 3, 2, 1),
-                this.newWith(1, 2, 2, 3).flatCollectWith(Interval::fromTo, 1, this.newMutableForTransform()));
     }
 
     @Override
