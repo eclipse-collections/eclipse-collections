@@ -903,11 +903,19 @@ public final class IteratorIterate
      */
     public static <T> boolean removeIf(Iterator<T> iterator, Predicate<? super T> predicate)
     {
+        return IteratorIterate.removeIf(iterator, (java.util.function.Predicate<? super T>) predicate);
+    }
+
+    /**
+     * @see Iterate#removeIf(Iterable, java.util.function.Predicate)
+     */
+    public static <T> boolean removeIf(Iterator<T> iterator, java.util.function.Predicate<? super T> predicate)
+    {
         boolean changed = false;
         while (iterator.hasNext())
         {
             T each = iterator.next();
-            if (predicate.accept(each))
+            if (predicate.test(each))
             {
                 iterator.remove();
                 changed = true;

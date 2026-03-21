@@ -1281,37 +1281,38 @@ public class ArrayListIterateTest
     @Test
     public void removeIf()
     {
+        java.util.function.Predicate<Integer> isNull = each -> each == null;
         ArrayList<Integer> objects = this.newArrayList(1, 2, 3, null);
-        ArrayListIterate.removeIf(objects, Predicates.isNull());
+        ArrayListIterate.removeIf(objects, isNull);
         Verify.assertSize(3, objects);
         Verify.assertContainsAll(objects, 1, 2, 3);
 
         ArrayList<Integer> objects5 = this.newArrayList(null, 1, 2, 3);
-        ArrayListIterate.removeIf(objects5, Predicates.isNull());
+        ArrayListIterate.removeIf(objects5, isNull);
         Verify.assertSize(3, objects5);
         Verify.assertContainsAll(objects5, 1, 2, 3);
 
         ArrayList<Integer> objects4 = this.newArrayList(1, null, 2, 3);
-        ArrayListIterate.removeIf(objects4, Predicates.isNull());
+        ArrayListIterate.removeIf(objects4, isNull);
         Verify.assertSize(3, objects4);
         Verify.assertContainsAll(objects4, 1, 2, 3);
 
         ArrayList<Integer> objects3 = this.newArrayList(null, null, null, null);
-        ArrayListIterate.removeIf(objects3, Predicates.isNull());
+        ArrayListIterate.removeIf(objects3, isNull);
         Verify.assertEmpty(objects3);
 
         ArrayList<Integer> objects2 = this.newArrayList(null, 1, 2, 3, null);
-        ArrayListIterate.removeIf(objects2, Predicates.isNull());
+        ArrayListIterate.removeIf(objects2, isNull);
         Verify.assertSize(3, objects2);
         Verify.assertContainsAll(objects2, 1, 2, 3);
 
         ArrayList<Integer> objects1 = this.newArrayList(1, 2, 3);
-        ArrayListIterate.removeIf(objects1, Predicates.isNull());
+        ArrayListIterate.removeIf(objects1, isNull);
         Verify.assertSize(3, objects1);
         Verify.assertContainsAll(objects1, 1, 2, 3);
 
         ThisIsNotAnArrayList<Integer> objects6 = this.newNotAnArrayList(1, 2, 3);
-        ArrayListIterate.removeIf(objects6, Predicates.isNull());
+        ArrayListIterate.removeIf(objects6, isNull);
         Verify.assertSize(3, objects6);
         Verify.assertContainsAll(objects6, 1, 2, 3);
     }

@@ -104,6 +104,12 @@ public abstract class AbstractMemoryEfficientMutableList<T>
     }
 
     @Override
+    public boolean removeIf(java.util.function.Predicate<? super T> filter)
+    {
+        throw new UnsupportedOperationException("Cannot remove from a fixed size list: " + this.getClass());
+    }
+
+    @Override
     public <P> boolean removeIfWith(Predicate2<? super T, ? super P> predicate, P parameter)
     {
         throw new UnsupportedOperationException("Cannot removeIfWith from a fixed size list: " + this.getClass());
@@ -241,6 +247,12 @@ public abstract class AbstractMemoryEfficientMutableList<T>
 
         @Override
         public boolean removeIf(Predicate<? super T> predicate)
+        {
+            throw new UnsupportedOperationException("Cannot remove from a fixed size list: " + this.getClass());
+        }
+
+        @Override
+        public boolean removeIf(java.util.function.Predicate<? super T> filter)
         {
             throw new UnsupportedOperationException("Cannot remove from a fixed size list: " + this.getClass());
         }
