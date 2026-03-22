@@ -10,6 +10,7 @@
 
 package org.eclipse.collections.impl.block.function;
 
+import org.eclipse.collections.impl.test.Verify;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -41,5 +42,11 @@ public class SubtractFunctionTest
         assertEquals(Long.valueOf(1L), SubtractFunction.LONG.value(2L, 1L));
         assertEquals(Long.valueOf(0L), SubtractFunction.LONG.value(1L, 1L));
         assertEquals(Long.valueOf(-1L), SubtractFunction.LONG.value(1L, 2L));
+    }
+
+    @Test
+    public void classIsNonInstantiable()
+    {
+        Verify.assertClassNonInstantiable(SubtractFunction.class);
     }
 }

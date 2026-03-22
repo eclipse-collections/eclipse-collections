@@ -26,6 +26,7 @@ import org.eclipse.collections.impl.factory.primitive.FloatLists;
 import org.eclipse.collections.impl.factory.primitive.IntLists;
 import org.eclipse.collections.impl.factory.primitive.LongLists;
 import org.eclipse.collections.impl.factory.primitive.ShortLists;
+import org.eclipse.collections.impl.test.Verify;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -118,5 +119,11 @@ public class InternalArrayIterateTest
                 items, 3, Integer::shortValue, ShortLists.mutable.withInitialCapacity(3));
 
         assertEquals(result, ShortLists.mutable.of((short) 1, (short) 2, (short) 3));
+    }
+
+    @Test
+    public void classIsNonInstantiable()
+    {
+        Verify.assertClassNonInstantiable(InternalArrayIterate.class);
     }
 }

@@ -12,6 +12,7 @@ package org.eclipse.collections.impl.block.function;
 
 import org.eclipse.collections.api.factory.Maps;
 import org.eclipse.collections.impl.list.mutable.FastList;
+import org.eclipse.collections.impl.test.Verify;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -33,5 +34,11 @@ public class MinSizeFunctionTest
     {
         assertEquals(Integer.valueOf(2), MinSizeFunction.MAP.value(2, Maps.mutable.of(1, 1, 2, 2, 3, 3)));
         assertEquals(Integer.valueOf(2), MinSizeFunction.MAP.value(3, Maps.mutable.of(1, 1, 2, 2)));
+    }
+
+    @Test
+    public void classIsNonInstantiable()
+    {
+        Verify.assertClassNonInstantiable(MinSizeFunction.class);
     }
 }

@@ -25,6 +25,7 @@ package org.eclipse.collections.impl.factory.primitive;
 import org.eclipse.collections.api.factory.map.primitive.Immutable<name1><name2>MapFactory;
 import org.eclipse.collections.api.factory.map.primitive.Mutable<name1><name2>MapFactory;
 import org.eclipse.collections.impl.map.mutable.primitive.<name1><name2>HashMap;
+import org.eclipse.collections.impl.test.Verify;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -67,6 +68,12 @@ public class <name1><name2>MapsTest
         <name1><name2>HashMap sourceMap = <name1><name2>HashMap.newWithKeysValues(<(literal.(type1))("1")>, <(literal.(type2))("1")>);
         assertEquals(sourceMap, mapFactory.ofAll(sourceMap));
         assertEquals(sourceMap, mapFactory.withAll(sourceMap));
+    }
+
+    @Test
+    public void classIsNonInstantiable()
+    {
+        Verify.assertClassNonInstantiable(<name1><name2>Maps.class);
     }
 }
 

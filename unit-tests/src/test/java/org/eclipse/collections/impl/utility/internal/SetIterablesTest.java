@@ -12,6 +12,7 @@ package org.eclipse.collections.impl.utility.internal;
 
 import org.eclipse.collections.api.factory.Sets;
 import org.eclipse.collections.api.set.SetIterable;
+import org.eclipse.collections.impl.test.Verify;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -164,5 +165,11 @@ public class SetIterablesTest
     {
         SetIterable<? extends Number> actual = SetIterables.difference(set1, set2);
         assertEquals(expected, actual);
+    }
+
+    @Test
+    public void classIsNonInstantiable()
+    {
+        Verify.assertClassNonInstantiable(SetIterables.class);
     }
 }

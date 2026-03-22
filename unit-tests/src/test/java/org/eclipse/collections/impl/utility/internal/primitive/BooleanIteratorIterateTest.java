@@ -40,4 +40,10 @@ public class BooleanIteratorIterateTest
     {
         Verify.assertIterableSize(3, BooleanIteratorIterate.collect(this.iterable.booleanIterator(), String::valueOf, FastList.newList()));
     }
+
+    @Test
+    public void classIsNonInstantiable()
+    {
+        Verify.assertClassNonInstantiable(BooleanIteratorIterate.class);
+    }
 }

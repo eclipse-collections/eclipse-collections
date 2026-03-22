@@ -11,6 +11,7 @@
 package org.eclipse.collections.impl.factory;
 
 import org.eclipse.collections.api.factory.map.sorted.MutableSortedMapFactory;
+import org.eclipse.collections.impl.test.Verify;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -23,5 +24,11 @@ public class SortedMapsTest
         MutableSortedMapFactory factory = SortedMaps.mutable;
         assertEquals(SortedMaps.mutable.empty(), factory.empty());
         assertEquals(SortedMaps.mutable.empty(Integer::compare), factory.empty(Integer::compare));
+    }
+
+    @Test
+    public void classIsNonInstantiable()
+    {
+        Verify.assertClassNonInstantiable(SortedMaps.class);
     }
 }

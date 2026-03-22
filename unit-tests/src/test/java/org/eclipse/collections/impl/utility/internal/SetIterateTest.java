@@ -15,6 +15,7 @@ import java.util.Set;
 import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.factory.Sets;
 import org.eclipse.collections.api.set.MutableSet;
+import org.eclipse.collections.impl.test.Verify;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -74,5 +75,11 @@ public class SetIterateTest
         Set<Integer> set = this.newSet();
         assertFalse(SetIterate.removeAllIterable(set, Lists.mutable.of(90)));
         assertEquals(this.newSet(), set);
+    }
+
+    @Test
+    public void classIsNonInstantiable()
+    {
+        Verify.assertClassNonInstantiable(SetIterate.class);
     }
 }
