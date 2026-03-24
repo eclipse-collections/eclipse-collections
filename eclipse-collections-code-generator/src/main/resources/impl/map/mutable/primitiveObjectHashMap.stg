@@ -1440,7 +1440,7 @@ public class <name>ObjectHashMap\<V> implements Mutable<name>ObjectMap\<V>, Exte
         if (that instanceof Collection || that instanceof RichIterable)
         {
             int thatSize = Iterate.sizeOf(that);
-            HashBag\<Pair\<V, S>\> target = HashBag.newBag(Math.min(this.size(), thatSize));
+            MutableBag\<Pair\<V, S>\> target = HashBag.newBag(Math.min(this.size(), thatSize));
             return this.zip(that, target);
         }
         return this.zip(that, HashBag.newBag());
@@ -1758,7 +1758,7 @@ public class <name>ObjectHashMap\<V> implements Mutable<name>ObjectMap\<V>, Exte
     @Override
     public \<NK, NV> MutableMap\<NK, NV> toMap(Function\<? super V, ? extends NK> keyFunction, Function\<? super V, ? extends NV> valueFunction)
     {
-        UnifiedMap\<NK, NV> map = UnifiedMap.newMap();
+        MutableMap\<NK, NV> map = UnifiedMap.newMap();
         this.forEach(new MapCollectProcedure\<V, NK, NV>(map, keyFunction, valueFunction));
         return map;
     }

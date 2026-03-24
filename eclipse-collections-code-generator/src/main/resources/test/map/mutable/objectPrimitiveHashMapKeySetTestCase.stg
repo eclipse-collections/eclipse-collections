@@ -24,6 +24,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
+import org.eclipse.collections.api.bag.MutableBag;
 import org.eclipse.collections.api.map.primitive.MutableObject<name>Map;
 import org.eclipse.collections.impl.bag.mutable.HashBag;
 import org.eclipse.collections.impl.list.mutable.FastList;
@@ -37,6 +38,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+/**
+ * This file was automatically generated from template file objectPrimitiveHashMapKeySetTestCase.stg.
+ */
 public abstract class Object<name>HashMapKeySetTestCase
 {
     public abstract MutableObject<name>Map\<String> newMapWithKeysValues(String key1, <type> value1);
@@ -135,8 +139,8 @@ public abstract class Object<name>HashMapKeySetTestCase
         Set\<String> keySet = map1.keySet();
         Iterator\<String> iterator1 = keySet.iterator();
 
-        HashBag\<String> expected = HashBag.newBagWith("One", "Two", "Three", null);
-        HashBag\<String> actual = HashBag.newBag();
+        MutableBag\<String> expected = HashBag.newBagWith("One", "Two", "Three", null);
+        MutableBag\<String> actual = HashBag.newBag();
         assertThrows(IllegalStateException.class, iterator1::remove);
         for (int i = 0; i \< 4; i++)
         {
@@ -248,7 +252,7 @@ public abstract class Object<name>HashMapKeySetTestCase
     public void keySetToArray()
     {
         MutableObject<name>Map\<String> map = this.newMapWithKeysValues("One", <(literal.(type))("1")>, "Two", <(literal.(type))("2")>, "Three", <(literal.(type))("3")>);
-        HashBag\<String> expected = HashBag.newBagWith("One", "Two", "Three");
+        MutableBag\<String> expected = HashBag.newBagWith("One", "Two", "Three");
         Set\<String> keySet = map.keySet();
         assertEquals(expected, HashBag.newBagWith(keySet.toArray()));
         assertEquals(expected, HashBag.newBagWith(keySet.toArray(new String[keySet.size()])));

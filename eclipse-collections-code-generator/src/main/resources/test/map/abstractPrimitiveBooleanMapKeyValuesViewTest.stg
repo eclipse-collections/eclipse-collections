@@ -204,7 +204,7 @@ public abstract class Abstract<name>BooleanMapKeyValuesViewTestCase
     @Test
     public void selectWith_target()
     {
-        HashBag\<<name>BooleanPair> result = this.newWith(<(literal.(type))("1")>, false, <(literal.(type))("2")>, true, <(literal.(type))("3")>, false).selectWith(Predicates2.notEqual(), PrimitiveTuples.pair(<(literal.(type))("2")>, true), HashBag.\<<name>BooleanPair>newBag());
+        MutableBag\<<name>BooleanPair> result = this.newWith(<(literal.(type))("1")>, false, <(literal.(type))("2")>, true, <(literal.(type))("3")>, false).selectWith(Predicates2.notEqual(), PrimitiveTuples.pair(<(literal.(type))("2")>, true), HashBag.\<<name>BooleanPair>newBag());
         assertEquals(Bags.immutable.of(PrimitiveTuples.pair(<(literal.(type))("1")>, false), PrimitiveTuples.pair(<(literal.(type))("3")>, false)), result);
     }
 
@@ -229,7 +229,7 @@ public abstract class Abstract<name>BooleanMapKeyValuesViewTestCase
     @Test
     public void rejectWith_target()
     {
-        HashBag\<<name>BooleanPair> result = this.newWith(<(literal.(type))("1")>, false, <(literal.(type))("2")>, true, <(literal.(type))("3")>, false).rejectWith(Object::equals, PrimitiveTuples.pair(<(literal.(type))("2")>, true), HashBag.\<<name>BooleanPair>newBag());
+        MutableBag\<<name>BooleanPair> result = this.newWith(<(literal.(type))("1")>, false, <(literal.(type))("2")>, true, <(literal.(type))("3")>, false).rejectWith(Object::equals, PrimitiveTuples.pair(<(literal.(type))("2")>, true), HashBag.\<<name>BooleanPair>newBag());
         assertEquals(Bags.immutable.of(PrimitiveTuples.pair(<(literal.(type))("1")>, false), PrimitiveTuples.pair(<(literal.(type))("3")>, false)), result);
     }
 
