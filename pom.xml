@@ -130,8 +130,7 @@ Arrays, Maps or Strings. The iteration protocol was inspired by the Smalltalk co
         <junit.version>4.13.2</junit.version>
         <jmh.version>1.37</jmh.version>
 
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.release>17</maven.compiler.release>
         <maven.compiler.fork>true</maven.compiler.fork>
         <maven.compiler.meminitial>2048m</maven.compiler.meminitial>
         <maven.compiler.maxmem>2048m</maven.compiler.maxmem>
