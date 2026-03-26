@@ -21,7 +21,7 @@ The Eclipse Collections team gives a huge thank you to everyone who participated
 
 # API Changes
 -----------------
-* Added `injectIntoWithIndex` to `OrderedIterable`. Fixes #1203.
+* Added `injectIntoWithIndex` to `OrderedIterable`.
 
 
 # Bug Fixes
@@ -33,8 +33,8 @@ The Eclipse Collections team gives a huge thank you to everyone who participated
 
 # Note
 -------
-_We have taken all the measures to ensure all features are captured in the release notes. 
-However, release notes compilation is manual, so it is possible that a commit might be missed. 
+_We have taken all the measures to ensure all features are captured in the release notes.
+However, release notes compilation is manual, so it is possible that a commit might be missed.
 For a comprehensive list of commits please go through the commit log._
 
 Acquiring Eclipse Collections

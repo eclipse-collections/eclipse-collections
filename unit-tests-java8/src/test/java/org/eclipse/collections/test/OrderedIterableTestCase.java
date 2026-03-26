@@ -208,44 +208,13 @@ public interface OrderedIterableTestCase extends RichIterableTestCase
     default void OrderedIterable_injectIntoWithIndex()
     {
         OrderedIterable<Integer> iterable = (OrderedIterable<Integer>) this.newWith(3, 2, 1, 0);
-        MutableList<Pair<Integer, Integer>> injected = Lists.mutable.empty();
-        MutableList<Pair<Integer, Integer>> result = iterable.injectIntoWithIndex(
-                injected,
-                (coll, each, index) ->
-                {
-                    coll.add(Tuples.pair(each, index));
-                    return coll;
-                });
-        assertEquals(
-                Lists.immutable.with(
-                        Tuples.pair(3, 0),
-                        Tuples.pair(2, 1),
-                        Tuples.pair(1, 2),
-                        Tuples.pair(0, 3)),
-                result);
-        assertSame(injected, result);
-    }
 
-    @Test
-    default void OrderedIterable_injectIntoWithIndex_target()
-    {
-        MutableList<Pair<Integer, Integer>> initialValue = Lists.mutable.empty();
-        initialValue.add(Tuples.pair(99, 99));
-        MutableList<Pair<Integer, Integer>> result = ((OrderedIterable<Integer>) this.newWith(3, 2, 1, 0)).injectIntoWithIndex(
-                initialValue,
-                (coll, each, index) ->
-                {
-                    coll.add(Tuples.pair(each, index));
-                    return coll;
-                });
-        assertSame(initialValue, result);
-        assertEquals(
-                Lists.immutable.with(
-                        Tuples.pair(99, 99),
-                        Tuples.pair(3, 0),
-                        Tuples.pair(2, 1),
-                        Tuples.pair(1, 2),
-                        Tuples.pair(0, 3)),
-                result);
+        // Weighted sum (element * index): 3*0 + 2*1 + 1*2 + 0*3 = 4
+        assertEquals(Integer.valueOf(5), iterable.injectIntoWithIndex(
+                1,
+                (sum, each, index) -> sum + each * index));
+        assertEquals(Integer.valueOf(4), iterable.injectIntoWithIndex(
+                0,
+                (sum, each, index) -> sum + each * index));
     }
 }
