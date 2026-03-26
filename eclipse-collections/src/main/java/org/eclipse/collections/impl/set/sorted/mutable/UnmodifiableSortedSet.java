@@ -13,6 +13,7 @@ package org.eclipse.collections.impl.set.sorted.mutable;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.concurrent.ExecutorService;
@@ -555,5 +556,71 @@ public class UnmodifiableSortedSet<T>
     public ParallelSortedSetIterable<T> asParallel(ExecutorService executorService, int batchSize)
     {
         return this.getSortedSet().asParallel(executorService, batchSize);
+    }
+
+    @Override
+    public T lower(T e)
+    {
+        return this.getSortedSet().lower(e);
+    }
+
+    @Override
+    public T floor(T e)
+    {
+        return this.getSortedSet().floor(e);
+    }
+
+    @Override
+    public T ceiling(T e)
+    {
+        return this.getSortedSet().ceiling(e);
+    }
+
+    @Override
+    public T higher(T e)
+    {
+        return this.getSortedSet().higher(e);
+    }
+
+    @Override
+    public T pollFirst()
+    {
+        throw new UnsupportedOperationException("Cannot call pollFirst() on " + this.getClass().getSimpleName());
+    }
+
+    @Override
+    public T pollLast()
+    {
+        throw new UnsupportedOperationException("Cannot call pollLast() on " + this.getClass().getSimpleName());
+    }
+
+    @Override
+    public Iterator<T> descendingIterator()
+    {
+        return this.getSortedSet().descendingIterator();
+    }
+
+    @Override
+    public MutableSortedSet<T> descendingSet()
+    {
+        return this.getSortedSet().descendingSet().asUnmodifiable();
+    }
+
+    @Override
+    public MutableSortedSet<T> subSet(T fromElement, boolean fromInclusive, T toElement, boolean toInclusive)
+    {
+        return this.getSortedSet().subSet(fromElement, fromInclusive, toElement, toInclusive).asUnmodifiable();
+    }
+
+    @Override
+    public MutableSortedSet<T> headSet(T toElement, boolean inclusive)
+    {
+        return this.getSortedSet().headSet(toElement, inclusive).asUnmodifiable();
+    }
+
+    @Override
+    public MutableSortedSet<T> tailSet(T fromElement, boolean inclusive)
+    {
+        return this.getSortedSet().tailSet(fromElement, inclusive).asUnmodifiable();
     }
 }

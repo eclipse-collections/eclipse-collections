@@ -14,6 +14,7 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.NavigableSet;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.SortedSet;
@@ -101,6 +102,15 @@ public final class SortedSetAdapter<T>
             throw new NullPointerException("SortedSetAdapter may not wrap null");
         }
         this.delegate = newDelegate;
+    }
+
+    private NavigableSet<T> asNavigableSet()
+    {
+        if (this.delegate instanceof NavigableSet)
+        {
+            return (NavigableSet<T>) this.delegate;
+        }
+        throw new UnsupportedOperationException(this.getClass().getSimpleName() + " requires a NavigableSet delegate");
     }
 
     @Override
@@ -647,7 +657,7 @@ public final class SortedSetAdapter<T>
     @Override
     public MutableSortedSet<T> toReversed()
     {
-        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".toReversed() not implemented yet");
+        return this.descendingSet();
     }
 
     @Override
@@ -663,20 +673,68 @@ public final class SortedSetAdapter<T>
     }
 
     @Override
-    public void reverseForEach(Procedure<? super T> procedure)
+    public T lower(T e)
     {
-        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".reverseForEach() not implemented yet");
+        return this.asNavigableSet().lower(e);
     }
 
     @Override
-    public void reverseForEachWithIndex(ObjectIntProcedure<? super T> procedure)
+    public T floor(T e)
     {
-        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".reverseForEachWithIndex() not implemented yet");
+        return this.asNavigableSet().floor(e);
     }
 
     @Override
-    public int detectLastIndex(Predicate<? super T> predicate)
+    public T ceiling(T e)
     {
-        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".detectLastIndex() not implemented yet");
+        return this.asNavigableSet().ceiling(e);
+    }
+
+    @Override
+    public T higher(T e)
+    {
+        return this.asNavigableSet().higher(e);
+    }
+
+    @Override
+    public T pollFirst()
+    {
+        return this.asNavigableSet().pollFirst();
+    }
+
+    @Override
+    public T pollLast()
+    {
+        return this.asNavigableSet().pollLast();
+    }
+
+    @Override
+    public Iterator<T> descendingIterator()
+    {
+        return this.asNavigableSet().descendingIterator();
+    }
+
+    @Override
+    public MutableSortedSet<T> descendingSet()
+    {
+        return SortedSetAdapter.adapt(this.asNavigableSet().descendingSet());
+    }
+
+    @Override
+    public MutableSortedSet<T> subSet(T fromElement, boolean fromInclusive, T toElement, boolean toInclusive)
+    {
+        return SortedSetAdapter.adapt(this.asNavigableSet().subSet(fromElement, fromInclusive, toElement, toInclusive));
+    }
+
+    @Override
+    public MutableSortedSet<T> headSet(T toElement, boolean inclusive)
+    {
+        return SortedSetAdapter.adapt(this.asNavigableSet().headSet(toElement, inclusive));
+    }
+
+    @Override
+    public MutableSortedSet<T> tailSet(T fromElement, boolean inclusive)
+    {
+        return SortedSetAdapter.adapt(this.asNavigableSet().tailSet(fromElement, inclusive));
     }
 }

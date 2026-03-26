@@ -71,6 +71,25 @@ class ReversedImmutableList<T>
     }
 
     @Override
+    public AbstractImmutableList<T> subList(int fromIndex, int toIndex)
+    {
+        int size = this.size();
+        if (fromIndex < 0)
+        {
+            throw new IndexOutOfBoundsException("fromIndex = " + fromIndex);
+        }
+        if (toIndex > size)
+        {
+            throw new IndexOutOfBoundsException("toIndex = " + toIndex);
+        }
+        if (fromIndex > toIndex)
+        {
+            throw new IllegalArgumentException("fromIndex(" + fromIndex + ") > toIndex(" + toIndex + ')');
+        }
+        return this.delegate.subList(size - toIndex, size - fromIndex).reversed();
+    }
+
+    @Override
     public AbstractImmutableList<T> reversed()
     {
         return this.delegate;
