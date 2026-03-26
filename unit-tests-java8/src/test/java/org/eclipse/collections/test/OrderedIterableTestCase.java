@@ -203,4 +203,18 @@ public interface OrderedIterableTestCase extends RichIterableTestCase
                 result);
         assertSame(target, result);
     }
+
+    @Test
+    default void OrderedIterable_injectIntoWithIndex()
+    {
+        OrderedIterable<Integer> iterable = (OrderedIterable<Integer>) this.newWith(3, 2, 1, 0);
+
+        // Weighted sum (element * index): 3*0 + 2*1 + 1*2 + 0*3 = 4
+        assertEquals(Integer.valueOf(5), iterable.injectIntoWithIndex(
+                1,
+                (sum, each, index) -> sum + each * index));
+        assertEquals(Integer.valueOf(4), iterable.injectIntoWithIndex(
+                0,
+                (sum, each, index) -> sum + each * index));
+    }
 }

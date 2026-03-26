@@ -572,6 +572,21 @@ public interface SortedNaturalOrderTestCase extends OrderedIterableTestCase
         assertSame(target, result);
     }
 
+    @Override
+    @Test
+    default void OrderedIterable_injectIntoWithIndex()
+    {
+        OrderedIterable<Integer> iterable = (OrderedIterable<Integer>) this.newWith(1, 2, 2, 3, 3, 3, 4, 4, 4, 4);
+
+        // Weighted sum (element * index): 1*0 + 2*1 + 2*2 + 3*3 + 3*4 + 3*5 + 4*6 + 4*7 + 4*8 + 4*9 = 162
+        assertEquals(Integer.valueOf(163), iterable.injectIntoWithIndex(
+                1,
+                (sum, each, index) -> sum + each * index));
+        assertEquals(Integer.valueOf(162), iterable.injectIntoWithIndex(
+                0,
+                (sum, each, index) -> sum + each * index));
+    }
+
     @Test
     default void SortedIterable_comparator()
     {
