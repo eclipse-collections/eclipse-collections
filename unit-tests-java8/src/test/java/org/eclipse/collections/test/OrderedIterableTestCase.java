@@ -30,6 +30,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public interface OrderedIterableTestCase extends RichIterableTestCase
 {
@@ -44,9 +45,18 @@ public interface OrderedIterableTestCase extends RichIterableTestCase
         assertEquals(
                 IntLists.mutable.with(0, 1, 2, 3),
                 pairs.collectInt(ObjectIntPair::getTwo, IntLists.mutable.empty()));
-        assertEquals(
-                Lists.mutable.with(3, 2, 1, 0),
-                pairs.collect(ObjectIntPair::getOne, Lists.mutable.empty()));
+        switch (this.getOrderingType())
+        {
+            case INSERTION_ORDER, SORTED_REVERSE_NATURAL ->
+                    assertEquals(
+                            Lists.mutable.with(3, 2, 1, 0),
+                            pairs.collect(ObjectIntPair::getOne, Lists.mutable.empty()));
+            case SORTED_NATURAL ->
+                    assertEquals(
+                            Lists.mutable.with(0, 1, 2, 3),
+                            pairs.collect(ObjectIntPair::getOne, Lists.mutable.empty()));
+            default -> fail("Unexpected value: " + this.getOrderingType());
+        }
     }
 
     /**
@@ -60,9 +70,18 @@ public interface OrderedIterableTestCase extends RichIterableTestCase
         assertEquals(
                 IntLists.mutable.with(0, 1, 2, 3),
                 pairs.collectInt(ObjectIntPair::getTwo, IntLists.mutable.empty()));
-        assertEquals(
-                Lists.mutable.with(3, 2, 1, 0),
-                pairs.collect(ObjectIntPair::getOne, Lists.mutable.empty()));
+        switch (this.getOrderingType())
+        {
+            case INSERTION_ORDER, SORTED_REVERSE_NATURAL ->
+                    assertEquals(
+                            Lists.mutable.with(3, 2, 1, 0),
+                            pairs.collect(ObjectIntPair::getOne, Lists.mutable.empty()));
+            case SORTED_NATURAL ->
+                    assertEquals(
+                            Lists.mutable.with(0, 1, 2, 3),
+                            pairs.collect(ObjectIntPair::getOne, Lists.mutable.empty()));
+            default -> fail("Unexpected value: " + this.getOrderingType());
+        }
 
         RichIterable<ObjectIntPair<Integer>> setOfPairs = ((OrderedIterable<Integer>) this.newWith(3, 2, 1, 0))
                 .collectWithIndex(PrimitiveTuples::pair, Lists.mutable.empty());

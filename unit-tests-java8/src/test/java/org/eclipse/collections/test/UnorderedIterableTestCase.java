@@ -33,6 +33,12 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public interface UnorderedIterableTestCase extends RichIterableTestCase
 {
     @Override
+    default OrderingType getOrderingType()
+    {
+        return OrderingType.UNORDERED;
+    }
+
+    @Override
     @Test
     default void Iterable_next()
     {
