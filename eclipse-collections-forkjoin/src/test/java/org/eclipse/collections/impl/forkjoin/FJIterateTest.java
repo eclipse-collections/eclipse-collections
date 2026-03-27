@@ -48,6 +48,7 @@ import org.eclipse.collections.impl.list.mutable.ArrayListAdapter;
 import org.eclipse.collections.impl.list.mutable.CompositeFastList;
 import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.list.mutable.ListAdapter;
+import org.eclipse.collections.impl.list.mutable.MutableList;
 import org.eclipse.collections.impl.map.mutable.UnifiedMap;
 import org.eclipse.collections.impl.multimap.bag.HashBagMultimap;
 import org.eclipse.collections.impl.multimap.bag.SynchronizedPutHashBagMultimap;
@@ -71,6 +72,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 public class FJIterateTest
 {
@@ -656,4 +658,14 @@ public class FJIterateTest
             this.sum.add(sumProcedure.getSum());
         }
     }
+    @Test
+    public void testForEachWithEmptyList()
+    {
+        MutableList<Integer> list = Lists.mutable.empty();
+        AtomicInteger counter = new AtomicInteger(0);
+
+        ParallelIterate.forEach(list, each -> counter.incrementAndGet());
+
+       assertEquals(0, counter.get());
+   }
 }
