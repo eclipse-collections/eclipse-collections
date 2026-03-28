@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Goldman Sachs and others.
+ * Copyright (c) 2026 Goldman Sachs and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -78,12 +78,12 @@ import org.eclipse.collections.api.set.ImmutableSet;
 import org.eclipse.collections.api.set.MutableSet;
 import org.eclipse.collections.api.tuple.Pair;
 import org.eclipse.collections.impl.EmptyIterator;
+import org.eclipse.collections.impl.lazy.EmptyLazyIterable;
 import org.eclipse.collections.impl.map.sorted.mutable.TreeSortedMap;
 import org.eclipse.collections.impl.multimap.bag.HashBagMultimap;
 import org.eclipse.collections.impl.partition.bag.PartitionHashBag;
 import org.eclipse.collections.impl.utility.ArrayIterate;
 import org.eclipse.collections.impl.utility.Iterate;
-import org.eclipse.collections.impl.utility.LazyIterate;
 
 /**
  * This is a zero element {@link ImmutableBag} which is created by calling the Bags.immutable.empty().
@@ -98,7 +98,6 @@ final class ImmutableEmptyBag<T>
 
     private static final long serialVersionUID = 1L;
 
-    private static final LazyIterable<?> LAZY_ITERABLE = LazyIterate.adapt(INSTANCE);
     private static final Object[] TO_ARRAY = new Object[0];
     private static final PartitionImmutableBag<Object> IMMUTABLE_EMPTY_PARTITION = new PartitionHashBag<>().toImmutable();
 
@@ -645,7 +644,7 @@ final class ImmutableEmptyBag<T>
     @Override
     public LazyIterable<T> asLazy()
     {
-        return (LazyIterable<T>) LAZY_ITERABLE;
+        return EmptyLazyIterable.getInstance();
     }
 
     @Override
