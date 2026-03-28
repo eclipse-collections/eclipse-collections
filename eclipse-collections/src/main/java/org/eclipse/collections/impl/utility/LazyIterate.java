@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Goldman Sachs.
+ * Copyright (c) 2026 Goldman Sachs.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -24,6 +24,7 @@ import org.eclipse.collections.impl.lazy.CompositeIterable;
 import org.eclipse.collections.impl.lazy.DistinctIterable;
 import org.eclipse.collections.impl.lazy.DropIterable;
 import org.eclipse.collections.impl.lazy.DropWhileIterable;
+import org.eclipse.collections.impl.lazy.EmptyLazyIterable;
 import org.eclipse.collections.impl.lazy.FlatCollectIterable;
 import org.eclipse.collections.impl.lazy.LazyIterableAdapter;
 import org.eclipse.collections.impl.lazy.RejectIterable;
@@ -59,6 +60,19 @@ public final class LazyIterate
     public static <T> LazyIterable<T> adapt(Iterable<T> iterable)
     {
         return new LazyIterableAdapter<>(iterable);
+    }
+
+    /**
+     * Creates a deferred rich iterable for the specified iterable or returns an EmptyLazyIterable if
+     * a RichIterable type or Collection type is empty.
+     */
+    public static <T> LazyIterable<T> adaptOrEmpty(Iterable<T> iterable)
+    {
+        if (iterable instanceof RichIterable<T> richIterable && richIterable.isEmpty())
+        {
+            return EmptyLazyIterable.getInstance();
+        }
+        return LazyIterate.adapt(iterable);
     }
 
     /**
