@@ -511,6 +511,12 @@ abstract class AbstractMutableBiMap<K, V> extends AbstractBiMap<K, V> implements
     }
 
     @Override
+    public <P, VV> MutableBag<VV> flatCollectWith(Function2<? super V, ? super P, ? extends Iterable<VV>> function, P parameter)
+    {
+        return this.delegate.flatCollectWith(function, parameter);
+    }
+
+    @Override
     public MutableBooleanBag collectBoolean(BooleanFunction<? super V> booleanFunction)
     {
         return this.delegate.collectBoolean(booleanFunction);

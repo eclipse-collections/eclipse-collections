@@ -400,6 +400,12 @@ public class SynchronizedMutableMap<K, V>
     }
 
     @Override
+    public <P, R> MutableBag<R> flatCollectWith(Function2<? super V, ? super P, ? extends Iterable<R>> function, P parameter)
+    {
+        return (MutableBag<R>) super.flatCollectWith(function, parameter);
+    }
+
+    @Override
     public <KK> MutableBagMultimap<KK, V> groupBy(Function<? super V, ? extends KK> function)
     {
         return (MutableBagMultimap<KK, V>) super.<KK>groupBy(function);
