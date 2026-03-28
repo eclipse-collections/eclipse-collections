@@ -1300,7 +1300,7 @@ public class UnmodifiableTreeMap<K, V>
     @Override
     public MutableSortedMap<K, V> takeWhile(Predicate<? super V> predicate)
     {
-        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".takeWhile() not implemented yet");
+        return this.getMutableSortedMap().takeWhile(predicate);
     }
 
     @Override
@@ -1312,13 +1312,13 @@ public class UnmodifiableTreeMap<K, V>
     @Override
     public MutableSortedMap<K, V> dropWhile(Predicate<? super V> predicate)
     {
-        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".dropWhile() not implemented yet");
+        return this.getMutableSortedMap().dropWhile(predicate);
     }
 
     @Override
     public PartitionMutableList<V> partitionWhile(Predicate<? super V> predicate)
     {
-        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".partitionWhile() not implemented yet");
+        return this.getMutableSortedMap().partitionWhile(predicate);
     }
 
     @Override

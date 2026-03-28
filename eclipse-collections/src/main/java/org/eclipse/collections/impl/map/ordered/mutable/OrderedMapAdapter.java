@@ -266,7 +266,21 @@ public class OrderedMapAdapter<K, V>
     @Override
     public MutableOrderedMap<K, V> takeWhile(Predicate<? super V> predicate)
     {
-        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".takeWhile() not implemented yet");
+        MutableOrderedMap<K, V> output = OrderedMapAdapter.adapt(new LinkedHashMap<>(this.size()));
+        Iterator<Entry<K, V>> iterator = this.delegate.entrySet().iterator();
+        while (iterator.hasNext())
+        {
+            Entry<K, V> next = iterator.next();
+            if (predicate.accept(next.getValue()))
+            {
+                output.put(next.getKey(), next.getValue());
+            }
+            else
+            {
+                break;
+            }
+        }
+        return output;
     }
 
     @Override
@@ -304,13 +318,45 @@ public class OrderedMapAdapter<K, V>
     @Override
     public MutableOrderedMap<K, V> dropWhile(Predicate<? super V> predicate)
     {
-        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".dropWhile() not implemented yet");
+        MutableOrderedMap<K, V> output = OrderedMapAdapter.adapt(new LinkedHashMap<>(this.size()));
+        Iterator<Entry<K, V>> iterator = this.delegate.entrySet().iterator();
+        while (iterator.hasNext())
+        {
+            Entry<K, V> next = iterator.next();
+            if (!predicate.accept(next.getValue()))
+            {
+                output.put(next.getKey(), next.getValue());
+                break;
+            }
+        }
+        while (iterator.hasNext())
+        {
+            Entry<K, V> next = iterator.next();
+            output.put(next.getKey(), next.getValue());
+        }
+        return output;
     }
 
     @Override
     public PartitionMutableList<V> partitionWhile(Predicate<? super V> predicate)
     {
-        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".partitionWhile() not implemented yet");
+        PartitionMutableList<V> result = new PartitionFastList<>();
+        Iterator<Entry<K, V>> iterator = this.delegate.entrySet().iterator();
+        while (iterator.hasNext())
+        {
+            V value = iterator.next().getValue();
+            if (!predicate.accept(value))
+            {
+                result.getRejected().add(value);
+                break;
+            }
+            result.getSelected().add(value);
+        }
+        while (iterator.hasNext())
+        {
+            result.getRejected().add(iterator.next().getValue());
+        }
+        return result;
     }
 
     @Override
