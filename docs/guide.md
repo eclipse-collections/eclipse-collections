@@ -7,9 +7,9 @@
   ~ and the Eclipse Distribution License is available at
   ~ http://www.eclipse.org/org/documents/edl-v10.php.
   -->
-# Reference Guide <a href="https://www.eclipse.org/collections/"><img align="right" src="https://github.com/eclipse/eclipse-collections/blob/master/artwork/eclipse-collections-logo.png" height="25%" width="25%"></a>
+# Reference Guide <a href="https://www.eclipse.org/collections/"><img align="right" src="https://github.com/eclipse-collections/eclipse-collections/blob/master/artwork/eclipse-collections-logo.png" height="25%" width="25%"></a>
 
-<div dir="auto"><a href="https://github.com/eclipse/eclipse-collections/blob/master/docs/0-RefGuide.adoc">A newer version of this guide is available.</a></div><br/>
+<div dir="auto"><a href="https://github.com/eclipse-collections/eclipse-collections/blob/master/docs/0-RefGuide.adoc">A newer version of this guide is available.</a></div><br/>
 
 - [About Eclipse Collections](#-about-eclipse-collections)
 - [About this guide](#-about-this-guide)
@@ -94,7 +94,7 @@ This Guide is an introduction to basic Eclipse Collections concepts and its comm
 []() Getting Started With Eclipse Collections
 ---------------------------------------------
 
-It is recommended that first time users go through the [Eclipse Collections Kata](https://github.com/eclipse/eclipse-collections-kata). The Kata is a fun way to help you learn idiomatic Eclipse Collections usage through coding exercises.
+It is recommended that first time users go through the [Eclipse Collections Kata](https://github.com/eclipse-collections/eclipse-collections-kata). The Kata is a fun way to help you learn idiomatic Eclipse Collections usage through coding exercises.
 
 []() Iteration patterns
 ----------------------
@@ -2569,7 +2569,7 @@ ImmutableMap<String, String> map1 = map0.newWithKeyValue("1", "1");
 ImmutableMap<String, String> map2 = map1.newWithAllKeyValues(Lists.mutable.with(Tuples.pair("2", "2")))
 ```
 
-These methods are available on the primitive containers too though we are missing some symmetry in our immutable primitive map containers. We **do not** currently have `newWithAllKeyValues()` on immutable primitive maps. The corresponding feature request is [here](https://github.com/eclipse/eclipse-collections/issues/344).
+These methods are available on the primitive containers too though we are missing some symmetry in our immutable primitive map containers. We **do not** currently have `newWithAllKeyValues()` on immutable primitive maps. The corresponding feature request is [here](https://github.com/eclipse-collections/eclipse-collections/issues/344).
 
 ```java
 ImmutableIntList list0 = IntLists.immutable.empty();
@@ -3078,4 +3078,4 @@ Verify.assertContains(1, Lists.mutable.with(1));
 
 []() Eclipse Collections Mind Map
 ------------------------------------
-![Eclipse Collections Mind Map](https://github.com/eclipse/eclipse-collections/blob/master/docs/EclipseCollectionsMindMap.png)
+![Eclipse Collections Mind Map](https://github.com/eclipse-collections/eclipse-collections/blob/master/docs/EclipseCollectionsMindMap.png)

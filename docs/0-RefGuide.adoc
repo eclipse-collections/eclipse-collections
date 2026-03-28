@@ -21,11 +21,11 @@
 :Testing:       xref:4-Testing_Utilities.adoc[Testing Utilities]
 :QuickRef:		xref:5-Quick_Reference.adoc[Quick Reference]
 //
-:EC_Kata: https://github.com/eclipse/eclipse-collections-kata[Eclipse Collections Kata]
+:EC_Kata: https://github.com/eclipse-collections/eclipse-collections-kata[Eclipse Collections Kata]
 //
 
 ++++
-<img align="right" src="https://raw.githubusercontent.com/eclipse/eclipse-collections/master/artwork/eclipse-collections-logo.svg" height="40%" width="40%"></a>
+<img align="right" src="https://raw.githubusercontent.com/eclipse-collections/eclipse-collections/master/artwork/eclipse-collections-logo.svg" height="40%" width="40%"></a>
 ++++
 
 

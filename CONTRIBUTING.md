@@ -11,7 +11,7 @@ If this is your first time contributing to an Eclipse Foundation project, you'll
 Issues
 ------
 
-Search the [issue tracker](https://github.com/eclipse/eclipse-collections/issues) for a relevant issue or create a new one.
+Search the [issue tracker](https://github.com/eclipse-collections/eclipse-collections/issues) for a relevant issue or create a new one.
 
 Making changes
 --------------

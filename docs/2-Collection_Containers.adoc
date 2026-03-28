@@ -1294,7 +1294,7 @@ ImmutableMap<String, String> map2 = map1.newWithAllKeyValues(Lists.mutable.with(
 
 These methods are available on the primitive containers too though we are missing some symmetry in our immutable primitive map containers.
 We *do not* currently have *newWithAllKeyValues()* on immutable primitive maps.
-The corresponding feature request is https://github.com/eclipse/eclipse-collections/issues/344[here].
+The corresponding feature request is https://github.com/eclipse-collections/eclipse-collections/issues/344[here].
 
 .Immutable primitive containers
 ====
