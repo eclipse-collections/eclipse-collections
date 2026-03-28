@@ -556,7 +556,28 @@ public class FJIterateTest
         assertEquals(1000, aggregation.get("1").intValue());
         assertEquals(4000, aggregation.get("2").intValue());
         assertEquals(9000, aggregation.get("3").intValue());
+        assertEquals(0, result.size());
     }
+    
+    @Test
+    public void aggregateByWithNullValues()
+    {
+       Function2<Integer, Integer, Integer> countAggregator = (aggregate, value) -> aggregate + 1;
+
+       MutableList<Integer> list = Lists.mutable.with(1, null, 2, null, 3);
+
+       MutableMap<String, Integer> aggregation =
+            FJIterate.aggregateBy(
+                    list,
+                    each -> each != null && each % 2 == 0 ? "Even" : "Odd",
+                    Maps.mutable.empty(),
+                    countAggregator
+            );
+
+       assertEquals(Integer.valueOf(2), aggregation.get("Null"));
+       assertEquals(Integer.valueOf(1), aggregation.get("Even"));
+       assertEquals(Integer.valueOf(2), aggregation.get("Odd"));
+   }
 
     private static List<Integer> createIntegerList(int size)
     {
