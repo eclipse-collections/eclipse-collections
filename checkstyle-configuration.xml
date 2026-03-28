@@ -81,6 +81,11 @@
         </module>
 
         <module name="IllegalImport" />
+        <module name="IllegalImport">
+            <property name="illegalPkgs" value="" />
+            <property name="illegalClasses"
+                value="org.junit.jupiter.api.Assertions, org.junit.Assume, org.hamcrest.MatcherAssert, org.hamcrest.Matchers, org.assertj.core.api.Assertions" />
+        </module>
         <module name="RedundantImport" />
 
         <!-- Checks for whitespace                               -->
