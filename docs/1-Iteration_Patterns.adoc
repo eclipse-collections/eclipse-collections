@@ -17,8 +17,8 @@ All rights reserved.
 
 // This section would normally be stored in a separate include file; at present, GitHub does not support AsciiDoc include directives.
 // GitHub page links and images
-:Eclipse-Collections-Kata:      https://github.com/eclipse/eclipse-collections-kata[Eclipse Collections Kata]
-:Eclipse-Collections-Mind-Map:  https://github.com/eclipse/eclipse-collections/blob/master/docs/EclipseCollectionsMindMap.png[Eclipse Collections Mind Map]
+:Eclipse-Collections-Kata:      https://github.com/eclipse-collections/eclipse-collections-kata[Eclipse Collections Kata]
+:Eclipse-Collections-Mind-Map:  https://github.com/eclipse-collections/eclipse-collections/blob/master/docs/EclipseCollectionsMindMap.png[Eclipse Collections Mind Map]
 
 // Javadoc links
 :api-url:               https://www.eclipse.org/collections/javadoc/11.1.0/org/eclipse/collections

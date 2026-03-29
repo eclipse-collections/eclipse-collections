@@ -10,7 +10,7 @@ on:
 jobs:
   applications:
     name: Coverage Report ${{ matrix.java-version }}
-    if: github.repository == 'eclipse/eclipse-collections'
+    if: github.repository == 'eclipse-collections/eclipse-collections'
     strategy:
       matrix:
         os: [ubuntu-latest]

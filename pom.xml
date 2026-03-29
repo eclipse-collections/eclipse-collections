@@ -29,7 +29,7 @@ implementations with a rich API and set of utility classes that work with any JD
 Arrays, Maps or Strings. The iteration protocol was inspired by the Smalltalk collection framework.
     </description>
 
-    <url>https://github.com/eclipse/eclipse-collections</url>
+    <url>https://github.com/eclipse-collections/eclipse-collections</url>
 
     <inceptionYear>2004</inceptionYear>
 
@@ -47,19 +47,19 @@ Arrays, Maps or Strings. The iteration protocol was inspired by the Smalltalk co
     </licenses>
 
     <scm>
-        <url>https://github.com/eclipse/eclipse-collections</url>
-        <connection>scm:git:https://github.com/eclipse/eclipse-collections.git</connection>
-        <developerConnection>scm:git:https://github.com/eclipse/eclipse-collections.git</developerConnection>
+        <url>https://github.com/eclipse-collections/eclipse-collections</url>
+        <connection>scm:git:https://github.com/eclipse-collections/eclipse-collections.git</connection>
+        <developerConnection>scm:git:https://github.com/eclipse-collections/eclipse-collections.git</developerConnection>
     </scm>
 
     <issueManagement>
         <system>GitHub</system>
-        <url>https://github.com/eclipse/eclipse-collections/issues</url>
+        <url>https://github.com/eclipse-collections/eclipse-collections/issues</url>
     </issueManagement>
 
     <ciManagement>
         <system>GitHub Actions</system>
-        <url>https://github.com/eclipse/eclipse-collections/actions</url>
+        <url>https://github.com/eclipse-collections/eclipse-collections/actions</url>
     </ciManagement>
 
     <mailingLists>
