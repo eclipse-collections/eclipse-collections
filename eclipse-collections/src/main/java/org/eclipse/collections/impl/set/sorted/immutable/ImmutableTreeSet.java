@@ -197,7 +197,7 @@ final class ImmutableTreeSet<T>
     @Override
     public Iterator<T> descendingIterator()
     {
-        return this.descendingSet().iterator();
+        return this.sortedElements.reversed().iterator();
     }
 
     @Override
@@ -433,6 +433,12 @@ final class ImmutableTreeSet<T>
             throw new IllegalArgumentException("fromIndex must not be greater than toIndex");
         }
         this.sortedElements.forEach(fromIndex, toIndex, procedure);
+    }
+
+    @Override
+    public void forEachWithIndex(ObjectIntProcedure<? super T> objectIntProcedure)
+    {
+        this.sortedElements.forEachWithIndex(objectIntProcedure);
     }
 
     @Override
