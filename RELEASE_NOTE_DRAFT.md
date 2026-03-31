@@ -1,3 +1,8 @@
+# Unrreleased
+
+## Documentation Changes
+* Improved Javadoc for 'Sets' factory class ([#782](https://github.com/eclipse-collections/eclipse-collections/issues/782))
+
 13.0.0
 ====================
 
