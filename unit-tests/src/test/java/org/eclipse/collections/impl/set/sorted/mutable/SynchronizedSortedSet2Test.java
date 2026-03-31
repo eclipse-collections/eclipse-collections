@@ -39,6 +39,7 @@ public class SynchronizedSortedSet2Test extends AbstractSortedSetTestCase
     }
 
     @Override
+    @Test
     public void asSynchronized()
     {
         MutableSortedSet<Object> synchronizedSet = this.newWith();
@@ -46,6 +47,7 @@ public class SynchronizedSortedSet2Test extends AbstractSortedSetTestCase
     }
 
     @Override
+    @Test
     public void asUnmodifiable()
     {
         Verify.assertInstanceOf(UnmodifiableSortedSet.class, this.newWith().asUnmodifiable());

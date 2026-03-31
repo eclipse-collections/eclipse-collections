@@ -557,18 +557,21 @@ public class UnmodifiableBiMapTest extends AbstractMutableBiMapTestCase
     }
 
     @Override
+    @Test
     public void retainAllFromKeySet_null_collision()
     {
         // Not applicable for unmodifiable maps
     }
 
     @Override
+    @Test
     public void rehash_null_collision()
     {
         // Not applicable for unmodifiable maps
     }
 
     @Override
+    @Test
     public void nullCollisionWithCastInEquals()
     {
         // Not applicable for unmodifiable maps

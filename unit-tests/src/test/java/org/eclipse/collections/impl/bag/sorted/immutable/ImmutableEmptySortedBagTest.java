@@ -154,6 +154,7 @@ public class ImmutableEmptySortedBagTest extends AbstractImmutableSortedBagTestC
     }
 
     @Override
+    @Test
     public void allSatisfyWith()
     {
         assertTrue(this.classUnderTest().allSatisfyWith(Predicates2.alwaysFalse(), "false"));
@@ -161,6 +162,7 @@ public class ImmutableEmptySortedBagTest extends AbstractImmutableSortedBagTestC
     }
 
     @Override
+    @Test
     public void anySatisfyWith()
     {
         assertFalse(this.classUnderTest().anySatisfyWith(Predicates2.alwaysFalse(), "false"));
@@ -168,6 +170,7 @@ public class ImmutableEmptySortedBagTest extends AbstractImmutableSortedBagTestC
     }
 
     @Override
+    @Test
     public void noneSatisfyWith()
     {
         assertTrue(this.classUnderTest().noneSatisfyWith(Predicates2.alwaysFalse(), "false"));
@@ -175,6 +178,7 @@ public class ImmutableEmptySortedBagTest extends AbstractImmutableSortedBagTestC
     }
 
     @Override
+    @Test
     public void noneSatisfy()
     {
         assertTrue(this.classUnderTest().noneSatisfy(Predicates.alwaysFalse()));
@@ -394,6 +398,7 @@ public class ImmutableEmptySortedBagTest extends AbstractImmutableSortedBagTestC
     }
 
     @Override
+    @Test
     public void zipWithIndex()
     {
         ImmutableSortedBag<Integer> bag = this.classUnderTest(Comparator.reverseOrder());
@@ -633,12 +638,14 @@ public class ImmutableEmptySortedBagTest extends AbstractImmutableSortedBagTestC
     }
 
     @Override
+    @Test
     public void detectIndex()
     {
         assertEquals(-1, this.classUnderTest().detectIndex(each -> each > 1));
     }
 
     @Override
+    @Test
     public void indexOf()
     {
         assertEquals(-1, this.classUnderTest().indexOf(1));

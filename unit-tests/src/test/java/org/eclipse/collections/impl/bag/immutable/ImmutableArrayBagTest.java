@@ -101,6 +101,7 @@ public class ImmutableArrayBagTest extends ImmutableBagTestCase
     }
 
     @Override
+    @Test
     public void toStringOfItemToCount()
     {
         String actual = ImmutableArrayBag.newBagWith("1", "2", "2").toStringOfItemToCount();

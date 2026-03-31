@@ -244,6 +244,7 @@ public class ImmutableEmptyMapWithHashingStrategyTest extends ImmutableMemoryEff
     }
 
     @Override
+    @Test
     public void select()
     {
         ImmutableMap<Integer, String> map = this.classUnderTest();
@@ -252,6 +253,7 @@ public class ImmutableEmptyMapWithHashingStrategyTest extends ImmutableMemoryEff
     }
 
     @Override
+    @Test
     public void reject()
     {
         ImmutableMap<Integer, String> map = this.classUnderTest();
@@ -260,6 +262,7 @@ public class ImmutableEmptyMapWithHashingStrategyTest extends ImmutableMemoryEff
     }
 
     @Override
+    @Test
     public void detect()
     {
         ImmutableMap<Integer, String> map = this.classUnderTest();

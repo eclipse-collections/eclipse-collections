@@ -1094,6 +1094,7 @@ public class UnifiedSetWithHashingStrategyTest extends AbstractUnifiedSetTestCas
     }
 
     @Override
+    @Test
     public void getFirst()
     {
         super.getFirst();
@@ -1107,6 +1108,7 @@ public class UnifiedSetWithHashingStrategyTest extends AbstractUnifiedSetTestCas
     }
 
     @Override
+    @Test
     public void getLast()
     {
         super.getLast();

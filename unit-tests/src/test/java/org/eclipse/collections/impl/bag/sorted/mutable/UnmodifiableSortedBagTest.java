@@ -65,6 +65,7 @@ public class UnmodifiableSortedBagTest extends AbstractMutableSortedBagTestCase
     }
 
     @Override
+    @Test
     public void equalsAndHashCode()
     {
         super.equalsAndHashCode();

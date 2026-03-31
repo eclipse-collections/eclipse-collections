@@ -442,6 +442,7 @@ public class EmptyMapTest extends AbstractMemoryEfficientMutableMapTest
     }
 
     @Override
+    @Test
     public void withKeyValue()
     {
         MutableMap<Integer, String> map = new EmptyMap<Integer, String>().withKeyValue(1, "A");
@@ -450,6 +451,7 @@ public class EmptyMapTest extends AbstractMemoryEfficientMutableMapTest
     }
 
     @Override
+    @Test
     public void withAllKeyValueArguments()
     {
         MutableMap<Integer, String> map1 = new EmptyMap<Integer, String>().withAllKeyValueArguments(Tuples.pair(1, "A"));
@@ -462,6 +464,7 @@ public class EmptyMapTest extends AbstractMemoryEfficientMutableMapTest
     }
 
     @Override
+    @Test
     public void withoutKey()
     {
         MutableMap<Integer, String> map = new EmptyMap<>();
@@ -470,6 +473,7 @@ public class EmptyMapTest extends AbstractMemoryEfficientMutableMapTest
     }
 
     @Override
+    @Test
     public void withoutAllKeys()
     {
         MutableMap<Integer, String> map = new EmptyMap<>();

@@ -48,6 +48,7 @@ public abstract class AbstractMutableBooleanStackTestCase extends AbstractBoolea
     protected abstract MutableBooleanStack newWithIterable(BooleanIterable iterable);
 
     @Override
+    @Test
     public void peekAtIndex()
     {
         super.peekAtIndex();
