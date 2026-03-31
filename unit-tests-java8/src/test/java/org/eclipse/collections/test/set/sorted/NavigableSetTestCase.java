@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Goldman Sachs and others.
+ * Copyright (c) 2026 Goldman Sachs and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -350,6 +350,36 @@ public interface NavigableSetTestCase extends SortedSetTestCase
             // subSet with crossed indices (from > to) should throw
             assertThrows(IllegalArgumentException.class, () -> set1.subSet(4, true, 8, true));
             assertThrows(IllegalArgumentException.class, () -> set1.subSet(4, false, 8, false));
+        }
+    }
+
+    @Test
+    default void NavigableSet_descendingIterator_remove()
+    {
+        if (!this.allowsRemove())
+        {
+            NavigableSet<Integer> set = this.newWith(2, 4, 6);
+            Iterator<Integer> descendingIterator = set.descendingIterator();
+            descendingIterator.next();
+            assertThrows(UnsupportedOperationException.class, descendingIterator::remove);
+            return;
+        }
+
+        NavigableSet<Integer> set = this.newWith(2, 4, 6);
+        Comparator<? super Integer> comparator = set.comparator();
+
+        Iterator<Integer> descendingIterator = set.descendingIterator();
+        if (this.isNaturalOrder(comparator))
+        {
+            assertEquals(Integer.valueOf(6), descendingIterator.next());
+            descendingIterator.remove();
+            assertIterablesEqual(this.newWith(2, 4), set);
+        }
+        if (this.isReverseOrder(comparator))
+        {
+            assertEquals(Integer.valueOf(2), descendingIterator.next());
+            descendingIterator.remove();
+            assertIterablesEqual(this.newWith(4, 6), set);
         }
     }
 
