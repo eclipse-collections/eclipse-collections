@@ -262,7 +262,10 @@ public interface SortedSetIterable<T>
      *
      * @since 14.0
      */
-    Iterator<T> descendingIterator();
+    default Iterator<T> descendingIterator()
+    {
+        return this.descendingSet().iterator();
+    }
 
     /**
      * Returns a reverse-order view of the elements contained in this set.
@@ -285,19 +288,6 @@ public interface SortedSetIterable<T>
      * @since 14.0
      */
     SortedSetIterable<T> tailSet(T fromElement, boolean inclusive);
-
-    @Override
-    default void reverseForEach(Procedure<? super T> procedure)
-    {
-        this.descendingSet().forEach(procedure);
-    }
-
-    @Override
-    default void reverseForEachWithIndex(ObjectIntProcedure<? super T> procedure)
-    {
-        int size = this.size();
-        this.descendingSet().forEachWithIndex((each, index) -> procedure.value(each, size - 1 - index));
-    }
 
     @Override
     default int detectLastIndex(Predicate<? super T> predicate)

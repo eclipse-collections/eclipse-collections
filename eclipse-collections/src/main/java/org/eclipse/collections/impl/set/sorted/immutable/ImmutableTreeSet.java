@@ -51,7 +51,6 @@ import org.eclipse.collections.impl.lazy.parallel.set.sorted.SortedSetBatch;
 import org.eclipse.collections.impl.map.mutable.ConcurrentHashMap;
 import org.eclipse.collections.impl.utility.ArrayIterate;
 import org.eclipse.collections.impl.utility.Iterate;
-import org.eclipse.collections.impl.utility.ListIterate;
 
 /**
  * An immutable sorted set backed by an {@link ImmutableList} of elements in logical comparator order.
@@ -429,11 +428,6 @@ final class ImmutableTreeSet<T>
     @Override
     public void forEach(int fromIndex, int toIndex, Procedure<? super T> procedure)
     {
-        ListIterate.rangeCheck(fromIndex, toIndex, this.size());
-        if (fromIndex > toIndex)
-        {
-            throw new IllegalArgumentException("fromIndex must not be greater than toIndex");
-        }
         this.sortedElements.forEach(fromIndex, toIndex, procedure);
     }
 
@@ -446,11 +440,6 @@ final class ImmutableTreeSet<T>
     @Override
     public void forEachWithIndex(int fromIndex, int toIndex, ObjectIntProcedure<? super T> objectIntProcedure)
     {
-        ListIterate.rangeCheck(fromIndex, toIndex, this.size());
-        if (fromIndex > toIndex)
-        {
-            throw new IllegalArgumentException("fromIndex must not be greater than toIndex");
-        }
         this.sortedElements.forEachWithIndex(fromIndex, toIndex, objectIntProcedure);
     }
 

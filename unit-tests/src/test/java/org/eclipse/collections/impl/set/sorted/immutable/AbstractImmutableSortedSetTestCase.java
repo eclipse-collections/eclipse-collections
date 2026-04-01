@@ -1087,7 +1087,9 @@ public abstract class AbstractImmutableSortedSetTestCase
         assertThrows(IndexOutOfBoundsException.class, () -> integers.forEach(-1, 0, result::add));
         assertThrows(IndexOutOfBoundsException.class, () -> integers.forEach(0, -1, result::add));
 
-        assertThrows(IllegalArgumentException.class, () -> integers.forEach(2, 1, result::add));
+        MutableList<Integer> resultReverse = FastList.newList();
+        integers.forEach(2, 1, resultReverse::add);
+        assertEquals(Lists.immutable.with(2, 3), resultReverse);
     }
 
     @Test
@@ -1105,7 +1107,9 @@ public abstract class AbstractImmutableSortedSetTestCase
         assertThrows(IndexOutOfBoundsException.class, () -> integers.forEachWithIndex(-1, 0, new AddToList(result2)));
         assertThrows(IndexOutOfBoundsException.class, () -> integers.forEachWithIndex(0, -1, new AddToList(result2)));
 
-        assertThrows(IllegalArgumentException.class, () -> integers.forEachWithIndex(2, 1, new AddToList(result2)));
+        MutableList<Integer> resultReverse = Lists.mutable.of();
+        integers.forEachWithIndex(2, 1, new AddToList(resultReverse));
+        assertEquals(Lists.immutable.with(2, 3), resultReverse);
     }
 
     @Test

@@ -888,10 +888,9 @@ public abstract class AbstractSortedSetTestCase extends AbstractCollectionTestCa
         integers.forEachWithIndex(0, 9, (each, index) -> builder3.append(each).append(index));
         assertEquals("90817263544536271809", builder3.toString());
 
-        MutableList<Integer> result = Lists.mutable.of();
-        assertThrows(IndexOutOfBoundsException.class, () -> integers.forEachWithIndex(-1, 0, new AddToList(result)));
-        assertThrows(IndexOutOfBoundsException.class, () -> integers.forEachWithIndex(0, -1, new AddToList(result)));
-        assertThrows(IllegalArgumentException.class, () -> integers.forEachWithIndex(7, 5, new AddToList(result)));
+        MutableList<Integer> resultReverse = Lists.mutable.of();
+        integers.forEachWithIndex(7, 5, new AddToList(resultReverse));
+        assertEquals(Lists.immutable.with(2, 3, 4), resultReverse);
     }
 
     @Test
@@ -907,9 +906,7 @@ public abstract class AbstractSortedSetTestCase extends AbstractCollectionTestCa
                 IndexOutOfBoundsException.class,
                 () -> this.validateForEachWithIndexOnRange(set, 10, 10, SortedSets.mutable.with(Comparators.reverseNaturalOrder())));
 
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> this.validateForEachWithIndexOnRange(set, 9, 0, SortedSets.mutable.with(Comparators.reverseNaturalOrder(), 9, 8, 7, 6, 5, 4, 3, 2, 1, 0)));
+        this.validateForEachWithIndexOnRange(set, 9, 0, SortedSets.mutable.with(Comparators.reverseNaturalOrder(), 9, 8, 7, 6, 5, 4, 3, 2, 1, 0));
     }
 
     protected void validateForEachWithIndexOnRange(

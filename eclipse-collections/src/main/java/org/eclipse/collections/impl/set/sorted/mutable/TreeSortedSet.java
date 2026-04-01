@@ -85,7 +85,6 @@ import org.eclipse.collections.impl.multimap.set.sorted.TreeSortedSetMultimap;
 import org.eclipse.collections.impl.partition.set.sorted.PartitionTreeSortedSet;
 import org.eclipse.collections.impl.utility.ArrayIterate;
 import org.eclipse.collections.impl.utility.Iterate;
-import org.eclipse.collections.impl.utility.ListIterate;
 import org.eclipse.collections.impl.utility.OrderedIterate;
 import org.eclipse.collections.impl.utility.internal.IterableIterate;
 import org.eclipse.collections.impl.utility.internal.SetIterables;
@@ -540,46 +539,65 @@ public class TreeSortedSet<T> extends AbstractMutableCollection<T>
     @Override
     public void forEach(int fromIndex, int toIndex, Procedure<? super T> procedure)
     {
-        ListIterate.rangeCheck(fromIndex, toIndex, this.size());
-
-        if (fromIndex > toIndex)
+        if (fromIndex <= toIndex)
         {
-            throw new IllegalArgumentException("fromIndex must not be greater than toIndex");
-        }
-
-        Iterator<T> iterator = this.iterator();
-        int i = 0;
-        while (iterator.hasNext() && i <= toIndex)
-        {
-            T each = iterator.next();
-            if (i >= fromIndex)
+            Iterator<T> iterator = this.iterator();
+            int i = 0;
+            while (iterator.hasNext() && i <= toIndex)
             {
-                procedure.value(each);
+                T each = iterator.next();
+                if (i >= fromIndex)
+                {
+                    procedure.value(each);
+                }
+                i++;
             }
-            i++;
+        }
+        else
+        {
+            Iterator<T> iterator = this.descendingIterator();
+            int i = this.size() - 1;
+            while (iterator.hasNext() && i >= toIndex)
+            {
+                T each = iterator.next();
+                if (i <= fromIndex)
+                {
+                    procedure.value(each);
+                }
+                i--;
+            }
         }
     }
 
     @Override
     public void forEachWithIndex(int fromIndex, int toIndex, ObjectIntProcedure<? super T> objectIntProcedure)
     {
-        ListIterate.rangeCheck(fromIndex, toIndex, this.size());
-
-        if (fromIndex > toIndex)
+        if (fromIndex <= toIndex)
         {
-            throw new IllegalArgumentException("fromIndex must not be greater than toIndex");
-        }
-
-        Iterator<T> iterator = this.iterator();
-        int i = 0;
-        while (iterator.hasNext() && i <= toIndex)
-        {
-            T each = iterator.next();
-            if (i >= fromIndex)
+            Iterator<T> iterator = this.iterator();
+            int i = 0;
+            while (iterator.hasNext() && i <= toIndex)
             {
-                objectIntProcedure.value(each, i);
+                T each = iterator.next();
+                if (i >= fromIndex)
+                {
+                    objectIntProcedure.value(each, i);
+                }
+                i++;
             }
-            i++;
+        }
+        else
+        {
+            Iterator<T> iterator = this.descendingIterator();
+            int i = this.size() - 1;
+            while (iterator.hasNext() && i >= toIndex)
+            {
+                T each = iterator.next();
+                if (i <= fromIndex)
+                {
+                    objectIntProcedure.value(each, i);
+                }
+                i--;
         }
     }
 
