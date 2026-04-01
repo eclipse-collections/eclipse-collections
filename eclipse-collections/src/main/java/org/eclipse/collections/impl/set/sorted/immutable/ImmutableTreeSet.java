@@ -21,6 +21,7 @@ import java.util.SortedSet;
 import java.util.concurrent.ExecutorService;
 
 import org.eclipse.collections.api.LazyIterable;
+import org.eclipse.collections.api.RichIterable;
 import org.eclipse.collections.api.block.function.Function;
 import org.eclipse.collections.api.block.function.primitive.ObjectIntToObjectFunction;
 import org.eclipse.collections.api.block.predicate.Predicate;
@@ -588,7 +589,7 @@ final class ImmutableTreeSet<T>
                 int chunkEndIndex = (this.chunkIndex + 1) * SortedSetIterableParallelIterable.this.getBatchSize();
                 int truncatedChunkEndIndex = Math.min(chunkEndIndex, ImmutableTreeSet.this.size());
                 this.chunkIndex++;
-                return new ImmutableTreeSetBatch(chunkStartIndex, truncatedChunkEndIndex);
+                return new ImmutableTreeSetBatch<>(ImmutableTreeSet.this.sortedElements.subList(chunkStartIndex, truncatedChunkEndIndex));
             }
 
             @Override
@@ -618,77 +619,43 @@ final class ImmutableTreeSet<T>
         }
     }
 
-    private final class ImmutableTreeSetBatch extends AbstractBatch<T> implements RootSortedSetBatch<T>
+    private static final class ImmutableTreeSetBatch<T> extends AbstractBatch<T> implements RootSortedSetBatch<T>
     {
-        private final int chunkStartLogical;
-        private final int chunkEndLogical;
+        private final RichIterable<T> chunk;
 
-        private ImmutableTreeSetBatch(int chunkStartLogical, int chunkEndLogical)
+        private ImmutableTreeSetBatch(RichIterable<T> chunk)
         {
-            this.chunkStartLogical = chunkStartLogical;
-            this.chunkEndLogical = chunkEndLogical;
+            this.chunk = chunk;
         }
 
         @Override
         public void forEach(Procedure<? super T> procedure)
         {
-            for (int i = this.chunkStartLogical; i < this.chunkEndLogical; i++)
-            {
-                procedure.value(ImmutableTreeSet.this.sortedElements.get(i));
-            }
+            this.chunk.each(procedure);
         }
 
         @Override
         public int count(Predicate<? super T> predicate)
         {
-            int count = 0;
-            for (int i = this.chunkStartLogical; i < this.chunkEndLogical; i++)
-            {
-                if (predicate.accept(ImmutableTreeSet.this.sortedElements.get(i)))
-                {
-                    count++;
-                }
-            }
-            return count;
+            return this.chunk.count(predicate);
         }
 
         @Override
         public boolean anySatisfy(Predicate<? super T> predicate)
         {
-            for (int i = this.chunkStartLogical; i < this.chunkEndLogical; i++)
-            {
-                if (predicate.accept(ImmutableTreeSet.this.sortedElements.get(i)))
-                {
-                    return true;
-                }
-            }
-            return false;
+            return this.chunk.anySatisfy(predicate);
         }
 
         @Override
         public boolean allSatisfy(Predicate<? super T> predicate)
         {
-            for (int i = this.chunkStartLogical; i < this.chunkEndLogical; i++)
-            {
-                if (!predicate.accept(ImmutableTreeSet.this.sortedElements.get(i)))
-                {
-                    return false;
-                }
-            }
-            return true;
+            return this.chunk.allSatisfy(predicate);
         }
 
         @Override
         public T detect(Predicate<? super T> predicate)
         {
-            for (int i = this.chunkStartLogical; i < this.chunkEndLogical; i++)
-            {
-                if (predicate.accept(ImmutableTreeSet.this.sortedElements.get(i)))
-                {
-                    return ImmutableTreeSet.this.sortedElements.get(i);
-                }
-            }
-            return null;
+            return this.chunk.detect(predicate);
         }
 
         @Override
