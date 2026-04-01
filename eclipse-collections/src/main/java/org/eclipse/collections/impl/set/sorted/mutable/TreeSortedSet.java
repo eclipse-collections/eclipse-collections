@@ -539,6 +539,11 @@ public class TreeSortedSet<T> extends AbstractMutableCollection<T>
     @Override
     public void forEach(int fromIndex, int toIndex, Procedure<? super T> procedure)
     {
+        int size = this.size();
+        if (fromIndex < 0 || toIndex < 0 || fromIndex >= size || toIndex >= size)
+        {
+            throw new IndexOutOfBoundsException("Index out of range: fromIndex=" + fromIndex + ", toIndex=" + toIndex + ", size=" + size);
+        }
         if (fromIndex <= toIndex)
         {
             Iterator<T> iterator = this.iterator();
@@ -572,6 +577,11 @@ public class TreeSortedSet<T> extends AbstractMutableCollection<T>
     @Override
     public void forEachWithIndex(int fromIndex, int toIndex, ObjectIntProcedure<? super T> objectIntProcedure)
     {
+        int size = this.size();
+        if (fromIndex < 0 || toIndex < 0 || fromIndex >= size || toIndex >= size)
+        {
+            throw new IndexOutOfBoundsException("Index out of range: fromIndex=" + fromIndex + ", toIndex=" + toIndex + ", size=" + size);
+        }
         if (fromIndex <= toIndex)
         {
             Iterator<T> iterator = this.iterator();
@@ -598,6 +608,7 @@ public class TreeSortedSet<T> extends AbstractMutableCollection<T>
                     objectIntProcedure.value(each, i);
                 }
                 i--;
+            }
         }
     }
 

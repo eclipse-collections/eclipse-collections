@@ -262,10 +262,7 @@ public interface SortedSetIterable<T>
      *
      * @since 14.0
      */
-    default Iterator<T> descendingIterator()
-    {
-        return this.descendingSet().iterator();
-    }
+    Iterator<T> descendingIterator();
 
     /**
      * Returns a reverse-order view of the elements contained in this set.
