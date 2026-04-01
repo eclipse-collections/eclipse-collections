@@ -734,7 +734,7 @@ public class TreeSortedSet<T> extends AbstractMutableCollection<T>
     @Override
     public MutableSortedSet<T> toReversed()
     {
-        return this.descendingSet();
+        return this.clone().descendingSet();
     }
 
     @Override

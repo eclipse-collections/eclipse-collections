@@ -14,6 +14,7 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.SortedSet;
@@ -76,7 +77,7 @@ final class ImmutableTreeSet<T>
      */
     private ImmutableTreeSet(ImmutableList<T> sortedElements, Comparator<? super T> comparator)
     {
-        this.sortedElements = sortedElements;
+        this.sortedElements = Objects.requireNonNull(sortedElements, "sortedElements");
         this.comparator = comparator;
     }
 
