@@ -49,6 +49,7 @@ public class SynchronizedBooleanBagTest extends AbstractMutableBooleanBagTestCas
     }
 
     @Override
+    @Test
     public void selectUnique()
     {
         super.selectUnique();

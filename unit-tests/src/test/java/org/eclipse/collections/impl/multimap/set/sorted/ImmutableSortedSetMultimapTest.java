@@ -93,6 +93,7 @@ public class ImmutableSortedSetMultimapTest extends AbstractImmutableMultimapTes
     }
 
     @Override
+    @Test
     public void allowDuplicates()
     {
         // Sets do not allow duplicates

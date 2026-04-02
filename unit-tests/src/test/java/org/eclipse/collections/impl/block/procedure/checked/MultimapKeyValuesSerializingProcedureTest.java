@@ -136,6 +136,7 @@ public class MultimapKeyValuesSerializingProcedureTest
         }
 
         @Override
+        @Test
         public void flush()
         {
             throw new RuntimeException("flush not implemented");

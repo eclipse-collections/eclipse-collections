@@ -77,6 +77,7 @@ public abstract class AbstractImmutableEmptySetTestCase extends AbstractImmutabl
     }
 
     @Override
+    @Test
     public void anySatisfyWith()
     {
         ImmutableSet<Integer> integers = this.classUnderTest();
@@ -92,6 +93,7 @@ public abstract class AbstractImmutableEmptySetTestCase extends AbstractImmutabl
     }
 
     @Override
+    @Test
     public void allSatisfyWith()
     {
         ImmutableSet<Integer> integers = this.classUnderTest();
@@ -99,6 +101,7 @@ public abstract class AbstractImmutableEmptySetTestCase extends AbstractImmutabl
     }
 
     @Override
+    @Test
     public void noneSatisfy()
     {
         ImmutableSet<Integer> integers = this.classUnderTest();
@@ -106,6 +109,7 @@ public abstract class AbstractImmutableEmptySetTestCase extends AbstractImmutabl
     }
 
     @Override
+    @Test
     public void noneSatisfyWith()
     {
         ImmutableSet<Integer> integers = this.classUnderTest();

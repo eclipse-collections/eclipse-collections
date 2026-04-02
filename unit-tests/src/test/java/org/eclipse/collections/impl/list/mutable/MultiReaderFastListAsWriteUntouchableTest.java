@@ -59,6 +59,7 @@ public class MultiReaderFastListAsWriteUntouchableTest extends AbstractListTestC
     }
 
     @Override
+    @Test
     public void subList()
     {
         MutableList<String> list = this.newWith("A", "B", "C", "D");

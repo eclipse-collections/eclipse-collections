@@ -864,6 +864,7 @@ public abstract class UnifiedMapTestCase extends MutableMapTestCase
     }
 
     @Override
+    @Test
     public void getFirst()
     {
         super.getFirst();

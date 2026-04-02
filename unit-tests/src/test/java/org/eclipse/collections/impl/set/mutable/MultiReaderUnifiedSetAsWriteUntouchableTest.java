@@ -35,6 +35,7 @@ public class MultiReaderUnifiedSetAsWriteUntouchableTest extends AbstractCollect
     }
 
     @Override
+    @Test
     public void getLast()
     {
         assertNotNull(this.newWith(1, 2, 3).getLast());

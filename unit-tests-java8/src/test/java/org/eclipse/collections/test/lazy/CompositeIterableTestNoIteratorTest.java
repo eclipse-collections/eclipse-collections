@@ -47,12 +47,14 @@ public class CompositeIterableTestNoIteratorTest implements LazyNoIteratorTestCa
     }
 
     @Override
+    @Test
     public void Iterable_hasNext()
     {
         assertThrows(AssertionError.class, () -> this.newWith(3, 2, 1).iterator().hasNext());
     }
 
     @Override
+    @Test
     public void Iterable_next()
     {
         assertThrows(AssertionError.class, () -> this.newWith(3, 2, 1).iterator().next());

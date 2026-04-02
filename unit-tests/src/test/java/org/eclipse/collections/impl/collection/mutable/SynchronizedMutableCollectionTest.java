@@ -51,6 +51,7 @@ public class SynchronizedMutableCollectionTest extends AbstractSynchronizedColle
     }
 
     @Override
+    @Test
     public void equalsAndHashCode()
     {
         assertNotEquals(this.newWith(), this.newWith());

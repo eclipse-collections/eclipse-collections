@@ -55,6 +55,7 @@ public class SynchronizedSortedBagTest extends AbstractMutableSortedBagTestCase
     }
 
     @Override
+    @Test
     public void asSynchronized()
     {
         MutableSortedBag<Object> synchronizedBag = this.newWith();

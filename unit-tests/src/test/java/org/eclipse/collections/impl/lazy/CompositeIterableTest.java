@@ -125,6 +125,7 @@ public class CompositeIterableTest extends AbstractLazyIterableTestCase
     }
 
     @Override
+    @Test
     public void detect()
     {
         CompositeIterable<Integer> composite = CompositeIterable.with(
@@ -136,6 +137,7 @@ public class CompositeIterableTest extends AbstractLazyIterableTestCase
     }
 
     @Override
+    @Test
     public void detectWith()
     {
         CompositeIterable<Integer> composite = CompositeIterable.with(
@@ -147,6 +149,7 @@ public class CompositeIterableTest extends AbstractLazyIterableTestCase
     }
 
     @Override
+    @Test
     public void detectOptional()
     {
         CompositeIterable<Integer> composite = CompositeIterable.with(
@@ -158,6 +161,7 @@ public class CompositeIterableTest extends AbstractLazyIterableTestCase
     }
 
     @Override
+    @Test
     public void detectWithOptional()
     {
         CompositeIterable<Integer> composite = CompositeIterable.with(

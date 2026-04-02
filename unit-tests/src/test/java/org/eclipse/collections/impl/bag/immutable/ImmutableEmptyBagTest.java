@@ -186,6 +186,7 @@ public class ImmutableEmptyBagTest extends ImmutableBagTestCase
     }
 
     @Override
+    @Test
     public void partition()
     {
         PartitionImmutableBag<String> partition = this.newBag().partition(Predicates.lessThan("0"));
@@ -194,6 +195,7 @@ public class ImmutableEmptyBagTest extends ImmutableBagTestCase
     }
 
     @Override
+    @Test
     public void partitionWith()
     {
         PartitionImmutableBag<String> partition = this.newBag().partitionWith(Predicates2.lessThan(), "0");
@@ -234,6 +236,7 @@ public class ImmutableEmptyBagTest extends ImmutableBagTestCase
     }
 
     @Override
+    @Test
     public void toStringOfItemToCount()
     {
         assertEquals("{}", Bags.immutable.of().toStringOfItemToCount());
@@ -261,6 +264,7 @@ public class ImmutableEmptyBagTest extends ImmutableBagTestCase
     }
 
     @Override
+    @Test
     public void detectIfNone()
     {
         super.detectIfNone();

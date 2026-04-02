@@ -704,6 +704,7 @@ public class ImmutableEmptySortedSetTest extends AbstractImmutableSortedSetTestC
     }
 
     @Override
+    @Test
     public void toStack()
     {
         ImmutableSortedSet<Integer> set = this.classUnderTest(Comparators.reverseNaturalOrder());

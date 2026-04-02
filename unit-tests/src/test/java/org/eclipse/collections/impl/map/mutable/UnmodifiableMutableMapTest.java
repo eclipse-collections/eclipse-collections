@@ -505,12 +505,14 @@ public class UnmodifiableMutableMapTest extends MutableMapTestCase
     }
 
     @Override
+    @Test
     public void retainAllFromKeySet_null_collision()
     {
         // Not applicable for unmodifiable maps
     }
 
     @Override
+    @Test
     public void rehash_null_collision()
     {
         // Not applicable for unmodifiable maps

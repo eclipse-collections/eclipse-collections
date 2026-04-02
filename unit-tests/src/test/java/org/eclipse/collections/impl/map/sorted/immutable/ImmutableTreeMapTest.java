@@ -93,6 +93,7 @@ public class ImmutableTreeMapTest extends ImmutableSortedMapTestCase
     }
 
     @Override
+    @Test
     public void entrySet()
     {
         super.entrySet();

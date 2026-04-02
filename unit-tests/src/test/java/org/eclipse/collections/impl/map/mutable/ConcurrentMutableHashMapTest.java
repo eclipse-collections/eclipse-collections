@@ -167,6 +167,7 @@ public class ConcurrentMutableHashMapTest extends ConcurrentHashMapTestCase
     }
 
     @Override
+    @Test
     public void equalsAndHashCode()
     {
         // java.util.concurrent.ConcurrentHashMap doesn't support null keys OR values

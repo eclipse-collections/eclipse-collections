@@ -228,6 +228,7 @@ public abstract class AbstractListTestCase
     }
 
     @Override
+    @Test
     public void collectBoolean()
     {
         super.collectBoolean();
@@ -236,6 +237,7 @@ public abstract class AbstractListTestCase
     }
 
     @Override
+    @Test
     public void collectByte()
     {
         super.collectByte();
@@ -244,6 +246,7 @@ public abstract class AbstractListTestCase
     }
 
     @Override
+    @Test
     public void collectChar()
     {
         super.collectChar();
@@ -252,6 +255,7 @@ public abstract class AbstractListTestCase
     }
 
     @Override
+    @Test
     public void collectDouble()
     {
         super.collectDouble();
@@ -260,6 +264,7 @@ public abstract class AbstractListTestCase
     }
 
     @Override
+    @Test
     public void collectFloat()
     {
         super.collectFloat();
@@ -268,6 +273,7 @@ public abstract class AbstractListTestCase
     }
 
     @Override
+    @Test
     public void collectInt()
     {
         super.collectInt();
@@ -276,6 +282,7 @@ public abstract class AbstractListTestCase
     }
 
     @Override
+    @Test
     public void collectLong()
     {
         super.collectLong();
@@ -284,6 +291,7 @@ public abstract class AbstractListTestCase
     }
 
     @Override
+    @Test
     public void collectShort()
     {
         super.collectShort();
