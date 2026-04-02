@@ -63,6 +63,13 @@ public interface NavigableSetNoIteratorTestCase extends NavigableSetTestCase
         assertThrows(AssertionError.class, () -> this.newWith(3, 2, 1).descendingIterator());
     }
 
+    @Override
+    @Test
+    default void NavigableSet_descendingIterator_remove()
+    {
+        assertThrows(AssertionError.class, () -> this.newWith(3, 2, 1).descendingIterator());
+    }
+
     /**
      * {@link java.util.AbstractCollection#toString()} delegates to iterator().
      */
