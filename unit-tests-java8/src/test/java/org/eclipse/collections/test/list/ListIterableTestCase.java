@@ -97,9 +97,12 @@ public interface ListIterableTestCase extends OrderedIterableWithDuplicatesTestC
         assertEquals(7, integers2.lastIndexOf(null));
     }
 
+    @Override
     @Test
     default void OrderedIterable_forEach_from_to()
     {
+        OrderedIterableWithDuplicatesTestCase.super.OrderedIterable_forEach_from_to();
+
         ListIterable<Integer> integers = this.newWith(4, 4, 4, 4, 3, 3, 3, 2, 2, 1);
 
         MutableList<Integer> result = Lists.mutable.empty();
@@ -137,6 +140,7 @@ public interface ListIterableTestCase extends OrderedIterableWithDuplicatesTestC
         assertThrows(IndexOutOfBoundsException.class, () -> integers.forEach(10, 0, result::add));
     }
 
+    @Override
     @Test
     default void OrderedIterable_forEach_from_to_reverse_order()
     {

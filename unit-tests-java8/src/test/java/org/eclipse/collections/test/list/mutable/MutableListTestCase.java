@@ -42,6 +42,12 @@ public interface MutableListTestCase extends MutableCollectionTestCase, ListTest
     }
 
     @Override
+    default OrderingType getOrderingType()
+    {
+        return ListTestCase.super.getOrderingType();
+    }
+
+    @Override
     @Test
     default void Iterable_toString()
     {

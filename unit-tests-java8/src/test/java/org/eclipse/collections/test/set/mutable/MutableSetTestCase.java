@@ -30,6 +30,12 @@ public interface MutableSetTestCase extends SetTestCase, UnsortedSetIterableTest
     }
 
     @Override
+    default OrderingType getOrderingType()
+    {
+        return SetTestCase.super.getOrderingType();
+    }
+
+    @Override
     @Test
     default void Object_PostSerializedEqualsAndHashCode()
     {

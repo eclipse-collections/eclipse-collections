@@ -30,6 +30,12 @@ public interface MutableSortedBagNoComparatorTestCase extends SortedBagTestCase,
     <T> MutableSortedBag<T> newWith(T... elements);
 
     @Override
+    default OrderingType getOrderingType()
+    {
+        return OrderingType.SORTED_NATURAL;
+    }
+
+    @Override
     default <T> SortedBag<T> getExpectedFiltered(T... elements)
     {
         return this.newMutableForFilter(elements);

@@ -25,8 +25,19 @@ public interface MutableSortedIterableTestCase extends MutableOrderedIterableTes
     {
         Iterable<Integer> iterable = this.newWith(3, 2, 1);
         Iterator<Integer> iterator = iterable.iterator();
-        assertEquals(Integer.valueOf(3), iterator.next());
+        Integer expectedFirst = switch (this.getOrderingType())
+        {
+            case SORTED_NATURAL -> 1;
+            case SORTED_REVERSE_NATURAL, INSERTION_ORDER, UNORDERED -> 3;
+        };
+        assertEquals(expectedFirst, iterator.next());
         iterator.remove();
-        assertIterablesEqual(this.newWith(2, 1), iterable);
+        assertIterablesEqual(
+                switch (this.getOrderingType())
+                {
+                    case SORTED_NATURAL -> this.newWith(2, 3);
+                    case SORTED_REVERSE_NATURAL, INSERTION_ORDER, UNORDERED -> this.newWith(2, 1);
+                },
+                iterable);
     }
 }

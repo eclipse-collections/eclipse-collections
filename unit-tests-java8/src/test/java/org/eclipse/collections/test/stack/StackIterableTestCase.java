@@ -135,4 +135,20 @@ public interface StackIterableTestCase extends OrderedIterableWithDuplicatesTest
         assertThrows(IllegalArgumentException.class, () -> stackIterable.peekAt(-1));
         assertThrows(IllegalArgumentException.class, () -> stackIterable.peekAt(5));
     }
+
+    @Override
+    @Test
+    default void OrderedIterable_forEach_from_to()
+    {
+        // TODO Support indexed traversal for stacks.
+        assertThrows(UnsupportedOperationException.class, () -> this.newWith(9, 8, 7, 6, 5, 4, 3, 2, 1, 0).forEach(5, 7, each -> { }));
+    }
+
+    @Override
+    @Test
+    default void OrderedIterable_forEach_from_to_reverse_order()
+    {
+        // TODO Support reverse indexed traversal for stacks.
+        assertThrows(UnsupportedOperationException.class, () -> this.newWith(9, 8, 7, 6, 5, 4, 3, 2, 1, 0).forEach(7, 5, each -> { }));
+    }
 }

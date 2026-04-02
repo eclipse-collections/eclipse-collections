@@ -43,6 +43,12 @@ public interface SetTestCase extends CollectionTestCase
     }
 
     @Override
+    default OrderingType getOrderingType()
+    {
+        return OrderingType.UNORDERED;
+    }
+
+    @Override
     @Test
     default void Object_PostSerializedEqualsAndHashCode()
     {

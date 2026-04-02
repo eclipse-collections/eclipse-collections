@@ -16,13 +16,13 @@ import java.util.Iterator;
 import org.eclipse.collections.api.map.sorted.MutableSortedMap;
 import org.eclipse.collections.impl.block.factory.Comparators;
 import org.eclipse.collections.impl.map.sorted.mutable.TreeSortedMap;
-import org.eclipse.collections.test.bag.mutable.sorted.OrderedIterableNoIteratorTest;
+import org.eclipse.collections.test.OrderedIterableNoIteratorTestCase;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class TreeSortedMapNoIteratorTest implements MutableSortedMapIterableTestCase, OrderedIterableNoIteratorTest
+public class TreeSortedMapNoIteratorTest implements MutableSortedMapIterableTestCase, OrderedIterableNoIteratorTestCase
 {
     @Override
     public <T> MutableSortedMap<Object, T> newWith(T... elements)
@@ -57,7 +57,28 @@ public class TreeSortedMapNoIteratorTest implements MutableSortedMapIterableTest
     @Test
     public void Iterable_remove()
     {
-        OrderedIterableNoIteratorTest.super.Iterable_remove();
+        OrderedIterableNoIteratorTestCase.super.Iterable_remove();
+    }
+
+    @Override
+    @Test
+    public void OrderedIterable_takeWhile()
+    {
+        MutableSortedMapIterableTestCase.super.OrderedIterable_takeWhile();
+    }
+
+    @Override
+    @Test
+    public void OrderedIterable_dropWhile()
+    {
+        MutableSortedMapIterableTestCase.super.OrderedIterable_dropWhile();
+    }
+
+    @Override
+    @Test
+    public void OrderedIterable_partitionWhile()
+    {
+        MutableSortedMapIterableTestCase.super.OrderedIterable_partitionWhile();
     }
 
     public static class TreeSortedMapNoIterator<K, V> extends TreeSortedMap<K, V>
