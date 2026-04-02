@@ -53,6 +53,7 @@ import org.eclipse.collections.api.set.sorted.MutableSortedSet;
 import org.eclipse.collections.api.set.sorted.ParallelSortedSetIterable;
 import org.eclipse.collections.api.set.sorted.SortedSetIterable;
 import org.eclipse.collections.api.tuple.Pair;
+import org.eclipse.collections.impl.UnmodifiableIteratorAdapter;
 import org.eclipse.collections.impl.collection.mutable.AbstractUnmodifiableMutableCollection;
 import org.eclipse.collections.impl.collection.mutable.UnmodifiableCollectionSerializationProxy;
 
@@ -597,7 +598,7 @@ public class UnmodifiableSortedSet<T>
     @Override
     public Iterator<T> descendingIterator()
     {
-        return this.getSortedSet().descendingIterator();
+        return new UnmodifiableIteratorAdapter<>(this.getSortedSet().descendingIterator());
     }
 
     @Override
