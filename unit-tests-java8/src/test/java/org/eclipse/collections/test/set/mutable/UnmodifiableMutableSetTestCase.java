@@ -17,6 +17,12 @@ import org.junit.jupiter.api.Test;
 public interface UnmodifiableMutableSetTestCase extends UnmodifiableMutableCollectionTestCase, UnmodifiableSetTestCase, MutableSetTestCase
 {
     @Override
+    default OrderingType getOrderingType()
+    {
+        return MutableSetTestCase.super.getOrderingType();
+    }
+
+    @Override
     default boolean allowsRemove()
     {
         return false;

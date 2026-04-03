@@ -25,7 +25,6 @@ import static org.eclipse.collections.test.IterableTestCase.assertIterablesEqual
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public interface SortedSetTestCase extends CollectionTestCase
 {
@@ -51,41 +50,6 @@ public interface SortedSetTestCase extends CollectionTestCase
         assertThat(this.isNaturalOrder(comparator) || this.isReverseOrder(comparator))
                 .as("Comparator must be either null (natural order) or reverse order, but was: %s", comparator)
                 .isTrue();
-    }
-
-    @Override
-    @Test
-    default void Iterable_next()
-    {
-        SortedSet<Integer> iterable = this.newWith(2, 4, 6);
-        Comparator<? super Integer> comparator = iterable.comparator();
-
-        Iterator<Integer> iterator = iterable.iterator();
-        assertTrue(iterator.hasNext());
-        assertTrue(iterator.hasNext());
-        if (this.isNaturalOrder(comparator))
-        {
-            assertEquals(Integer.valueOf(2), iterator.next());
-            assertTrue(iterator.hasNext());
-            assertTrue(iterator.hasNext());
-            assertEquals(Integer.valueOf(4), iterator.next());
-            assertTrue(iterator.hasNext());
-            assertTrue(iterator.hasNext());
-            assertEquals(Integer.valueOf(6), iterator.next());
-        }
-        if (this.isReverseOrder(comparator))
-        {
-            assertEquals(Integer.valueOf(6), iterator.next());
-            assertTrue(iterator.hasNext());
-            assertTrue(iterator.hasNext());
-            assertEquals(Integer.valueOf(4), iterator.next());
-            assertTrue(iterator.hasNext());
-            assertTrue(iterator.hasNext());
-            assertEquals(Integer.valueOf(2), iterator.next());
-        }
-        assertFalse(iterator.hasNext());
-        assertFalse(iterator.hasNext());
-        assertThrows(NoSuchElementException.class, iterator::next);
     }
 
     @Override

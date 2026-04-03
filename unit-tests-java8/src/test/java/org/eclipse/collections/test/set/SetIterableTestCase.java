@@ -76,7 +76,13 @@ public interface SetIterableTestCase extends RichIterableUniqueTestCase, Collisi
     default void RichIterable_toArray()
     {
         Object[] array = this.newWith(3, 2, 1).toArray();
-        assertArrayEquals(new Object[]{3, 2, 1}, array);
+        assertArrayEquals(
+                switch (this.getOrderingType())
+                {
+                    case SORTED_NATURAL -> new Object[]{1, 2, 3};
+                    case UNORDERED, INSERTION_ORDER, SORTED_REVERSE_NATURAL -> new Object[]{3, 2, 1};
+                },
+                array);
     }
 
     @Test

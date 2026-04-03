@@ -103,13 +103,13 @@ import org.eclipse.collections.impl.tuple.Tuples;
 import org.junit.jupiter.api.Test;
 
 import static org.eclipse.collections.test.IterableTestCase.assertIterablesEqual;
-import static org.eclipse.collections.test.IterableTestCase.assertIterablesNotEqual;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.isOneOf;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -328,6 +328,14 @@ public interface RichIterableTestCase extends IterableTestCase
         assertThat(first, isOneOf(3, 2, 1));
         assertEquals(iterable.iterator().next(), first);
 
+        switch (this.getOrderingType())
+        {
+            case UNORDERED -> assertThat(first, isOneOf(3, 2, 1));
+            case INSERTION_ORDER, SORTED_REVERSE_NATURAL -> assertEquals(Integer.valueOf(3), first);
+            case SORTED_NATURAL -> assertEquals(Integer.valueOf(1), first);
+            default -> fail("Unexpected value: " + this.getOrderingType());
+        }
+
         if (!this.allowsDuplicates())
         {
             return;
@@ -337,6 +345,14 @@ public interface RichIterableTestCase extends IterableTestCase
         Integer firstWithDuplicates = iterableWithDuplicates.getFirst();
         assertThat(firstWithDuplicates, isOneOf(3, 2, 1));
         assertEquals(iterableWithDuplicates.iterator().next(), firstWithDuplicates);
+
+        switch (this.getOrderingType())
+        {
+            case UNORDERED -> assertThat(firstWithDuplicates, isOneOf(3, 2, 1));
+            case INSERTION_ORDER, SORTED_REVERSE_NATURAL -> assertEquals(Integer.valueOf(3), firstWithDuplicates);
+            case SORTED_NATURAL -> assertEquals(Integer.valueOf(1), firstWithDuplicates);
+            default -> fail("Unexpected value: " + this.getOrderingType());
+        }
     }
 
     @Test
@@ -353,6 +369,14 @@ public interface RichIterableTestCase extends IterableTestCase
         }
         assertEquals(iteratorLast, last);
 
+        switch (this.getOrderingType())
+        {
+            case UNORDERED -> assertThat(last, isOneOf(3, 2, 1));
+            case INSERTION_ORDER, SORTED_REVERSE_NATURAL -> assertThat(last, is(1));
+            case SORTED_NATURAL -> assertThat(last, is(3));
+            default -> fail("Unexpected value: " + this.getOrderingType());
+        }
+
         if (!this.allowsDuplicates())
         {
             return;
@@ -368,6 +392,14 @@ public interface RichIterableTestCase extends IterableTestCase
             iteratorLastWithDuplicates = iteratorWithDuplicates.next();
         }
         assertEquals(iteratorLastWithDuplicates, lastWithDuplicates);
+
+        switch (this.getOrderingType())
+        {
+            case UNORDERED -> assertThat(lastWithDuplicates, isOneOf(3, 2, 1));
+            case INSERTION_ORDER, SORTED_REVERSE_NATURAL -> assertEquals(Integer.valueOf(1), lastWithDuplicates);
+            case SORTED_NATURAL -> assertEquals(Integer.valueOf(3), lastWithDuplicates);
+            default -> fail("Unexpected value: " + this.getOrderingType());
+        }
     }
 
     @Test
@@ -394,7 +426,7 @@ public interface RichIterableTestCase extends IterableTestCase
     default void RichIterable_getFirst_and_getLast()
     {
         RichIterable<Integer> iterable = this.newWith(3, 2, 1);
-        assertIterablesNotEqual(iterable.getFirst(), iterable.getLast());
+        assertNotEquals(iterable.getFirst(), iterable.getLast());
     }
 
     @Test
@@ -1423,25 +1455,31 @@ public interface RichIterableTestCase extends IterableTestCase
     {
         RichIterable<Integer> iterable = this.newWith(13, 12, 11, 3, 2, 1);
 
-        assertIterablesEqual(
-                this.getExpectedTransformed(3, 2, 1, 3, 2, 1),
-                iterable.collect(i -> i % 10));
+        Integer[] expected = switch (this.getOrderingType())
+        {
+            case UNORDERED, INSERTION_ORDER, SORTED_REVERSE_NATURAL -> new Integer[]{3, 2, 1, 3, 2, 1};
+            case SORTED_NATURAL -> new Integer[]{1, 2, 3, 1, 2, 3};
+        };
 
+        assertIterablesEqual(this.getExpectedTransformed(expected), iterable.collect(i -> i % 10));
+
+        if (this.getOrderingType() != OrderingType.UNORDERED)
         {
             MutableCollection<Integer> target = this.newMutableForTransform();
             MutableCollection<Integer> result = iterable.collect(i -> i % 10, target);
-            assertIterablesEqual(this.newMutableForTransform(3, 2, 1, 3, 2, 1), result);
+            assertIterablesEqual(this.newMutableForTransform(expected), result);
             assertSame(target, result);
         }
 
-        assertIterablesEqual(
-                this.getExpectedTransformed(3, 2, 1, 3, 2, 1),
-                iterable.collectWith((i, mod) -> i % mod, 10));
+        assertIterablesEqual(this.getExpectedTransformed(expected), iterable.collectWith((i, mod) -> i % mod, 10));
 
-        MutableCollection<Integer> target = this.newMutableForTransform();
-        MutableCollection<Integer> result = iterable.collectWith((i, mod) -> i % mod, 10, target);
-        assertIterablesEqual(this.newMutableForTransform(3, 2, 1, 3, 2, 1), result);
-        assertSame(target, result);
+        if (this.getOrderingType() != OrderingType.UNORDERED)
+        {
+            MutableCollection<Integer> target2 = this.newMutableForTransform();
+            MutableCollection<Integer> result2 = iterable.collectWith((i, mod) -> i % mod, 10, target2);
+            assertIterablesEqual(this.newMutableForTransform(expected), result2);
+            assertSame(target2, result2);
+        }
 
         if (!this.allowsDuplicates())
         {
@@ -1450,54 +1488,76 @@ public interface RichIterableTestCase extends IterableTestCase
 
         RichIterable<Integer> iterableWithDuplicates = this.newWith(13, 13, 12, 12, 11, 11, 3, 3, 2, 2, 1, 1);
 
-        assertIterablesEqual(
-                this.getExpectedTransformed(3, 3, 2, 2, 1, 1, 3, 3, 2, 2, 1, 1),
-                iterableWithDuplicates.collect(i -> i % 10));
+        Integer[] expectedWithDuplicates = switch (this.getOrderingType())
+        {
+            case UNORDERED, INSERTION_ORDER, SORTED_REVERSE_NATURAL -> new Integer[]{3, 3, 2, 2, 1, 1, 3, 3, 2, 2, 1, 1};
+            case SORTED_NATURAL -> new Integer[]{1, 1, 2, 2, 3, 3, 1, 1, 2, 2, 3, 3};
+        };
 
+        assertIterablesEqual(this.getExpectedTransformed(expectedWithDuplicates), iterableWithDuplicates.collect(i -> i % 10));
+
+        if (this.getOrderingType() != OrderingType.UNORDERED)
         {
             MutableCollection<Integer> targetWithDuplicates = this.newMutableForTransform();
             MutableCollection<Integer> resultWithDuplicates = iterableWithDuplicates.collect(i -> i % 10, targetWithDuplicates);
-            assertIterablesEqual(this.newMutableForTransform(3, 3, 2, 2, 1, 1, 3, 3, 2, 2, 1, 1), resultWithDuplicates);
+            assertIterablesEqual(this.newMutableForTransform(expectedWithDuplicates), resultWithDuplicates);
             assertSame(targetWithDuplicates, resultWithDuplicates);
         }
 
-        assertIterablesEqual(
-                this.getExpectedTransformed(3, 3, 2, 2, 1, 1, 3, 3, 2, 2, 1, 1),
-                iterableWithDuplicates.collectWith((i, mod) -> i % mod, 10));
+        assertIterablesEqual(this.getExpectedTransformed(expectedWithDuplicates), iterableWithDuplicates.collectWith((i, mod) -> i % mod, 10));
 
-        MutableCollection<Integer> targetWithDuplicates = this.newMutableForTransform();
-        MutableCollection<Integer> resultWithDuplicates = iterableWithDuplicates.collectWith((i, mod) -> i % mod, 10, targetWithDuplicates);
-        assertIterablesEqual(this.newMutableForTransform(3, 3, 2, 2, 1, 1, 3, 3, 2, 2, 1, 1), resultWithDuplicates);
-        assertSame(targetWithDuplicates, resultWithDuplicates);
+        if (this.getOrderingType() != OrderingType.UNORDERED)
+        {
+            MutableCollection<Integer> targetWithDuplicates2 = this.newMutableForTransform();
+            MutableCollection<Integer> resultWithDuplicates2 = iterableWithDuplicates.collectWith((i, mod) -> i % mod, 10, targetWithDuplicates2);
+            assertIterablesEqual(this.newMutableForTransform(expectedWithDuplicates), resultWithDuplicates2);
+            assertSame(targetWithDuplicates2, resultWithDuplicates2);
+        }
     }
 
     @Test
     default void RichIterable_collectIf()
     {
-        assertIterablesEqual(
-                this.getExpectedTransformed(3, 1, 3, 1),
-                this.newWith(13, 12, 11, 3, 2, 1).collectIf(i -> i % 2 != 0, i -> i % 10));
+        RichIterable<Integer> iterable = this.newWith(13, 12, 11, 3, 2, 1);
 
-        MutableCollection<Integer> target = this.newMutableForTransform();
-        MutableCollection<Integer> result = this.newWith(13, 12, 11, 3, 2, 1).collectIf(i -> i % 2 != 0, i -> i % 10, target);
-        assertIterablesEqual(this.newMutableForTransform(3, 1, 3, 1), result);
-        assertSame(target, result);
+        Integer[] expected = switch (this.getOrderingType())
+        {
+            case UNORDERED, INSERTION_ORDER, SORTED_REVERSE_NATURAL -> new Integer[]{3, 1, 3, 1};
+            case SORTED_NATURAL -> new Integer[]{1, 3, 1, 3};
+        };
+
+        assertIterablesEqual(this.getExpectedTransformed(expected), iterable.collectIf(i -> i % 2 != 0, i -> i % 10));
+
+        if (this.getOrderingType() != OrderingType.UNORDERED)
+        {
+            MutableCollection<Integer> target = this.newMutableForTransform();
+            MutableCollection<Integer> result = iterable.collectIf(i -> i % 2 != 0, i -> i % 10, target);
+            assertIterablesEqual(this.newMutableForTransform(expected), result);
+            assertSame(target, result);
+        }
 
         if (!this.allowsDuplicates())
         {
             return;
         }
 
-        RichIterable<Integer> iterable = this.newWith(13, 13, 12, 12, 11, 11, 3, 3, 2, 2, 1, 1);
+        RichIterable<Integer> iterableWithDuplicates = this.newWith(13, 13, 12, 12, 11, 11, 3, 3, 2, 2, 1, 1);
 
-        assertIterablesEqual(
-                this.getExpectedTransformed(3, 3, 1, 1, 3, 3, 1, 1),
-                iterable.collectIf(i -> i % 2 != 0, i -> i % 10));
+        Integer[] expectedWithDuplicates = switch (this.getOrderingType())
+        {
+            case UNORDERED, INSERTION_ORDER, SORTED_REVERSE_NATURAL -> new Integer[]{3, 3, 1, 1, 3, 3, 1, 1};
+            case SORTED_NATURAL -> new Integer[]{1, 1, 3, 3, 1, 1, 3, 3};
+        };
 
-        MutableCollection<Integer> targetWithDuplicates = this.newMutableForTransform();
-        MutableCollection<Integer> resultWithDuplicates = iterable.collectIf(i -> i % 2 != 0, i -> i % 10, targetWithDuplicates);
-        assertIterablesEqual(this.newMutableForTransform(3, 3, 1, 1, 3, 3, 1, 1), resultWithDuplicates);
-        assertSame(targetWithDuplicates, resultWithDuplicates);
+        assertIterablesEqual(this.getExpectedTransformed(expectedWithDuplicates), iterableWithDuplicates.collectIf(i -> i % 2 != 0, i -> i % 10));
+
+        if (this.getOrderingType() != OrderingType.UNORDERED)
+        {
+            MutableCollection<Integer> targetWithDuplicates = this.newMutableForTransform();
+            MutableCollection<Integer> resultWithDuplicates = iterableWithDuplicates.collectIf(i -> i % 2 != 0, i -> i % 10, targetWithDuplicates);
+            assertIterablesEqual(this.newMutableForTransform(expectedWithDuplicates), resultWithDuplicates);
+            assertSame(targetWithDuplicates, resultWithDuplicates);
+        }
     }
 
     @Test
@@ -1918,55 +1978,30 @@ public interface RichIterableTestCase extends IterableTestCase
     @Test
     default void RichIterable_flatCollect()
     {
-        switch (this.getOrderingType())
+        Integer[] expectedFlatCollect = switch (this.getOrderingType())
         {
-            case UNORDERED ->
-            {
-                assertIterablesEqual(
-                        this.getExpectedTransformed(1, 2, 3, 1, 2, 1),
-                        this.newWith(3, 2, 1).flatCollect(Interval::oneTo));
+            case UNORDERED, INSERTION_ORDER, SORTED_REVERSE_NATURAL -> new Integer[]{1, 2, 3, 1, 2, 1};
+            case SORTED_NATURAL -> new Integer[]{1, 1, 2, 1, 2, 3};
+        };
 
-                assertIterablesEqual(
-                        this.getExpectedTransformed(3, 2, 1, 2, 1, 1),
-                        this.newWith(3, 2, 1).flatCollectWith(Interval::fromTo, 1));
-            }
-            case INSERTION_ORDER, SORTED_REVERSE_NATURAL ->
-            {
-                assertIterablesEqual(
-                        this.getExpectedTransformed(1, 2, 3, 1, 2, 1),
-                        this.newWith(3, 2, 1).flatCollect(Interval::oneTo));
+        Integer[] expectedFlatCollectWith = switch (this.getOrderingType())
+        {
+            case UNORDERED, INSERTION_ORDER, SORTED_REVERSE_NATURAL -> new Integer[]{3, 2, 1, 2, 1, 1};
+            case SORTED_NATURAL -> new Integer[]{1, 2, 1, 3, 2, 1};
+        };
 
-                assertIterablesEqual(
-                        this.newMutableForTransform(1, 2, 3, 1, 2, 1),
-                        this.newWith(3, 2, 1).flatCollect(Interval::oneTo, this.newMutableForTransform()));
+        assertIterablesEqual(this.getExpectedTransformed(expectedFlatCollect), this.newWith(3, 2, 1).flatCollect(Interval::oneTo));
 
-                assertIterablesEqual(
-                        this.getExpectedTransformed(3, 2, 1, 2, 1, 1),
-                        this.newWith(3, 2, 1).flatCollectWith(Interval::fromTo, 1));
+        if (this.getOrderingType() != OrderingType.UNORDERED)
+        {
+            assertIterablesEqual(this.newMutableForTransform(expectedFlatCollect), this.newWith(3, 2, 1).flatCollect(Interval::oneTo, this.newMutableForTransform()));
+        }
 
-                assertIterablesEqual(
-                        this.newMutableForTransform(3, 2, 1, 2, 1, 1),
-                        this.newWith(3, 2, 1).flatCollectWith(Interval::fromTo, 1, this.newMutableForTransform()));
-            }
-            case SORTED_NATURAL ->
-            {
-                assertIterablesEqual(
-                        this.getExpectedTransformed(1, 1, 2, 1, 2, 3),
-                        this.newWith(3, 2, 1).flatCollect(Interval::oneTo));
+        assertIterablesEqual(this.getExpectedTransformed(expectedFlatCollectWith), this.newWith(3, 2, 1).flatCollectWith(Interval::fromTo, 1));
 
-                assertIterablesEqual(
-                        this.newMutableForTransform(1, 1, 2, 1, 2, 3),
-                        this.newWith(3, 2, 1).flatCollect(Interval::oneTo, this.newMutableForTransform()));
-
-                assertIterablesEqual(
-                        this.getExpectedTransformed(1, 2, 1, 3, 2, 1),
-                        this.newWith(3, 2, 1).flatCollectWith(Interval::fromTo, 1));
-
-                assertIterablesEqual(
-                        this.newMutableForTransform(1, 2, 1, 3, 2, 1),
-                        this.newWith(3, 2, 1).flatCollectWith(Interval::fromTo, 1, this.newMutableForTransform()));
-            }
-            default -> throw new IllegalStateException("Unexpected ordering type");
+        if (this.getOrderingType() != OrderingType.UNORDERED)
+        {
+            assertIterablesEqual(this.newMutableForTransform(expectedFlatCollectWith), this.newWith(3, 2, 1).flatCollectWith(Interval::fromTo, 1, this.newMutableForTransform()));
         }
 
         if (!this.allowsDuplicates())
@@ -1974,55 +2009,36 @@ public interface RichIterableTestCase extends IterableTestCase
             return;
         }
 
-        switch (this.getOrderingType())
+        Integer[] expectedFlatCollectDup = switch (this.getOrderingType())
         {
-            case UNORDERED ->
-            {
-                assertIterablesEqual(
-                        this.getExpectedTransformed(1, 2, 3, 1, 2, 1, 2, 1),
-                        this.newWith(3, 2, 2, 1).flatCollect(Interval::oneTo));
+            case UNORDERED, INSERTION_ORDER, SORTED_REVERSE_NATURAL -> new Integer[]{1, 2, 3, 1, 2, 1, 2, 1};
+            case SORTED_NATURAL -> new Integer[]{1, 1, 2, 1, 2, 1, 2, 3};
+        };
 
-                assertIterablesEqual(
-                        this.getExpectedTransformed(3, 4, 5, 2, 3, 4, 5, 2, 3, 4, 5, 1, 2, 3, 4, 5),
-                        this.newWith(3, 2, 2, 1).flatCollectWith(Interval::fromTo, 5));
-            }
-            case INSERTION_ORDER, SORTED_REVERSE_NATURAL ->
-            {
-                assertIterablesEqual(
-                        this.getExpectedTransformed(1, 2, 3, 1, 2, 1, 2, 1),
-                        this.newWith(3, 2, 2, 1).flatCollect(Interval::oneTo));
+        Integer[] expectedFlatCollectWithDup5 = switch (this.getOrderingType())
+        {
+            case UNORDERED, INSERTION_ORDER, SORTED_REVERSE_NATURAL -> new Integer[]{3, 4, 5, 2, 3, 4, 5, 2, 3, 4, 5, 1, 2, 3, 4, 5};
+            case SORTED_NATURAL -> new Integer[]{1, 2, 3, 4, 5, 2, 3, 4, 5, 2, 3, 4, 5, 3, 4, 5};
+        };
 
-                assertIterablesEqual(
-                        this.newMutableForTransform(1, 2, 3, 1, 2, 1, 2, 1),
-                        this.newWith(3, 2, 2, 1).flatCollect(Interval::oneTo, this.newMutableForTransform()));
+        Integer[] expectedFlatCollectWithDup1 = switch (this.getOrderingType())
+        {
+            case UNORDERED, INSERTION_ORDER, SORTED_REVERSE_NATURAL -> new Integer[]{3, 2, 1, 2, 1, 2, 1, 1};
+            case SORTED_NATURAL -> new Integer[]{1, 2, 1, 2, 1, 3, 2, 1};
+        };
 
-                assertIterablesEqual(
-                        this.getExpectedTransformed(3, 4, 5, 2, 3, 4, 5, 2, 3, 4, 5, 1, 2, 3, 4, 5),
-                        this.newWith(3, 2, 2, 1).flatCollectWith(Interval::fromTo, 5));
+        assertIterablesEqual(this.getExpectedTransformed(expectedFlatCollectDup), this.newWith(3, 2, 2, 1).flatCollect(Interval::oneTo));
 
-                assertIterablesEqual(
-                        this.newMutableForTransform(3, 2, 1, 2, 1, 2, 1, 1),
-                        this.newWith(3, 2, 2, 1).flatCollectWith(Interval::fromTo, 1, this.newMutableForTransform()));
-            }
-            case SORTED_NATURAL ->
-            {
-                assertIterablesEqual(
-                        this.getExpectedTransformed(1, 1, 2, 1, 2, 1, 2, 3),
-                        this.newWith(3, 2, 2, 1).flatCollect(Interval::oneTo));
+        if (this.getOrderingType() != OrderingType.UNORDERED)
+        {
+            assertIterablesEqual(this.newMutableForTransform(expectedFlatCollectDup), this.newWith(3, 2, 2, 1).flatCollect(Interval::oneTo, this.newMutableForTransform()));
+        }
 
-                assertIterablesEqual(
-                        this.newMutableForTransform(1, 1, 2, 1, 2, 1, 2, 3),
-                        this.newWith(3, 2, 2, 1).flatCollect(Interval::oneTo, this.newMutableForTransform()));
+        assertIterablesEqual(this.getExpectedTransformed(expectedFlatCollectWithDup5), this.newWith(3, 2, 2, 1).flatCollectWith(Interval::fromTo, 5));
 
-                assertIterablesEqual(
-                        this.getExpectedTransformed(1, 2, 3, 4, 5, 2, 3, 4, 5, 2, 3, 4, 5, 3, 4, 5),
-                        this.newWith(3, 2, 2, 1).flatCollectWith(Interval::fromTo, 5));
-
-                assertIterablesEqual(
-                        this.newMutableForTransform(1, 2, 1, 2, 1, 3, 2, 1),
-                        this.newWith(3, 2, 2, 1).flatCollectWith(Interval::fromTo, 1, this.newMutableForTransform()));
-            }
-            default -> throw new IllegalStateException("Unexpected ordering type");
+        if (this.getOrderingType() != OrderingType.UNORDERED)
+        {
+            assertIterablesEqual(this.newMutableForTransform(expectedFlatCollectWithDup1), this.newWith(3, 2, 2, 1).flatCollectWith(Interval::fromTo, 1, this.newMutableForTransform()));
         }
     }
 
@@ -2108,14 +2124,16 @@ public interface RichIterableTestCase extends IterableTestCase
                     assertSame(target, result);
                 }
 
-                MutableShortCollection target = this.newShortForTransform();
-                MutableShortCollection result = iterable.flatCollectShort(each -> ShortLists.immutable.with(
-                        (short) (each % 10),
-                        (short) (each % 10)), target);
-                assertIterablesEqual(
-                        this.newShortForTransform((short) 3, (short) 3, (short) 2, (short) 2, (short) 1, (short) 1, (short) 3, (short) 3, (short) 2, (short) 2, (short) 1, (short) 1),
-                        result);
-                assertSame(target, result);
+                {
+                    MutableShortCollection target = this.newShortForTransform();
+                    MutableShortCollection result = iterable.flatCollectShort(each -> ShortLists.immutable.with(
+                            (short) (each % 10),
+                            (short) (each % 10)), target);
+                    assertIterablesEqual(
+                            this.newShortForTransform((short) 3, (short) 3, (short) 2, (short) 2, (short) 1, (short) 1, (short) 3, (short) 3, (short) 2, (short) 2, (short) 1, (short) 1),
+                            result);
+                    assertSame(target, result);
+                }
             }
             case SORTED_NATURAL ->
             {
@@ -2183,14 +2201,16 @@ public interface RichIterableTestCase extends IterableTestCase
                     assertSame(target, result);
                 }
 
-                MutableShortCollection target = this.newShortForTransform();
-                MutableShortCollection result = iterable.flatCollectShort(each -> ShortLists.immutable.with(
-                        (short) (each % 10),
-                        (short) (each % 10)), target);
-                assertIterablesEqual(
-                        this.newShortForTransform((short) 1, (short) 1, (short) 2, (short) 2, (short) 3, (short) 3, (short) 1, (short) 1, (short) 2, (short) 2, (short) 3, (short) 3),
-                        result);
-                assertSame(target, result);
+                {
+                    MutableShortCollection target = this.newShortForTransform();
+                    MutableShortCollection result = iterable.flatCollectShort(each -> ShortLists.immutable.with(
+                            (short) (each % 10),
+                            (short) (each % 10)), target);
+                    assertIterablesEqual(
+                            this.newShortForTransform((short) 1, (short) 1, (short) 2, (short) 2, (short) 3, (short) 3, (short) 1, (short) 1, (short) 2, (short) 2, (short) 3, (short) 3),
+                            result);
+                    assertSame(target, result);
+                }
             }
             default -> fail("Unexpected value: " + this.getOrderingType());
         }
@@ -2281,14 +2301,16 @@ public interface RichIterableTestCase extends IterableTestCase
                     assertSame(targetDup, resultDup);
                 }
 
-                MutableShortCollection targetDup = this.newShortForTransform();
-                MutableShortCollection resultDup = iterableDup.flatCollectShort(
-                        each -> ShortLists.immutable.with((short) (each % 10), (short) (each % 10)),
-                        targetDup);
-                assertIterablesEqual(
-                        this.newShortForTransform((short) 3, (short) 3, (short) 3, (short) 3, (short) 2, (short) 2, (short) 2, (short) 2, (short) 1, (short) 1, (short) 1, (short) 1, (short) 3, (short) 3, (short) 3, (short) 3, (short) 2, (short) 2, (short) 2, (short) 2, (short) 1, (short) 1, (short) 1, (short) 1),
-                        resultDup);
-                assertSame(targetDup, resultDup);
+                {
+                    MutableShortCollection targetDup = this.newShortForTransform();
+                    MutableShortCollection resultDup = iterableDup.flatCollectShort(
+                            each -> ShortLists.immutable.with((short) (each % 10), (short) (each % 10)),
+                            targetDup);
+                    assertIterablesEqual(
+                            this.newShortForTransform((short) 3, (short) 3, (short) 3, (short) 3, (short) 2, (short) 2, (short) 2, (short) 2, (short) 1, (short) 1, (short) 1, (short) 1, (short) 3, (short) 3, (short) 3, (short) 3, (short) 2, (short) 2, (short) 2, (short) 2, (short) 1, (short) 1, (short) 1, (short) 1),
+                            resultDup);
+                    assertSame(targetDup, resultDup);
+                }
             }
             case SORTED_NATURAL ->
             {
@@ -2358,14 +2380,16 @@ public interface RichIterableTestCase extends IterableTestCase
                     assertSame(targetDup, resultDup);
                 }
 
-                MutableShortCollection targetDup = this.newShortForTransform();
-                MutableShortCollection resultDup = iterableDup.flatCollectShort(
-                        each -> ShortLists.immutable.with((short) (each % 10), (short) (each % 10)),
-                        targetDup);
-                assertIterablesEqual(
-                        this.newShortForTransform((short) 1, (short) 1, (short) 1, (short) 1, (short) 2, (short) 2, (short) 2, (short) 2, (short) 3, (short) 3, (short) 3, (short) 3, (short) 1, (short) 1, (short) 1, (short) 1, (short) 2, (short) 2, (short) 2, (short) 2, (short) 3, (short) 3, (short) 3, (short) 3),
-                        targetDup);
-                assertSame(targetDup, resultDup);
+                {
+                    MutableShortCollection targetDup = this.newShortForTransform();
+                    MutableShortCollection resultDup = iterableDup.flatCollectShort(
+                            each -> ShortLists.immutable.with((short) (each % 10), (short) (each % 10)),
+                            targetDup);
+                    assertIterablesEqual(
+                            this.newShortForTransform((short) 1, (short) 1, (short) 1, (short) 1, (short) 2, (short) 2, (short) 2, (short) 2, (short) 3, (short) 3, (short) 3, (short) 3, (short) 1, (short) 1, (short) 1, (short) 1, (short) 2, (short) 2, (short) 2, (short) 2, (short) 3, (short) 3, (short) 3, (short) 3),
+                            resultDup);
+                    assertSame(targetDup, resultDup);
+                }
             }
             default -> fail("Unexpected value: " + this.getOrderingType());
         }
@@ -2521,109 +2545,133 @@ public interface RichIterableTestCase extends IterableTestCase
     {
         RichIterable<Integer> iterable = this.newWith(3, 2, 1);
 
+        assertThat(iterable.detect(Predicates.greaterThan(0)), isOneOf(3, 2, 1));
+        assertThat(iterable.detect(Predicates.greaterThan(1)), isOneOf(3, 2));
+        assertThat(iterable.detect(Predicates.greaterThan(2)), is(3));
         assertThat(iterable.detect(Predicates.greaterThan(3)), nullValue());
+
         assertThat(iterable.detect(Predicates.lessThan(1)), nullValue());
         assertThat(iterable.detect(Predicates.lessThan(2)), is(1));
+        assertThat(iterable.detect(Predicates.lessThan(3)), isOneOf(2, 1));
+        assertThat(iterable.detect(Predicates.lessThan(4)), isOneOf(3, 2, 1));
 
+        assertThat(iterable.detectWith(Predicates2.greaterThan(), 0), isOneOf(3, 2, 1));
+        assertThat(iterable.detectWith(Predicates2.greaterThan(), 1), isOneOf(3, 2));
+        assertThat(iterable.detectWith(Predicates2.greaterThan(), 2), is(3));
         assertThat(iterable.detectWith(Predicates2.greaterThan(), 3), nullValue());
+
         assertThat(iterable.detectWith(Predicates2.lessThan(), 1), nullValue());
         assertThat(iterable.detectWith(Predicates2.lessThan(), 2), is(1));
+        assertThat(iterable.detectWith(Predicates2.lessThan(), 3), isOneOf(2, 1));
+        assertThat(iterable.detectWith(Predicates2.lessThan(), 4), isOneOf(3, 2, 1));
 
+        assertThat(iterable.detectIfNone(Predicates.greaterThan(0), () -> 4), isOneOf(3, 2, 1));
+        assertThat(iterable.detectIfNone(Predicates.greaterThan(1), () -> 4), isOneOf(3, 2));
+        assertThat(iterable.detectIfNone(Predicates.greaterThan(2), () -> 4), is(3));
         assertThat(iterable.detectIfNone(Predicates.greaterThan(3), () -> 4), is(4));
+
         assertThat(iterable.detectIfNone(Predicates.lessThan(1), () -> 4), is(4));
         assertThat(iterable.detectIfNone(Predicates.lessThan(2), () -> 4), is(1));
+        assertThat(iterable.detectIfNone(Predicates.lessThan(3), () -> 4), isOneOf(2, 1));
+        assertThat(iterable.detectIfNone(Predicates.lessThan(4), () -> 4), isOneOf(3, 2, 1));
 
+        assertThat(iterable.detectWithIfNone(Predicates2.greaterThan(), 0, () -> 4), isOneOf(3, 2, 1));
+        assertThat(iterable.detectWithIfNone(Predicates2.greaterThan(), 1, () -> 4), isOneOf(3, 2));
+        assertThat(iterable.detectWithIfNone(Predicates2.greaterThan(), 2, () -> 4), is(3));
         assertThat(iterable.detectWithIfNone(Predicates2.greaterThan(), 3, () -> 4), is(4));
+
         assertThat(iterable.detectWithIfNone(Predicates2.lessThan(), 1, () -> 4), is(4));
         assertThat(iterable.detectWithIfNone(Predicates2.lessThan(), 2, () -> 4), is(1));
+        assertThat(iterable.detectWithIfNone(Predicates2.lessThan(), 3, () -> 4), isOneOf(2, 1));
+        assertThat(iterable.detectWithIfNone(Predicates2.lessThan(), 4, () -> 4), isOneOf(3, 2, 1));
 
+        assertThat(iterable.detectOptional(Predicates.greaterThan(0)), isOneOf(Optional.of(3), Optional.of(2), Optional.of(1)));
+        assertThat(iterable.detectOptional(Predicates.greaterThan(1)), isOneOf(Optional.of(3), Optional.of(2)));
+        assertThat(iterable.detectOptional(Predicates.greaterThan(2)), is(Optional.of(3)));
         assertThat(iterable.detectOptional(Predicates.greaterThan(3)), is(Optional.empty()));
+
         assertThat(iterable.detectOptional(Predicates.lessThan(1)), is(Optional.empty()));
         assertThat(iterable.detectOptional(Predicates.lessThan(2)), is(Optional.of(1)));
+        assertThat(iterable.detectOptional(Predicates.lessThan(3)), isOneOf(Optional.of(2), Optional.of(1)));
+        assertThat(iterable.detectOptional(Predicates.lessThan(4)), isOneOf(Optional.of(3), Optional.of(2), Optional.of(1)));
 
+        assertThat(iterable.detectWithOptional(Predicates2.greaterThan(), 0), isOneOf(Optional.of(3), Optional.of(2), Optional.of(1)));
+        assertThat(iterable.detectWithOptional(Predicates2.greaterThan(), 1), isOneOf(Optional.of(3), Optional.of(2)));
+        assertThat(iterable.detectWithOptional(Predicates2.greaterThan(), 2), is(Optional.of(3)));
         assertThat(iterable.detectWithOptional(Predicates2.greaterThan(), 3), is(Optional.empty()));
+
         assertThat(iterable.detectWithOptional(Predicates2.lessThan(), 1), is(Optional.empty()));
         assertThat(iterable.detectWithOptional(Predicates2.lessThan(), 2), is(Optional.of(1)));
+        assertThat(iterable.detectWithOptional(Predicates2.lessThan(), 3), isOneOf(Optional.of(2), Optional.of(1)));
+        assertThat(iterable.detectWithOptional(Predicates2.lessThan(), 4), isOneOf(Optional.of(3), Optional.of(2), Optional.of(1)));
 
-        switch (this.getOrderingType())
+        if (this.getOrderingType() == OrderingType.INSERTION_ORDER || this.getOrderingType() == OrderingType.SORTED_REVERSE_NATURAL)
         {
-            case INSERTION_ORDER, SORTED_REVERSE_NATURAL ->
-            {
-                assertThat(iterable.detect(Predicates.greaterThan(0)), is(3));
-                assertThat(iterable.detect(Predicates.greaterThan(1)), is(3));
-                assertThat(iterable.detect(Predicates.greaterThan(2)), is(3));
-                assertThat(iterable.detect(Predicates.lessThan(3)), is(2));
-                assertThat(iterable.detect(Predicates.lessThan(4)), is(3));
+            assertThat(iterable.detect(Predicates.greaterThan(0)), is(3));
+            assertThat(iterable.detect(Predicates.greaterThan(1)), is(3));
+            assertThat(iterable.detect(Predicates.lessThan(3)), is(2));
+            assertThat(iterable.detect(Predicates.lessThan(4)), is(3));
 
-                assertThat(iterable.detectWith(Predicates2.greaterThan(), 0), is(3));
-                assertThat(iterable.detectWith(Predicates2.greaterThan(), 1), is(3));
-                assertThat(iterable.detectWith(Predicates2.greaterThan(), 2), is(3));
-                assertThat(iterable.detectWith(Predicates2.lessThan(), 3), is(2));
-                assertThat(iterable.detectWith(Predicates2.lessThan(), 4), is(3));
+            assertThat(iterable.detectWith(Predicates2.greaterThan(), 0), is(3));
+            assertThat(iterable.detectWith(Predicates2.greaterThan(), 1), is(3));
+            assertThat(iterable.detectWith(Predicates2.lessThan(), 3), is(2));
+            assertThat(iterable.detectWith(Predicates2.lessThan(), 4), is(3));
 
-                assertThat(iterable.detectIfNone(Predicates.greaterThan(0), () -> 4), is(3));
-                assertThat(iterable.detectIfNone(Predicates.greaterThan(1), () -> 4), is(3));
-                assertThat(iterable.detectIfNone(Predicates.greaterThan(2), () -> 4), is(3));
-                assertThat(iterable.detectIfNone(Predicates.lessThan(3), () -> 4), is(2));
-                assertThat(iterable.detectIfNone(Predicates.lessThan(4), () -> 4), is(3));
+            assertThat(iterable.detectIfNone(Predicates.greaterThan(0), () -> 4), is(3));
+            assertThat(iterable.detectIfNone(Predicates.greaterThan(1), () -> 4), is(3));
+            assertThat(iterable.detectIfNone(Predicates.lessThan(3), () -> 4), is(2));
+            assertThat(iterable.detectIfNone(Predicates.lessThan(4), () -> 4), is(3));
 
-                assertThat(iterable.detectWithIfNone(Predicates2.greaterThan(), 0, () -> 4), is(3));
-                assertThat(iterable.detectWithIfNone(Predicates2.greaterThan(), 1, () -> 4), is(3));
-                assertThat(iterable.detectWithIfNone(Predicates2.greaterThan(), 2, () -> 4), is(3));
-                assertThat(iterable.detectWithIfNone(Predicates2.lessThan(), 3, () -> 4), is(2));
-                assertThat(iterable.detectWithIfNone(Predicates2.lessThan(), 4, () -> 4), is(3));
+            assertThat(iterable.detectWithIfNone(Predicates2.greaterThan(), 0, () -> 4), is(3));
+            assertThat(iterable.detectWithIfNone(Predicates2.greaterThan(), 1, () -> 4), is(3));
+            assertThat(iterable.detectWithIfNone(Predicates2.lessThan(), 3, () -> 4), is(2));
+            assertThat(iterable.detectWithIfNone(Predicates2.lessThan(), 4, () -> 4), is(3));
 
-                assertThat(iterable.detectOptional(Predicates.greaterThan(0)), is(Optional.of(3)));
-                assertThat(iterable.detectOptional(Predicates.greaterThan(1)), is(Optional.of(3)));
-                assertThat(iterable.detectOptional(Predicates.greaterThan(2)), is(Optional.of(3)));
-                assertThat(iterable.detectOptional(Predicates.lessThan(3)), is(Optional.of(2)));
-                assertThat(iterable.detectOptional(Predicates.lessThan(4)), is(Optional.of(3)));
+            assertThat(iterable.detectOptional(Predicates.greaterThan(0)), is(Optional.of(3)));
+            assertThat(iterable.detectOptional(Predicates.greaterThan(1)), is(Optional.of(3)));
+            assertThat(iterable.detectOptional(Predicates.lessThan(3)), is(Optional.of(2)));
+            assertThat(iterable.detectOptional(Predicates.lessThan(4)), is(Optional.of(3)));
 
-                assertThat(iterable.detectWithOptional(Predicates2.greaterThan(), 0), is(Optional.of(3)));
-                assertThat(iterable.detectWithOptional(Predicates2.greaterThan(), 1), is(Optional.of(3)));
-                assertThat(iterable.detectWithOptional(Predicates2.greaterThan(), 2), is(Optional.of(3)));
-                assertThat(iterable.detectWithOptional(Predicates2.lessThan(), 3), is(Optional.of(2)));
-                assertThat(iterable.detectWithOptional(Predicates2.lessThan(), 4), is(Optional.of(3)));
-            }
-            case SORTED_NATURAL ->
-            {
-                assertThat(iterable.detect(Predicates.greaterThan(0)), is(1));
-                assertThat(iterable.detect(Predicates.greaterThan(1)), is(2));
-                assertThat(iterable.detect(Predicates.greaterThan(2)), is(3));
-                assertThat(iterable.detect(Predicates.lessThan(3)), is(1));
-                assertThat(iterable.detect(Predicates.lessThan(4)), is(1));
+            assertThat(iterable.detectWithOptional(Predicates2.greaterThan(), 0), is(Optional.of(3)));
+            assertThat(iterable.detectWithOptional(Predicates2.greaterThan(), 1), is(Optional.of(3)));
+            assertThat(iterable.detectWithOptional(Predicates2.lessThan(), 3), is(Optional.of(2)));
+            assertThat(iterable.detectWithOptional(Predicates2.lessThan(), 4), is(Optional.of(3)));
+        }
+        else if (this.getOrderingType() == OrderingType.SORTED_NATURAL)
+        {
+            assertThat(iterable.detect(Predicates.greaterThan(0)), is(1));
+            assertThat(iterable.detect(Predicates.greaterThan(1)), is(2));
+            assertThat(iterable.detect(Predicates.lessThan(3)), is(1));
+            assertThat(iterable.detect(Predicates.lessThan(4)), is(1));
 
-                assertThat(iterable.detectWith(Predicates2.greaterThan(), 0), is(1));
-                assertThat(iterable.detectWith(Predicates2.greaterThan(), 1), is(2));
-                assertThat(iterable.detectWith(Predicates2.greaterThan(), 2), is(3));
-                assertThat(iterable.detectWith(Predicates2.lessThan(), 3), is(1));
-                assertThat(iterable.detectWith(Predicates2.lessThan(), 4), is(1));
+            assertThat(iterable.detectWith(Predicates2.greaterThan(), 0), is(1));
+            assertThat(iterable.detectWith(Predicates2.greaterThan(), 1), is(2));
+            assertThat(iterable.detectWith(Predicates2.lessThan(), 3), is(1));
+            assertThat(iterable.detectWith(Predicates2.lessThan(), 4), is(1));
 
-                assertThat(iterable.detectIfNone(Predicates.greaterThan(0), () -> 4), is(1));
-                assertThat(iterable.detectIfNone(Predicates.greaterThan(1), () -> 4), is(2));
-                assertThat(iterable.detectIfNone(Predicates.greaterThan(2), () -> 4), is(3));
-                assertThat(iterable.detectIfNone(Predicates.lessThan(3), () -> 4), is(1));
-                assertThat(iterable.detectIfNone(Predicates.lessThan(4), () -> 4), is(1));
+            assertThat(iterable.detectIfNone(Predicates.greaterThan(0), () -> 4), is(1));
+            assertThat(iterable.detectIfNone(Predicates.greaterThan(1), () -> 4), is(2));
+            assertThat(iterable.detectIfNone(Predicates.lessThan(3), () -> 4), is(1));
+            assertThat(iterable.detectIfNone(Predicates.lessThan(4), () -> 4), is(1));
 
-                assertThat(iterable.detectWithIfNone(Predicates2.greaterThan(), 0, () -> 4), is(1));
-                assertThat(iterable.detectWithIfNone(Predicates2.greaterThan(), 1, () -> 4), is(2));
-                assertThat(iterable.detectWithIfNone(Predicates2.greaterThan(), 2, () -> 4), is(3));
-                assertThat(iterable.detectWithIfNone(Predicates2.lessThan(), 3, () -> 4), is(1));
-                assertThat(iterable.detectWithIfNone(Predicates2.lessThan(), 4, () -> 4), is(1));
+            assertThat(iterable.detectWithIfNone(Predicates2.greaterThan(), 0, () -> 4), is(1));
+            assertThat(iterable.detectWithIfNone(Predicates2.greaterThan(), 1, () -> 4), is(2));
+            assertThat(iterable.detectWithIfNone(Predicates2.lessThan(), 3, () -> 4), is(1));
+            assertThat(iterable.detectWithIfNone(Predicates2.lessThan(), 4, () -> 4), is(1));
 
-                assertThat(iterable.detectOptional(Predicates.greaterThan(0)), is(Optional.of(1)));
-                assertThat(iterable.detectOptional(Predicates.greaterThan(1)), is(Optional.of(2)));
-                assertThat(iterable.detectOptional(Predicates.greaterThan(2)), is(Optional.of(3)));
-                assertThat(iterable.detectOptional(Predicates.lessThan(3)), is(Optional.of(1)));
-                assertThat(iterable.detectOptional(Predicates.lessThan(4)), is(Optional.of(1)));
+            assertThat(iterable.detectOptional(Predicates.greaterThan(0)), is(Optional.of(1)));
+            assertThat(iterable.detectOptional(Predicates.greaterThan(1)), is(Optional.of(2)));
+            assertThat(iterable.detectOptional(Predicates.lessThan(3)), is(Optional.of(1)));
+            assertThat(iterable.detectOptional(Predicates.lessThan(4)), is(Optional.of(1)));
 
-                assertThat(iterable.detectWithOptional(Predicates2.greaterThan(), 0), is(Optional.of(1)));
-                assertThat(iterable.detectWithOptional(Predicates2.greaterThan(), 1), is(Optional.of(2)));
-                assertThat(iterable.detectWithOptional(Predicates2.greaterThan(), 2), is(Optional.of(3)));
-                assertThat(iterable.detectWithOptional(Predicates2.lessThan(), 3), is(Optional.of(1)));
-                assertThat(iterable.detectWithOptional(Predicates2.lessThan(), 4), is(Optional.of(1)));
-            }
-            default -> fail("Unexpected value: " + this.getOrderingType());
+            assertThat(iterable.detectWithOptional(Predicates2.greaterThan(), 0), is(Optional.of(1)));
+            assertThat(iterable.detectWithOptional(Predicates2.greaterThan(), 1), is(Optional.of(2)));
+            assertThat(iterable.detectWithOptional(Predicates2.lessThan(), 3), is(Optional.of(1)));
+            assertThat(iterable.detectWithOptional(Predicates2.lessThan(), 4), is(Optional.of(1)));
+        }
+        else if (this.getOrderingType() != OrderingType.UNORDERED)
+        {
+            fail("Unexpected value: " + this.getOrderingType());
         }
     }
 
@@ -2671,6 +2719,28 @@ public interface RichIterableTestCase extends IterableTestCase
 
         assertEquals(Integer.valueOf(-1), this.newWith(-1, -1, 0, 0, 1, 1).max(Comparators.reverseNaturalOrder()));
         assertEquals(Integer.valueOf(-1), this.newWith(1, 1, 0, 0, -1, -1).max(Comparators.reverseNaturalOrder()));
+
+        if (this.getOrderingType() == OrderingType.UNORDERED)
+        {
+            return;
+        }
+
+        // Test tie-breaking: when multiple elements have the min/max value, the first one in order should be returned
+        Holder<Integer> firstMin = new Holder<>(-1);
+        Holder<Integer> secondMin = new Holder<>(-1);
+        assertSame(firstMin, this.newWith(new Holder<>(2), firstMin, new Holder<>(0), secondMin).min());
+
+        Holder<Integer> firstMax = new Holder<>(1);
+        Holder<Integer> secondMax = new Holder<>(1);
+        assertSame(firstMax, this.newWith(new Holder<>(-2), firstMax, new Holder<>(0), secondMax).max());
+
+        Holder<Integer> firstMinReverse = new Holder<>(1);
+        Holder<Integer> secondMinReverse = new Holder<>(1);
+        assertSame(firstMinReverse, this.newWith(new Holder<>(-2), firstMinReverse, new Holder<>(0), secondMinReverse).min(Comparators.reverseNaturalOrder()));
+
+        Holder<Integer> firstMaxReverse = new Holder<>(-1);
+        Holder<Integer> secondMaxReverse = new Holder<>(-1);
+        assertSame(firstMaxReverse, this.newWith(new Holder<>(2), firstMaxReverse, new Holder<>(0), secondMaxReverse).max(Comparators.reverseNaturalOrder()));
     }
 
     @Test
@@ -2753,21 +2823,44 @@ public interface RichIterableTestCase extends IterableTestCase
     @Test
     default void RichIterable_minBy_maxBy()
     {
-        switch (this.getOrderingType())
+        // Without an ordering, min can be either ca or da (both have last char 'a')
+        RichIterable<String> minIterable = this.newWith("ed", "da", "ca", "bc", "ab");
+        String actualMin = minIterable.minBy(string -> string.charAt(string.length() - 1));
+        assertThat(actualMin, isOneOf("ca", "da"));
+        assertEquals(minIterable.detect(each -> each.equals("ca") || each.equals("da")), actualMin);
+        if (this.getOrderingType() == OrderingType.INSERTION_ORDER || this.getOrderingType() == OrderingType.SORTED_REVERSE_NATURAL)
         {
-            case INSERTION_ORDER, SORTED_REVERSE_NATURAL ->
-            {
-                assertEquals("da", this.newWith("ed", "da", "ca", "bc", "ab").minBy(string -> string.charAt(string.length() - 1)));
-                assertEquals("dz", this.newWith("ew", "dz", "cz", "bx", "ay").maxBy(string -> string.charAt(string.length() - 1)));
-            }
-            case SORTED_NATURAL ->
-            {
-                assertEquals("ca", this.newWith("ed", "da", "ca", "bc", "ab").minBy(string -> string.charAt(string.length() - 1)));
-                assertEquals("cz", this.newWith("ew", "dz", "cz", "bx", "ay").maxBy(string -> string.charAt(string.length() - 1)));
-            }
-            default -> throw new IllegalStateException("Unexpected ordering type");
+            assertThat(actualMin, is("da"));
         }
+        else if (this.getOrderingType() == OrderingType.SORTED_NATURAL)
+        {
+            assertThat(actualMin, is("ca"));
+        }
+        else if (this.getOrderingType() != OrderingType.UNORDERED)
+        {
+            fail("Unexpected value: " + this.getOrderingType());
+        }
+
         assertThrows(NoSuchElementException.class, () -> this.<String>newWith().minBy(string -> string.charAt(string.length() - 1)));
+
+        // Without an ordering, max can be either cz or dz (both have last char 'z')
+        RichIterable<String> maxIterable = this.newWith("ew", "dz", "cz", "bx", "ay");
+        String actualMax = maxIterable.maxBy(string -> string.charAt(string.length() - 1));
+        assertThat(actualMax, isOneOf("cz", "dz"));
+        assertEquals(maxIterable.detect(each -> each.equals("cz") || each.equals("dz")), actualMax);
+        if (this.getOrderingType() == OrderingType.INSERTION_ORDER || this.getOrderingType() == OrderingType.SORTED_REVERSE_NATURAL)
+        {
+            assertThat(actualMax, is("dz"));
+        }
+        else if (this.getOrderingType() == OrderingType.SORTED_NATURAL)
+        {
+            assertThat(actualMax, is("cz"));
+        }
+        else if (this.getOrderingType() != OrderingType.UNORDERED)
+        {
+            fail("Unexpected value: " + this.getOrderingType());
+        }
+
         assertThrows(NoSuchElementException.class, () -> this.<String>newWith().maxBy(string -> string.charAt(string.length() - 1)));
 
         if (!this.allowsDuplicates())
@@ -2775,30 +2868,81 @@ public interface RichIterableTestCase extends IterableTestCase
             return;
         }
 
-        switch (this.getOrderingType())
+        RichIterable<String> minIterableDups = this.newWith("ed", "ed", "da", "da", "ca", "ca", "bc", "bc", "ab", "ab");
+        String actualMinDups = minIterableDups.minBy(string -> string.charAt(string.length() - 1));
+        assertThat(actualMinDups, isOneOf("ca", "da"));
+        if (this.getOrderingType() == OrderingType.INSERTION_ORDER || this.getOrderingType() == OrderingType.SORTED_REVERSE_NATURAL)
         {
-            case INSERTION_ORDER, SORTED_REVERSE_NATURAL ->
-            {
-                assertEquals("da", this.newWith("ed", "ed", "da", "da", "ca", "ca", "bc", "bc", "ab", "ab").minBy(string -> string.charAt(string.length() - 1)));
-                assertEquals("dz", this.newWith("ew", "ew", "dz", "dz", "cz", "cz", "bx", "bx", "ay", "ay").maxBy(string -> string.charAt(string.length() - 1)));
-            }
-            case SORTED_NATURAL ->
-            {
-                assertEquals("ca", this.newWith("ed", "ed", "da", "da", "ca", "ca", "bc", "bc", "ab", "ab").minBy(string -> string.charAt(string.length() - 1)));
-                assertEquals("cz", this.newWith("ew", "ew", "dz", "dz", "cz", "cz", "bx", "bx", "ay", "ay").maxBy(string -> string.charAt(string.length() - 1)));
-            }
-            default -> throw new IllegalStateException("Unexpected ordering type");
+            assertThat(actualMinDups, is("da"));
+        }
+        else if (this.getOrderingType() == OrderingType.SORTED_NATURAL)
+        {
+            assertThat(actualMinDups, is("ca"));
+        }
+        else if (this.getOrderingType() != OrderingType.UNORDERED)
+        {
+            fail("Unexpected value: " + this.getOrderingType());
+        }
+
+        RichIterable<String> maxIterableDups = this.newWith("ew", "ew", "dz", "dz", "cz", "cz", "bx", "bx", "ay", "ay");
+        String actualMaxDups = maxIterableDups.maxBy(string -> string.charAt(string.length() - 1));
+        assertThat(actualMaxDups, isOneOf("cz", "dz"));
+        if (this.getOrderingType() == OrderingType.INSERTION_ORDER || this.getOrderingType() == OrderingType.SORTED_REVERSE_NATURAL)
+        {
+            assertThat(actualMaxDups, is("dz"));
+        }
+        else if (this.getOrderingType() == OrderingType.SORTED_NATURAL)
+        {
+            assertThat(actualMaxDups, is("cz"));
+        }
+        else if (this.getOrderingType() != OrderingType.UNORDERED)
+        {
+            fail("Unexpected value: " + this.getOrderingType());
         }
     }
 
     @Test
     default void RichIterable_minByOptional_maxByOptional()
     {
-        assertEquals(Optional.of("da"), this.newWith("ed", "da", "ca", "bc", "ab").minByOptional(string -> string.charAt(string.length() - 1)));
+        // Without an ordering, min can be either ca or da (both have last char 'a')
+        RichIterable<String> minIterable = this.newWith("ed", "da", "ca", "bc", "ab");
+        Optional<String> actualMinOptional = minIterable.minByOptional(string -> string.charAt(string.length() - 1));
+        assertThat(actualMinOptional, isOneOf(Optional.of("ca"), Optional.of("da")));
+        assertEquals(minIterable.detect(each -> each.equals("ca") || each.equals("da")), actualMinOptional.get());
+        if (this.getOrderingType() == OrderingType.INSERTION_ORDER || this.getOrderingType() == OrderingType.SORTED_REVERSE_NATURAL)
+        {
+            assertThat(actualMinOptional, is(Optional.of("da")));
+        }
+        else if (this.getOrderingType() == OrderingType.SORTED_NATURAL)
+        {
+            assertThat(actualMinOptional, is(Optional.of("ca")));
+        }
+        else if (this.getOrderingType() != OrderingType.UNORDERED)
+        {
+            fail("Unexpected value: " + this.getOrderingType());
+        }
+
         assertSame(Optional.empty(), this.<String>newWith().minByOptional(string -> string.charAt(string.length() - 1)));
         assertThrows(NullPointerException.class, () -> this.newWith(new Object[]{null}).minByOptional(Objects::isNull));
 
-        assertEquals(Optional.of("dz"), this.newWith("ew", "dz", "cz", "bx", "ay").maxByOptional(string -> string.charAt(string.length() - 1)));
+        // Without an ordering, max can be either cz or dz (both have last char 'z')
+        RichIterable<String> maxIterable = this.newWith("ew", "dz", "cz", "bx", "ay");
+        Optional<String> actualMaxOptional = maxIterable.maxByOptional(string -> string.charAt(string.length() - 1));
+        assertThat(actualMaxOptional, isOneOf(Optional.of("cz"), Optional.of("dz")));
+        assertEquals(maxIterable.detect(each -> each.equals("cz") || each.equals("dz")), actualMaxOptional.get());
+        if (this.getOrderingType() == OrderingType.INSERTION_ORDER || this.getOrderingType() == OrderingType.SORTED_REVERSE_NATURAL)
+        {
+            assertThat(actualMaxOptional, is(Optional.of("dz")));
+        }
+        else if (this.getOrderingType() == OrderingType.SORTED_NATURAL)
+        {
+            assertThat(actualMaxOptional, is(Optional.of("cz")));
+        }
+        else if (this.getOrderingType() != OrderingType.UNORDERED)
+        {
+            fail("Unexpected value: " + this.getOrderingType());
+        }
+
         assertSame(Optional.empty(), this.<String>newWith().maxByOptional(string -> string.charAt(string.length() - 1)));
         assertThrows(NullPointerException.class, () -> this.newWith(new Object[]{null}).maxByOptional(Objects::isNull));
 
@@ -2807,8 +2951,37 @@ public interface RichIterableTestCase extends IterableTestCase
             return;
         }
 
-        assertEquals(Optional.of("da"), this.newWith("ed", "ed", "da", "da", "ca", "ca", "bc", "bc", "ab", "ab").minByOptional(string -> string.charAt(string.length() - 1)));
-        assertEquals(Optional.of("dz"), this.newWith("ew", "ew", "dz", "dz", "cz", "cz", "bx", "bx", "ay", "ay").maxByOptional(string -> string.charAt(string.length() - 1)));
+        RichIterable<String> minIterableDups = this.newWith("ed", "ed", "da", "da", "ca", "ca", "bc", "bc", "ab", "ab");
+        Optional<String> actualMinDupsOptional = minIterableDups.minByOptional(string -> string.charAt(string.length() - 1));
+        assertThat(actualMinDupsOptional, isOneOf(Optional.of("ca"), Optional.of("da")));
+        if (this.getOrderingType() == OrderingType.INSERTION_ORDER || this.getOrderingType() == OrderingType.SORTED_REVERSE_NATURAL)
+        {
+            assertThat(actualMinDupsOptional, is(Optional.of("da")));
+        }
+        else if (this.getOrderingType() == OrderingType.SORTED_NATURAL)
+        {
+            assertThat(actualMinDupsOptional, is(Optional.of("ca")));
+        }
+        else if (this.getOrderingType() != OrderingType.UNORDERED)
+        {
+            fail("Unexpected value: " + this.getOrderingType());
+        }
+
+        RichIterable<String> maxIterableDups = this.newWith("ew", "ew", "dz", "dz", "cz", "cz", "bx", "bx", "ay", "ay");
+        Optional<String> actualMaxDupsOptional = maxIterableDups.maxByOptional(string -> string.charAt(string.length() - 1));
+        assertThat(actualMaxDupsOptional, isOneOf(Optional.of("cz"), Optional.of("dz")));
+        if (this.getOrderingType() == OrderingType.INSERTION_ORDER || this.getOrderingType() == OrderingType.SORTED_REVERSE_NATURAL)
+        {
+            assertThat(actualMaxDupsOptional, is(Optional.of("dz")));
+        }
+        else if (this.getOrderingType() == OrderingType.SORTED_NATURAL)
+        {
+            assertThat(actualMaxDupsOptional, is(Optional.of("cz")));
+        }
+        else if (this.getOrderingType() != OrderingType.UNORDERED)
+        {
+            fail("Unexpected value: " + this.getOrderingType());
+        }
     }
 
     @Test
@@ -3445,46 +3618,34 @@ public interface RichIterableTestCase extends IterableTestCase
     {
         RichIterable<Integer> iterable = this.newWith(4, 3, 2, 1);
 
-        switch (this.getOrderingType())
+        if (this.getOrderingType() == OrderingType.INSERTION_ORDER || this.getOrderingType() == OrderingType.SORTED_REVERSE_NATURAL)
         {
-            case INSERTION_ORDER, SORTED_REVERSE_NATURAL ->
-            {
-                assertEquals("4, 3, 2, 1", iterable.makeString());
-                assertEquals("4/3/2/1", iterable.makeString("/"));
-                assertEquals("[4/3/2/1]", iterable.makeString("[", "/", "]"));
-
-                StringBuilder stringBuilder1 = new StringBuilder();
-                iterable.appendString(stringBuilder1);
-                assertEquals("4, 3, 2, 1", stringBuilder1.toString());
-
-                StringBuilder stringBuilder2 = new StringBuilder();
-                iterable.appendString(stringBuilder2, "/");
-                assertEquals("4/3/2/1", stringBuilder2.toString());
-
-                StringBuilder stringBuilder3 = new StringBuilder();
-                iterable.appendString(stringBuilder3, "[", "/", "]");
-                assertEquals("[4/3/2/1]", stringBuilder3.toString());
-            }
-            case SORTED_NATURAL ->
-            {
-                assertEquals("1, 2, 3, 4", iterable.makeString());
-                assertEquals("1/2/3/4", iterable.makeString("/"));
-                assertEquals("[1/2/3/4]", iterable.makeString("[", "/", "]"));
-
-                StringBuilder stringBuilder1 = new StringBuilder();
-                iterable.appendString(stringBuilder1);
-                assertEquals("1, 2, 3, 4", stringBuilder1.toString());
-
-                StringBuilder stringBuilder2 = new StringBuilder();
-                iterable.appendString(stringBuilder2, "/");
-                assertEquals("1/2/3/4", stringBuilder2.toString());
-
-                StringBuilder stringBuilder3 = new StringBuilder();
-                iterable.appendString(stringBuilder3, "[", "/", "]");
-                assertEquals("[1/2/3/4]", stringBuilder3.toString());
-            }
-            default -> throw new IllegalStateException("Unexpected ordering type");
+            assertEquals("4, 3, 2, 1", iterable.makeString());
+            assertEquals("4/3/2/1", iterable.makeString("/"));
+            assertEquals("[4/3/2/1]", iterable.makeString("[", "/", "]"));
         }
+        else if (this.getOrderingType() == OrderingType.SORTED_NATURAL)
+        {
+            assertEquals("1, 2, 3, 4", iterable.makeString());
+            assertEquals("1/2/3/4", iterable.makeString("/"));
+            assertEquals("[1/2/3/4]", iterable.makeString("[", "/", "]"));
+        }
+        else if (this.getOrderingType() != OrderingType.UNORDERED)
+        {
+            fail("Unexpected value: " + this.getOrderingType());
+        }
+
+        StringBuilder stringBuilder1 = new StringBuilder();
+        iterable.appendString(stringBuilder1);
+        assertEquals(iterable.makeString(), stringBuilder1.toString());
+
+        StringBuilder stringBuilder2 = new StringBuilder();
+        iterable.appendString(stringBuilder2, "/");
+        assertEquals(iterable.makeString("/"), stringBuilder2.toString());
+
+        StringBuilder stringBuilder3 = new StringBuilder();
+        iterable.appendString(stringBuilder3, "[", "/", "]");
+        assertEquals(iterable.makeString("[", "/", "]"), stringBuilder3.toString());
 
         if (!this.allowsDuplicates())
         {
@@ -3493,98 +3654,46 @@ public interface RichIterableTestCase extends IterableTestCase
 
         RichIterable<Integer> iterable2 = this.newWith(4, 4, 4, 4, 3, 3, 3, 2, 2, 1);
 
-        switch (this.getOrderingType())
+        if (this.getOrderingType() == OrderingType.INSERTION_ORDER || this.getOrderingType() == OrderingType.SORTED_REVERSE_NATURAL)
         {
-            case INSERTION_ORDER, SORTED_REVERSE_NATURAL ->
-            {
-                assertEquals(
-                        "4, 4, 4, 4, 3, 3, 3, 2, 2, 1",
-                        iterable2.makeString());
-
-                assertEquals(
-                        iterable2.makeString(),
-                        iterable2.reduceInPlace(Collectors2.makeString()));
-
-                assertEquals(
-                        "4/4/4/4/3/3/3/2/2/1",
-                        iterable2.makeString("/"));
-
-                assertEquals(
-                        iterable2.makeString("/"),
-                        iterable2.reduceInPlace(Collectors2.makeString("/")));
-
-                assertEquals(
-                        "[4/4/4/4/3/3/3/2/2/1]",
-                        iterable2.makeString("[", "/", "]"));
-
-                assertEquals(
-                        iterable2.makeString("[", "/", "]"),
-                        iterable2.reduceInPlace(Collectors2.makeString("[", "/", "]")));
-
-                StringBuilder builder1 = new StringBuilder();
-                iterable2.appendString(builder1);
-                assertEquals(
-                        "4, 4, 4, 4, 3, 3, 3, 2, 2, 1",
-                        builder1.toString());
-
-                StringBuilder builder2 = new StringBuilder();
-                iterable2.appendString(builder2, "/");
-                assertEquals(
-                        "4/4/4/4/3/3/3/2/2/1",
-                        builder2.toString());
-
-                StringBuilder builder3 = new StringBuilder();
-                iterable2.appendString(builder3, "[", "/", "]");
-                assertEquals(
-                        "[4/4/4/4/3/3/3/2/2/1]",
-                        builder3.toString());
-            }
-            case SORTED_NATURAL ->
-            {
-                assertEquals(
-                        "1, 2, 2, 3, 3, 3, 4, 4, 4, 4",
-                        iterable2.makeString());
-
-                assertEquals(
-                        iterable2.makeString(),
-                        iterable2.reduceInPlace(Collectors2.makeString()));
-
-                assertEquals(
-                        "1/2/2/3/3/3/4/4/4/4",
-                        iterable2.makeString("/"));
-
-                assertEquals(
-                        iterable2.makeString("/"),
-                        iterable2.reduceInPlace(Collectors2.makeString("/")));
-
-                assertEquals(
-                        "[1/2/2/3/3/3/4/4/4/4]",
-                        iterable2.makeString("[", "/", "]"));
-
-                assertEquals(
-                        iterable2.makeString("[", "/", "]"),
-                        iterable2.reduceInPlace(Collectors2.makeString("[", "/", "]")));
-
-                StringBuilder builder1 = new StringBuilder();
-                iterable2.appendString(builder1);
-                assertEquals(
-                        "1, 2, 2, 3, 3, 3, 4, 4, 4, 4",
-                        builder1.toString());
-
-                StringBuilder builder2 = new StringBuilder();
-                iterable2.appendString(builder2, "/");
-                assertEquals(
-                        "1/2/2/3/3/3/4/4/4/4",
-                        builder2.toString());
-
-                StringBuilder builder3 = new StringBuilder();
-                iterable2.appendString(builder3, "[", "/", "]");
-                assertEquals(
-                        "[1/2/2/3/3/3/4/4/4/4]",
-                        builder3.toString());
-            }
-            default -> throw new IllegalStateException("Unexpected ordering type");
+            assertEquals("4, 4, 4, 4, 3, 3, 3, 2, 2, 1", iterable2.makeString());
+            assertEquals("4/4/4/4/3/3/3/2/2/1", iterable2.makeString("/"));
+            assertEquals("[4/4/4/4/3/3/3/2/2/1]", iterable2.makeString("[", "/", "]"));
         }
+        else if (this.getOrderingType() == OrderingType.SORTED_NATURAL)
+        {
+            assertEquals("1, 2, 2, 3, 3, 3, 4, 4, 4, 4", iterable2.makeString());
+            assertEquals("1/2/2/3/3/3/4/4/4/4", iterable2.makeString("/"));
+            assertEquals("[1/2/2/3/3/3/4/4/4/4]", iterable2.makeString("[", "/", "]"));
+        }
+        else if (this.getOrderingType() != OrderingType.UNORDERED)
+        {
+            fail("Unexpected value: " + this.getOrderingType());
+        }
+
+        assertEquals(
+                iterable2.makeString(),
+                iterable2.reduceInPlace(Collectors2.makeString()));
+
+        assertEquals(
+                iterable2.makeString("/"),
+                iterable2.reduceInPlace(Collectors2.makeString("/")));
+
+        assertEquals(
+                iterable2.makeString("[", "/", "]"),
+                iterable2.reduceInPlace(Collectors2.makeString("[", "/", "]")));
+
+        StringBuilder builder1 = new StringBuilder();
+        iterable2.appendString(builder1);
+        assertEquals(iterable2.makeString(), builder1.toString());
+
+        StringBuilder builder2 = new StringBuilder();
+        iterable2.appendString(builder2, "/");
+        assertEquals(iterable2.makeString("/"), builder2.toString());
+
+        StringBuilder builder3 = new StringBuilder();
+        iterable2.appendString(builder3, "[", "/", "]");
+        assertEquals(iterable2.makeString("[", "/", "]"), builder3.toString());
     }
 
     @Override
@@ -3592,21 +3701,52 @@ public interface RichIterableTestCase extends IterableTestCase
     default void Iterable_toString()
     {
         RichIterable<Integer> iterable = this.newWith(3, 2, 1);
-        assertEquals("[3, 2, 1]", iterable.toString());
-        assertEquals("[3, 2, 1]", iterable.asLazy().toString());
+        assertThat(iterable.toString(), isOneOf(
+                "[3, 2, 1]", "[3, 1, 2]", "[2, 3, 1]", "[2, 1, 3]", "[1, 3, 2]", "[1, 2, 3]"));
+        assertThat(iterable.asLazy().toString(), isOneOf(
+                "[3, 2, 1]", "[3, 1, 2]", "[2, 3, 1]", "[2, 1, 3]", "[1, 3, 2]", "[1, 2, 3]"));
+        if (this.getOrderingType() == OrderingType.INSERTION_ORDER || this.getOrderingType() == OrderingType.SORTED_REVERSE_NATURAL)
+        {
+            assertEquals("[3, 2, 1]", iterable.toString());
+            assertEquals("[3, 2, 1]", iterable.asLazy().toString());
+        }
+        else if (this.getOrderingType() == OrderingType.SORTED_NATURAL)
+        {
+            assertEquals("[1, 2, 3]", iterable.toString());
+            assertEquals("[1, 2, 3]", iterable.asLazy().toString());
+        }
+        else if (this.getOrderingType() != OrderingType.UNORDERED)
+        {
+            fail("Unexpected value: " + this.getOrderingType());
+        }
 
         if (!this.allowsDuplicates())
         {
             return;
         }
 
-        RichIterable<Integer> iterable2 = this.newWith(4, 4, 4, 4, 3, 3, 3, 2, 2, 1);
-        assertEquals(
-                "[4, 4, 4, 4, 3, 3, 3, 2, 2, 1]",
-                iterable2.toString());
-        assertEquals(
-                "[4, 4, 4, 4, 3, 3, 3, 2, 2, 1]",
-                iterable2.asLazy().toString());
+        switch (this.getOrderingType())
+        {
+            case UNORDERED ->
+            {
+                RichIterable<Integer> iterableWithDuplicates = this.newWith(2, 2, 1);
+                assertThat(iterableWithDuplicates.toString(), isOneOf("[2, 2, 1]", "[1, 2, 2]"));
+                assertThat(iterableWithDuplicates.asLazy().toString(), isOneOf("[2, 2, 1]", "[1, 2, 2]"));
+            }
+            case INSERTION_ORDER, SORTED_REVERSE_NATURAL ->
+            {
+                RichIterable<Integer> iterableWithDuplicates = this.newWith(4, 4, 4, 4, 3, 3, 3, 2, 2, 1);
+                assertEquals("[4, 4, 4, 4, 3, 3, 3, 2, 2, 1]", iterableWithDuplicates.toString());
+                assertEquals("[4, 4, 4, 4, 3, 3, 3, 2, 2, 1]", iterableWithDuplicates.asLazy().toString());
+            }
+            case SORTED_NATURAL ->
+            {
+                RichIterable<Integer> iterableWithDuplicates = this.newWith(4, 4, 4, 4, 3, 3, 3, 2, 2, 1);
+                assertEquals("[1, 2, 2, 3, 3, 3, 4, 4, 4, 4]", iterableWithDuplicates.toString());
+                assertEquals("[1, 2, 2, 3, 3, 3, 4, 4, 4, 4]", iterableWithDuplicates.asLazy().toString());
+            }
+            default -> fail("Unexpected value: " + this.getOrderingType());
+        }
     }
 
     @Test
@@ -3614,17 +3754,17 @@ public interface RichIterableTestCase extends IterableTestCase
     {
         RichIterable<Integer> iterable = this.newWith(4, 3, 2, 1);
 
-        switch (this.getOrderingType())
+        if (this.getOrderingType() == OrderingType.INSERTION_ORDER || this.getOrderingType() == OrderingType.SORTED_REVERSE_NATURAL)
         {
-            case INSERTION_ORDER, SORTED_REVERSE_NATURAL ->
-                    assertIterablesEqual(
-                            Lists.immutable.with(4, 3, 2, 1),
-                            iterable.toList());
-            case SORTED_NATURAL ->
-                    assertIterablesEqual(
-                            Lists.immutable.with(1, 2, 3, 4),
-                            iterable.toList());
-            default -> throw new IllegalStateException("Unexpected ordering type");
+            assertIterablesEqual(Lists.immutable.with(4, 3, 2, 1), iterable.toList());
+        }
+        else if (this.getOrderingType() == OrderingType.SORTED_NATURAL)
+        {
+            assertIterablesEqual(Lists.immutable.with(1, 2, 3, 4), iterable.toList());
+        }
+        else if (this.getOrderingType() != OrderingType.UNORDERED)
+        {
+            fail("Unexpected value: " + this.getOrderingType());
         }
 
         MutableList<Integer> target = Lists.mutable.empty();
@@ -3640,17 +3780,17 @@ public interface RichIterableTestCase extends IterableTestCase
 
         RichIterable<Integer> duplicateIterable = this.newWith(4, 4, 4, 4, 3, 3, 3, 2, 2, 1);
 
-        switch (this.getOrderingType())
+        if (this.getOrderingType() == OrderingType.INSERTION_ORDER || this.getOrderingType() == OrderingType.SORTED_REVERSE_NATURAL)
         {
-            case INSERTION_ORDER, SORTED_REVERSE_NATURAL ->
-                    assertIterablesEqual(
-                            Lists.immutable.with(4, 4, 4, 4, 3, 3, 3, 2, 2, 1),
-                            duplicateIterable.toList());
-            case SORTED_NATURAL ->
-                    assertIterablesEqual(
-                            Lists.immutable.with(1, 2, 2, 3, 3, 3, 4, 4, 4, 4),
-                            duplicateIterable.toList());
-            default -> throw new IllegalStateException("Unexpected ordering type");
+            assertIterablesEqual(Lists.immutable.with(4, 4, 4, 4, 3, 3, 3, 2, 2, 1), duplicateIterable.toList());
+        }
+        else if (this.getOrderingType() == OrderingType.SORTED_NATURAL)
+        {
+            assertIterablesEqual(Lists.immutable.with(1, 2, 2, 3, 3, 3, 4, 4, 4, 4), duplicateIterable.toList());
+        }
+        else if (this.getOrderingType() != OrderingType.UNORDERED)
+        {
+            fail("Unexpected value: " + this.getOrderingType());
         }
 
         MutableList<Integer> duplicateTarget = Lists.mutable.empty();
@@ -3663,36 +3803,52 @@ public interface RichIterableTestCase extends IterableTestCase
     @Test
     default void RichIterable_into()
     {
-        switch (this.getOrderingType())
+        RichIterable<Integer> iterable = this.newWith(4, 3, 2, 1);
+
+        if (this.getOrderingType() == OrderingType.INSERTION_ORDER || this.getOrderingType() == OrderingType.SORTED_REVERSE_NATURAL)
         {
-            case INSERTION_ORDER, SORTED_REVERSE_NATURAL ->
-                    assertIterablesEqual(
-                            Lists.immutable.with(0, 4, 3, 2, 1),
-                            this.newWith(4, 3, 2, 1).into(Lists.mutable.with(0)));
-            case SORTED_NATURAL ->
-                    assertIterablesEqual(
-                            Lists.immutable.with(0, 1, 2, 3, 4),
-                            this.newWith(4, 3, 2, 1).into(Lists.mutable.with(0)));
-            default -> throw new IllegalStateException("Unexpected ordering type");
+            assertIterablesEqual(Lists.immutable.with(0, 4, 3, 2, 1), iterable.into(Lists.mutable.with(0)));
         }
+        else if (this.getOrderingType() == OrderingType.SORTED_NATURAL)
+        {
+            assertIterablesEqual(Lists.immutable.with(0, 1, 2, 3, 4), iterable.into(Lists.mutable.with(0)));
+        }
+        else if (this.getOrderingType() != OrderingType.UNORDERED)
+        {
+            fail("Unexpected value: " + this.getOrderingType());
+        }
+
+        MutableList<Integer> target = Lists.mutable.with(0);
+        iterable.each(target::add);
+        assertIterablesEqual(
+                target,
+                iterable.into(Lists.mutable.with(0)));
 
         if (!this.allowsDuplicates())
         {
             return;
         }
 
-        switch (this.getOrderingType())
+        RichIterable<Integer> duplicateIterable = this.newWith(4, 4, 4, 4, 3, 3, 3, 2, 2, 1);
+
+        if (this.getOrderingType() == OrderingType.INSERTION_ORDER || this.getOrderingType() == OrderingType.SORTED_REVERSE_NATURAL)
         {
-            case INSERTION_ORDER, SORTED_REVERSE_NATURAL ->
-                    assertIterablesEqual(
-                            Lists.immutable.with(0, 4, 4, 4, 4, 3, 3, 3, 2, 2, 1),
-                            this.newWith(4, 4, 4, 4, 3, 3, 3, 2, 2, 1).into(Lists.mutable.with(0)));
-            case SORTED_NATURAL ->
-                    assertIterablesEqual(
-                            Lists.immutable.with(0, 1, 2, 2, 3, 3, 3, 4, 4, 4, 4),
-                            this.newWith(4, 4, 4, 4, 3, 3, 3, 2, 2, 1).into(Lists.mutable.with(0)));
-            default -> throw new IllegalStateException("Unexpected ordering type");
+            assertIterablesEqual(Lists.immutable.with(0, 4, 4, 4, 4, 3, 3, 3, 2, 2, 1), duplicateIterable.into(Lists.mutable.with(0)));
         }
+        else if (this.getOrderingType() == OrderingType.SORTED_NATURAL)
+        {
+            assertIterablesEqual(Lists.immutable.with(0, 1, 2, 2, 3, 3, 3, 4, 4, 4, 4), duplicateIterable.into(Lists.mutable.with(0)));
+        }
+        else if (this.getOrderingType() != OrderingType.UNORDERED)
+        {
+            fail("Unexpected value: " + this.getOrderingType());
+        }
+
+        MutableList<Integer> duplicateTarget = Lists.mutable.with(0);
+        duplicateIterable.each(duplicateTarget::add);
+        assertIterablesEqual(
+                duplicateTarget,
+                duplicateIterable.into(Lists.mutable.with(0)));
     }
 
     @Test

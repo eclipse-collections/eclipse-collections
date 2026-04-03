@@ -25,6 +25,7 @@ import org.eclipse.collections.test.list.TransformsToListTrait;
 import org.junit.jupiter.api.Test;
 
 import static org.eclipse.collections.test.IterableTestCase.assertIterablesEqual;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
 public interface SortedMapIterableTestCase extends MapIterableTestCase, OrderedIterableTestCase, TransformsToListTrait
@@ -34,6 +35,12 @@ public interface SortedMapIterableTestCase extends MapIterableTestCase, OrderedI
 
     @Override
     <K, V> SortedMapIterable<K, V> newWithKeysValues(Object... elements);
+
+    @Override
+    default OrderingType getOrderingType()
+    {
+        return OrderingType.SORTED_REVERSE_NATURAL;
+    }
 
     @Override
     default <K, V> OrderedMap<K, V> newWithTransformedKeysValues(Object... elements)
@@ -128,5 +135,21 @@ public interface SortedMapIterableTestCase extends MapIterableTestCase, OrderedI
         });
         assertIterablesEqual(Lists.immutable.empty(), partition4.getSelected());
         assertIterablesEqual(Lists.immutable.empty(), partition4.getRejected());
+    }
+
+    @Override
+    @Test
+    default void OrderedIterable_forEach_from_to()
+    {
+        // TODO Support indexed traversal for sorted maps.
+        assertThrows(UnsupportedOperationException.class, () -> this.newWith(9, 8, 7, 6, 5, 4, 3, 2, 1, 0).forEach(5, 7, each -> { }));
+    }
+
+    @Override
+    @Test
+    default void OrderedIterable_forEach_from_to_reverse_order()
+    {
+        // TODO Support reverse indexed traversal for sorted maps.
+        assertThrows(UnsupportedOperationException.class, () -> this.newWith(9, 8, 7, 6, 5, 4, 3, 2, 1, 0).forEach(7, 5, each -> { }));
     }
 }

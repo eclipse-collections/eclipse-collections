@@ -173,4 +173,20 @@ public interface OrderedMapIterableTestCase extends MapIterableTestCase, Ordered
         assertIterablesEqual(Lists.immutable.empty(), partition4.getSelected());
         assertIterablesEqual(Lists.immutable.empty(), partition4.getRejected());
     }
+
+    @Override
+    @Test
+    default void OrderedIterable_forEach_from_to()
+    {
+        // TODO Support indexed traversal for ordered maps.
+        assertThrows(UnsupportedOperationException.class, () -> this.newWith(9, 8, 7, 6, 5, 4, 3, 2, 1, 0).forEach(5, 7, each -> { }));
+    }
+
+    @Override
+    @Test
+    default void OrderedIterable_forEach_from_to_reverse_order()
+    {
+        // TODO Support reverse indexed traversal for ordered maps.
+        assertThrows(UnsupportedOperationException.class, () -> this.newWith(9, 8, 7, 6, 5, 4, 3, 2, 1, 0).forEach(7, 5, each -> { }));
+    }
 }
