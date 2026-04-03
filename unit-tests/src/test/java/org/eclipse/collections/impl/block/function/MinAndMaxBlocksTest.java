@@ -10,6 +10,7 @@
 
 package org.eclipse.collections.impl.block.function;
 
+import org.eclipse.collections.impl.test.Verify;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -83,5 +84,12 @@ public class MinAndMaxBlocksTest
         assertSame(FORTY_TWO_LONG, MaxFunction.LONG.value(null, FORTY_TWO_LONG));
         assertSame(FORTY_TWO_LONG, MaxFunction.LONG.value(FORTY_TWO_LONG, null));
         assertSame(null, MaxFunction.LONG.value(null, null));
+    }
+
+    @Test
+    public void classIsNonInstantiable()
+    {
+        Verify.assertClassNonInstantiable(MaxFunction.class);
+        Verify.assertClassNonInstantiable(MinFunction.class);
     }
 }

@@ -15,6 +15,7 @@ import org.eclipse.collections.api.map.primitive.ImmutableObjectBooleanMap;
 import org.eclipse.collections.api.map.primitive.MutableObjectBooleanMap;
 import org.eclipse.collections.impl.factory.primitive.ObjectBooleanMaps;
 import org.eclipse.collections.impl.map.mutable.primitive.ObjectBooleanHashMap;
+import org.eclipse.collections.impl.test.Verify;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -80,5 +81,11 @@ public class ObjectBooleanMapFactoryTest
                 ObjectBooleanHashMap.newWithKeysValues("1", false, "2", true, "3", false),
                 ObjectBooleanMaps.immutable.from(iterable, each -> each, each -> Integer.valueOf(each) % 2 == 0));
         assertTrue(ObjectBooleanMaps.immutable.from(iterable, each -> each, each -> Integer.valueOf(each) % 2 == 0) instanceof ImmutableObjectBooleanMap);
+    }
+
+    @Test
+    public void classIsNonInstantiable()
+    {
+        Verify.assertClassNonInstantiable(ObjectBooleanMaps.class);
     }
 }
