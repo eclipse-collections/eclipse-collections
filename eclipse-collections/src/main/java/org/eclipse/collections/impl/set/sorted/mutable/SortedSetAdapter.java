@@ -684,12 +684,6 @@ public final class SortedSetAdapter<T>
     }
 
     @Override
-    public MutableSortedSet<T> toReversed()
-    {
-        return this.clone().descendingSet();
-    }
-
-    @Override
     public MutableSortedSet<T> take(int count)
     {
         return IterableIterate.take(this.getDelegate(), Math.min(this.size(), count), TreeSortedSet.newSet(this.comparator()));

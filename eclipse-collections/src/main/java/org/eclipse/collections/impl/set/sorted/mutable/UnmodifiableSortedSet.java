@@ -483,12 +483,6 @@ public class UnmodifiableSortedSet<T>
     }
 
     @Override
-    public MutableSortedSet<T> toReversed()
-    {
-        return this.getSortedSet().toReversed().asUnmodifiable();
-    }
-
-    @Override
     public MutableSortedSet<T> take(int count)
     {
         return this.getSortedSet().take(count);

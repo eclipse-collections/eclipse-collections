@@ -10,6 +10,7 @@
 
 package org.eclipse.collections.api.set.sorted;
 
+import java.util.Collections;
 import java.util.NavigableSet;
 import java.util.SortedSet;
 
@@ -37,6 +38,7 @@ import org.eclipse.collections.api.list.primitive.MutableIntList;
 import org.eclipse.collections.api.list.primitive.MutableLongList;
 import org.eclipse.collections.api.list.primitive.MutableShortList;
 import org.eclipse.collections.api.multimap.sortedset.MutableSortedSetMultimap;
+import org.eclipse.collections.api.factory.SortedSets;
 import org.eclipse.collections.api.partition.set.sorted.PartitionMutableSortedSet;
 import org.eclipse.collections.api.set.MutableSetIterable;
 import org.eclipse.collections.api.set.SetIterable;
@@ -230,7 +232,10 @@ public interface MutableSortedSet<T>
     MutableSortedSet<Pair<T, Integer>> zipWithIndex();
 
     @Override
-    MutableSortedSet<T> toReversed();
+    default MutableSortedSet<T> toReversed()
+    {
+        return SortedSets.mutable.ofAll(Collections.reverseOrder(this.comparator()), this);
+    }
 
     @Override
     MutableSortedSet<T> take(int count);

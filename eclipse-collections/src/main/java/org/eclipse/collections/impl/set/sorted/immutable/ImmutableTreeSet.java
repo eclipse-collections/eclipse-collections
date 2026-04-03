@@ -325,13 +325,13 @@ final class ImmutableTreeSet<T>
     @Override
     public T first()
     {
-        return this.sortedElements.get(0);
+        return this.sortedElements.getFirst();
     }
 
     @Override
     public T last()
     {
-        return this.sortedElements.get(this.size() - 1);
+        return this.sortedElements.getLast();
     }
 
     @Override
