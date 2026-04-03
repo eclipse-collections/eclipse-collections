@@ -10,6 +10,7 @@
 
 package org.eclipse.collections.api.set.sorted;
 
+import java.util.NavigableSet;
 import java.util.Set;
 import java.util.SortedSet;
 
@@ -175,7 +176,21 @@ public interface ImmutableSortedSet<T>
     @Override
     ImmutableSortedSet<T> drop(int count);
 
+    @Override
+    ImmutableSortedSet<T> descendingSet();
+
+    @Override
+    ImmutableSortedSet<T> subSet(T fromElement, boolean fromInclusive, T toElement, boolean toInclusive);
+
+    @Override
+    ImmutableSortedSet<T> headSet(T toElement, boolean inclusive);
+
+    @Override
+    ImmutableSortedSet<T> tailSet(T fromElement, boolean inclusive);
+
     SortedSet<T> castToSortedSet();
+
+    NavigableSet<T> castToNavigableSet();
 
     @Override
     ImmutableSortedSet<T> union(SetIterable<? extends T> set);

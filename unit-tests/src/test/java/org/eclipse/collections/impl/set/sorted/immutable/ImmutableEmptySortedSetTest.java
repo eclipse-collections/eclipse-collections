@@ -753,21 +753,21 @@ public class ImmutableEmptySortedSetTest extends AbstractImmutableSortedSetTestC
     @Test
     public void subSet()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.classUnderTest().castToSortedSet().subSet(1, 4));
+        Verify.assertEmpty(this.classUnderTest().castToSortedSet().subSet(1, 4));
     }
 
     @Override
     @Test
     public void headSet()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.classUnderTest().castToSortedSet().headSet(4));
+        Verify.assertEmpty(this.classUnderTest().castToSortedSet().headSet(4));
     }
 
     @Override
     @Test
     public void tailSet()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.classUnderTest().castToSortedSet().tailSet(1));
+        Verify.assertEmpty(this.classUnderTest().castToSortedSet().tailSet(1));
     }
 
     @Override

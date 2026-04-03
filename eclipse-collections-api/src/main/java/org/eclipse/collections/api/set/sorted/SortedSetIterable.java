@@ -11,9 +11,11 @@
 package org.eclipse.collections.api.set.sorted;
 
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.concurrent.ExecutorService;
 
 import org.eclipse.collections.api.annotation.Beta;
+import org.eclipse.collections.api.block.procedure.primitive.ObjectIntProcedure;
 import org.eclipse.collections.api.block.function.Function;
 import org.eclipse.collections.api.block.function.Function2;
 import org.eclipse.collections.api.block.function.primitive.BooleanFunction;
@@ -222,4 +224,73 @@ public interface SortedSetIterable<T>
     @Override
     @Beta
     ParallelSortedSetIterable<T> asParallel(ExecutorService executorService, int batchSize);
+
+    /**
+     * Returns the greatest element in this set strictly less than the given element, or {@code null} if there is no
+     * such element.
+     *
+     * @since 14.0
+     */
+    T lower(T e);
+
+    /**
+     * Returns the greatest element in this set less than or equal to the given element, or {@code null} if there is no
+     * such element.
+     *
+     * @since 14.0
+     */
+    T floor(T e);
+
+    /**
+     * Returns the least element in this set greater than or equal to the given element, or {@code null} if there is no
+     * such element.
+     *
+     * @since 14.0
+     */
+    T ceiling(T e);
+
+    /**
+     * Returns the least element in this set strictly greater than the given element, or {@code null} if there is no
+     * such element.
+     *
+     * @since 14.0
+     */
+    T higher(T e);
+
+    /**
+     * Returns an iterator over the elements in this set in descending order.
+     *
+     * @since 14.0
+     */
+    Iterator<T> descendingIterator();
+
+    /**
+     * Returns a reverse-order view of the elements contained in this set.
+     *
+     * @since 14.0
+     */
+    SortedSetIterable<T> descendingSet();
+
+    /**
+     * @since 14.0
+     */
+    SortedSetIterable<T> subSet(T fromElement, boolean fromInclusive, T toElement, boolean toInclusive);
+
+    /**
+     * @since 14.0
+     */
+    SortedSetIterable<T> headSet(T toElement, boolean inclusive);
+
+    /**
+     * @since 14.0
+     */
+    SortedSetIterable<T> tailSet(T fromElement, boolean inclusive);
+
+    @Override
+    default int detectLastIndex(Predicate<? super T> predicate)
+    {
+        int size = this.size();
+        int index = this.descendingSet().detectIndex(predicate);
+        return index >= 0 ? size - 1 - index : -1;
+    }
 }

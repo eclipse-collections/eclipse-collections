@@ -22,6 +22,7 @@ The Eclipse Collections team gives a huge thank you to everyone who participated
 # API Changes
 -----------------
 * Added `injectIntoWithIndex` to `OrderedIterable`.
+* Added `NavigableSet` API (`lower`, `floor`, `ceiling`, `higher`, `descendingSet`, `descendingIterator`, `subSet(T, boolean, T, boolean)`, `headSet(T, boolean)`, `tailSet(T, boolean)`) to `SortedSetIterable` hierarchy. `MutableSortedSet` now extends `NavigableSet`. `ImmutableSortedSet` exposes `NavigableSet` via `castToNavigableSet()`. Fixes #1851.
 
 
 # Bug Fixes

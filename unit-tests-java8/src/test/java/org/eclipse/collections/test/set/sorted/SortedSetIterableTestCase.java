@@ -12,7 +12,10 @@ package org.eclipse.collections.test.set.sorted;
 
 import java.util.NoSuchElementException;
 
+import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.factory.SortedSets;
+import org.eclipse.collections.api.list.MutableList;
+import org.eclipse.collections.api.ordered.OrderedIterable;
 import org.eclipse.collections.api.set.sorted.MutableSortedSet;
 import org.eclipse.collections.api.set.sorted.SortedSetIterable;
 import org.eclipse.collections.impl.block.factory.Comparators;
@@ -104,5 +107,22 @@ public interface SortedSetIterableTestCase extends SetIterableTestCase, SortedIt
         SortedSetIterable<A> numbers = this.newWith(new C(4.0), new B(3), new C(2.0), new B(1));
         assertIterablesEqual(this.getExpectedFiltered(new B(3), new B(1)), numbers.selectInstancesOf(B.class));
         assertIterablesEqual(this.getExpectedFiltered(new C(4.0), new B(3), new C(2.0), new B(1)), numbers.selectInstancesOf(A.class));
+    }
+
+    @Override
+    @Test
+    default void OrderedIterable_forEach_from_to_reverse_order()
+    {
+        OrderedIterable<Integer> integers = (OrderedIterable<Integer>) this.newWith(9, 8, 7, 6, 5, 4, 3, 2, 1, 0);
+        MutableList<Integer> result = Lists.mutable.empty();
+        integers.forEach(7, 5, result::add);
+        assertIterablesEqual(
+                switch (this.getOrderingType())
+                {
+                    case SORTED_NATURAL -> Lists.immutable.with(7, 6, 5);
+                    case SORTED_REVERSE_NATURAL -> Lists.immutable.with(2, 3, 4);
+                    default -> throw new AssertionError("Unexpected ordering type for SortedSetIterable: " + this.getOrderingType());
+                },
+                result);
     }
 }
