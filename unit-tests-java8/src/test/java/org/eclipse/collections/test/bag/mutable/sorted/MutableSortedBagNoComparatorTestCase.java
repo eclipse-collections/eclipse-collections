@@ -101,11 +101,4 @@ public interface MutableSortedBagNoComparatorTestCase extends SortedBagTestCase,
         }, 0);
         assertIterablesEqual(Lists.immutable.with(1, 0, 2, 0, 2, 0, 3, 0, 3, 0, 3, 0), result);
     }
-
-    @Override
-    @Test
-    default void SortedIterable_comparator()
-    {
-        MutableSortedNaturalOrderTestCase.super.SortedIterable_comparator();
-    }
 }

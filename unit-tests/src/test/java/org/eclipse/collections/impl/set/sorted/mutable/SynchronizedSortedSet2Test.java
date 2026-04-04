@@ -63,5 +63,4 @@ public class SynchronizedSortedSet2Test extends AbstractSortedSetTestCase
     {
         assertThrows(NoSuchElementException.class, () -> this.newWith().max());
     }
-
 }
