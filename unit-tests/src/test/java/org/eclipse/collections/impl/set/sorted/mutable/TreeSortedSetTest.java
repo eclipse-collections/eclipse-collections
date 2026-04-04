@@ -83,5 +83,4 @@ public class TreeSortedSetTest extends AbstractSortedSetTestCase
         MutableSortedSet<Integer> set = this.newWith(1, 2, 3, 4, 5);
         Verify.assertPostSerializedEqualsAndHashCode(set);
     }
-
 }
