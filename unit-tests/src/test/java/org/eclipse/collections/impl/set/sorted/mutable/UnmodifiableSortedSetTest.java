@@ -28,7 +28,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * JUnit test for {@link UnmodifiableSortedSet}.
@@ -355,5 +354,4 @@ public class UnmodifiableSortedSetTest extends AbstractSortedSetTestCase
     {
         assertThrows(UnsupportedOperationException.class, () -> this.newWith().withoutAll(FastList.newListWith(1, 2)));
     }
-
 }
