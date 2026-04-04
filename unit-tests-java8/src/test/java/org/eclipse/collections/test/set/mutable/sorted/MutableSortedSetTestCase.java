@@ -13,11 +13,11 @@ package org.eclipse.collections.test.set.mutable.sorted;
 import org.eclipse.collections.api.set.sorted.MutableSortedSet;
 import org.eclipse.collections.test.MutableSortedIterableTestCase;
 import org.eclipse.collections.test.collection.mutable.MutableCollectionUniqueTestCase;
+import org.eclipse.collections.test.set.sorted.NavigableSetTestCase;
 import org.eclipse.collections.test.set.sorted.SortedSetIterableTestCase;
-import org.eclipse.collections.test.set.sorted.SortedSetTestCase;
 import org.junit.jupiter.api.Test;
 
-public interface MutableSortedSetTestCase extends SortedSetIterableTestCase, MutableCollectionUniqueTestCase, SortedSetTestCase, MutableSortedIterableTestCase
+public interface MutableSortedSetTestCase extends SortedSetIterableTestCase, MutableCollectionUniqueTestCase, NavigableSetTestCase, MutableSortedIterableTestCase
 {
     @Override
     <T> MutableSortedSet<T> newWith(T... elements);
@@ -26,7 +26,7 @@ public interface MutableSortedSetTestCase extends SortedSetIterableTestCase, Mut
     @Test
     default void Iterable_toString()
     {
-        SortedSetTestCase.super.Iterable_toString();
+        NavigableSetTestCase.super.Iterable_toString();
     }
 
     @Override
@@ -34,7 +34,7 @@ public interface MutableSortedSetTestCase extends SortedSetIterableTestCase, Mut
     default void Iterable_remove()
     {
         // Both implementations are the same
-        SortedSetTestCase.super.Iterable_remove();
+        NavigableSetTestCase.super.Iterable_remove();
         MutableSortedIterableTestCase.super.Iterable_remove();
     }
 }

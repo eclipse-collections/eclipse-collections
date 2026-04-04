@@ -11,36 +11,14 @@
 package org.eclipse.collections.test;
 
 import org.eclipse.collections.api.ordered.SortedIterable;
-import org.eclipse.collections.impl.block.factory.Comparators;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public interface SortedIterableTestCase extends OrderedIterableTestCase, NoDetectOptionalNullTestCase
 {
     @Override
     <T> SortedIterable<T> newWith(T... elements);
-
-    @Override
-    default OrderingType getOrderingType()
-    {
-        return OrderingType.SORTED_REVERSE_NATURAL;
-    }
-
-    @Test
-    default void SortedIterable_comparator()
-    {
-        assertSame(Comparators.reverseNaturalOrder(), this.newWith().comparator());
-    }
-
-    @Override
-    @Test
-    default void OrderedIterable_forEach_from_to_reverse_order()
-    {
-        // TODO Support reverse indexed traversal for sorted iterables.
-        assertThrows(IllegalArgumentException.class, () -> this.newWith(9, 8, 7, 6, 5, 4, 3, 2, 1, 0).forEach(7, 5, each -> { }));
-    }
 
     @Override
     @Test

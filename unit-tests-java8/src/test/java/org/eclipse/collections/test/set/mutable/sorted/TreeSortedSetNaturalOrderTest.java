@@ -31,10 +31,4 @@ public class TreeSortedSetNaturalOrderTest
         IterableTestCase.addAllTo(elements, result);
         return result;
     }
-
-    @Override
-    public boolean allowsDuplicates()
-    {
-        return false;
-    }
 }

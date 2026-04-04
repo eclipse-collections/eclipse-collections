@@ -428,25 +428,33 @@ public interface OrderedIterableTestCase extends RichIterableTestCase
                 },
                 result5);
 
+        if (this.supportsForEachFromToReverseIteration())
+        {
+            MutableList<Integer> reverseResult = Lists.mutable.empty();
+            integers.forEach(7, 5, reverseResult::add);
+            assertIterablesEqual(
+                    switch (this.getOrderingType())
+                    {
+                        case SORTED_NATURAL -> Lists.immutable.with(7, 6, 5);
+                        case UNORDERED, INSERTION_ORDER, SORTED_REVERSE_NATURAL -> Lists.immutable.with(2, 3, 4);
+                    },
+                    reverseResult);
+        }
+        else
+        {
+            // TODO Support reverse indexed traversal where this still throws.
+            assertThrows(IllegalArgumentException.class, () -> integers.forEach(7, 5, result::add));
+        }
+
         assertThrows(IndexOutOfBoundsException.class, () -> integers.forEach(-1, 0, result::add));
         assertThrows(IndexOutOfBoundsException.class, () -> integers.forEach(0, -1, result::add));
         assertThrows(IndexOutOfBoundsException.class, () -> integers.forEach(0, 10, result::add));
         assertThrows(IndexOutOfBoundsException.class, () -> integers.forEach(10, 0, result::add));
     }
 
-    @Test
-    default void OrderedIterable_forEach_from_to_reverse_order()
+    default boolean supportsForEachFromToReverseIteration()
     {
-        OrderedIterable<Integer> integers = (OrderedIterable<Integer>) this.newWith(9, 8, 7, 6, 5, 4, 3, 2, 1, 0);
-        MutableList<Integer> result = Lists.mutable.empty();
-        integers.forEach(7, 5, result::add);
-        assertIterablesEqual(
-                switch (this.getOrderingType())
-                {
-                    case SORTED_NATURAL -> Lists.immutable.with(7, 6, 5);
-                    case UNORDERED, INSERTION_ORDER, SORTED_REVERSE_NATURAL -> Lists.immutable.with(2, 3, 4);
-                },
-                result);
+        return true;
     }
 
     @Test
