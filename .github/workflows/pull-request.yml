@@ -1,5 +1,5 @@
 # This workflow will build a Java project with Maven
-# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-maven
 
 name: Pull Request
 
@@ -9,6 +9,7 @@ jobs:
   unit-tests:
     name: Unit Tests
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v6
 
@@ -35,6 +36,7 @@ jobs:
 
   enforcer:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v6
 
@@ -63,6 +65,7 @@ jobs:
 
   dependency:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v6
 
@@ -95,6 +98,7 @@ jobs:
       matrix:
         java-version: [17, 21, 25]
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v6
 
@@ -124,6 +128,7 @@ jobs:
   unit-tests-early-access:
     name: Unit Test Early Access
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v6
 
@@ -158,6 +163,7 @@ jobs:
   acceptance-tests:
     name: Acceptance Tests
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v6
 
@@ -186,6 +192,7 @@ jobs:
   performance-tests:
     name: Performance Tests
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v6
 
@@ -214,6 +221,7 @@ jobs:
   checkstyle:
     name: Checkstyle
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v6
       - run: mvn --non-recursive wrapper:wrapper -Dmaven=3.9.6
@@ -230,6 +238,7 @@ jobs:
   errorprone:
     name: ErrorProne
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v6
 
@@ -327,6 +336,7 @@ jobs:
   javadoc-early-access:
     name: Javadoc Early Access
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v6
 
