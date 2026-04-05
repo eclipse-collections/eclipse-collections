@@ -83,7 +83,7 @@ All changes are in `.stg` template files. The code generator produces the final 
 
 | File | Change |
 |---|---|
-| `impl/set/immutable/immutablePrimitiveEmptySet.stg` | Return `Spliterators.emptyIntSpliterator()` (or Long/Double equivalent) |
+| `impl/set/immutable/immutablePrimitiveEmptySet.stg` | Return `Spliterators.empty<name>Spliterator()` — template expands to `emptyIntSpliterator()`, `emptyLongSpliterator()`, `emptyDoubleSpliterator()` |
 | `impl/set/immutable/immutablePrimitiveSingletonSet.stg` | Return `new <name>SingletonSpliterator(this.element1)` (reuse existing spliterator class) |
 
 ### Map Key Sets

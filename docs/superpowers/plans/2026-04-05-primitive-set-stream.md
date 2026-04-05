@@ -15,8 +15,8 @@
 | Template file (all under `eclipse-collections-code-generator/src/main/resources/`) | Change |
 |---|---|
 | `api/set/primitiveSet.stg` | Add stream imports + `spliterator()` abstract + 2 default stream methods |
-| `impl/set/mutable/primitiveHashSet.stg` | Add `Spliterators` import + implement `spliterator()` |
-| `impl/set/mutable/synchronizedPrimitiveSet.stg` | Add `Spliterator` import + synchronized delegate `spliterator()` |
+| `impl/set/mutable/primitiveHashSet.stg` | Add `Spliterators` import + implement `spliterator()` for **both** `<name>HashSet` (mutable) **and** the inner `Immutable<name>HashSet` private class |
+| `impl/set/mutable/synchronizedPrimitiveSet.stg` | Add `Spliterator` import + delegate `spliterator()` with manual-sync Javadoc (no `synchronized` keyword — matches list convention) |
 | `impl/set/mutable/unmodifiablePrimitiveSet.stg` | Add `Spliterator` import + delegate `spliterator()` |
 | `impl/set/immutable/immutablePrimitiveEmptySet.stg` | Add imports + implement `spliterator()` returning empty spliterator |
 | `impl/set/immutable/immutablePrimitiveSingletonSet.stg` | Add imports + implement `spliterator()` using `<name>SingletonSpliterator` |
@@ -111,12 +111,18 @@ git commit -m "feat: add spliterator/primitiveStream API to primitiveSet.stg int
 
 ---
 
-## Task 2: Implement `spliterator()` in `primitiveHashSet.stg`
+## Task 2: Implement `spliterator()` in `primitiveHashSet.stg` — mutable AND inner immutable class
 
 **Files:**
 - Modify: `eclipse-collections-code-generator/src/main/resources/impl/set/mutable/primitiveHashSet.stg`
 
-`IntHashSet` stores elements in a `zeroToThirtyOne` bitmask + a `table[]` array. We use `toArray()` (which already handles both) to build the spliterator.
+**Important:** This template generates two classes:
+1. The public `<name>HashSet` (mutable) — at the top of the file
+2. An inner `private static final class Immutable<name>HashSet` at line 1114 — this is the concrete class returned by `toImmutable()` and `freeze()`
+
+Both classes must implement `spliterator()`. If only the mutable one is handled, `ImmutableIntHashSet` (the most common concrete immutable set) will fail with `AbstractMethodError` at runtime.
+
+`IntHashSet` stores elements in a `zeroToThirtyOne` bitmask + a `table[]` array. We use `toArray()` (which already handles both storage mechanisms) to build the spliterator.
 
 - [ ] **Step 1: Add the import**
 
@@ -129,9 +135,9 @@ import java.util.Spliterators;
 <endif>
 ```
 
-- [ ] **Step 2: Add the `spliterator()` method**
+- [ ] **Step 2a: Add `spliterator()` to the mutable `<name>HashSet` class**
 
-The class body closes at line 1777 (`}` then `>>`). Add before the closing `}`:
+The mutable class body closes at line 1777 (`}` then `>>`). Add before the first closing `}` that ends `<name>HashSet`:
 
 ```stg
 <if(primitive.specializedStream)>
@@ -144,20 +150,22 @@ The class body closes at line 1777 (`}` then `>>`). Add before the closing `}`:
 <endif>
 ```
 
-The end of the file should look like:
+- [ ] **Step 2b: Add `spliterator()` to the inner `Immutable<name>HashSet` class**
+
+The inner class is at line 1114: `private static final class Immutable<name>HashSet extends AbstractImmutable<name>Set`. Find its closing `}` (the one that closes the inner class body, before the outer serialization proxy). Add before that closing `}`:
+
 ```stg
 <if(primitive.specializedStream)>
 
     @Override
     public Spliterator.Of<name> spliterator()
     {
-        return Spliterators.spliterator(this.toArray(), Spliterator.DISTINCT | Spliterator.SIZED);
+        return Spliterators.spliterator(this.toArray(), Spliterator.DISTINCT | Spliterator.SIZED | Spliterator.IMMUTABLE);
     }
 <endif>
-}
-
->>
 ```
+
+The inner `Immutable<name>HashSet` uses `IMMUTABLE` in its characteristics because it cannot be structurally modified after creation.
 
 - [ ] **Step 3: Commit**
 
@@ -173,7 +181,7 @@ git commit -m "feat: implement spliterator() in primitiveHashSet.stg"
 **Files:**
 - Modify: `eclipse-collections-code-generator/src/main/resources/impl/set/mutable/synchronizedPrimitiveSet.stg`
 
-`SynchronizedIntSet` wraps a delegate; `spliterator()` must be `synchronized` to match the class contract.
+`SynchronizedIntSet` wraps a delegate. **Convention from `synchronizedPrimitiveList.stg`:** do NOT add `synchronized` keyword to `spliterator()` — instead add a Javadoc warning that the caller must synchronize externally before streaming. This matches the existing pattern at line 505–512 of `synchronizedPrimitiveList.stg`.
 
 - [ ] **Step 1: Add the import**
 
@@ -192,35 +200,18 @@ The class body closes at line 241 (`}` then `>>`). Add before the closing `}`:
 ```stg
 <if(primitive.specializedStream)>
 
+    /**
+     * This function needs to be synchronized manually
+     */
     @Override
-    public synchronized Spliterator.Of<name> spliterator()
+    public Spliterator.Of<name> spliterator()
     {
         return this.getMutable<name>Set().spliterator();
     }
 <endif>
 ```
 
-The end of the file should look like:
-```stg
-    public Mutable<name>Set newEmpty()
-    {
-        synchronized (this.getLock())
-        {
-            return this.getMutable<name>Set().newEmpty();
-        }
-    }
-<if(primitive.specializedStream)>
-
-    @Override
-    public synchronized Spliterator.Of<name> spliterator()
-    {
-        return this.getMutable<name>Set().spliterator();
-    }
-<endif>
-}
-
->>
-```
+**Note:** No `synchronized` keyword — this follows the same convention as `synchronizedPrimitiveList.stg`. The Javadoc tells callers they must synchronize externally if they want thread-safe traversal.
 
 - [ ] **Step 3: Commit**
 
@@ -296,7 +287,11 @@ git commit -m "feat: implement spliterator() in unmodifiablePrimitiveSet.stg"
 **Files:**
 - Modify: `eclipse-collections-code-generator/src/main/resources/impl/set/immutable/immutablePrimitiveEmptySet.stg`
 
-For an empty set, the JDK provides `Spliterators.emptyIntSpliterator()` etc. — no elements to copy.
+For an empty immutable set, we need a spliterator with `DISTINCT | SIZED | IMMUTABLE` characteristics.
+
+**Do NOT use `Spliterators.emptyIntSpliterator()`** — its JDK implementation has characteristics `SIZED | SUBSIZED | IMMUTABLE | ORDERED` but notably **does NOT include `DISTINCT`**. Since this is an immutable *set*, it must advertise `DISTINCT`.
+
+Instead, use `Spliterators.spliterator(new <type>[0], ...)` to construct an empty spliterator with the correct contract.
 
 - [ ] **Step 1: Add the imports**
 
@@ -319,12 +314,14 @@ The main body closes at line 396 (`>>`), with the class `}` just before at line 
     @Override
     public Spliterator.Of<name> spliterator()
     {
-        return Spliterators.empty<name>Spliterator();
+        return Spliterators.spliterator(new <type>[0], Spliterator.DISTINCT | Spliterator.SIZED | Spliterator.IMMUTABLE);
     }
 <endif>
 ```
 
-`<name>` expands to `Int`, `Long`, or `Double` — producing `emptyIntSpliterator()`, `emptyLongSpliterator()`, `emptyDoubleSpliterator()`.
+`<type>` expands to `int`, `long`, or `double`. This produces an empty spliterator with `DISTINCT | SIZED | IMMUTABLE` characteristics, correctly advertising the set contract.
+
+**Do NOT** use `Spliterators.emptyIntSpliterator()` — it lacks `DISTINCT`, which would make the `spliterator_empty_characteristics()` test fail.
 
 - [ ] **Step 3: Commit**
 
@@ -500,18 +497,27 @@ The class body currently closes at line 736 (`}` then `>>`). Add before the clos
     public void stream()
     {
         Mutable<name>Set set = this.newWith(<["1", "2", "3"]:(literal.(type))(); separator=", ">);
-        assertEquals(3, (int) set.primitiveStream().count());
-        assertTrue(set.primitiveStream().allMatch(set::contains));
+        // Verify exact contents using a collected set — count() alone is insufficient
+        assertEquals(set.toSet(), set.primitiveStream().boxed().collect(java.util.stream.Collectors.toSet()));
         assertEquals(3, (int) set.asSynchronized().primitiveStream().count());
         assertEquals(3, (int) set.asUnmodifiable().primitiveStream().count());
+    }
+
+    @Test
+    public void stream_singleton()
+    {
+        Mutable<name>Set singleton = this.newWith(<(literal.(type))("42")>);
+        assertEquals(1, (int) singleton.primitiveStream().count());
+        assertTrue(singleton.primitiveStream().allMatch(v -> v == <(literal.(type))("42")>));
     }
 
     @Test
     public void parallelStream()
     {
         Mutable<name>Set set = this.newWith(<["1", "2", "3"]:(literal.(type))(); separator=", ">);
-        assertEquals(3, (int) set.primitiveParallelStream().count());
-        assertTrue(set.primitiveParallelStream().allMatch(set::contains));
+        // Verify parallel stream returns same elements as sequential
+        assertEquals(set.toSet(), set.primitiveParallelStream().boxed().collect(java.util.stream.Collectors.toSet()));
+        assertTrue(set.primitiveParallelStream().isParallel());
     }
 
     @Test
@@ -561,8 +567,8 @@ The class body currently closes at line 537 (`}` then `>>`). Add before the clos
     public void stream()
     {
         Immutable<name>Set set = this.newWith(<["1", "2", "3"]:(literal.(type))(); separator=", ">);
-        assertEquals(3, (int) set.primitiveStream().count());
-        assertTrue(set.primitiveStream().allMatch(set::contains));
+        // Verify exact contents — count() alone cannot catch a stream that emits duplicates or skips elements
+        assertEquals(set.toSet(), set.primitiveStream().boxed().collect(java.util.stream.Collectors.toSet()));
     }
 
     @Test
@@ -573,11 +579,20 @@ The class body currently closes at line 537 (`}` then `>>`). Add before the clos
     }
 
     @Test
+    public void stream_singleton()
+    {
+        Immutable<name>Set singleton = this.newWith(<(literal.(type))("42")>);
+        assertEquals(1, (int) singleton.primitiveStream().count());
+        assertTrue(singleton.primitiveStream().allMatch(v -> v == <(literal.(type))("42")>));
+    }
+
+    @Test
     public void parallelStream()
     {
         Immutable<name>Set set = this.newWith(<["1", "2", "3"]:(literal.(type))(); separator=", ">);
-        assertEquals(3, (int) set.primitiveParallelStream().count());
-        assertTrue(set.primitiveParallelStream().allMatch(set::contains));
+        // Verify parallel stream returns same elements as sequential
+        assertEquals(set.toSet(), set.primitiveParallelStream().boxed().collect(java.util.stream.Collectors.toSet()));
+        assertTrue(set.primitiveParallelStream().isParallel());
     }
 
     @Test
@@ -589,6 +604,16 @@ The class body currently closes at line 537 (`}` then `>>`). Add before the clos
         assertTrue(spliterator.hasCharacteristics(Spliterator.SIZED));
         assertTrue(spliterator.hasCharacteristics(Spliterator.IMMUTABLE));
         assertEquals(3L, spliterator.estimateSize());
+    }
+
+    @Test
+    public void spliterator_singleton_characteristics()
+    {
+        Spliterator.Of<name> spliterator = this.newWith(<(literal.(type))("7")>).spliterator();
+        assertTrue(spliterator.hasCharacteristics(Spliterator.DISTINCT));
+        assertTrue(spliterator.hasCharacteristics(Spliterator.SIZED));
+        assertTrue(spliterator.hasCharacteristics(Spliterator.IMMUTABLE));
+        assertEquals(1L, spliterator.estimateSize());
     }
 
     @Test
@@ -637,20 +662,51 @@ Expected: paths printed for all listed files.
 - [ ] **Step 3: Run primitive set unit tests**
 
 ```bash
-mvn test -pl unit-tests -Dtest="AbstractIntSetTestCase,AbstractLongSetTestCase,AbstractDoubleSetTestCase,AbstractImmutableIntHashSetTestCase,AbstractImmutableLongHashSetTestCase,AbstractImmutableDoubleHashSetTestCase" -q
+mvn test -pl unit-tests -Dtest="IntHashSetTest,LongHashSetTest,DoubleHashSetTest,ImmutableIntHashSetTest,ImmutableLongHashSetTest,ImmutableDoubleHashSetTest,FrozenIntHashSetTest,FrozenLongHashSetTest,FrozenDoubleHashSetTest,SynchronizedIntSetTest,SynchronizedLongSetTest,SynchronizedDoubleSetTest,UnmodifiableIntSetTest,UnmodifiableLongSetTest,UnmodifiableDoubleSetTest" -q
 ```
+
+These are the **concrete generated test classes** (from `primitiveHashSetTest.stg` → `IntHashSetTest`, `immutablePrimitiveHashSetTest.stg` → `ImmutableIntHashSetTest`, `frozenPrimitiveSetTest.stg` → `FrozenIntHashSetTest`, `synchronizedPrimitiveSetTest.stg`, `unmodifiablePrimitiveSetTest.stg`). Abstract base classes like `AbstractIntSetTestCase` have no `@Test` methods and running them directly produces zero results.
 
 Expected: `BUILD SUCCESS`, all tests pass.
 
 If a test fails with `AbstractMethodError: spliterator()`, a concrete set class hasn't had its template updated. Check which class is throwing — it will point to the missing template.
 
-- [ ] **Step 4: Run full primitive set test suite for confidence**
+- [ ] **Step 4: Run full affected primitive set and key-set test suite for confidence**
+
+The changed templates affect these test families (all for int/long/double only):
+
+**Set tests:** `IntHashSetTest`, `ImmutableIntHashSetTest`, `ImmutableIntEmptySetTest`, `FrozenIntHashSetTest`, `SynchronizedIntSetTest`, `UnmodifiableIntSetTest`
+
+**Key-set tests from `abstractMutablePrimitiveKeySet.stg` (mutable key-set shared base):**
+- `IntIntHashMapKeySetTest`, `IntLongHashMapKeySetTest`, ... (all `<p1><p2>HashMapKeySetTest`)
+- `IntObjectHashMapKeySetTest` (from `primitiveObjectHashMapKeySetTest.stg`)
+- `IntBooleanHashMapKeySetTest` (from `primitiveBooleanHashMapKeySetTest.stg`)
+- `SynchronizedIntIntMapKeySetTest`, `SynchronizedIntObjectMapKeySetTest`, `SynchronizedIntBooleanMapKeySetTest`
+- `UnmodifiableIntIntMapKeySetTest`, `UnmodifiableIntObjectMapKeySetTest`, `UnmodifiableIntBooleanMapKeySetTest`
+
+**Key-set tests from `primitiveImmutableKeySets.stg` (immutable key-set):**
+- `ImmutableIntMapKeySetTest` (from `immutablePrimitiveKeySetTest.stg`)
+- `ImmutableIntIntMapKeySetTest` (from `immutablePrimitivePrimitiveMapKeySetTest.stg`)
+
+Rather than listing every combination (8 primitives × 8 primitives for primitive-primitive variants), use the Maven Surefire glob patterns that precisely target the affected generated test names:
 
 ```bash
-mvn test -pl unit-tests -Dtest="*IntSet*,*LongSet*,*DoubleSet*" -q
+mvn test -pl unit-tests \
+  -Dtest="IntHashSetTest,LongHashSetTest,DoubleHashSetTest,\
+ImmutableIntHashSetTest,ImmutableLongHashSetTest,ImmutableDoubleHashSetTest,\
+ImmutableIntEmptySetTest,ImmutableLongEmptySetTest,ImmutableDoubleEmptySetTest,\
+FrozenIntHashSetTest,FrozenLongHashSetTest,FrozenDoubleHashSetTest,\
+SynchronizedIntSetTest,SynchronizedLongSetTest,SynchronizedDoubleSetTest,\
+UnmodifiableIntSetTest,UnmodifiableLongSetTest,UnmodifiableDoubleSetTest,\
+Int*HashMapKeySetTest,Long*HashMapKeySetTest,Double*HashMapKeySetTest,\
+Synchronized*Int*MapKeySetTest,Synchronized*Long*MapKeySetTest,Synchronized*Double*MapKeySetTest,\
+Unmodifiable*Int*MapKeySetTest,Unmodifiable*Long*MapKeySetTest,Unmodifiable*Double*MapKeySetTest,\
+ImmutableIntMapKeySetTest,ImmutableLongMapKeySetTest,ImmutableDoubleMapKeySetTest,\
+ImmutableIntIntMapKeySetTest,ImmutableLongLongMapKeySetTest,ImmutableDoubleDoubleMapKeySetTest" \
+  -q
 ```
 
-Expected: `BUILD SUCCESS`.
+This covers: mutable hash sets, immutable hash sets, empty sets, frozen sets, synchronized sets, unmodifiable sets, all mutable key-set variants for int/long/double (primitive-primitive, primitive-object, primitive-boolean), their synchronized/unmodifiable wrappers, and both immutable key-set families.
 
 - [ ] **Step 5: Final commit**
 
@@ -663,8 +719,13 @@ git commit -m "feat: add primitiveStream/spliterator to IntSet, LongSet, DoubleS
 
 ## Self-Review Checklist
 
-- [x] **Spec coverage:** All 11 template files from the spec are covered (API, 3 mutable impls, 2 immutable impls, 3 map key set templates, 2 test templates).
+- [x] **Spec coverage:** All template files covered — API, 3 mutable impls, 2 immutable impls, 3 map key set templates, 2 test templates.
 - [x] **No placeholders:** Every step has exact code or exact commands.
-- [x] **Type consistency:** `spliterator()` signature and `DISTINCT | SIZED` characteristics are uniform across Tasks 2–8. Immutable variants additionally include `IMMUTABLE` (Tasks 5, 6, 8, 10).
-- [x] **Field name caveat:** Task 6 explicitly asks to verify the field name before committing to avoid a silent bug.
-- [x] **Test empty/singleton coverage:** Task 10 adds dedicated `stream_empty()` and `spliterator_empty_characteristics()` tests.
+- [x] **Inner immutable hash set:** Task 2 now explicitly covers BOTH the mutable `<name>HashSet` AND the inner `private static final class Immutable<name>HashSet` in `primitiveHashSet.stg`. Inner class uses `DISTINCT | SIZED | IMMUTABLE` characteristics.
+- [x] **Empty spliterator correctness:** Task 5 uses `Spliterators.spliterator(new <type>[0], DISTINCT|SIZED|IMMUTABLE)` — NOT `emptyIntSpliterator()` which lacks `DISTINCT`.
+- [x] **Synchronized convention:** Task 3 follows `synchronizedPrimitiveList.stg` — no `synchronized` keyword, Javadoc comment only.
+- [x] **Test strength:** Tests use `.boxed().collect(toSet())` for exact content verification, and `isParallel()` to verify parallel mode. Count-only assertions removed.
+- [x] **Singleton test coverage:** Task 9 adds `stream_singleton()`, Task 10 adds `stream_singleton()` and `spliterator_singleton_characteristics()`.
+- [x] **Empty test coverage:** Task 10 adds `stream_empty()` and `spliterator_empty_characteristics()`.
+- [x] **Verification uses concrete test classes with correct names:** Task 11 Step 3 now uses `FrozenIntHashSetTest` (not `FrozenIntSetTest`), verified against `frozenPrimitiveSetTest.stg → fileName = "Frozen<primitive.name>HashSetTest"`.
+- [x] **Step 4 covers all affected classes:** Uses targeted patterns covering mutable/immutable/frozen/synchronized/unmodifiable sets AND all key-set families (primitive-primitive, primitive-object, primitive-boolean, immutable primitive-map, immutable primitive-primitive-map) for int/long/double.
