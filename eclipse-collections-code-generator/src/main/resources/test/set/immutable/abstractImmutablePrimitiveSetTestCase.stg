@@ -45,6 +45,9 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+<if(primitive.specializedStream)>
+import java.util.Spliterator;
+<endif>
 
 /**
  * Abstract JUnit test for {@link Immutable<name>Set}.
@@ -534,6 +537,71 @@ public abstract class AbstractImmutable<name>HashSetTestCase extends AbstractImm
         ImmutableSet\<<name><name>Pair> actual = set1.cartesianProduct(set2).toSet().toImmutable();
         assertEquals(expected, actual);
     }
+<if(primitive.specializedStream)>
+
+    @Test
+    public void stream()
+    {
+        Immutable<name>Set set = this.newWith(<["1", "2", "3"]:(literal.(type))(); separator=", ">);
+        // Verify exact contents — count() alone cannot catch a stream that emits duplicates or skips elements
+        assertEquals(set.toSet(), set.primitiveStream().boxed().collect(java.util.stream.Collectors.toSet()));
+    }
+
+    @Test
+    public void stream_empty()
+    {
+        Immutable<name>Set empty = this.newWith();
+        assertEquals(0, (int) empty.primitiveStream().count());
+    }
+
+    @Test
+    public void stream_singleton()
+    {
+        Immutable<name>Set singleton = this.newWith(<(literal.(type))("42")>);
+        assertEquals(1, (int) singleton.primitiveStream().count());
+        assertTrue(singleton.primitiveStream().allMatch(v -> v == <(literal.(type))("42")>));
+    }
+
+    @Test
+    public void parallelStream()
+    {
+        Immutable<name>Set set = this.newWith(<["1", "2", "3"]:(literal.(type))(); separator=", ">);
+        // Verify parallel stream returns same elements as sequential
+        assertEquals(set.toSet(), set.primitiveParallelStream().boxed().collect(java.util.stream.Collectors.toSet()));
+        assertTrue(set.primitiveParallelStream().isParallel());
+    }
+
+    @Test
+    public void spliterator_characteristics()
+    {
+        Immutable<name>Set set = this.newWith(<["1", "2", "3"]:(literal.(type))(); separator=", ">);
+        Spliterator.Of<name> spliterator = set.spliterator();
+        assertTrue(spliterator.hasCharacteristics(Spliterator.DISTINCT));
+        assertTrue(spliterator.hasCharacteristics(Spliterator.SIZED));
+        assertTrue(spliterator.hasCharacteristics(Spliterator.IMMUTABLE));
+        assertEquals(3L, spliterator.estimateSize());
+    }
+
+    @Test
+    public void spliterator_singleton_characteristics()
+    {
+        Spliterator.Of<name> spliterator = this.newWith(<(literal.(type))("7")>).spliterator();
+        assertTrue(spliterator.hasCharacteristics(Spliterator.DISTINCT));
+        assertTrue(spliterator.hasCharacteristics(Spliterator.SIZED));
+        assertTrue(spliterator.hasCharacteristics(Spliterator.IMMUTABLE));
+        assertEquals(1L, spliterator.estimateSize());
+    }
+
+    @Test
+    public void spliterator_empty_characteristics()
+    {
+        Spliterator.Of<name> spliterator = this.newWith().spliterator();
+        assertTrue(spliterator.hasCharacteristics(Spliterator.DISTINCT));
+        assertTrue(spliterator.hasCharacteristics(Spliterator.SIZED));
+        assertTrue(spliterator.hasCharacteristics(Spliterator.IMMUTABLE));
+        assertEquals(0L, spliterator.estimateSize());
+    }
+<endif>
 }
 
 >>
