@@ -96,6 +96,14 @@ Arrays, Maps or Strings. The iteration protocol was inspired by the Smalltalk co
         <developer>
             <name>Sirisha Pratha</name>
         </developer>
+
+        <developer>
+            <name>Vladimir Zakharov</name>
+        </developer>
+
+        <developer>
+            <name>Desislav Petrov</name>
+        </developer>
     </developers>
 
     <modules>
@@ -132,8 +140,7 @@ Arrays, Maps or Strings. The iteration protocol was inspired by the Smalltalk co
         <jmh.version>1.37</jmh.version>
         <jol.version>0.17</jol.version>
 
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.release>17</maven.compiler.release>
         <maven.compiler.fork>true</maven.compiler.fork>
         <maven.compiler.meminitial>2048m</maven.compiler.meminitial>
         <maven.compiler.maxmem>2048m</maven.compiler.maxmem>
