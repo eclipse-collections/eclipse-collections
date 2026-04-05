@@ -19,6 +19,10 @@ package org.eclipse.collections.impl.set.mutable.primitive;
 <if(primitive.floatingPoint)>import java.util.HashSet;<endif>
 import java.util.NoSuchElementException;
 <if(primitive.floatingPoint)>import java.util.Set;<endif>
+<if(primitive.specializedStream)>
+import java.util.Spliterator;
+import java.util.stream.Collectors;
+<endif>
 
 import org.eclipse.collections.api.Lazy<name>Iterable;
 import org.eclipse.collections.api.iterator.<name>Iterator;
@@ -733,6 +737,45 @@ public abstract class Abstract<name>SetTestCase extends AbstractMutable<name>Col
         MutableSet\<<name><name>Pair> actual = set1.cartesianProduct(set2).toSet();
         assertEquals(expected, actual);
     }
+<if(primitive.specializedStream)>
+
+    @Test
+    public void stream()
+    {
+        Mutable<name>Set set = this.newWith(<["1", "2", "3"]:(literal.(type))(); separator=", ">);
+        // Verify exact contents using a collected set — count() alone is insufficient
+        assertEquals(set.toSet(), set.primitiveStream().boxed().collect(java.util.stream.Collectors.toSet()));
+        assertEquals(3, (int) set.asSynchronized().primitiveStream().count());
+        assertEquals(3, (int) set.asUnmodifiable().primitiveStream().count());
+    }
+
+    @Test
+    public void stream_singleton()
+    {
+        Mutable<name>Set singleton = this.newWith(<(literal.(type))("42")>);
+        assertEquals(1, (int) singleton.primitiveStream().count());
+        assertTrue(singleton.primitiveStream().allMatch(v -> v == <(literal.(type))("42")>));
+    }
+
+    @Test
+    public void parallelStream()
+    {
+        Mutable<name>Set set = this.newWith(<["1", "2", "3"]:(literal.(type))(); separator=", ">);
+        // Verify parallel stream returns same elements as sequential
+        assertEquals(set.toSet(), set.primitiveParallelStream().boxed().collect(java.util.stream.Collectors.toSet()));
+        assertTrue(set.primitiveParallelStream().isParallel());
+    }
+
+    @Test
+    public void spliterator_characteristics()
+    {
+        Mutable<name>Set set = this.newWith(<["1", "2", "3"]:(literal.(type))(); separator=", ">);
+        Spliterator.Of<name> spliterator = set.spliterator();
+        assertTrue(spliterator.hasCharacteristics(Spliterator.DISTINCT));
+        assertTrue(spliterator.hasCharacteristics(Spliterator.SIZED));
+        assertEquals(3L, spliterator.estimateSize());
+    }
+<endif>
 }
 
 >>
