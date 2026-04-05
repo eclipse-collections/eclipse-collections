@@ -345,7 +345,7 @@ public class ArrayStack<T> implements MutableStack<T>, Externalizable
     @Override
     public boolean containsAll(Collection<?> source)
     {
-        return this.delegate.asReversed().containsAll(source);
+        return this.delegate.asReversed().containsAllIterable(source);
     }
 
     @Override

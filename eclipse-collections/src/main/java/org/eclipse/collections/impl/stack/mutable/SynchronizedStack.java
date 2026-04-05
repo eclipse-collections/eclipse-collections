@@ -726,7 +726,7 @@ public final class SynchronizedStack<T> implements MutableStack<T>, Serializable
     {
         synchronized (this.lock)
         {
-            return this.delegate.containsAll(source);
+            return this.delegate.containsAllIterable(source);
         }
     }
 
