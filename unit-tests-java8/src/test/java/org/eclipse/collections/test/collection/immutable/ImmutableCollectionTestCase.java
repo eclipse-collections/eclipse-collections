@@ -29,6 +29,18 @@ public interface ImmutableCollectionTestCase extends RichIterableTestCase
     @Override
     <T> ImmutableCollection<T> newWith(T... elements);
 
+    @Override
+    default boolean allowsAdd()
+    {
+        return false;
+    }
+
+    @Override
+    default boolean allowsRemove()
+    {
+        return false;
+    }
+
     @Test
     default void ImmutableCollection_sanity_check()
     {

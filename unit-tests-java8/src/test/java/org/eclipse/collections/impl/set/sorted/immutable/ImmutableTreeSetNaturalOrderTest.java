@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Goldman Sachs and others.
+ * Copyright (c) 2026 Goldman Sachs and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -8,21 +8,26 @@
  * http://www.eclipse.org/org/documents/edl-v10.php.
  */
 
-package org.eclipse.collections.test.set.immutable.sorted;
+package org.eclipse.collections.impl.set.sorted.immutable;
 
 import org.eclipse.collections.api.factory.SortedSets;
-import org.eclipse.collections.api.set.sorted.ImmutableSortedSet;
 import org.eclipse.collections.api.set.sorted.MutableSortedSet;
 import org.eclipse.collections.test.IterableTestCase;
 
-public class ImmutableTreeSetNaturalOrderTest implements ImmutableNavigableSetTestCase
+public class ImmutableTreeSetNaturalOrderTest implements ImmutableSortedSetTestCase
 {
+    @Override
+    public OrderingType getOrderingType()
+    {
+        return OrderingType.SORTED_NATURAL;
+    }
+
     @SafeVarargs
     @Override
-    public final <T> ImmutableSortedSet<T> newWith(T... elements)
+    public final <T> AbstractImmutableSortedSet<T> newWith(T... elements)
     {
         MutableSortedSet<T> result = SortedSets.mutable.empty();
         IterableTestCase.addAllTo(elements, result);
-        return result.toImmutable();
+        return (AbstractImmutableSortedSet<T>) result.toImmutable();
     }
 }

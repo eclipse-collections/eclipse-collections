@@ -80,12 +80,6 @@ public class TreeMapKeySetHeadSetTest implements SortedSetTestCase
     }
 
     @Override
-    public boolean allowsRemove()
-    {
-        return true;
-    }
-
-    @Override
     @Test
     public void Object_PostSerializedEqualsAndHashCode()
     {
