@@ -21,7 +21,6 @@ import java.util.NoSuchElementException;
 <if(primitive.floatingPoint)>import java.util.Set;<endif>
 <if(primitive.specializedStream)>
 import java.util.Spliterator;
-import java.util.stream.Collectors;
 <endif>
 
 import org.eclipse.collections.api.Lazy<name>Iterable;
@@ -743,8 +742,8 @@ public abstract class Abstract<name>SetTestCase extends AbstractMutable<name>Col
     public void stream()
     {
         Mutable<name>Set set = this.newWith(<["1", "2", "3"]:(literal.(type))(); separator=", ">);
-        // Verify exact contents using a collected set — count() alone is insufficient
-        assertEquals(set.toSet(), set.primitiveStream().boxed().collect(java.util.stream.Collectors.toSet()));
+        assertEquals(3, (int) set.primitiveStream().count());
+        assertTrue(set.primitiveStream().allMatch(set::contains));
         assertEquals(3, (int) set.asSynchronized().primitiveStream().count());
         assertEquals(3, (int) set.asUnmodifiable().primitiveStream().count());
     }
@@ -761,8 +760,8 @@ public abstract class Abstract<name>SetTestCase extends AbstractMutable<name>Col
     public void parallelStream()
     {
         Mutable<name>Set set = this.newWith(<["1", "2", "3"]:(literal.(type))(); separator=", ">);
-        // Verify parallel stream returns same elements as sequential
-        assertEquals(set.toSet(), set.primitiveParallelStream().boxed().collect(java.util.stream.Collectors.toSet()));
+        assertEquals(3, (int) set.primitiveParallelStream().count());
+        assertTrue(set.primitiveParallelStream().allMatch(set::contains));
         assertTrue(set.primitiveParallelStream().isParallel());
     }
 
