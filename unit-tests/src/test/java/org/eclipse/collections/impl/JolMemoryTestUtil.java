@@ -40,15 +40,15 @@ public class JolMemoryTestUtil
         return false;
     }
 
-    public static void assertClassMemoryEquals(int expected, int expectedCOH, Object instance)
+    public static void assertClassMemoryEquals(long expected, long expectedCOH, Object instance)
     {
-        int memoryRequired = IS_COH_ENABLED ? expectedCOH : expected;
+        long memoryRequired = IS_COH_ENABLED ? expectedCOH : expected;
         assertEquals(memoryRequired, ClassLayout.parseInstance(instance).instanceSize());
     }
 
-    public static void assertGraphMemoryEquals(int expected, int expectedCOH, Object instance)
+    public static void assertGraphMemoryEquals(long expected, long expectedCOH, Object instance)
     {
-        int memoryRequired = IS_COH_ENABLED ? expectedCOH : expected;
+        long memoryRequired = IS_COH_ENABLED ? expectedCOH : expected;
         assertEquals(memoryRequired, GraphLayout.parseInstance(instance).totalSize());
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Goldman Sachs.
+ * Copyright (c) 2026 Goldman Sachs and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -13,7 +13,7 @@ package org.eclipse.collections.impl.lazy.primitive;
 import java.util.Iterator;
 
 import org.eclipse.collections.api.BooleanIterable;
-import org.eclipse.collections.api.LazyIterable;
+import org.eclipse.collections.api.RichIterable;
 import org.eclipse.collections.api.bag.primitive.MutableBooleanBag;
 import org.eclipse.collections.api.block.function.primitive.BooleanFunction;
 import org.eclipse.collections.api.block.predicate.primitive.BooleanPredicate;
@@ -32,11 +32,11 @@ import org.eclipse.collections.api.set.primitive.MutableBooleanSet;
 public class CollectBooleanIterable<T>
         extends AbstractLazyBooleanIterable
 {
-    private final LazyIterable<T> iterable;
+    private final RichIterable<T> iterable;
     private final BooleanFunction<? super T> function;
     private final BooleanFunctionToProcedure<T> booleanFunctionToProcedure;
 
-    public CollectBooleanIterable(LazyIterable<T> adapted, BooleanFunction<? super T> function)
+    public CollectBooleanIterable(RichIterable<T> adapted, BooleanFunction<? super T> function)
     {
         this.iterable = adapted;
         this.function = function;
