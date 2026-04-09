@@ -8,18 +8,20 @@
  * http://www.eclipse.org/org/documents/edl-v10.php.
  */
 
-package org.eclipse.collections.test.set.mutable.sorted;
+package org.eclipse.collections.test.bag.mutable.sorted;
 
-import org.eclipse.collections.test.UnmodifiableMutableCollectionTestCase;
-import org.eclipse.collections.test.set.sorted.UnmodifiableNavigableSetTestCase;
+import org.eclipse.collections.test.NoIteratorTestCase;
+import org.eclipse.collections.test.OrderedIterableTestCase;
 import org.junit.jupiter.api.Test;
 
-public interface UnmodifiableMutableSortedSetTestCase extends UnmodifiableMutableCollectionTestCase, UnmodifiableNavigableSetTestCase, MutableSortedSetTestCase
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+public interface OrderedIterableNoIteratorTest extends NoIteratorTestCase, OrderedIterableTestCase
 {
     @Override
     @Test
-    default void Iterable_remove()
+    default void Iterable_next()
     {
-        UnmodifiableNavigableSetTestCase.super.Iterable_remove();
+        assertThrows(AssertionError.class, () -> this.newWith(3, 2, 1).iterator());
     }
 }

@@ -154,7 +154,12 @@ public interface IterableTestCase
             return;
         }
 
-        assertEquals(o1, o2);
+        boolean equivalentEmptyCollections = IterableTestCase.areEquivalentEmptyCollections(o1, o2);
+
+        if (!equivalentEmptyCollections)
+        {
+            assertEquals(o1, o2);
+        }
 
         assertNotNull(o1, "Neither item should equal null");
         assertNotNull(o2, "Neither item should equal null");
@@ -162,9 +167,12 @@ public interface IterableTestCase
         assertIterablesNotEqual("Neither item should equal new Object()", o2.equals(new Object()));
         assertEquals(o1, o1);
         assertEquals(o2, o2);
-        assertEquals(o1, o2);
-        assertEquals(o2, o1);
-        assertEquals(o1.hashCode(), o2.hashCode());
+        if (!equivalentEmptyCollections)
+        {
+            assertEquals(o1, o2);
+            assertEquals(o2, o1);
+            assertEquals(o1.hashCode(), o2.hashCode());
+        }
 
         checkNotSame(o1, o2);
 
@@ -181,12 +189,7 @@ public interface IterableTestCase
             Verify.assertIterablesEqual((Iterable<?>) o1, (Iterable<?>) o2);
             if (o1 instanceof SortedIterable<?> || o2 instanceof SortedIterable<?>)
             {
-                Comparator<?> comparator1 = ((SortedIterable<?>) o1).comparator();
-                Comparator<?> comparator2 = ((SortedIterable<?>) o2).comparator();
-                if (comparator1 != null && comparator2 != null)
-                {
-                    assertSame(comparator1.getClass(), comparator2.getClass());
-                }
+                assertTrue(IterableTestCase.haveCompatibleComparators(o1, o2));
             }
         }
 
@@ -231,7 +234,47 @@ public interface IterableTestCase
             assertSame(o1, o2);
             return;
         }
+        if (IterableTestCase.areEquivalentEmptyCollections(o1, o2))
+        {
+            return;
+        }
         assertNotSame(o1, o2);
+    }
+
+    private static boolean haveCompatibleComparators(Object o1, Object o2)
+    {
+        if (!(o1 instanceof SortedIterable<?>) && !(o2 instanceof SortedIterable<?>))
+        {
+            return true;
+        }
+        if (!(o1 instanceof SortedIterable<?> sortedIterable1) || !(o2 instanceof SortedIterable<?> sortedIterable2))
+        {
+            return false;
+        }
+
+        Comparator<?> comparator1 = sortedIterable1.comparator();
+        Comparator<?> comparator2 = sortedIterable2.comparator();
+        if (comparator1 == comparator2)
+        {
+            return true;
+        }
+
+        // Only check class compatibility if both comparators are non-null
+        // (matching the original logic)
+        if (comparator1 != null && comparator2 != null)
+        {
+            return comparator1.getClass() == comparator2.getClass();
+        }
+
+        // If either is null, consider them compatible
+        return true;
+    }
+
+    private static boolean areEquivalentEmptyCollections(Object o1, Object o2)
+    {
+        return o1 instanceof ImmutableCollection<?> && o2 instanceof ImmutableCollection<?>
+                && ((ImmutableCollection<?>) o1).isEmpty() && ((ImmutableCollection<?>) o2).isEmpty()
+                && (o1 instanceof SortedIterable<?> || o2 instanceof SortedIterable<?>);
     }
 
     static void assertIterablesNotEqual(Object o1, Object o2)

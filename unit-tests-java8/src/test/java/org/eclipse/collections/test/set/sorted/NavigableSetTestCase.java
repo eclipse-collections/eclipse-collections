@@ -109,6 +109,19 @@ public interface NavigableSetTestCase extends SortedSetTestCase
     default void NavigableSet_pollFirst_pollLast()
     {
         NavigableSet<Integer> set1 = this.newWith();
+        if (!this.allowsRemove())
+        {
+            assertThrows(UnsupportedOperationException.class, set1::pollFirst);
+            assertThrows(UnsupportedOperationException.class, set1::pollLast);
+            NavigableSet<Integer> set2 = this.newWith(2, 4);
+            assertThrows(UnsupportedOperationException.class, set2::pollFirst);
+            assertThrows(UnsupportedOperationException.class, set2::pollLast);
+            assertEquals(2, set2.size());
+            assertTrue(set2.contains(2));
+            assertTrue(set2.contains(4));
+            return;
+        }
+
         assertNull(set1.pollFirst());
         assertNull(set1.pollLast());
 
@@ -217,48 +230,75 @@ public interface NavigableSetTestCase extends SortedSetTestCase
             assertIterablesEqual(this.newWith(), set1.tailSet(11, true));
             assertIterablesEqual(this.newWith(), set1.tailSet(11, false));
 
-            // Verify view semantics: modifications reflect in both
-            NavigableSet<Integer> subSetView = set1.subSet(4, true, 8, true);
-            subSetView.add(5);
-            assertIterablesEqual(this.newWith(2, 4, 5, 6, 8, 10), set1);
-            assertIterablesEqual(this.newWith(4, 5, 6, 8), subSetView);
-            set1.remove(5);
-            assertIterablesEqual(this.newWith(2, 4, 6, 8, 10), set1);
-            assertIterablesEqual(this.newWith(4, 6, 8), subSetView);
-            set1.add(5);
-            assertIterablesEqual(this.newWith(2, 4, 5, 6, 8, 10), set1);
-            assertIterablesEqual(this.newWith(4, 5, 6, 8), subSetView);
-            subSetView.remove(5);
-            assertIterablesEqual(this.newWith(2, 4, 6, 8, 10), set1);
-            assertIterablesEqual(this.newWith(4, 6, 8), subSetView);
+            if (this.allowsAdd() && this.allowsRemove())
+            {
+                // Verify view semantics: modifications reflect in both
+                NavigableSet<Integer> subSetView = set1.subSet(4, true, 8, true);
+                subSetView.add(5);
+                assertIterablesEqual(this.newWith(2, 4, 5, 6, 8, 10), set1);
+                assertIterablesEqual(this.newWith(4, 5, 6, 8), subSetView);
+                set1.remove(5);
+                assertIterablesEqual(this.newWith(2, 4, 6, 8, 10), set1);
+                assertIterablesEqual(this.newWith(4, 6, 8), subSetView);
+                set1.add(5);
+                assertIterablesEqual(this.newWith(2, 4, 5, 6, 8, 10), set1);
+                assertIterablesEqual(this.newWith(4, 5, 6, 8), subSetView);
+                subSetView.remove(5);
+                assertIterablesEqual(this.newWith(2, 4, 6, 8, 10), set1);
+                assertIterablesEqual(this.newWith(4, 6, 8), subSetView);
 
-            NavigableSet<Integer> headSetView = set1.headSet(6, true);
-            headSetView.add(3);
-            assertIterablesEqual(this.newWith(2, 3, 4, 6, 8, 10), set1);
-            assertIterablesEqual(this.newWith(2, 3, 4, 6), headSetView);
-            set1.remove(3);
-            assertIterablesEqual(this.newWith(2, 4, 6, 8, 10), set1);
-            assertIterablesEqual(this.newWith(2, 4, 6), headSetView);
-            set1.add(3);
-            assertIterablesEqual(this.newWith(2, 3, 4, 6, 8, 10), set1);
-            assertIterablesEqual(this.newWith(2, 3, 4, 6), headSetView);
-            headSetView.remove(3);
-            assertIterablesEqual(this.newWith(2, 4, 6, 8, 10), set1);
-            assertIterablesEqual(this.newWith(2, 4, 6), headSetView);
+                NavigableSet<Integer> headSetView = set1.headSet(6, true);
+                headSetView.add(3);
+                assertIterablesEqual(this.newWith(2, 3, 4, 6, 8, 10), set1);
+                assertIterablesEqual(this.newWith(2, 3, 4, 6), headSetView);
+                set1.remove(3);
+                assertIterablesEqual(this.newWith(2, 4, 6, 8, 10), set1);
+                assertIterablesEqual(this.newWith(2, 4, 6), headSetView);
+                set1.add(3);
+                assertIterablesEqual(this.newWith(2, 3, 4, 6, 8, 10), set1);
+                assertIterablesEqual(this.newWith(2, 3, 4, 6), headSetView);
+                headSetView.remove(3);
+                assertIterablesEqual(this.newWith(2, 4, 6, 8, 10), set1);
+                assertIterablesEqual(this.newWith(2, 4, 6), headSetView);
 
-            NavigableSet<Integer> tailSetView = set1.tailSet(6, true);
-            tailSetView.add(7);
-            assertIterablesEqual(this.newWith(2, 4, 6, 7, 8, 10), set1);
-            assertIterablesEqual(this.newWith(6, 7, 8, 10), tailSetView);
-            set1.remove(7);
-            assertIterablesEqual(this.newWith(2, 4, 6, 8, 10), set1);
-            assertIterablesEqual(this.newWith(6, 8, 10), tailSetView);
-            set1.add(7);
-            assertIterablesEqual(this.newWith(2, 4, 6, 7, 8, 10), set1);
-            assertIterablesEqual(this.newWith(6, 7, 8, 10), tailSetView);
-            tailSetView.remove(7);
-            assertIterablesEqual(this.newWith(2, 4, 6, 8, 10), set1);
-            assertIterablesEqual(this.newWith(6, 8, 10), tailSetView);
+                NavigableSet<Integer> tailSetView = set1.tailSet(6, true);
+                tailSetView.add(7);
+                assertIterablesEqual(this.newWith(2, 4, 6, 7, 8, 10), set1);
+                assertIterablesEqual(this.newWith(6, 7, 8, 10), tailSetView);
+                set1.remove(7);
+                assertIterablesEqual(this.newWith(2, 4, 6, 8, 10), set1);
+                assertIterablesEqual(this.newWith(6, 8, 10), tailSetView);
+                set1.add(7);
+                assertIterablesEqual(this.newWith(2, 4, 6, 7, 8, 10), set1);
+                assertIterablesEqual(this.newWith(6, 7, 8, 10), tailSetView);
+                tailSetView.remove(7);
+                assertIterablesEqual(this.newWith(2, 4, 6, 8, 10), set1);
+                assertIterablesEqual(this.newWith(6, 8, 10), tailSetView);
+            }
+            if (!this.allowsAdd())
+            {
+                NavigableSet<Integer> subSetView = set1.subSet(4, true, 8, true);
+                assertThrows(UnsupportedOperationException.class, () -> subSetView.add(5));
+                assertEquals(3, subSetView.size());
+                assertFalse(subSetView.contains(5));
+
+                NavigableSet<Integer> headSetView = set1.headSet(6, true);
+                assertThrows(UnsupportedOperationException.class, () -> headSetView.add(1));
+                assertEquals(3, headSetView.size());
+                assertFalse(headSetView.contains(1));
+
+                NavigableSet<Integer> tailSetView = set1.tailSet(6, true);
+                assertThrows(UnsupportedOperationException.class, () -> tailSetView.add(12));
+                assertEquals(3, tailSetView.size());
+                assertFalse(tailSetView.contains(12));
+            }
+            if (!this.allowsRemove())
+            {
+                NavigableSet<Integer> subSetView = set1.subSet(4, true, 8, true);
+                assertThrows(UnsupportedOperationException.class, () -> subSetView.remove(6));
+                assertEquals(3, subSetView.size());
+                assertTrue(subSetView.contains(6));
+            }
 
             // subSet with crossed indices (from > to) should throw
             assertThrows(IllegalArgumentException.class, () -> set1.subSet(8, true, 4, true));
@@ -304,48 +344,75 @@ public interface NavigableSetTestCase extends SortedSetTestCase
             assertIterablesEqual(this.newWith(10, 8, 6, 4, 2), set1.tailSet(11, true));
             assertIterablesEqual(this.newWith(10, 8, 6, 4, 2), set1.tailSet(11, false));
 
-            // Verify view semantics: modifications reflect in both
-            NavigableSet<Integer> subSetView = set1.subSet(8, true, 4, true);
-            subSetView.add(5);
-            assertIterablesEqual(this.newWith(10, 8, 6, 5, 4, 2), set1);
-            assertIterablesEqual(this.newWith(8, 6, 5, 4), subSetView);
-            set1.remove(5);
-            assertIterablesEqual(this.newWith(10, 8, 6, 4, 2), set1);
-            assertIterablesEqual(this.newWith(8, 6, 4), subSetView);
-            set1.add(5);
-            assertIterablesEqual(this.newWith(10, 8, 6, 5, 4, 2), set1);
-            assertIterablesEqual(this.newWith(8, 6, 5, 4), subSetView);
-            subSetView.remove(5);
-            assertIterablesEqual(this.newWith(10, 8, 6, 4, 2), set1);
-            assertIterablesEqual(this.newWith(8, 6, 4), subSetView);
+            if (this.allowsAdd() && this.allowsRemove())
+            {
+                // Verify view semantics: modifications reflect in both
+                NavigableSet<Integer> subSetView = set1.subSet(8, true, 4, true);
+                subSetView.add(5);
+                assertIterablesEqual(this.newWith(10, 8, 6, 5, 4, 2), set1);
+                assertIterablesEqual(this.newWith(8, 6, 5, 4), subSetView);
+                set1.remove(5);
+                assertIterablesEqual(this.newWith(10, 8, 6, 4, 2), set1);
+                assertIterablesEqual(this.newWith(8, 6, 4), subSetView);
+                set1.add(5);
+                assertIterablesEqual(this.newWith(10, 8, 6, 5, 4, 2), set1);
+                assertIterablesEqual(this.newWith(8, 6, 5, 4), subSetView);
+                subSetView.remove(5);
+                assertIterablesEqual(this.newWith(10, 8, 6, 4, 2), set1);
+                assertIterablesEqual(this.newWith(8, 6, 4), subSetView);
 
-            NavigableSet<Integer> headSetView = set1.headSet(6, true);
-            headSetView.add(7);
-            assertIterablesEqual(this.newWith(10, 8, 7, 6, 4, 2), set1);
-            assertIterablesEqual(this.newWith(10, 8, 7, 6), headSetView);
-            set1.remove(7);
-            assertIterablesEqual(this.newWith(10, 8, 6, 4, 2), set1);
-            assertIterablesEqual(this.newWith(10, 8, 6), headSetView);
-            set1.add(7);
-            assertIterablesEqual(this.newWith(10, 8, 7, 6, 4, 2), set1);
-            assertIterablesEqual(this.newWith(10, 8, 7, 6), headSetView);
-            headSetView.remove(7);
-            assertIterablesEqual(this.newWith(10, 8, 6, 4, 2), set1);
-            assertIterablesEqual(this.newWith(10, 8, 6), headSetView);
+                NavigableSet<Integer> headSetView = set1.headSet(6, true);
+                headSetView.add(7);
+                assertIterablesEqual(this.newWith(10, 8, 7, 6, 4, 2), set1);
+                assertIterablesEqual(this.newWith(10, 8, 7, 6), headSetView);
+                set1.remove(7);
+                assertIterablesEqual(this.newWith(10, 8, 6, 4, 2), set1);
+                assertIterablesEqual(this.newWith(10, 8, 6), headSetView);
+                set1.add(7);
+                assertIterablesEqual(this.newWith(10, 8, 7, 6, 4, 2), set1);
+                assertIterablesEqual(this.newWith(10, 8, 7, 6), headSetView);
+                headSetView.remove(7);
+                assertIterablesEqual(this.newWith(10, 8, 6, 4, 2), set1);
+                assertIterablesEqual(this.newWith(10, 8, 6), headSetView);
 
-            NavigableSet<Integer> tailSetView = set1.tailSet(6, true);
-            tailSetView.add(3);
-            assertIterablesEqual(this.newWith(10, 8, 6, 4, 3, 2), set1);
-            assertIterablesEqual(this.newWith(6, 4, 3, 2), tailSetView);
-            set1.remove(3);
-            assertIterablesEqual(this.newWith(10, 8, 6, 4, 2), set1);
-            assertIterablesEqual(this.newWith(6, 4, 2), tailSetView);
-            set1.add(3);
-            assertIterablesEqual(this.newWith(10, 8, 6, 4, 3, 2), set1);
-            assertIterablesEqual(this.newWith(6, 4, 3, 2), tailSetView);
-            tailSetView.remove(3);
-            assertIterablesEqual(this.newWith(10, 8, 6, 4, 2), set1);
-            assertIterablesEqual(this.newWith(6, 4, 2), tailSetView);
+                NavigableSet<Integer> tailSetView = set1.tailSet(6, true);
+                tailSetView.add(3);
+                assertIterablesEqual(this.newWith(10, 8, 6, 4, 3, 2), set1);
+                assertIterablesEqual(this.newWith(6, 4, 3, 2), tailSetView);
+                set1.remove(3);
+                assertIterablesEqual(this.newWith(10, 8, 6, 4, 2), set1);
+                assertIterablesEqual(this.newWith(6, 4, 2), tailSetView);
+                set1.add(3);
+                assertIterablesEqual(this.newWith(10, 8, 6, 4, 3, 2), set1);
+                assertIterablesEqual(this.newWith(6, 4, 3, 2), tailSetView);
+                tailSetView.remove(3);
+                assertIterablesEqual(this.newWith(10, 8, 6, 4, 2), set1);
+                assertIterablesEqual(this.newWith(6, 4, 2), tailSetView);
+            }
+            if (!this.allowsAdd())
+            {
+                NavigableSet<Integer> subSetView = set1.subSet(8, true, 4, true);
+                assertThrows(UnsupportedOperationException.class, () -> subSetView.add(5));
+                assertEquals(3, subSetView.size());
+                assertFalse(subSetView.contains(5));
+
+                NavigableSet<Integer> headSetView = set1.headSet(6, true);
+                assertThrows(UnsupportedOperationException.class, () -> headSetView.add(12));
+                assertEquals(3, headSetView.size());
+                assertFalse(headSetView.contains(12));
+
+                NavigableSet<Integer> tailSetView = set1.tailSet(6, true);
+                assertThrows(UnsupportedOperationException.class, () -> tailSetView.add(1));
+                assertEquals(3, tailSetView.size());
+                assertFalse(tailSetView.contains(1));
+            }
+            if (!this.allowsRemove())
+            {
+                NavigableSet<Integer> subSetView = set1.subSet(8, true, 4, true);
+                assertThrows(UnsupportedOperationException.class, () -> subSetView.remove(6));
+                assertEquals(3, subSetView.size());
+                assertTrue(subSetView.contains(6));
+            }
 
             // subSet with crossed indices (from > to) should throw
             assertThrows(IllegalArgumentException.class, () -> set1.subSet(4, true, 8, true));
@@ -388,7 +455,7 @@ public interface NavigableSetTestCase extends SortedSetTestCase
     {
         NavigableSet<Integer> set1 = this.newWith();
         NavigableSet<Integer> descending1 = set1.descendingSet();
-        assertIterablesEqual(this.newWith(), descending1);
+        assertIterablesEqual(this.newWith(), descending1.descendingSet());
 
         NavigableSet<Integer> set2 = this.newWith(2, 4);
         NavigableSet<Integer> descending2 = set2.descendingSet();
@@ -402,19 +469,34 @@ public interface NavigableSetTestCase extends SortedSetTestCase
             assertEquals(Integer.valueOf(4), descending2.first());
             assertEquals(Integer.valueOf(2), descending2.last());
 
-            // Verify view semantics: modifications reflect in both
-            descending2.add(3);
-            Verify.assertIterablesEqual(Arrays.asList(2, 3, 4), set2);
-            Verify.assertIterablesEqual(Arrays.asList(4, 3, 2), descending2);
-            set2.remove(3);
-            Verify.assertIterablesEqual(Arrays.asList(2, 4), set2);
-            Verify.assertIterablesEqual(Arrays.asList(4, 2), descending2);
-            set2.add(3);
-            Verify.assertIterablesEqual(Arrays.asList(2, 3, 4), set2);
-            Verify.assertIterablesEqual(Arrays.asList(4, 3, 2), descending2);
-            descending2.remove(3);
-            Verify.assertIterablesEqual(Arrays.asList(2, 4), set2);
-            Verify.assertIterablesEqual(Arrays.asList(4, 2), descending2);
+            if (this.allowsAdd() && this.allowsRemove())
+            {
+                // Verify view semantics: modifications reflect in both
+                descending2.add(3);
+                Verify.assertIterablesEqual(Arrays.asList(2, 3, 4), set2);
+                Verify.assertIterablesEqual(Arrays.asList(4, 3, 2), descending2);
+                set2.remove(3);
+                Verify.assertIterablesEqual(Arrays.asList(2, 4), set2);
+                Verify.assertIterablesEqual(Arrays.asList(4, 2), descending2);
+                set2.add(3);
+                Verify.assertIterablesEqual(Arrays.asList(2, 3, 4), set2);
+                Verify.assertIterablesEqual(Arrays.asList(4, 3, 2), descending2);
+                descending2.remove(3);
+                Verify.assertIterablesEqual(Arrays.asList(2, 4), set2);
+                Verify.assertIterablesEqual(Arrays.asList(4, 2), descending2);
+            }
+            if (!this.allowsAdd())
+            {
+                assertThrows(UnsupportedOperationException.class, () -> descending2.add(3));
+                assertEquals(2, descending2.size());
+                assertFalse(descending2.contains(3));
+            }
+            if (!this.allowsRemove())
+            {
+                assertThrows(UnsupportedOperationException.class, () -> descending2.remove(2));
+                assertEquals(2, descending2.size());
+                assertTrue(descending2.contains(2));
+            }
         }
         if (this.isReverseOrder(comparator))
         {
@@ -424,19 +506,34 @@ public interface NavigableSetTestCase extends SortedSetTestCase
             assertEquals(Integer.valueOf(2), descending2.first());
             assertEquals(Integer.valueOf(4), descending2.last());
 
-            // Verify view semantics: modifications reflect in both
-            descending2.add(3);
-            Verify.assertIterablesEqual(Arrays.asList(4, 3, 2), set2);
-            Verify.assertIterablesEqual(Arrays.asList(2, 3, 4), descending2);
-            set2.remove(3);
-            Verify.assertIterablesEqual(Arrays.asList(4, 2), set2);
-            Verify.assertIterablesEqual(Arrays.asList(2, 4), descending2);
-            set2.add(3);
-            Verify.assertIterablesEqual(Arrays.asList(4, 3, 2), set2);
-            Verify.assertIterablesEqual(Arrays.asList(2, 3, 4), descending2);
-            descending2.remove(3);
-            Verify.assertIterablesEqual(Arrays.asList(4, 2), set2);
-            Verify.assertIterablesEqual(Arrays.asList(2, 4), descending2);
+            if (this.allowsAdd() && this.allowsRemove())
+            {
+                // Verify view semantics: modifications reflect in both
+                descending2.add(3);
+                Verify.assertIterablesEqual(Arrays.asList(4, 3, 2), set2);
+                Verify.assertIterablesEqual(Arrays.asList(2, 3, 4), descending2);
+                set2.remove(3);
+                Verify.assertIterablesEqual(Arrays.asList(4, 2), set2);
+                Verify.assertIterablesEqual(Arrays.asList(2, 4), descending2);
+                set2.add(3);
+                Verify.assertIterablesEqual(Arrays.asList(4, 3, 2), set2);
+                Verify.assertIterablesEqual(Arrays.asList(2, 3, 4), descending2);
+                descending2.remove(3);
+                Verify.assertIterablesEqual(Arrays.asList(4, 2), set2);
+                Verify.assertIterablesEqual(Arrays.asList(2, 4), descending2);
+            }
+            if (!this.allowsAdd())
+            {
+                assertThrows(UnsupportedOperationException.class, () -> descending2.add(3));
+                assertEquals(2, descending2.size());
+                assertFalse(descending2.contains(3));
+            }
+            if (!this.allowsRemove())
+            {
+                assertThrows(UnsupportedOperationException.class, () -> descending2.remove(2));
+                assertEquals(2, descending2.size());
+                assertTrue(descending2.contains(2));
+            }
         }
 
         // Double descending returns to original order
