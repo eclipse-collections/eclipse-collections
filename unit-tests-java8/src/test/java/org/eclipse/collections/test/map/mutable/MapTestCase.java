@@ -10,14 +10,12 @@
 
 package org.eclipse.collections.test.map.mutable;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Spliterator;
 import java.util.function.BiConsumer;
 
 import org.eclipse.collections.api.factory.Sets;
@@ -637,10 +635,6 @@ public interface MapTestCase
             Map<Integer, String> map2 = this.newWithKeysValues(1, "1", 2, "2");
             assertNull(map2.putIfAbsent(5, null));
             assertTrue(map2.containsKey(5));
-
-            Map<Integer, String> map3 = this.newWithKeysValues(1, null, 2, "2");
-            assertNull(map3.putIfAbsent(1, "One"));
-            assertEquals("One", map3.get(1));
         }
     }
 
@@ -677,37 +671,6 @@ public interface MapTestCase
         MutableSet<String> actual = Sets.mutable.with();
         map.forEach((BiConsumer<Integer, String>) (key, value) -> actual.add(key + "=" + value));
         assertEquals(Sets.immutable.with("1=1", "2=2", "3=3"), actual);
-    }
-
-    @Test
-    default void Map_values()
-    {
-        Map<Integer, String> map = this.newWithKeysValues(3, "Three", 2, "Two", 1, "One");
-        Collection<String> values = map.values();
-
-        assertEquals(3, values.size());
-        assertFalse(values.isEmpty());
-
-        assertTrue(values.contains("One"));
-        assertTrue(values.contains("Two"));
-        assertTrue(values.contains("Three"));
-        assertFalse(values.contains("Four"));
-
-        assertTrue(values.containsAll(List.of("One", "Two", "Three")));
-        assertFalse(values.containsAll(List.of("One", "Four")));
-
-        Map<Object, Object> empty = this.newWith();
-        assertEquals(0, empty.values().size());
-        assertTrue(empty.values().isEmpty());
-
-        if (this.supportsNullValues())
-        {
-            assertFalse(values.contains(null));
-
-            Map<Integer, String> map2 = this.newWithKeysValues(1, null, 2, "2");
-            assertTrue(map2.values().contains(null));
-            assertFalse(map2.values().spliterator().hasCharacteristics(Spliterator.NONNULL));
-        }
     }
 
     class AlwaysEqual

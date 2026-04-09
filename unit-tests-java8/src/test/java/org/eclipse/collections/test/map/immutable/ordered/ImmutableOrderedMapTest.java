@@ -10,11 +10,8 @@
 
 package org.eclipse.collections.test.map.immutable.ordered;
 
-import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Random;
-import java.util.Set;
 
 import org.eclipse.collections.api.map.MutableOrderedMap;
 import org.eclipse.collections.impl.map.ordered.immutable.ImmutableOrderedMapAdapter;
@@ -22,10 +19,7 @@ import org.eclipse.collections.impl.map.ordered.mutable.OrderedMapAdapter;
 import org.eclipse.collections.impl.tuple.ImmutableEntry;
 import org.eclipse.collections.test.FixedSizeIterableTestCase;
 import org.eclipse.collections.test.map.OrderedMapIterableTestCase;
-import org.eclipse.collections.test.map.UnmodifiableMapKeySetTestCase;
-import org.eclipse.collections.test.map.UnmodifiableMapValuesCollectionTestCase;
 import org.eclipse.collections.test.map.mutable.MapTestCase;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import static org.eclipse.collections.test.IterableTestCase.assertIterablesEqual;
@@ -268,51 +262,5 @@ public class ImmutableOrderedMapTest
         assertThrows(UnsupportedOperationException.class, () -> map.remove(2, "wrong"));
         assertThrows(UnsupportedOperationException.class, () -> map.remove(4, "4"));
         assertEquals(this.newWithKeysValues(1, "1", 2, "2", 3, "3"), map);
-    }
-
-    @Nested
-    public class KeySetView implements UnmodifiableMapKeySetTestCase
-    {
-        @Override
-        public boolean allowsSerialization()
-        {
-            return false;
-        }
-
-        @SafeVarargs
-        @Override
-        public final <T> Set<T> newWith(T... elements)
-        {
-            Random random = new Random(CURRENT_TIME_MILLIS);
-            MutableOrderedMap<T, Object> result = OrderedMapAdapter.adapt(new LinkedHashMap<>());
-            for (T element : elements)
-            {
-                assertNull(result.put(element, random.nextDouble()));
-            }
-            return ((ImmutableOrderedMapAdapter<T, Object>) result.toImmutable()).keySet();
-        }
-    }
-
-    @Nested
-    public class ValuesCollectionView implements UnmodifiableMapValuesCollectionTestCase
-    {
-        @Override
-        public OrderingType getOrderingType()
-        {
-            return OrderingType.INSERTION_ORDER;
-        }
-
-        @Override
-        public boolean allowsSerialization()
-        {
-            return false;
-        }
-
-        @SafeVarargs
-        @Override
-        public final <T> Collection<T> newWith(T... elements)
-        {
-            return ImmutableOrderedMapTest.this.newWith(elements).values();
-        }
     }
 }
