@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.BiConsumer;
 
 import org.eclipse.collections.api.factory.Sets;
 import org.eclipse.collections.api.set.MutableSet;
@@ -475,6 +476,104 @@ public interface MapTestCase
         assertTrue(map3.containsKey(3));
         assertEquals("2", map3.get(2));
         assertSize(3, map3);
+    }
+
+    @Test
+    default void Map_replace()
+    {
+        Map<Integer, String> map = this.newWithKeysValues(1, "1", 2, "2", 3, "3");
+
+        // replace existing key
+        assertEquals("1", map.replace(1, "One"));
+        assertIterablesEqual(this.newWithKeysValues(1, "One", 2, "2", 3, "3"), map);
+
+        // replace non-existing key
+        assertNull(map.replace(4, "Four"));
+        assertIterablesEqual(this.newWithKeysValues(1, "One", 2, "2", 3, "3"), map);
+
+        // replace with oldValue match
+        assertTrue(map.replace(2, "2", "Two"));
+        assertIterablesEqual(this.newWithKeysValues(1, "One", 2, "Two", 3, "3"), map);
+
+        // replace with oldValue mismatch
+        assertFalse(map.replace(3, "wrong", "Three"));
+        assertIterablesEqual(this.newWithKeysValues(1, "One", 2, "Two", 3, "3"), map);
+
+        if (this.supportsNullKeys())
+        {
+            Map<Integer, String> map2 = this.newWithKeysValues(null, "Null", 1, "1");
+            assertEquals("Null", map2.replace(null, "NullReplaced"));
+            assertIterablesEqual(this.newWithKeysValues(null, "NullReplaced", 1, "1"), map2);
+        }
+
+        if (this.supportsNullValues())
+        {
+            Map<Integer, String> map3 = this.newWithKeysValues(1, null, 2, "2");
+            assertNull(map3.replace(1, "One"));
+            assertIterablesEqual(this.newWithKeysValues(1, "One", 2, "2"), map3);
+        }
+    }
+
+    @Test
+    default void Map_putIfAbsent()
+    {
+        Map<Integer, String> map = this.newWithKeysValues(1, "1", 2, "2", 3, "3");
+
+        // existing key
+        assertEquals("1", map.putIfAbsent(1, "One"));
+        assertIterablesEqual(this.newWithKeysValues(1, "1", 2, "2", 3, "3"), map);
+
+        // new key
+        assertNull(map.putIfAbsent(4, "4"));
+        assertIterablesEqual(this.newWithKeysValues(1, "1", 2, "2", 3, "3", 4, "4"), map);
+
+        if (this.supportsNullKeys())
+        {
+            assertNull(map.putIfAbsent(null, "Null"));
+            assertIterablesEqual(this.newWithKeysValues(1, "1", 2, "2", 3, "3", 4, "4", null, "Null"), map);
+        }
+
+        if (this.supportsNullValues())
+        {
+            Map<Integer, String> map2 = this.newWithKeysValues(1, "1", 2, "2");
+            assertNull(map2.putIfAbsent(5, null));
+            assertTrue(map2.containsKey(5));
+        }
+    }
+
+    @Test
+    default void Map_remove_key_value()
+    {
+        Map<Integer, String> map = this.newWithKeysValues(1, "1", 2, "2", 3, "3");
+
+        // matching key and value
+        assertTrue(map.remove(1, "1"));
+        assertIterablesEqual(this.newWithKeysValues(2, "2", 3, "3"), map);
+
+        // matching key, wrong value
+        assertFalse(map.remove(2, "wrong"));
+        assertIterablesEqual(this.newWithKeysValues(2, "2", 3, "3"), map);
+
+        // non-existing key
+        assertFalse(map.remove(4, "4"));
+        assertIterablesEqual(this.newWithKeysValues(2, "2", 3, "3"), map);
+
+        if (this.supportsNullKeys())
+        {
+            Map<Integer, String> map2 = this.newWithKeysValues(null, "Null", 1, "1");
+            assertTrue(map2.remove(null, "Null"));
+            assertIterablesEqual(this.newWithKeysValues(1, "1"), map2);
+        }
+    }
+
+    @Test
+    default void Map_forEach_BiConsumer()
+    {
+        Map<Integer, String> map = this.newWithKeysValues(1, "1", 2, "2", 3, "3");
+
+        MutableSet<String> actual = Sets.mutable.with();
+        map.forEach((BiConsumer<Integer, String>) (key, value) -> actual.add(key + "=" + value));
+        assertEquals(Sets.immutable.with("1=1", "2=2", "3=3"), actual);
     }
 
     class AlwaysEqual

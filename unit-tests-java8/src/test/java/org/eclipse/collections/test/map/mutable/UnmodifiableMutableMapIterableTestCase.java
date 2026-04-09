@@ -292,4 +292,41 @@ public interface UnmodifiableMutableMapIterableTestCase
         }));
         assertEquals(this.newWithKeysValues(), emptyMap);
     }
+
+    @Override
+    @Test
+    default void Map_replace()
+    {
+        Map<Integer, String> map = this.newWithKeysValues(1, "1", 2, "2", 3, "3");
+
+        assertThrows(UnsupportedOperationException.class, () -> map.replace(1, "One"));
+        assertThrows(UnsupportedOperationException.class, () -> map.replace(4, "Four"));
+        assertThrows(UnsupportedOperationException.class, () -> map.replace(2, "2", "Two"));
+        assertThrows(UnsupportedOperationException.class, () -> map.replace(3, "wrong", "Three"));
+        assertThrows(UnsupportedOperationException.class, () -> map.replace(4, "4", "Four"));
+        assertEquals(this.newWithKeysValues(1, "1", 2, "2", 3, "3"), map);
+    }
+
+    @Override
+    @Test
+    default void Map_putIfAbsent()
+    {
+        Map<Integer, String> map = this.newWithKeysValues(1, "1", 2, "2", 3, "3");
+
+        assertThrows(UnsupportedOperationException.class, () -> map.putIfAbsent(1, "One"));
+        assertThrows(UnsupportedOperationException.class, () -> map.putIfAbsent(4, "4"));
+        assertEquals(this.newWithKeysValues(1, "1", 2, "2", 3, "3"), map);
+    }
+
+    @Override
+    @Test
+    default void Map_remove_key_value()
+    {
+        Map<Integer, String> map = this.newWithKeysValues(1, "1", 2, "2", 3, "3");
+
+        assertThrows(UnsupportedOperationException.class, () -> map.remove(1, "1"));
+        assertThrows(UnsupportedOperationException.class, () -> map.remove(2, "wrong"));
+        assertThrows(UnsupportedOperationException.class, () -> map.remove(4, "4"));
+        assertEquals(this.newWithKeysValues(1, "1", 2, "2", 3, "3"), map);
+    }
 }
