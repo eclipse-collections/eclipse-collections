@@ -195,7 +195,7 @@ public abstract class AbstractBiMap<K, V> implements BiMap<K, V>
     @Override
     public boolean containsAll(Collection<?> source)
     {
-        return this.getInverse().keysView().containsAll(source);
+        return this.getInverse().keysView().containsAllIterable(source);
     }
 
     @Override
