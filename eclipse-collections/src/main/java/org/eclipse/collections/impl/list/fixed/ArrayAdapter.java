@@ -40,14 +40,14 @@ import org.eclipse.collections.impl.utility.Iterate;
  * of an existing Collection instance, use the {@link #newArray(Iterable)} or {@link #newArrayWithItem(Iterable, Object)}
  * factory methods. To wrap existing objects in a new array, use one of the {@link #newArrayWith(Object)} factory methods.
  */
-public final class ArrayAdapter<T>
+public class ArrayAdapter<T>
         extends AbstractArrayAdapter<T>
         implements Serializable, FixedSizeList<T>
 {
     private static final long serialVersionUID = 1L;
     private static final Object[] EMPTY_ARRAY = {};
 
-    private ArrayAdapter(T[] newElements)
+    protected ArrayAdapter(T[] newElements)
     {
         super(newElements);
     }
