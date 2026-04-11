@@ -10,17 +10,12 @@
 
 package org.eclipse.collections.test.map.mutable;
 
-import java.util.Map;
 import java.util.Random;
 
 import org.eclipse.collections.api.map.MutableMap;
-import org.eclipse.collections.api.map.MutableMapIterable;
 import org.eclipse.collections.impl.map.mutable.ConcurrentHashMapUnsafe;
-import org.junit.jupiter.api.Test;
 
-import static org.eclipse.collections.test.IterableTestCase.*;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
 public class ConcurrentHashMapUnsafeTest implements MutableMapTestCase
@@ -59,37 +54,5 @@ public class ConcurrentHashMapUnsafeTest implements MutableMapTestCase
     public boolean supportsNullKeys()
     {
         return false;
-    }
-
-    @Override
-    @Test
-    public void Map_entrySet_setValue()
-    {
-        MutableMapIterable<String, Integer> map = this.newWithKeysValues("3", 3, "2", 2, "1", 1);
-        map.entrySet().forEach(each -> assertThrows(UnsupportedOperationException.class, () -> each.setValue(each.getValue() + 1)));
-        assertIterablesEqual(this.newWithKeysValues("3", 3, "2", 2, "1", 1), map);
-    }
-
-    @Override
-    @Test
-    public void MutableMapIterable_entrySet_setValue()
-    {
-        MutableMapIterable<String, Integer> map = this.newWithKeysValues("3", 3, "2", 2, "1", 1);
-        map.entrySet().forEach(each -> assertThrows(UnsupportedOperationException.class, () -> each.setValue(each.getValue() + 1)));
-        assertIterablesEqual(this.newWithKeysValues("3", 3, "2", 2, "1", 1), map);
-    }
-
-    /**
-     * TODO: Implement a custom replaceAll() using the JDK's retry-loop approach with replace().
-     * ConcurrentHashMapUnsafe's Entry.setValue() throws UnsupportedOperationException,
-     * so the default replaceAll (which uses setValue internally) cannot work.
-     */
-    @Override
-    @Test
-    public void Map_replaceAll()
-    {
-        Map<Integer, String> map = this.newWithKeysValues(1, "1", 2, "2", 3, "3");
-        assertThrows(UnsupportedOperationException.class, () -> map.replaceAll((k, v) -> v + k));
-        assertIterablesEqual(this.newWithKeysValues(1, "1", 2, "2", 3, "3"), map);
     }
 }
