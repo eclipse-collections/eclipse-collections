@@ -22,7 +22,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 
 import org.eclipse.collections.api.<name>Iterable;
-import org.eclipse.collections.api.LazyIterable;
+import org.eclipse.collections.api.RichIterable;
 import org.eclipse.collections.api.bag.primitive.Mutable<name>Bag;
 import org.eclipse.collections.api.block.function.primitive.<name>Function;
 import org.eclipse.collections.api.block.predicate.primitive.<name>Predicate;
@@ -41,11 +41,11 @@ import org.eclipse.collections.api.set.primitive.Mutable<name>Set;
 public class Collect<name>Iterable\<T>
         extends AbstractLazy<name>Iterable
 {
-    private final LazyIterable\<T> iterable;
+    private final RichIterable\<T> iterable;
     private final <name>Function\<? super T> function;
     private final <name>FunctionToProcedure\<T> <type>FunctionToProcedure;
 
-    public Collect<name>Iterable(LazyIterable\<T> adapted, <name>Function\<? super T> function)
+    public Collect<name>Iterable(RichIterable\<T> adapted, <name>Function\<? super T> function)
     {
         this.iterable = adapted;
         this.function = function;

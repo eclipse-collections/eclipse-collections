@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Goldman Sachs.
+ * Copyright (c) 2026 Goldman Sachs.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -14,14 +14,39 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Optional;
 
+import org.eclipse.collections.api.LazyBooleanIterable;
+import org.eclipse.collections.api.LazyByteIterable;
+import org.eclipse.collections.api.LazyCharIterable;
+import org.eclipse.collections.api.LazyDoubleIterable;
+import org.eclipse.collections.api.LazyFloatIterable;
+import org.eclipse.collections.api.LazyIntIterable;
 import org.eclipse.collections.api.LazyIterable;
+import org.eclipse.collections.api.LazyLongIterable;
+import org.eclipse.collections.api.LazyShortIterable;
+import org.eclipse.collections.api.RichIterable;
 import org.eclipse.collections.api.block.function.Function;
+import org.eclipse.collections.api.block.function.primitive.BooleanFunction;
+import org.eclipse.collections.api.block.function.primitive.ByteFunction;
+import org.eclipse.collections.api.block.function.primitive.CharFunction;
+import org.eclipse.collections.api.block.function.primitive.DoubleFunction;
+import org.eclipse.collections.api.block.function.primitive.FloatFunction;
+import org.eclipse.collections.api.block.function.primitive.IntFunction;
+import org.eclipse.collections.api.block.function.primitive.LongFunction;
+import org.eclipse.collections.api.block.function.primitive.ShortFunction;
 import org.eclipse.collections.api.block.predicate.Predicate;
 import org.eclipse.collections.api.block.predicate.Predicate2;
 import org.eclipse.collections.api.block.procedure.Procedure;
 import org.eclipse.collections.api.block.procedure.Procedure2;
 import org.eclipse.collections.api.block.procedure.primitive.ObjectIntProcedure;
 import org.eclipse.collections.impl.UnmodifiableIteratorAdapter;
+import org.eclipse.collections.impl.lazy.primitive.CollectBooleanIterable;
+import org.eclipse.collections.impl.lazy.primitive.CollectByteIterable;
+import org.eclipse.collections.impl.lazy.primitive.CollectCharIterable;
+import org.eclipse.collections.impl.lazy.primitive.CollectDoubleIterable;
+import org.eclipse.collections.impl.lazy.primitive.CollectFloatIterable;
+import org.eclipse.collections.impl.lazy.primitive.CollectIntIterable;
+import org.eclipse.collections.impl.lazy.primitive.CollectLongIterable;
+import org.eclipse.collections.impl.lazy.primitive.CollectShortIterable;
 import org.eclipse.collections.impl.utility.Iterate;
 import org.eclipse.collections.impl.utility.LazyIterate;
 
@@ -67,6 +92,74 @@ public class LazyIterableAdapter<T>
     {
         Iterate.addAllIterable(this.adapted, target);
         return target;
+    }
+
+    @Override
+    public LazyIterable<T> tap(Procedure<? super T> procedure)
+    {
+        return LazyIterate.tap(this.adapted, procedure);
+    }
+
+    @Override
+    public LazyIterable<RichIterable<T>> chunk(int size)
+    {
+        return LazyIterate.chunk(this.adapted, size);
+    }
+
+    @Override
+    public LazyBooleanIterable collectBoolean(BooleanFunction<? super T> booleanFunction)
+    {
+        RichIterable<T> richIterable = this.adapted instanceof RichIterable<T> ri ? ri : this;
+        return new CollectBooleanIterable<>(richIterable, booleanFunction);
+    }
+
+    @Override
+    public LazyByteIterable collectByte(ByteFunction<? super T> byteFunction)
+    {
+        RichIterable<T> richIterable = this.adapted instanceof RichIterable<T> ri ? ri : this;
+        return new CollectByteIterable<>(richIterable, byteFunction);
+    }
+
+    @Override
+    public LazyCharIterable collectChar(CharFunction<? super T> charFunction)
+    {
+        RichIterable<T> richIterable = this.adapted instanceof RichIterable<T> ri ? ri : this;
+        return new CollectCharIterable<>(richIterable, charFunction);
+    }
+
+    @Override
+    public LazyDoubleIterable collectDouble(DoubleFunction<? super T> doubleFunction)
+    {
+        RichIterable<T> richIterable = this.adapted instanceof RichIterable<T> ri ? ri : this;
+        return new CollectDoubleIterable<>(richIterable, doubleFunction);
+    }
+
+    @Override
+    public LazyFloatIterable collectFloat(FloatFunction<? super T> floatFunction)
+    {
+        RichIterable<T> richIterable = this.adapted instanceof RichIterable<T> ri ? ri : this;
+        return new CollectFloatIterable<>(richIterable, floatFunction);
+    }
+
+    @Override
+    public LazyIntIterable collectInt(IntFunction<? super T> intFunction)
+    {
+        RichIterable<T> richIterable = this.adapted instanceof RichIterable<T> ri ? ri : this;
+        return new CollectIntIterable<>(richIterable, intFunction);
+    }
+
+    @Override
+    public LazyLongIterable collectLong(LongFunction<? super T> longFunction)
+    {
+        RichIterable<T> richIterable = this.adapted instanceof RichIterable<T> ri ? ri : this;
+        return new CollectLongIterable<>(richIterable, longFunction);
+    }
+
+    @Override
+    public LazyShortIterable collectShort(ShortFunction<? super T> shortFunction)
+    {
+        RichIterable<T> richIterable = this.adapted instanceof RichIterable<T> ri ? ri : this;
+        return new CollectShortIterable<>(richIterable, shortFunction);
     }
 
     @Override

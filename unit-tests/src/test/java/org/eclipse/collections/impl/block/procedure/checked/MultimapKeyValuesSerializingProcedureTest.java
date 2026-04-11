@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Goldman Sachs and others.
+ * Copyright (c) 2026 Goldman Sachs and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -136,7 +136,6 @@ public class MultimapKeyValuesSerializingProcedureTest
         }
 
         @Override
-        @Test
         public void flush()
         {
             throw new RuntimeException("flush not implemented");
