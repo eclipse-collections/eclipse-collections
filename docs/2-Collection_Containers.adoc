@@ -39,10 +39,12 @@ All rights reserved.
 :ImmutableSortedBag:   {api-url}/api/bag/sorted/ImmutableSortedBag.html[ImmutableSortedBag]
 :ImmutableStack:       {api-url}/api/stack/ImmutableStack.html[ImmutableStack]
 :IntArrayList:         {api-url}/impl/list/mutable/primitive/IntArrayList.html[IntArrayList]
+:IntArrayStack:        {api-url}/impl/stack/mutable/primitive/IntArrayStack.html[IntArrayStack]
 :IntHashSet:           {api-url}/impl/set/mutable/primitive/IntHashSet.html[IntHashSet]
 :IntLists:             {api-url}/impl/factory/primitive/IntLists.html[IntLists]
 :IntIntHashMap:         {api-url}/impl/map/mutable/primitive/IntIntHashMap.html[IntIntHashMap]
 :IntObjectHashMap:     {api-url}/impl/map/mutable/primitive/IntObjectHashMap.html[IntObjectHashMap]
+:IntStacks:            {api-url}/impl/factory/primitive/IntStacks.html[IntStacks]
 :ListIterable:         {api-url}/api/list/ListIterable.html[ListIterable]
 :Lists:                {api-url}/impl/factory/Lists.html[Lists]
 :Maps:                 {api-url}/impl/factory/Maps.html[Maps]
@@ -1105,6 +1107,25 @@ MutableIntBag mutableIntBag = intHashSet.toBag();
 === Primitive stacks
 
 Primitive stack implementations are similar to JCF *ArrayStack* but optimized for primitives.
+
+==== Iteration patterns
+
+Primitive stacks support rich iteration patterns like other Eclipse Collections types.
+Iteration follows stack order (Last-In-First-Out), starting from the top.
+
+.Iterating over a primitive stack
+====
+[source,java]
+----
+MutableIntStack stack = IntStacks.mutable.with(1, 2, 3);
+
+// Filter elements (returns a new primitive stack)
+MutableIntStack evens = stack.select(i -> i % 2 == 0);
+
+// Aggregate elements
+long sum = stack.sum();
+----
+====
 
 === Primitive bags
 
