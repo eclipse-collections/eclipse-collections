@@ -108,49 +108,49 @@ public interface IterableTestCase
         {
             fail("Second argument is not an Iterable: " + o2);
         }
-        if (o1 instanceof ListIterable<?> && o2 instanceof LazyIterable<?>)
+        if (o1 instanceof ListIterable<?> && o2 instanceof LazyIterable<?> lazyIterable)
         {
-            assertIterablesEqual(o1, ((LazyIterable<?>) o2).toList());
+            assertIterablesEqual(o1, lazyIterable.toList());
             return;
         }
-        if (o1 instanceof BooleanList && o2 instanceof LazyBooleanIterable)
+        if (o1 instanceof BooleanList && o2 instanceof LazyBooleanIterable lazyBooleanIterable)
         {
-            assertIterablesEqual(o1, ((LazyBooleanIterable) o2).toList());
+            assertIterablesEqual(o1, lazyBooleanIterable.toList());
             return;
         }
-        if (o1 instanceof ByteList && o2 instanceof LazyByteIterable)
+        if (o1 instanceof ByteList && o2 instanceof LazyByteIterable lazyByteIterable)
         {
-            assertIterablesEqual(o1, ((LazyByteIterable) o2).toList());
+            assertIterablesEqual(o1, lazyByteIterable.toList());
             return;
         }
-        if (o1 instanceof CharList && o2 instanceof LazyCharIterable)
+        if (o1 instanceof CharList && o2 instanceof LazyCharIterable lazyCharIterable)
         {
-            assertIterablesEqual(o1, ((LazyCharIterable) o2).toList());
+            assertIterablesEqual(o1, lazyCharIterable.toList());
             return;
         }
-        if (o1 instanceof DoubleList && o2 instanceof LazyDoubleIterable)
+        if (o1 instanceof DoubleList && o2 instanceof LazyDoubleIterable lazyDoubleIterable)
         {
-            assertIterablesEqual(o1, ((LazyDoubleIterable) o2).toList());
+            assertIterablesEqual(o1, lazyDoubleIterable.toList());
             return;
         }
-        if (o1 instanceof FloatList && o2 instanceof LazyFloatIterable)
+        if (o1 instanceof FloatList && o2 instanceof LazyFloatIterable lazyFloatIterable)
         {
-            assertIterablesEqual(o1, ((LazyFloatIterable) o2).toList());
+            assertIterablesEqual(o1, lazyFloatIterable.toList());
             return;
         }
-        if (o1 instanceof IntList && o2 instanceof LazyIntIterable)
+        if (o1 instanceof IntList && o2 instanceof LazyIntIterable lazyIntIterable)
         {
-            assertIterablesEqual(o1, ((LazyIntIterable) o2).toList());
+            assertIterablesEqual(o1, lazyIntIterable.toList());
             return;
         }
-        if (o1 instanceof LongList && o2 instanceof LazyLongIterable)
+        if (o1 instanceof LongList && o2 instanceof LazyLongIterable lazyLongIterable)
         {
-            assertIterablesEqual(o1, ((LazyLongIterable) o2).toList());
+            assertIterablesEqual(o1, lazyLongIterable.toList());
             return;
         }
-        if (o1 instanceof ShortList && o2 instanceof LazyShortIterable)
+        if (o1 instanceof ShortList && o2 instanceof LazyShortIterable lazyShortIterable)
         {
-            assertIterablesEqual(o1, ((LazyShortIterable) o2).toList());
+            assertIterablesEqual(o1, lazyShortIterable.toList());
             return;
         }
 
@@ -225,11 +225,11 @@ public interface IterableTestCase
         }
         if ((o1 instanceof Number && o2 instanceof Number)
                 || (o1 instanceof Boolean && o2 instanceof Boolean)
-                || o1 instanceof ImmutableCollection<?> && o2 instanceof ImmutableCollection<?>
-                && ((ImmutableCollection<?>) o1).isEmpty() && ((ImmutableCollection<?>) o2).isEmpty()
+                || o1 instanceof ImmutableCollection<?> immutableCollection1 && o2 instanceof ImmutableCollection<?> immutableCollection2
+                && immutableCollection1.isEmpty() && immutableCollection2.isEmpty()
                 && !(o1 instanceof SortedIterable<?>) && !(o2 instanceof SortedIterable<?>)
-                || o1 instanceof ImmutableStack<?> && o2 instanceof ImmutableStack<?>
-                && ((ImmutableStack<?>) o1).isEmpty() && ((ImmutableStack<?>) o2).isEmpty())
+                || o1 instanceof ImmutableStack<?> immutableStack1 && o2 instanceof ImmutableStack<?> immutableStack2
+                && immutableStack1.isEmpty() && immutableStack2.isEmpty())
         {
             assertSame(o1, o2);
             return;
@@ -272,8 +272,8 @@ public interface IterableTestCase
 
     private static boolean areEquivalentEmptyCollections(Object o1, Object o2)
     {
-        return o1 instanceof ImmutableCollection<?> && o2 instanceof ImmutableCollection<?>
-                && ((ImmutableCollection<?>) o1).isEmpty() && ((ImmutableCollection<?>) o2).isEmpty()
+        return o1 instanceof ImmutableCollection<?> immutableCollection1 && o2 instanceof ImmutableCollection<?> immutableCollection2
+                && immutableCollection1.isEmpty() && immutableCollection2.isEmpty()
                 && (o1 instanceof SortedIterable<?> || o2 instanceof SortedIterable<?>);
     }
 

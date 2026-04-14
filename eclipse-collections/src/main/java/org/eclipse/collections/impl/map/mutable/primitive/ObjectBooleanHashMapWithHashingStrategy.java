@@ -1197,9 +1197,8 @@ public class ObjectBooleanHashMapWithHashingStrategy<K> implements MutableObject
         @Override
         public boolean equals(Object obj)
         {
-            if (obj instanceof Set)
+            if (obj instanceof Set<?> other)
             {
-                Set<?> other = (Set<?>) obj;
                 if (other.size() == this.size())
                 {
                     return this.containsAll(other);
@@ -1475,7 +1474,7 @@ public class ObjectBooleanHashMapWithHashingStrategy<K> implements MutableObject
         public boolean retainAll(BooleanIterable source)
         {
             int oldSize = ObjectBooleanHashMapWithHashingStrategy.this.size();
-            BooleanSet sourceSet = source instanceof BooleanSet ? (BooleanSet) source : source.toSet();
+            BooleanSet sourceSet = source instanceof BooleanSet booleanSet ? booleanSet : source.toSet();
             ObjectBooleanHashMapWithHashingStrategy<K> retained = ObjectBooleanHashMapWithHashingStrategy.this.select((object, value) -> sourceSet.contains(value));
             if (retained.size() != oldSize)
             {

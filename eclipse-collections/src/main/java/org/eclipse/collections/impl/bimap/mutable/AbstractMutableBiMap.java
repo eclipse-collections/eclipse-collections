@@ -989,9 +989,8 @@ abstract class AbstractMutableBiMap<K, V> extends AbstractBiMap<K, V> implements
         @Override
         public boolean equals(Object obj)
         {
-            if (obj instanceof Set)
+            if (obj instanceof Set<?> other)
             {
-                Set<?> other = (Set<?>) obj;
                 if (other.size() == this.size())
                 {
                     return this.containsAll(other);
@@ -1225,9 +1224,8 @@ abstract class AbstractMutableBiMap<K, V> extends AbstractBiMap<K, V> implements
             @Override
             public boolean equals(Object obj)
             {
-                if (obj instanceof Entry)
+                if (obj instanceof Entry<?, ?> other)
                 {
-                    Entry<?, ?> other = (Entry<?, ?>) obj;
                     Object otherKey = other.getKey();
                     Object otherValue = other.getValue();
                     return AbstractMutableBiMap.nullSafeEquals(this.key, otherKey)

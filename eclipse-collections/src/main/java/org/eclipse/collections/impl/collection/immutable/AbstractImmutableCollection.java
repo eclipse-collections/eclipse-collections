@@ -157,9 +157,9 @@ public abstract class AbstractImmutableCollection<T>
 
     protected void removeAllFrom(Iterable<? extends T> elements, MutableCollection<T> result)
     {
-        if (elements instanceof Set)
+        if (elements instanceof Set<?> set)
         {
-            result.removeAll((Set<?>) elements);
+            result.removeAll(set);
         }
         else if (elements instanceof List)
         {

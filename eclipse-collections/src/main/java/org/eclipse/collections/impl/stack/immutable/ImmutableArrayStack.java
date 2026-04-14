@@ -1137,9 +1137,9 @@ final class ImmutableArrayStack<T> implements ImmutableStack<T>, Serializable
 
         StackIterable<?> that = (StackIterable<?>) o;
 
-        if (that instanceof ImmutableArrayStack<?>)
+        if (that instanceof ImmutableArrayStack<?> immutableArrayStack)
         {
-            return this.delegate.equals(((ImmutableArrayStack<?>) that).delegate);
+            return this.delegate.equals(immutableArrayStack.delegate);
         }
         Iterator<T> thisIterator = this.iterator();
         Iterator<?> thatIterator = that.iterator();

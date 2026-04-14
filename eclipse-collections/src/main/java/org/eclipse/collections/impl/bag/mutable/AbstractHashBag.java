@@ -316,9 +316,8 @@ public abstract class AbstractHashBag<T> extends AbstractMutableBag<T>
     public boolean removeAllIterable(Iterable<?> iterable)
     {
         int oldSize = this.size;
-        if (iterable instanceof Bag)
+        if (iterable instanceof Bag<?> source)
         {
-            Bag<?> source = (Bag<?>) iterable;
             source.forEachWithOccurrences((each, parameter) ->
             {
                 int removed = this.items.removeKeyIfAbsent((T) each, 0);

@@ -409,10 +409,9 @@ public interface RichIterable<T>
      */
     default boolean containsAnyIterable(Iterable<?> source)
     {
-        if (source instanceof RichIterable)
+        if (source instanceof RichIterable<?> inside)
         {
             RichIterable<?> outside = this;
-            RichIterable<?> inside = (RichIterable<?>) source;
             if (this.size() < inside.size())
             {
                 outside = inside;
@@ -440,10 +439,9 @@ public interface RichIterable<T>
      */
     default boolean containsNoneIterable(Iterable<?> source)
     {
-        if (source instanceof RichIterable)
+        if (source instanceof RichIterable<?> inside)
         {
             RichIterable<?> outside = this;
-            RichIterable<?> inside = (RichIterable<?>) source;
             if (this.size() < inside.size())
             {
                 outside = inside;

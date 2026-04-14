@@ -87,7 +87,7 @@ public class FunctionComparatorTest
         @Override
         public boolean equals(Object other)
         {
-            return this == other || other instanceof Band && this.name.equals(((Band) other).name);
+            return this == other || other instanceof Band band && this.name.equals(band.name);
         }
 
         @Override
