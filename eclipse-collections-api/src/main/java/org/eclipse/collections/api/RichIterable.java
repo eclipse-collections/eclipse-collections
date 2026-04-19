@@ -469,7 +469,36 @@ public interface RichIterable<T>
      *
      * @since 1.0
      */
-    boolean containsAllIterable(Iterable<?> source);
+    default boolean containsAllIterable(Iterable<?> source)
+    {
+        RichIterable<?> lookupCollection = this;
+        if (source instanceof Collection<?> sourceCollection)
+        {
+            int sourceSize = sourceCollection.size();
+            if (sourceSize == 0)
+            {
+                return true;
+            }
+            if (sourceSize >= 4 && this.size() > 32 && !(this instanceof SetIterable))
+            {
+                lookupCollection = this.toSet();
+            }
+        }
+
+        if (source instanceof RichIterable<?> sourceRichIterable)
+        {
+            return sourceRichIterable.allSatisfy(lookupCollection::contains);
+        }
+
+        for (Object each : source)
+        {
+            if (!lookupCollection.contains(each))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
 
     /**
      * Returns true if all elements in source are contained in this collection.
@@ -477,7 +506,10 @@ public interface RichIterable<T>
      * @see Collection#containsAll(Collection)
      * @since 1.0
      */
-    boolean containsAll(Collection<?> source);
+    default boolean containsAll(Collection<?> source)
+    {
+        return this.containsAllIterable(source);
+    }
 
     /**
      * Returns true if all elements in the specified var arg array are contained in this collection.

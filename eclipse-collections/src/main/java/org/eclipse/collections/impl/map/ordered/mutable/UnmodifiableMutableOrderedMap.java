@@ -798,7 +798,7 @@ public class UnmodifiableMutableOrderedMap<K, V>
     @Override
     public boolean containsAll(Collection<?> source)
     {
-        return this.delegate.containsAll(source);
+        return this.delegate.containsAllIterable(source);
     }
 
     @Override
