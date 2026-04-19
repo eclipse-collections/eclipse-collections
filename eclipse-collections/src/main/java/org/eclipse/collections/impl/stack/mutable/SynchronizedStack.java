@@ -93,7 +93,7 @@ import org.eclipse.collections.impl.UnmodifiableIteratorAdapter;
  *
  * @see MutableStack#asSynchronized()
  */
-public final class SynchronizedStack<T> implements MutableStack<T>, Serializable
+public class SynchronizedStack<T> implements MutableStack<T>, Serializable
 {
     private static final long serialVersionUID = 1L;
     private final Object lock;
