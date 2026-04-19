@@ -1716,13 +1716,80 @@ public class ConcurrentHashMapUnsafe<K, V>
         @Override
         public Map.Entry<K, V> next()
         {
-            return this.nextEntry();
+            return new WritableEntry(this.nextEntry());
         }
 
         @Override
         public void remove()
         {
             this.removeByKeyValue();
+        }
+    }
+
+    private final class WritableEntry implements Map.Entry<K, V>
+    {
+        private final K key;
+        private V val;
+
+        private WritableEntry(Entry<K, V> delegate)
+        {
+            this.key = delegate.getKey();
+            this.val = delegate.getValue();
+        }
+
+        @Override
+        public K getKey()
+        {
+            return this.key;
+        }
+
+        @Override
+        public V getValue()
+        {
+            return this.val;
+        }
+
+        @Override
+        public V setValue(V value)
+        {
+            V oldValue = this.val;
+            this.val = value;
+            ConcurrentHashMapUnsafe.this.put(this.key, value);
+            return oldValue;
+        }
+
+        @Override
+        public boolean equals(Object o)
+        {
+            if (!(o instanceof Map.Entry<?, ?>))
+            {
+                return false;
+            }
+            Map.Entry<?, ?> e = (Map.Entry<?, ?>) o;
+            Object k1 = this.key;
+            Object k2 = e.getKey();
+            if (k1 == k2 || (k1 != null && k1.equals(k2)))
+            {
+                Object v1 = this.val;
+                Object v2 = e.getValue();
+                if (v1 == v2 || (v1 != null && v1.equals(v2)))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        @Override
+        public int hashCode()
+        {
+            return (this.key == null ? 0 : this.key.hashCode()) ^ (this.val == null ? 0 : this.val.hashCode());
+        }
+
+        @Override
+        public String toString()
+        {
+            return this.key + "=" + this.val;
         }
     }
 
@@ -1957,6 +2024,11 @@ public class ConcurrentHashMapUnsafe<K, V>
             return this.value;
         }
 
+        /**
+         * Entry is a static class (the hash table bucket node), so it has no reference to the
+         * enclosing ConcurrentHashMapUnsafe and cannot call put(). The WritableEntry wrapper returned
+         * by the EntryIterator is non-static and delegates setValue() to ConcurrentHashMapUnsafe.this.put().
+         */
         @Override
         public V setValue(V value)
         {

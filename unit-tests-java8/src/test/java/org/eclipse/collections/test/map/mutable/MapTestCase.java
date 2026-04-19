@@ -166,7 +166,11 @@ public interface MapTestCase
     default void Map_entrySet_setValue()
     {
         Map<String, Integer> map = this.newWithKeysValues("3", 3, "2", 2, "1", 1);
-        map.entrySet().forEach(each -> each.setValue(each.getValue() + 1));
+        map.entrySet().forEach(each -> {
+            Integer currentValue = each.getValue();
+            Integer oldValue = each.setValue(currentValue + 1);
+            assertEquals(currentValue, oldValue);
+        });
         assertIterablesEqual(this.newWithKeysValues("3", 4, "2", 3, "1", 2), map);
     }
 
