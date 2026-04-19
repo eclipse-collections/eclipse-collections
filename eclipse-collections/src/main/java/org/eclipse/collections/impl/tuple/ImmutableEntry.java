@@ -33,9 +33,8 @@ public final class ImmutableEntry<K, V> extends AbstractImmutableEntry<K, V>
     @Override
     public boolean equals(Object object)
     {
-        if (object instanceof Entry)
+        if (object instanceof Entry<?, ?> that)
         {
-            Entry<?, ?> that = (Entry<?, ?>) object;
             return Objects.equals(this.key, that.getKey())
                     && Objects.equals(this.value, that.getValue());
         }

@@ -224,17 +224,17 @@ public abstract class Predicates<T>
      */
     public static Predicates<Object> in(Iterable<?> iterable)
     {
-        if (iterable instanceof SetIterable<?>)
+        if (iterable instanceof SetIterable<?> setIterable)
         {
-            return new InSetIterablePredicate((SetIterable<?>) iterable);
+            return new InSetIterablePredicate(setIterable);
         }
-        if (iterable instanceof Set<?>)
+        if (iterable instanceof Set<?> set)
         {
-            return new InSetPredicate((Set<?>) iterable);
+            return new InSetPredicate(set);
         }
-        if (iterable instanceof Collection<?> && ((Collection<?>) iterable).size() <= SMALL_COLLECTION_THRESHOLD)
+        if (iterable instanceof Collection<?> collection && collection.size() <= SMALL_COLLECTION_THRESHOLD)
         {
-            return new InCollectionPredicate((Collection<?>) iterable);
+            return new InCollectionPredicate(collection);
         }
         return new InSetIterablePredicate(Sets.mutable.withAll(iterable));
     }
@@ -297,17 +297,17 @@ public abstract class Predicates<T>
      */
     public static Predicates<Object> notIn(Iterable<?> iterable)
     {
-        if (iterable instanceof SetIterable<?>)
+        if (iterable instanceof SetIterable<?> setIterable)
         {
-            return new NotInSetIterablePredicate((SetIterable<?>) iterable);
+            return new NotInSetIterablePredicate(setIterable);
         }
-        if (iterable instanceof Set<?>)
+        if (iterable instanceof Set<?> set)
         {
-            return new NotInSetPredicate((Set<?>) iterable);
+            return new NotInSetPredicate(set);
         }
-        if (iterable instanceof Collection<?> && ((Collection<?>) iterable).size() <= SMALL_COLLECTION_THRESHOLD)
+        if (iterable instanceof Collection<?> collection && collection.size() <= SMALL_COLLECTION_THRESHOLD)
         {
-            return new NotInCollectionPredicate((Collection<?>) iterable);
+            return new NotInCollectionPredicate(collection);
         }
         return new NotInSetIterablePredicate(Sets.mutable.withAll(iterable));
     }

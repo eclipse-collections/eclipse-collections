@@ -647,13 +647,13 @@ public class CodePointAdapter
                     appendable.append(separator);
                 }
                 int codePoint = this.adapted.codePointAt(i);
-                if (appendable instanceof StringBuilder)
+                if (appendable instanceof StringBuilder stringBuilder)
                 {
-                    ((StringBuilder) appendable).appendCodePoint(codePoint);
+                    stringBuilder.appendCodePoint(codePoint);
                 }
-                else if (appendable instanceof StringBuffer)
+                else if (appendable instanceof StringBuffer stringBuffer)
                 {
-                    ((StringBuffer) appendable).appendCodePoint(codePoint);
+                    stringBuffer.appendCodePoint(codePoint);
                 }
                 else
                 {
@@ -680,13 +680,13 @@ public class CodePointAdapter
         {
             return true;
         }
-        if (otherList instanceof CodePointAdapter)
+        if (otherList instanceof CodePointAdapter codePointAdapter)
         {
-            return this.equalsCodePointAdapter((CodePointAdapter) otherList);
+            return this.equalsCodePointAdapter(codePointAdapter);
         }
-        if (otherList instanceof IntList)
+        if (otherList instanceof IntList intList)
         {
-            return this.equalsIntList((IntList) otherList);
+            return this.equalsIntList(intList);
         }
         return false;
     }

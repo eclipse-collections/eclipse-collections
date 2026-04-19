@@ -1286,9 +1286,9 @@ public class UnifiedMapWithHashingStrategy<K, V> extends AbstractMutableMap<K, V
         for (int i = start; i < end; i += 2)
         {
             Object value = this.table[i];
-            if (value instanceof Object[])
+            if (value instanceof Object[] objects)
             {
-                this.chainedForEachValue((Object[]) value, procedure);
+                this.chainedForEachValue(objects, procedure);
             }
             else if (value == null && this.table[i - 1] != null || value != null)
             {
@@ -2486,9 +2486,8 @@ public class UnifiedMapWithHashingStrategy<K, V> extends AbstractMutableMap<K, V
         @Override
         public boolean equals(Object obj)
         {
-            if (obj instanceof Set)
+            if (obj instanceof Set<?> other)
             {
-                Set<?> other = (Set<?>) obj;
                 if (other.size() == this.size())
                 {
                     return this.containsAll(other);
@@ -2816,7 +2815,7 @@ public class UnifiedMapWithHashingStrategy<K, V> extends AbstractMutableMap<K, V
         @Override
         public boolean contains(Object o)
         {
-            return o instanceof Entry && this.containsEntry((Entry<?, ?>) o);
+            return o instanceof Entry<?, ?> entry && this.containsEntry(entry);
         }
 
         @Override
@@ -2920,9 +2919,8 @@ public class UnifiedMapWithHashingStrategy<K, V> extends AbstractMutableMap<K, V
                     UnifiedMapWithHashingStrategy.this.newEmpty(retainedSize);
             for (Object obj : collection)
             {
-                if (obj instanceof Entry)
+                if (obj instanceof Entry<?, ?> otherEntry)
                 {
-                    Entry<?, ?> otherEntry = (Entry<?, ?>) obj;
                     Entry<K, V> thisEntry = this.getEntry(otherEntry);
                     if (thisEntry != null)
                     {
@@ -3078,9 +3076,8 @@ public class UnifiedMapWithHashingStrategy<K, V> extends AbstractMutableMap<K, V
         @Override
         public boolean equals(Object obj)
         {
-            if (obj instanceof Set)
+            if (obj instanceof Set<?> other)
             {
-                Set<?> other = (Set<?>) obj;
                 if (other.size() == this.size())
                 {
                     return this.containsAll(other);
@@ -3209,9 +3206,8 @@ public class UnifiedMapWithHashingStrategy<K, V> extends AbstractMutableMap<K, V
         @Override
         public boolean equals(Object obj)
         {
-            if (obj instanceof Entry)
+            if (obj instanceof Entry<?, ?> other)
             {
-                Entry<?, ?> other = (Entry<?, ?>) obj;
                 K otherKey = (K) other.getKey();
                 V otherValue = (V) other.getValue();
                 return this.hashingStrategy.equals(this.key, otherKey)

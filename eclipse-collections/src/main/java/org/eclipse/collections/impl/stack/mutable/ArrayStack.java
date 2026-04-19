@@ -1104,9 +1104,9 @@ public class ArrayStack<T> implements MutableStack<T>, Externalizable
 
         StackIterable<?> that = (StackIterable<?>) o;
 
-        if (that instanceof ArrayStack<?>)
+        if (that instanceof ArrayStack<?> arrayStack)
         {
-            return this.delegate.equals(((ArrayStack<?>) that).delegate);
+            return this.delegate.equals(arrayStack.delegate);
         }
         Iterator<T> thisIterator = this.iterator();
         Iterator<?> thatIterator = that.iterator();

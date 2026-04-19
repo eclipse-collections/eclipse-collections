@@ -593,9 +593,9 @@ public final class ParallelIterate
 
     private static <T> int calculateTaskCount(Iterable<T> iterable, int batchSize)
     {
-        if (iterable instanceof BatchIterable<?>)
+        if (iterable instanceof BatchIterable<?> batchIterable)
         {
-            return ParallelIterate.calculateTaskCount((BatchIterable<?>) iterable, batchSize);
+            return ParallelIterate.calculateTaskCount(batchIterable, batchSize);
         }
         return ParallelIterate.calculateTaskCount(Iterate.sizeOf(iterable), batchSize);
     }

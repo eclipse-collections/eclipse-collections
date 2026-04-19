@@ -1152,12 +1152,12 @@ public final class Verify extends Assert
 
         Verify.assertObjectNotNull(iterableName, actualIterable);
 
-        if (expectedIterable instanceof InternalIterable<?> && actualIterable instanceof InternalIterable<?>)
+        if (expectedIterable instanceof InternalIterable<?> expectedInternalIterable && actualIterable instanceof InternalIterable<?> actualInternalIterable)
         {
             MutableList<Object> expectedList = FastList.newList();
             MutableList<Object> actualList = FastList.newList();
-            ((InternalIterable<?>) expectedIterable).forEach(CollectionAddProcedure.on(expectedList));
-            ((InternalIterable<?>) actualIterable).forEach(CollectionAddProcedure.on(actualList));
+            expectedInternalIterable.forEach(CollectionAddProcedure.on(expectedList));
+            actualInternalIterable.forEach(CollectionAddProcedure.on(actualList));
             Verify.assertListsEqual(iterableName, expectedList, actualList);
         }
         else
