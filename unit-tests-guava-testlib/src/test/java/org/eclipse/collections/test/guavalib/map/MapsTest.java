@@ -12,10 +12,10 @@ package org.eclipse.collections.test.guavalib.map;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.SortedMap;
@@ -330,7 +330,7 @@ public class MapsTest
     {
         try
         {
-            return Arrays.asList(
+            return List.of(
                     CollectionSpliteratorTester.class.getDeclaredMethod("testSpliteratorNullable"),
                     MapComputeIfAbsentTester.class.getDeclaredMethod("testComputeIfAbsent_nullTreatedAsAbsent"),
                     MapComputeIfPresentTester.class.getDeclaredMethod("testComputeIfPresent_nullTreatedAsAbsent"),
