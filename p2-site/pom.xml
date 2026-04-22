@@ -96,6 +96,9 @@
                                     <ignoredUnusedDeclaredDependency>
                                         org.eclipse.collections:unit-tests-thread-safety:jar
                                     </ignoredUnusedDeclaredDependency>
+                                    <ignoredUnusedDeclaredDependency>
+                                        org.eclipse.collections:unit-tests-guava-testlib:jar
+                                    </ignoredUnusedDeclaredDependency>
                                 </ignoredUnusedDeclaredDependencies>
                             </configuration>
                             <executions>
