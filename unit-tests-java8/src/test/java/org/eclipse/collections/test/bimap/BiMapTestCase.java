@@ -11,6 +11,7 @@
 package org.eclipse.collections.test.bimap;
 
 import org.eclipse.collections.api.bimap.BiMap;
+import org.eclipse.collections.api.bimap.MutableBiMap;
 import org.eclipse.collections.api.collection.MutableCollection;
 import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.list.MutableList;
@@ -120,6 +121,19 @@ public interface BiMapTestCase extends RichIterableUniqueTestCase, MapIterableTe
         assertIterablesEqual(
                 target,
                 iterable.toList());
+    }
+
+    @SafeVarargs
+    static <T> void populateBiMapWithSameKeyAndValue(MutableBiMap<T, T> result, T... elements)
+    {
+        for (T element : elements)
+        {
+            if (result.containsKey(element))
+            {
+                throw new IllegalStateException();
+            }
+            result.put(element, element);
+        }
     }
 
     @Override

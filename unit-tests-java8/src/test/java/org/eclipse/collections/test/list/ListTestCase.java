@@ -38,6 +38,8 @@ public interface ListTestCase extends CollectionTestCase
     @Test
     default void Iterable_remove()
     {
+        CollectionTestCase.super.Iterable_remove();
+
         List<Integer> list = this.newWith(3, 3, 3, 2, 2, 1);
         Iterator<Integer> iterator = list.iterator();
         iterator.next();
@@ -49,6 +51,8 @@ public interface ListTestCase extends CollectionTestCase
     @Test
     default void Iterable_toString()
     {
+        CollectionTestCase.super.Iterable_toString();
+
         Iterable<Integer> iterable = this.newWith(3, 3, 3, 2, 2, 1);
         assertEquals("[3, 3, 3, 2, 2, 1]", iterable.toString());
     }

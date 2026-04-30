@@ -20,6 +20,9 @@ import org.eclipse.collections.api.map.MutableMap;
 import org.eclipse.collections.impl.map.mutable.UnifiedMap;
 import org.eclipse.collections.impl.tuple.ImmutableEntry;
 import org.eclipse.collections.test.NoIteratorTestCase;
+import org.eclipse.collections.test.map.NoIteratorMapKeySetTestCase;
+import org.eclipse.collections.test.map.NoIteratorMapValuesCollectionTestCase;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -178,6 +181,34 @@ public class UnifiedMapNoIteratorTest implements MutableMapTestCase, NoIteratorT
             {
                 throw new AssertionError("No iteration patterns should delegate to iterator()");
             }
+        }
+    }
+
+    @Nested
+    public class KeySetView implements NoIteratorMapKeySetTestCase
+    {
+        @SafeVarargs
+        @Override
+        public final <T> Set<T> newWith(T... elements)
+        {
+            Random random = new Random(CURRENT_TIME_MILLIS);
+            MutableMap<T, Object> result = new UnifiedMapNoIterator<>();
+            for (T element : elements)
+            {
+                assertNull(result.put(element, random.nextDouble()));
+            }
+            return result.keySet();
+        }
+    }
+
+    @Nested
+    public class ValuesCollectionView implements NoIteratorMapValuesCollectionTestCase
+    {
+        @SafeVarargs
+        @Override
+        public final <T> Collection<T> newWith(T... elements)
+        {
+            return UnifiedMapNoIteratorTest.this.newWith(elements).values();
         }
     }
 }

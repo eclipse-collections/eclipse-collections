@@ -10,9 +10,15 @@
 
 package org.eclipse.collections.test.map.mutable;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+
+import org.eclipse.collections.test.map.MapKeySetTestCase;
+import org.eclipse.collections.test.map.MapValuesCollectionTestCase;
+import org.junit.jupiter.api.Nested;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -59,5 +65,33 @@ public class JDKConcurrentHashMapTest implements MapTestCase
     public boolean supportsNullValues()
     {
         return false;
+    }
+
+    @Nested
+    public class KeySetView implements MapKeySetTestCase
+    {
+        @SafeVarargs
+        @Override
+        public final <T> Set<T> newWith(T... elements)
+        {
+            Random random = new Random(CURRENT_TIME_MILLIS);
+            Map<T, Object> result = new ConcurrentHashMap<>();
+            for (T element : elements)
+            {
+                assertNull(result.put(element, random.nextDouble()));
+            }
+            return result.keySet();
+        }
+    }
+
+    @Nested
+    public class ValuesCollectionView implements MapValuesCollectionTestCase
+    {
+        @SafeVarargs
+        @Override
+        public final <T> Collection<T> newWith(T... elements)
+        {
+            return JDKConcurrentHashMapTest.this.newWith(elements).values();
+        }
     }
 }

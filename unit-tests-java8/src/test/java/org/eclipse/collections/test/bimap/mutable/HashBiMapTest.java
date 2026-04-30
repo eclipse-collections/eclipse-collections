@@ -10,10 +10,16 @@
 
 package org.eclipse.collections.test.bimap.mutable;
 
+import java.util.Collection;
 import java.util.Random;
+import java.util.Set;
 
 import org.eclipse.collections.api.bimap.MutableBiMap;
 import org.eclipse.collections.impl.bimap.mutable.HashBiMap;
+import org.eclipse.collections.test.bimap.BiMapTestCase;
+import org.eclipse.collections.test.map.BiMapValuesCollectionTestCase;
+import org.eclipse.collections.test.map.MapKeySetTestCase;
+import org.junit.jupiter.api.Nested;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -55,5 +61,35 @@ public class HashBiMapTest implements MutableBiMapTestCase
             assertNull(result.put((K) elements[i], (V) elements[i + 1]));
         }
         return result;
+    }
+
+    @Nested
+    public class KeySetView implements MapKeySetTestCase
+    {
+        @SafeVarargs
+        @Override
+        public final <T> Set<T> newWith(T... elements)
+        {
+            MutableBiMap<T, T> result = new HashBiMap<>();
+            BiMapTestCase.populateBiMapWithSameKeyAndValue(result, elements);
+            return result.keySet();
+        }
+    }
+
+    @Nested
+    public class ValuesCollectionView implements BiMapValuesCollectionTestCase
+    {
+        @Override
+        public boolean allowsSerialization()
+        {
+            return false;
+        }
+
+        @SafeVarargs
+        @Override
+        public final <T> Collection<T> newWith(T... elements)
+        {
+            return HashBiMapTest.this.newWith(elements).values();
+        }
     }
 }

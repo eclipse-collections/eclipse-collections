@@ -114,8 +114,13 @@ public interface SortedSetTestCase extends CollectionTestCase
     @Test
     default void Collection_size()
     {
-        assertThat(this.newWith(3, 2, 1)).hasSize(3);
-        assertThat(this.newWith()).hasSize(0);
+        CollectionTestCase.super.Collection_size();
+
+        assertEquals(3, this.newWith(3, 2, 1).size());
+        assertEquals(0, this.newWith().size());
+        assertEquals(1, this.newWith(1).size());
+        assertEquals(2, this.newWith(1, 2).size());
+        assertEquals(5, this.newWith(5, 4, 3, 2, 1).size());
     }
 
     @Test
