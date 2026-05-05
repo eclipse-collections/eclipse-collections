@@ -128,6 +128,11 @@ public interface IterableTestCase
             assertIterablesEqual(o1, lazyIterable.toList());
             return;
         }
+        if (o1 instanceof LazyIterable<?> lazy1 && o2 instanceof LazyIterable<?> lazy2)
+        {
+            assertIterablesEqual(lazy1.toList(), lazy2.toList());
+            return;
+        }
         if (o1 instanceof BooleanList && o2 instanceof LazyBooleanIterable lazyBooleanIterable)
         {
             assertIterablesEqual(o1, lazyBooleanIterable.toList());

@@ -29,6 +29,7 @@ import static org.eclipse.collections.test.IterableTestCase.assertIterablesEqual
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public interface MutableListTestCase extends MutableCollectionTestCase, ListTestCase, ListIterableTestCase, MutableOrderedIterableTestCase
 {
@@ -129,5 +130,15 @@ public interface MutableListTestCase extends MutableCollectionTestCase, ListTest
 
         MutableList<Integer> empty = this.newWith();
         assertNotSame(empty, empty.reversed());
+    }
+
+    @Test
+    default void MutableList_toReversed()
+    {
+        MutableList<Integer> list = this.newWith(3, 2, 1);
+        MutableList<Integer> reversed = list.toReversed();
+        assertIterablesEqual(Lists.immutable.with(1, 2, 3), reversed);
+        assertTrue(reversed.add(99));
+        assertIterablesEqual(Lists.immutable.with(3, 2, 1), list);
     }
 }
