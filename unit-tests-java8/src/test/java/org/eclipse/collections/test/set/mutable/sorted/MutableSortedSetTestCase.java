@@ -18,6 +18,9 @@ import org.eclipse.collections.test.set.sorted.NavigableSetTestCase;
 import org.eclipse.collections.test.set.sorted.SortedSetIterableTestCase;
 import org.junit.jupiter.api.Test;
 
+import static org.eclipse.collections.test.IterableTestCase.assertIterablesEqual;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 public interface MutableSortedSetTestCase extends SortedSetIterableTestCase, MutableCollectionUniqueTestCase, NavigableSetTestCase, MutableSortedIterableTestCase
 {
     @Override
@@ -43,5 +46,15 @@ public interface MutableSortedSetTestCase extends SortedSetIterableTestCase, Mut
         // Both implementations are the same
         NavigableSetTestCase.super.Iterable_remove();
         MutableSortedIterableTestCase.super.Iterable_remove();
+    }
+
+    @Test
+    default void MutableSortedSet_toReversed()
+    {
+        MutableSortedSet<Integer> sortedSet = this.newWith(4, 3, 2, 1);
+        MutableSortedSet<Integer> reversed = sortedSet.toReversed();
+        assertIterablesEqual(sortedSet.toList().reverseThis(), reversed.toList());
+        assertTrue(reversed.add(99));
+        assertIterablesEqual(this.newWith(4, 3, 2, 1), sortedSet);
     }
 }
