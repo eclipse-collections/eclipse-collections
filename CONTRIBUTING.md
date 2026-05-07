@@ -3,7 +3,7 @@ Contributor License
 
 If this is your first time contributing to an Eclipse Foundation project, you'll need to sign the [Eclipse Contributor Agreement][ECA].
 
-- [Create an account](https://dev.eclipse.org/site_login/createaccount.php) on dev.eclipse.org
+- [Create an account](https://accounts.eclipse.org/user/register?destination=/user/login) on accounts.eclipse.org
 - Open your [Account Settings tab](https://dev.eclipse.org/site_login/myaccount.php#open_tab_accountsettings), enter your GitHub ID and click Update Account
 - Read and [sign the ECA](https://dev.eclipse.org/site_login/myaccount.php#open_tab_cla)
 - Use the exact same email address for your Eclipse account and your commit author.
@@ -105,5 +105,5 @@ That's it! Thanks for contributing to Eclipse Collections!
 [rebase]:          https://github.com/edx/edx-solutions-edx-platform/wiki/How-to-Rebase-a-Pull-Request
 [github]:          https://github.com/eclipse-collections/eclipse-collections/actions
 [imperative-mood]: https://github.com/git/git/blob/master/Documentation/SubmittingPatches
-[github-issue]:    https://help.github.com/articles/closing-issues-via-commit-messages/
-[mailing-list]:    https://dev.eclipse.org/mailman/listinfo/collections-dev
+[github-issue]:    https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue
+[mailing-list]:    https://accounts.eclipse.org/mailing-list/collections-dev
