@@ -20,7 +20,6 @@ import java.util.function.BiFunction;
 import org.eclipse.collections.api.RichIterable;
 import org.eclipse.collections.api.bag.MutableBag;
 import org.eclipse.collections.api.block.function.Function;
-import org.eclipse.collections.api.block.function.Function0;
 import org.eclipse.collections.api.block.function.Function2;
 import org.eclipse.collections.api.block.function.primitive.BooleanFunction;
 import org.eclipse.collections.api.block.function.primitive.ByteFunction;
@@ -38,7 +37,6 @@ import org.eclipse.collections.api.block.procedure.primitive.ObjectIntProcedure;
 import org.eclipse.collections.api.collection.MutableCollection;
 import org.eclipse.collections.api.factory.Bags;
 import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.factory.Sets;
 import org.eclipse.collections.api.factory.primitive.BooleanLists;
 import org.eclipse.collections.api.factory.primitive.ByteLists;
 import org.eclipse.collections.api.factory.primitive.CharLists;
@@ -59,12 +57,10 @@ import org.eclipse.collections.api.list.primitive.MutableIntList;
 import org.eclipse.collections.api.list.primitive.MutableLongList;
 import org.eclipse.collections.api.list.primitive.MutableShortList;
 import org.eclipse.collections.api.map.ImmutableOrderedMap;
-import org.eclipse.collections.api.map.MapIterable;
 import org.eclipse.collections.api.map.MutableOrderedMap;
 import org.eclipse.collections.api.map.primitive.MutableObjectDoubleMap;
 import org.eclipse.collections.api.map.primitive.MutableObjectLongMap;
 import org.eclipse.collections.api.multimap.list.MutableListMultimap;
-import org.eclipse.collections.api.ordered.OrderedIterable;
 import org.eclipse.collections.api.partition.list.PartitionMutableList;
 import org.eclipse.collections.api.set.MutableSet;
 import org.eclipse.collections.api.stack.MutableStack;
@@ -76,7 +72,6 @@ import org.eclipse.collections.impl.block.procedure.PartitionPredicate2Procedure
 import org.eclipse.collections.impl.block.procedure.PartitionProcedure;
 import org.eclipse.collections.impl.block.procedure.SelectInstancesOfProcedure;
 import org.eclipse.collections.impl.collection.mutable.CollectionAdapter;
-import org.eclipse.collections.impl.list.fixed.ArrayAdapter;
 import org.eclipse.collections.impl.map.AbstractMapIterable;
 import org.eclipse.collections.impl.map.ordered.immutable.ImmutableOrderedMapAdapter;
 import org.eclipse.collections.impl.multimap.list.FastListMultimap;
@@ -368,75 +363,6 @@ public class OrderedMapAdapter<K, V>
     }
 
     @Override
-    public MutableList<V> distinct()
-    {
-        MutableList<V> result = Lists.mutable.empty();
-        MutableSet<V> seen = Sets.mutable.empty();
-        this.forEachKeyValue((key, value) ->
-        {
-            if (seen.add(value))
-            {
-                result.add(value);
-            }
-        });
-        return result;
-    }
-
-    @Override
-    public MutableOrderedMap<K, V> withKeyValue(K key, V value)
-    {
-        this.put(key, value);
-        return this;
-    }
-
-    @Override
-    public MutableOrderedMap<K, V> withMap(Map<? extends K, ? extends V> map)
-    {
-        this.putAll(map);
-        return this;
-    }
-
-    @Override
-    public MutableOrderedMap<K, V> withMapIterable(MapIterable<? extends K, ? extends V> mapIterable)
-    {
-        this.putAllMapIterable(mapIterable);
-        return this;
-    }
-
-    @Override
-    public void putAllMapIterable(MapIterable<? extends K, ? extends V> mapIterable)
-    {
-        mapIterable.forEachKeyValue(this::put);
-    }
-
-    @Override
-    public MutableOrderedMap<K, V> withAllKeyValues(Iterable<? extends Pair<? extends K, ? extends V>> keyValues)
-    {
-        keyValues.forEach(keyVal -> this.put(keyVal.getOne(), keyVal.getTwo()));
-        return this;
-    }
-
-    @Override
-    public MutableOrderedMap<K, V> withAllKeyValueArguments(Pair<? extends K, ? extends V>... keyValues)
-    {
-        return this.withAllKeyValues(ArrayAdapter.adapt(keyValues));
-    }
-
-    @Override
-    public MutableOrderedMap<K, V> withoutKey(K key)
-    {
-        this.removeKey(key);
-        return this;
-    }
-
-    @Override
-    public MutableOrderedMap<K, V> withoutAllKeys(Iterable<? extends K> keys)
-    {
-        keys.forEach(this::removeKey);
-        return this;
-    }
-
-    @Override
     public MutableOrderedMap<K, V> asUnmodifiable()
     {
         return UnmodifiableMutableOrderedMap.of(this);
@@ -508,43 +434,6 @@ public class OrderedMapAdapter<K, V>
     public MutableShortList collectShort(ShortFunction<? super V> shortFunction)
     {
         return this.collectShort(shortFunction, ShortLists.mutable.withInitialCapacity(this.size()));
-    }
-
-    @Override
-    public <R> MutableOrderedMap<K, R> collectValues(Function2<? super K, ? super V, ? extends R> function)
-    {
-        return MapIterate.collectValues(
-                this,
-                function,
-                OrderedMapAdapter.adapt(new LinkedHashMap<>(this.size())));
-    }
-
-    @Override
-    public <R> MutableOrderedMap<R, V> collectKeysUnique(Function2<? super K, ? super V, ? extends R> function)
-    {
-        return MapIterate.collectKeysUnique(
-                this,
-                function,
-                OrderedMapAdapter.adapt(new LinkedHashMap<>(this.size())));
-    }
-
-    @Override
-    public MutableOrderedMap<K, V> tap(Procedure<? super V> procedure)
-    {
-        this.forEach(procedure);
-        return this;
-    }
-
-    @Override
-    public MutableOrderedMap<K, V> select(Predicate2<? super K, ? super V> predicate)
-    {
-        return MapIterate.selectMapOnEntry(this, predicate, this.newEmpty());
-    }
-
-    @Override
-    public MutableOrderedMap<K, V> reject(Predicate2<? super K, ? super V> predicate)
-    {
-        return MapIterate.rejectMapOnEntry(this, predicate, this.newEmpty());
     }
 
     @Override
@@ -644,88 +533,6 @@ public class OrderedMapAdapter<K, V>
     }
 
     @Override
-    public <VV> MutableOrderedMap<VV, V> groupByUniqueKey(Function<? super V, ? extends VV> function)
-    {
-        MutableOrderedMap<VV, V> vs = (MutableOrderedMap<VV, V>) this.newEmpty();
-        return this.groupByUniqueKey(function, vs);
-    }
-
-    @Override
-    public <KK, VV> MutableOrderedMap<KK, VV> aggregateInPlaceBy(
-            Function<? super V, ? extends KK> groupBy,
-            Function0<? extends VV> zeroValueFactory,
-            Procedure2<? super VV, ? super V> mutatingAggregator)
-    {
-        MutableOrderedMap<KK, VV> result = (MutableOrderedMap<KK, VV>) this.newEmpty();
-        this.forEach(each ->
-        {
-            KK key = groupBy.valueOf(each);
-            VV value = result.getIfAbsentPut(key, zeroValueFactory);
-            mutatingAggregator.value(value, each);
-        });
-        return result;
-    }
-
-    @Override
-    public <KK, VV> MutableOrderedMap<KK, VV> aggregateBy(
-            Function<? super V, ? extends KK> groupBy,
-            Function0<? extends VV> zeroValueFactory,
-            Function2<? super VV, ? super V, ? extends VV> nonMutatingAggregator)
-    {
-        MutableOrderedMap<KK, VV> result = (MutableOrderedMap<KK, VV>) this.newEmpty();
-        return this.aggregateBy(groupBy, zeroValueFactory, nonMutatingAggregator, result);
-    }
-
-    @Override
-    public <K1, V1, V2> MutableOrderedMap<K1, V2> aggregateBy(
-            Function<? super K, ? extends K1> keyFunction,
-            Function<? super V, ? extends V1> valueFunction,
-            Function0<? extends V2> zeroValueFactory,
-            Function2<? super V2, ? super V1, ? extends V2> nonMutatingAggregator)
-    {
-        MutableOrderedMap<K1, V2> result = (MutableOrderedMap<K1, V2>) this.newEmpty();
-        this.forEachKeyValue((key, value) -> result.updateValueWith(
-                keyFunction.valueOf(key),
-                zeroValueFactory,
-                nonMutatingAggregator,
-                valueFunction.valueOf(value)));
-        return result;
-    }
-
-    @Override
-    public <KK> MutableOrderedMap<KK, V> reduceBy(
-            Function<? super V, ? extends KK> groupBy,
-            Function2<? super V, ? super V, ? extends V> reduceFunction)
-    {
-        MutableOrderedMap<KK, V> result = (MutableOrderedMap<KK, V>) this.newEmpty();
-        return this.reduceBy(groupBy, reduceFunction, result);
-    }
-
-    @Override
-    public int detectLastIndex(Predicate<? super V> predicate)
-    {
-        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".detectLastIndex() not implemented yet");
-    }
-
-    @Override
-    public <S> boolean corresponds(OrderedIterable<S> other, Predicate2<? super V, ? super S> predicate)
-    {
-        if (this.size() != other.size())
-        {
-            return false;
-        }
-        Iterator<S> otherIterator = other.iterator();
-        for (V value : this)
-        {
-            if (!predicate.accept(value, otherIterator.next()))
-            {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    @Override
     public void forEach(int startIndex, int endIndex, Procedure<? super V> procedure)
     {
         throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".forEach() not implemented yet");
@@ -738,24 +545,21 @@ public class OrderedMapAdapter<K, V>
     }
 
     @Override
-    public MutableStack<V> toStack()
+    public int detectLastIndex(Predicate<? super V> predicate)
     {
-        return ArrayStack.newStackFromTopToBottom(this);
+        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".detectLastIndex() not implemented yet");
     }
 
     @Override
-    public int detectIndex(Predicate<? super V> predicate)
+    public Optional<Pair<K, V>> detectOptional(Predicate2<? super K, ? super V> predicate)
     {
-        int index = 0;
-        for (V value : this)
-        {
-            if (predicate.accept(value))
-            {
-                return index;
-            }
-            index++;
-        }
-        return -1;
+        return MapIterate.detectOptional(this, predicate);
+    }
+
+    @Override
+    public MutableStack<V> toStack()
+    {
+        return ArrayStack.newStackFromTopToBottom(this);
     }
 
     @Override
@@ -777,42 +581,9 @@ public class OrderedMapAdapter<K, V>
     }
 
     @Override
-    public <K2, V2> MutableOrderedMap<K2, V2> collect(Function2<? super K, ? super V, Pair<K2, V2>> function)
-    {
-        return MapIterate.collect(this, function, OrderedMapAdapter.adapt(new LinkedHashMap<>(this.size())));
-    }
-
-    @Override
-    public MutableOrderedMap<V, K> flipUniqueValues()
-    {
-        MutableOrderedMap<V, K> result = OrderedMapAdapter.adapt(new LinkedHashMap<>(this.size()));
-
-        this.delegate.forEach((key, value) ->
-        {
-            K oldKey = result.put(value, key);
-            if (oldKey != null)
-            {
-                String detailMessage = String.format(
-                        "Duplicate value: %s found at key: %s and key: %s",
-                        value,
-                        oldKey,
-                        key);
-                throw new IllegalStateException(detailMessage);
-            }
-        });
-        return result;
-    }
-
-    @Override
     public Pair<K, V> detect(Predicate2<? super K, ? super V> predicate)
     {
         return MapIterate.detect(this, predicate);
-    }
-
-    @Override
-    public Optional<Pair<K, V>> detectOptional(Predicate2<? super K, ? super V> predicate)
-    {
-        return MapIterate.detectOptional(this, predicate);
     }
 
     @Override
