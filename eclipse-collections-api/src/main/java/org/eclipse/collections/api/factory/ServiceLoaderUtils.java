@@ -239,6 +239,7 @@ public final class ServiceLoaderUtils
         FACTORY_IMPL.put("org.eclipse.collections.api.factory.map.primitive.MutableShortShortMapFactory", "org.eclipse.collections.impl.map.mutable.primitive.MutableShortShortMapFactoryImpl");
         FACTORY_IMPL.put("org.eclipse.collections.api.factory.map.sorted.ImmutableSortedMapFactory", "org.eclipse.collections.impl.map.sorted.immutable.ImmutableSortedMapFactoryImpl");
         FACTORY_IMPL.put("org.eclipse.collections.api.factory.map.sorted.MutableSortedMapFactory", "org.eclipse.collections.impl.map.sorted.mutable.MutableSortedMapFactoryImpl");
+        FACTORY_IMPL.put("org.eclipse.collections.api.factory.map.ordered.MutableOrderedMapFactory", "org.eclipse.collections.impl.map.ordered.mutable.MutableOrderedMapFactoryImpl");
         FACTORY_IMPL.put("org.eclipse.collections.api.factory.set.FixedSizeSetFactory", "org.eclipse.collections.impl.set.fixed.FixedSizeSetFactoryImpl");
         FACTORY_IMPL.put("org.eclipse.collections.api.factory.set.ImmutableSetFactory", "org.eclipse.collections.impl.set.immutable.ImmutableSetFactoryImpl");
         FACTORY_IMPL.put("org.eclipse.collections.api.factory.set.MultiReaderSetFactory", "org.eclipse.collections.impl.set.mutable.MultiReaderMutableSetFactory");
