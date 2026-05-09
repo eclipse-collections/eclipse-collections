@@ -13,14 +13,15 @@ package org.eclipse.collections.test.map;
 import java.util.LinkedHashMap;
 
 import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.factory.Stacks;
 import org.eclipse.collections.api.list.ListIterable;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.map.MapIterable;
 import org.eclipse.collections.api.map.MutableOrderedMap;
 import org.eclipse.collections.api.map.OrderedMap;
 import org.eclipse.collections.api.partition.ordered.PartitionOrderedIterable;
+import org.eclipse.collections.api.stack.MutableStack;
 import org.eclipse.collections.impl.map.ordered.mutable.OrderedMapAdapter;
+import org.eclipse.collections.impl.tuple.Tuples;
 import org.eclipse.collections.test.OrderedIterableTestCase;
 import org.eclipse.collections.test.list.TransformsToListTrait;
 import org.junit.jupiter.api.Test;
@@ -64,7 +65,7 @@ public interface OrderedMapIterableTestCase extends MapIterableTestCase, Ordered
     }
 
     @Test
-    default void take()
+    default void ReversibleIterable_take()
     {
         OrderedMap<Integer, String> orderedMap = this.newWithKeysValues(3, "Three", 2, "Two", 1, "Three");
         assertIterablesEqual(this.newWithKeysValues(), orderedMap.take(0));
@@ -77,7 +78,7 @@ public interface OrderedMapIterableTestCase extends MapIterableTestCase, Ordered
     }
 
     @Test
-    default void drop()
+    default void ReversibleIterable_drop()
     {
         OrderedMap<Integer, String> orderedMap = this.newWithKeysValues(3, "Three", 2, "Two", 1, "Three");
         assertIterablesEqual(this.newWithKeysValues(3, "Three", 2, "Two", 1, "Three"), orderedMap.drop(0));
@@ -104,6 +105,258 @@ public interface OrderedMapIterableTestCase extends MapIterableTestCase, Ordered
         assertThrows(
                 IllegalStateException.class,
                 () -> this.newWithKeysValues(1, "2", 2, "2").flipUniqueValues());
+    }
+
+    @Test
+    default void MapIterable_keysView_valuesView_keyValuesView()
+    {
+        OrderedMap<String, Integer> map = this.newWithKeysValues("A", 1, "B", 2, "C", 3);
+
+        assertEquals(Lists.mutable.with("A", "B", "C"), map.keysView().toList());
+        assertEquals(Lists.mutable.with(1, 2, 3), map.valuesView().toList());
+        assertEquals(
+                Lists.mutable.with(Tuples.pair("A", 1), Tuples.pair("B", 2), Tuples.pair("C", 3)),
+                map.keyValuesView().toList());
+    }
+
+    @Override
+    @Test
+    default void MapIterable_select_reject()
+    {
+        MapIterableTestCase.super.MapIterable_select_reject();
+
+        OrderedMap<String, Integer> map = this.newWithKeysValues("A", 1, "B", 2, "C", 3, "D", 4);
+
+        OrderedMap<String, Integer> selected = map.select((key, value) -> value % 2 != 0);
+        assertIterablesEqual(this.newWithKeysValues("A", 1, "C", 3), selected);
+
+        OrderedMap<String, Integer> rejected = map.reject((key, value) -> value % 2 != 0);
+        assertIterablesEqual(this.newWithKeysValues("B", 2, "D", 4), rejected);
+    }
+
+    @Override
+    @Test
+    default void MapIterable_collectValues()
+    {
+        MapIterableTestCase.super.MapIterable_collectValues();
+
+        OrderedMap<String, Integer> map = this.newWithKeysValues("A", 1, "B", 2, "C", 3, "D", 4);
+
+        OrderedMap<String, Integer> collected = map.collectValues((key, value) -> value * 10);
+        assertIterablesEqual(this.newWithKeysValues("A", 10, "B", 20, "C", 30, "D", 40), collected);
+    }
+
+    @Test
+    default void OrderedIterable_forEachWithIndex_from_to()
+    {
+        OrderedMap<Object, Integer> integers = this.newWith(9, 8, 7, 6, 5, 4, 3, 2, 1, 0);
+
+        MutableList<Integer> result = Lists.mutable.empty();
+        MutableList<Integer> indexes = Lists.mutable.empty();
+        integers.forEachWithIndex(5, 7, (each, index) ->
+        {
+            result.add(each);
+            indexes.add(index);
+        });
+        assertIterablesEqual(
+                switch (this.getOrderingType())
+                {
+                    case SORTED_NATURAL -> Lists.immutable.with(5, 6, 7);
+                    case UNORDERED, INSERTION_ORDER, SORTED_REVERSE_NATURAL -> Lists.immutable.with(4, 3, 2);
+                },
+                result);
+        assertIterablesEqual(Lists.immutable.with(5, 6, 7), indexes);
+
+        MutableList<Integer> reverseResult = Lists.mutable.empty();
+        MutableList<Integer> reverseIndexes = Lists.mutable.empty();
+        integers.forEachWithIndex(7, 5, (each, index) ->
+        {
+            reverseResult.add(each);
+            reverseIndexes.add(index);
+        });
+        assertIterablesEqual(
+                switch (this.getOrderingType())
+                {
+                    case SORTED_NATURAL -> Lists.immutable.with(7, 6, 5);
+                    case UNORDERED, INSERTION_ORDER, SORTED_REVERSE_NATURAL -> Lists.immutable.with(2, 3, 4);
+                },
+                reverseResult);
+        assertIterablesEqual(Lists.immutable.with(7, 6, 5), reverseIndexes);
+
+        assertThrows(IndexOutOfBoundsException.class, () -> integers.forEachWithIndex(-1, 0, (each, index) -> { }));
+        assertThrows(IndexOutOfBoundsException.class, () -> integers.forEachWithIndex(0, -1, (each, index) -> { }));
+        assertThrows(IndexOutOfBoundsException.class, () -> integers.forEachWithIndex(0, 10, (each, index) -> { }));
+        assertThrows(IndexOutOfBoundsException.class, () -> integers.forEachWithIndex(10, 0, (each, index) -> { }));
+    }
+
+    @Test
+    default void OrderedIterable_corresponds()
+    {
+        OrderedMap<Object, Integer> map = this.newWith(3, 2, 1);
+        MutableList<Integer> expected = switch (this.getOrderingType())
+        {
+            case SORTED_NATURAL -> Lists.mutable.with(1, 2, 3);
+            case UNORDERED, INSERTION_ORDER, SORTED_REVERSE_NATURAL -> Lists.mutable.with(3, 2, 1);
+        };
+        MutableList<Integer> differentOrder = switch (this.getOrderingType())
+        {
+            case SORTED_NATURAL -> Lists.mutable.with(3, 2, 1);
+            case UNORDERED, INSERTION_ORDER, SORTED_REVERSE_NATURAL -> Lists.mutable.with(1, 2, 3);
+        };
+
+        assertTrue(map.corresponds(expected, Integer::equals));
+        assertFalse(map.corresponds(differentOrder, Integer::equals));
+        assertFalse(map.corresponds(Lists.mutable.with(1, 2), Integer::equals));
+        assertTrue(this.<Integer>newWith().corresponds(Lists.mutable.empty(), Integer::equals));
+
+        if (!this.allowsDuplicates())
+        {
+            return;
+        }
+
+        OrderedMap<Object, Integer> mapWithDuplicates = this.newWith(3, 3, 3, 2, 2, 1);
+        MutableList<Integer> expectedWithDuplicates = switch (this.getOrderingType())
+        {
+            case SORTED_NATURAL -> Lists.mutable.with(1, 2, 2, 3, 3, 3);
+            case UNORDERED, INSERTION_ORDER, SORTED_REVERSE_NATURAL -> Lists.mutable.with(3, 3, 3, 2, 2, 1);
+        };
+        assertTrue(mapWithDuplicates.corresponds(expectedWithDuplicates, Integer::equals));
+        assertFalse(mapWithDuplicates.corresponds(expected, Integer::equals));
+    }
+
+    @Test
+    default void OrderedIterable_distinct()
+    {
+        OrderedMap<Object, Integer> map = this.newWith(3, 2, 1);
+        assertIterablesEqual(
+                switch (this.getOrderingType())
+                {
+                    case SORTED_NATURAL -> Lists.immutable.with(1, 2, 3);
+                    case UNORDERED, INSERTION_ORDER, SORTED_REVERSE_NATURAL -> Lists.immutable.with(3, 2, 1);
+                },
+                map.distinct());
+
+        if (!this.allowsDuplicates())
+        {
+            return;
+        }
+
+        OrderedMap<Object, Integer> mapWithDuplicates = this.newWith(3, 3, 3, 2, 2, 1, 0, 0);
+        assertIterablesEqual(
+                switch (this.getOrderingType())
+                {
+                    case SORTED_NATURAL -> Lists.immutable.with(0, 1, 2, 3);
+                    case UNORDERED, INSERTION_ORDER, SORTED_REVERSE_NATURAL -> Lists.immutable.with(3, 2, 1, 0);
+                },
+                mapWithDuplicates.distinct());
+    }
+
+    @Test
+    default void OrderedIterable_toStack()
+    {
+        OrderedMap<Object, Integer> map = this.newWith(3, 2, 1);
+        MutableStack<Integer> stack = map.toStack();
+        assertEquals(map.size(), stack.size());
+        assertEquals(map.toBag(), stack.toBag());
+
+        if (!this.allowsDuplicates())
+        {
+            return;
+        }
+
+        OrderedMap<Object, Integer> mapWithDuplicates = this.newWith(3, 3, 2, 1, 1);
+        MutableStack<Integer> stackWithDuplicates = mapWithDuplicates.toStack();
+        assertEquals(mapWithDuplicates.size(), stackWithDuplicates.size());
+        assertEquals(mapWithDuplicates.toBag(), stackWithDuplicates.toBag());
+    }
+
+    @Test
+    default void OrderedIterable_detectIndex()
+    {
+        OrderedMap<Object, Integer> map = this.newWith(3, 2, 1);
+        switch (this.getOrderingType())
+        {
+            case SORTED_NATURAL ->
+            {
+                assertEquals(0, map.detectIndex(each -> each == 1));
+                assertEquals(1, map.detectIndex(each -> each == 2));
+                assertEquals(2, map.detectIndex(each -> each == 3));
+            }
+            case UNORDERED, INSERTION_ORDER, SORTED_REVERSE_NATURAL ->
+            {
+                assertEquals(0, map.detectIndex(each -> each == 3));
+                assertEquals(1, map.detectIndex(each -> each == 2));
+                assertEquals(2, map.detectIndex(each -> each == 1));
+            }
+            default -> fail("Unexpected value: " + this.getOrderingType());
+        }
+        assertEquals(-1, map.detectIndex(each -> each == 99));
+        assertEquals(-1, this.<Integer>newWith().detectIndex(each -> true));
+
+        if (!this.allowsDuplicates())
+        {
+            return;
+        }
+
+        OrderedMap<Object, Integer> mapWithDuplicates = this.newWith(3, 3, 3, 2, 2, 1);
+        switch (this.getOrderingType())
+        {
+            case SORTED_NATURAL ->
+            {
+                assertEquals(0, mapWithDuplicates.detectIndex(each -> each == 1));
+                assertEquals(1, mapWithDuplicates.detectIndex(each -> each == 2));
+                assertEquals(3, mapWithDuplicates.detectIndex(each -> each == 3));
+            }
+            case UNORDERED, INSERTION_ORDER, SORTED_REVERSE_NATURAL ->
+            {
+                assertEquals(0, mapWithDuplicates.detectIndex(each -> each == 3));
+                assertEquals(3, mapWithDuplicates.detectIndex(each -> each == 2));
+                assertEquals(5, mapWithDuplicates.detectIndex(each -> each == 1));
+            }
+            default -> fail("Unexpected value: " + this.getOrderingType());
+        }
+    }
+
+    @Test
+    default void ReversibleIterable_detectLastIndex()
+    {
+        OrderedMap<String, Integer> map = this.newWithKeysValues("A", 1, "B", 2, "C", 1, "D", 3);
+
+        assertEquals(2, map.detectLastIndex(value -> value == 1));
+        assertEquals(1, map.detectLastIndex(value -> value == 2));
+        assertEquals(-1, map.detectLastIndex(value -> value == 99));
+        assertEquals(-1, this.<String, Integer>newWithKeysValues().detectLastIndex(value -> true));
+    }
+
+    @Test
+    default void ReversibleIterable_toReversed()
+    {
+        OrderedMap<String, Integer> map = this.newWithKeysValues("A", 1, "B", 2, "C", 3);
+
+        OrderedMap<String, Integer> reversed = map.toReversed();
+        assertIterablesEqual(this.newWithKeysValues("C", 3, "B", 2, "A", 1), reversed);
+        assertIterablesEqual(this.newWithKeysValues(), this.<String, Integer>newWithKeysValues().toReversed());
+        assertIterablesEqual(map, reversed.toReversed());
+    }
+
+    @Test
+    default void ReversibleIterable_reverseForEach()
+    {
+        OrderedMap<String, Integer> map = this.newWithKeysValues("A", 1, "B", 2, "C", 3);
+
+        MutableList<Integer> values = Lists.mutable.empty();
+        map.reverseForEach(values::add);
+        assertIterablesEqual(Lists.immutable.with(3, 2, 1), values);
+
+        MutableList<Integer> empty = Lists.mutable.empty();
+        this.<String, Integer>newWithKeysValues().reverseForEach(empty::add);
+        assertIterablesEqual(Lists.immutable.empty(), empty);
+    }
+
+    @Test
+    default void ReversibleIterable_asReversed()
+    {
+        assertThrows(UnsupportedOperationException.class, () -> this.newWithKeysValues("A", 1).asReversed());
     }
 
     // Cannot call super tests for takeWhile/dropWhile/partitionWhile because map equals
@@ -176,127 +429,5 @@ public interface OrderedMapIterableTestCase extends MapIterableTestCase, Ordered
         });
         assertIterablesEqual(Lists.immutable.empty(), partition4.getSelected());
         assertIterablesEqual(Lists.immutable.empty(), partition4.getRejected());
-    }
-
-    @Override
-    @Test
-    default void OrderedIterable_forEach_from_to()
-    {
-        // TODO Support indexed traversal for ordered maps.
-        assertThrows(UnsupportedOperationException.class, () -> this.newWith(9, 8, 7, 6, 5, 4, 3, 2, 1, 0).forEach(5, 7, each -> { }));
-
-        // TODO Support reverse indexed traversal for ordered maps.
-        assertThrows(UnsupportedOperationException.class, () -> this.newWith(9, 8, 7, 6, 5, 4, 3, 2, 1, 0).forEach(7, 5, each -> { }));
-    }
-
-    @Test
-    default void OrderedIterable_distinct()
-    {
-        OrderedMap<Object, Integer> map = this.newWith(3, 2, 1);
-        assertIterablesEqual(
-                switch (this.getOrderingType())
-                {
-                    case SORTED_NATURAL -> Lists.immutable.with(1, 2, 3);
-                    case UNORDERED, INSERTION_ORDER, SORTED_REVERSE_NATURAL -> Lists.immutable.with(3, 2, 1);
-                },
-                map.distinct());
-
-        if (!this.allowsDuplicates())
-        {
-            return;
-        }
-
-        OrderedMap<Object, Integer> mapWithDuplicates = this.newWith(3, 3, 3, 2, 2, 1, 0, 0);
-        assertIterablesEqual(
-                switch (this.getOrderingType())
-                {
-                    case SORTED_NATURAL -> Lists.immutable.with(0, 1, 2, 3);
-                    case UNORDERED, INSERTION_ORDER, SORTED_REVERSE_NATURAL -> Lists.immutable.with(3, 2, 1, 0);
-                },
-                mapWithDuplicates.distinct());
-    }
-
-    @Test
-    default void OrderedIterable_detectIndex()
-    {
-        OrderedMap<Object, Integer> map = this.newWith(3, 2, 1);
-        MutableList<Integer> values = map.valuesView().toList();
-        assertEquals(values.indexOf(1), map.detectIndex(each -> each == 1));
-        assertEquals(values.indexOf(2), map.detectIndex(each -> each == 2));
-        assertEquals(values.indexOf(3), map.detectIndex(each -> each == 3));
-        assertEquals(-1, map.detectIndex(each -> each == 99));
-        assertEquals(-1, this.<Integer>newWith().detectIndex(each -> true));
-
-        if (!this.allowsDuplicates())
-        {
-            return;
-        }
-
-        OrderedMap<Object, Integer> mapWithDuplicates = this.newWith(3, 3, 3, 2, 2, 1);
-        MutableList<Integer> valuesWithDuplicates = mapWithDuplicates.valuesView().toList();
-        assertEquals(valuesWithDuplicates.indexOf(1), mapWithDuplicates.detectIndex(each -> each == 1));
-        assertEquals(valuesWithDuplicates.indexOf(2), mapWithDuplicates.detectIndex(each -> each == 2));
-        assertEquals(valuesWithDuplicates.indexOf(3), mapWithDuplicates.detectIndex(each -> each == 3));
-    }
-
-    @Test
-    default void OrderedIterable_corresponds()
-    {
-        OrderedMap<Object, Integer> map = this.newWith(3, 2, 1);
-        MutableList<Integer> expected = switch (this.getOrderingType())
-        {
-            case SORTED_NATURAL -> Lists.mutable.with(1, 2, 3);
-            case UNORDERED, INSERTION_ORDER, SORTED_REVERSE_NATURAL -> Lists.mutable.with(3, 2, 1);
-        };
-        MutableList<Integer> differentOrder = switch (this.getOrderingType())
-        {
-            case SORTED_NATURAL -> Lists.mutable.with(3, 2, 1);
-            case UNORDERED, INSERTION_ORDER, SORTED_REVERSE_NATURAL -> Lists.mutable.with(1, 2, 3);
-        };
-
-        assertTrue(map.corresponds(expected, Integer::equals));
-        assertFalse(map.corresponds(differentOrder, Integer::equals));
-        assertFalse(map.corresponds(Lists.mutable.with(1, 2), Integer::equals));
-        assertTrue(this.<Integer>newWith().corresponds(Lists.mutable.empty(), Integer::equals));
-
-        if (!this.allowsDuplicates())
-        {
-            return;
-        }
-
-        OrderedMap<Object, Integer> mapWithDuplicates = this.newWith(3, 3, 3, 2, 2, 1);
-        MutableList<Integer> expectedWithDuplicates = switch (this.getOrderingType())
-        {
-            case SORTED_NATURAL -> Lists.mutable.with(1, 2, 2, 3, 3, 3);
-            case UNORDERED, INSERTION_ORDER, SORTED_REVERSE_NATURAL -> Lists.mutable.with(3, 3, 3, 2, 2, 1);
-        };
-        assertTrue(mapWithDuplicates.corresponds(expectedWithDuplicates, Integer::equals));
-        assertFalse(mapWithDuplicates.corresponds(expected, Integer::equals));
-    }
-
-    @Test
-    default void ReversibleIterable_toReversed()
-    {
-        OrderedMap<String, Integer> map = this.newWithKeysValues("A", 1, "B", 2, "C", 3);
-
-        OrderedMap<String, Integer> reversed = map.toReversed();
-        assertIterablesEqual(this.newWithKeysValues("C", 3, "B", 2, "A", 1), reversed);
-        assertIterablesEqual(this.newWithKeysValues(), this.<String, Integer>newWithKeysValues().toReversed());
-        assertIterablesEqual(map, reversed.toReversed());
-    }
-
-    @Test
-    default void OrderedIterable_toStack()
-    {
-        OrderedMap<Object, Integer> map = this.newWith(3, 2, 1);
-        assertEquals(Stacks.mutable.withAllReversed(map.valuesView()), map.toStack());
-
-        if (!this.allowsDuplicates())
-        {
-            return;
-        }
-
-        OrderedMap<Object, Integer> mapWithDuplicates = this.newWith(3, 3, 2, 1, 1);
-        assertEquals(Stacks.mutable.withAllReversed(mapWithDuplicates.valuesView()), mapWithDuplicates.toStack());
     }
 }
