@@ -108,7 +108,16 @@ public interface MutableMapIterable<K, V> extends MapIterable<K, V>, Map<K, V>
      * This method guarantees that if the factory function throws an exception,
      * the map will be left in the same state as prior to the method invocation.
      */
-    V getIfAbsentPut(K key, Function0<? extends V> function);
+    default V getIfAbsentPut(K key, Function0<? extends V> function)
+    {
+        V result = this.get(key);
+        if (result == null && !this.containsKey(key))
+        {
+            result = function.value();
+            this.put(key, result);
+        }
+        return result;
+    }
 
     /**
      * Get and return the value in the Map at the specified key. Alternatively, if there is no value in the map at the key,
@@ -116,7 +125,16 @@ public interface MutableMapIterable<K, V> extends MapIterable<K, V>, Map<K, V>
      *
      * @since 5.0
      */
-    V getIfAbsentPut(K key, V value);
+    default V getIfAbsentPut(K key, V value)
+    {
+        V result = this.get(key);
+        if (result == null && !this.containsKey(key))
+        {
+            result = value;
+            this.put(key, result);
+        }
+        return result;
+    }
 
     /**
      * Get and return the value in the Map at the specified key. Alternatively, if there is no value in the map for that key
@@ -126,7 +144,10 @@ public interface MutableMapIterable<K, V> extends MapIterable<K, V>, Map<K, V>
      * This method guarantees that if the function throws an exception,
      * the map will be left in the same state as prior to the method invocation.
      */
-    V getIfAbsentPutWithKey(K key, Function<? super K, ? extends V> function);
+    default V getIfAbsentPutWithKey(K key, Function<? super K, ? extends V> function)
+    {
+        return this.getIfAbsentPutWith(key, function, key);
+    }
 
     /**
      * Get and return the value in the Map at the specified key. Alternatively, if there is no value in the map for that key
@@ -136,7 +157,16 @@ public interface MutableMapIterable<K, V> extends MapIterable<K, V>, Map<K, V>
      * This method guarantees that if the function throws an exception,
      * the map will be left in the same state as prior to the method invocation.
      */
-    <P> V getIfAbsentPutWith(K key, Function<? super P, ? extends V> function, P parameter);
+    default <P> V getIfAbsentPutWith(K key, Function<? super P, ? extends V> function, P parameter)
+    {
+        V result = this.get(key);
+        if (result == null && !this.containsKey(key))
+        {
+            result = function.valueOf(parameter);
+            this.put(key, result);
+        }
+        return result;
+    }
 
     /**
      * Looks up the value associated with {@code key}, applies the {@code function} to it, and replaces the value. If there
@@ -145,7 +175,13 @@ public interface MutableMapIterable<K, V> extends MapIterable<K, V>, Map<K, V>
      * This method guarantees that if either the factory or the function throws an exception,
      * the map will be left in the same state as prior to the method invocation.
      */
-    V updateValue(K key, Function0<? extends V> factory, Function<? super V, ? extends V> function);
+    default V updateValue(K key, Function0<? extends V> factory, Function<? super V, ? extends V> function)
+    {
+        V oldValue = this.getIfAbsent(key, factory);
+        V newValue = function.valueOf(oldValue);
+        this.put(key, newValue);
+        return newValue;
+    }
 
     /**
      * Same as {@link #updateValue(Object, Function0, Function)} with a Function2 and specified parameter which is
@@ -154,7 +190,13 @@ public interface MutableMapIterable<K, V> extends MapIterable<K, V>, Map<K, V>
      * This method guarantees that if either the factory or the function throws an exception,
      * the map will be left in the same state as prior to the method invocation.
      */
-    <P> V updateValueWith(K key, Function0<? extends V> factory, Function2<? super V, ? super P, ? extends V> function, P parameter);
+    default <P> V updateValueWith(K key, Function0<? extends V> factory, Function2<? super V, ? super P, ? extends V> function, P parameter)
+    {
+        V oldValue = this.getIfAbsent(key, factory);
+        V newValue = function.value(oldValue, parameter);
+        this.put(key, newValue);
+        return newValue;
+    }
 
     /**
      * This method allows mutable, fixed size, and immutable maps the ability to add elements to their existing
