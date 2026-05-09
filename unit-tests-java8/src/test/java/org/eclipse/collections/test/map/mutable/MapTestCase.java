@@ -10,11 +10,14 @@
 
 package org.eclipse.collections.test.map.mutable;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Spliterator;
 import java.util.function.BiConsumer;
 
 import org.eclipse.collections.api.factory.Sets;
@@ -114,6 +117,36 @@ public interface MapTestCase
     }
 
     @Test
+    default void Map_keySet()
+    {
+        Map<Integer, String> map = this.newWithKeysValues(3, "Three", 2, "Two", 1, "One");
+        Set<Integer> keySet = map.keySet();
+
+        assertEquals(3, keySet.size());
+        assertFalse(keySet.isEmpty());
+
+        assertTrue(keySet.contains(1));
+        assertTrue(keySet.contains(2));
+        assertTrue(keySet.contains(3));
+        assertFalse(keySet.contains(4));
+
+        assertTrue(keySet.containsAll(List.of(1, 2, 3)));
+        assertFalse(keySet.containsAll(List.of(1, 4)));
+
+        Map<Object, Object> empty = this.newWith();
+        assertEquals(0, empty.keySet().size());
+        assertTrue(empty.keySet().isEmpty());
+
+        if (this.supportsNullKeys())
+        {
+            assertFalse(keySet.contains(null));
+
+            Map<Integer, String> map2 = this.newWithKeysValues(null, "Null", 1, "One");
+            assertTrue(map2.keySet().contains(null));
+        }
+    }
+
+    @Test
     default void Map_entrySet_equals()
     {
         Map<Integer, String> map = this.newWithKeysValues(1, "One", 2, "Two", 3, "Three");
@@ -172,6 +205,48 @@ public interface MapTestCase
             assertEquals(currentValue, oldValue);
         });
         assertIterablesEqual(this.newWithKeysValues("3", 4, "2", 3, "1", 2), map);
+    }
+
+    @Test
+    default void Map_entrySet()
+    {
+        Map<Integer, String> map = this.newWithKeysValues(3, "Three", 2, "Two", 1, "One");
+        Set<Map.Entry<Integer, String>> entrySet = map.entrySet();
+
+        assertEquals(3, entrySet.size());
+        assertFalse(entrySet.isEmpty());
+
+        assertTrue(entrySet.contains(ImmutableEntry.of(1, "One")));
+        assertTrue(entrySet.contains(ImmutableEntry.of(2, "Two")));
+        assertTrue(entrySet.contains(ImmutableEntry.of(3, "Three")));
+        assertFalse(entrySet.contains(ImmutableEntry.of(4, "Four")));
+        assertFalse(entrySet.contains(ImmutableEntry.of(1, "Wrong")));
+
+        assertTrue(entrySet.containsAll(List.of(
+                ImmutableEntry.of(1, "One"),
+                ImmutableEntry.of(2, "Two"),
+                ImmutableEntry.of(3, "Three"))));
+        assertFalse(entrySet.containsAll(List.of(
+                ImmutableEntry.of(1, "One"),
+                ImmutableEntry.of(4, "Four"))));
+
+        Map<Object, Object> empty = this.newWith();
+        assertEquals(0, empty.entrySet().size());
+        assertTrue(empty.entrySet().isEmpty());
+
+        if (this.supportsNullKeys())
+        {
+            Map<Integer, String> map2 = this.newWithKeysValues(null, "Null", 1, "One");
+            assertTrue(map2.entrySet().contains(ImmutableEntry.of(null, "Null")));
+            assertFalse(map2.entrySet().contains(ImmutableEntry.of(null, "Wrong")));
+        }
+
+        if (this.supportsNullValues())
+        {
+            Map<Integer, String> map3 = this.newWithKeysValues(1, null, 2, "Two");
+            assertTrue(map3.entrySet().contains(ImmutableEntry.of(1, null)));
+            assertFalse(map3.entrySet().contains(ImmutableEntry.of(1, "Wrong")));
+        }
     }
 
     @Test
@@ -399,6 +474,14 @@ public interface MapTestCase
         }));
         assertSame(exception, actualException);
         assertIterablesEqual(this.newWithKeysValues(1, "1", 2, "2", 3, "3", 4, "4"), map);
+
+        if (this.supportsNullValues())
+        {
+            Map<Integer, String> map2 = this.newWithKeysValues(1, null, 2, "2");
+            String value4 = map2.computeIfAbsent(1, k -> "One");
+            assertEquals("One", value4);
+            assertEquals("One", map2.get(1));
+        }
     }
 
     @Test
@@ -437,6 +520,18 @@ public interface MapTestCase
         }));
         assertSame(exception, actualException);
         assertIterablesEqual(this.newWithKeysValues(1, "1", 2, "2Modified", 3, "3"), map);
+
+        if (this.supportsNullValues())
+        {
+            Map<Integer, String> map2 = this.newWithKeysValues(1, null, 2, "2");
+            String value4 = map2.computeIfPresent(1, (k, v) -> {
+                fail("Expected remapping function not to be called for null value");
+                return "Should not be returned";
+            });
+            assertNull(value4);
+            assertNull(map2.get(1));
+            assertTrue(map2.containsKey(1));
+        }
     }
 
     @Test
@@ -542,6 +637,10 @@ public interface MapTestCase
             Map<Integer, String> map2 = this.newWithKeysValues(1, "1", 2, "2");
             assertNull(map2.putIfAbsent(5, null));
             assertTrue(map2.containsKey(5));
+
+            Map<Integer, String> map3 = this.newWithKeysValues(1, null, 2, "2");
+            assertNull(map3.putIfAbsent(1, "One"));
+            assertEquals("One", map3.get(1));
         }
     }
 
@@ -578,6 +677,37 @@ public interface MapTestCase
         MutableSet<String> actual = Sets.mutable.with();
         map.forEach((BiConsumer<Integer, String>) (key, value) -> actual.add(key + "=" + value));
         assertEquals(Sets.immutable.with("1=1", "2=2", "3=3"), actual);
+    }
+
+    @Test
+    default void Map_values()
+    {
+        Map<Integer, String> map = this.newWithKeysValues(3, "Three", 2, "Two", 1, "One");
+        Collection<String> values = map.values();
+
+        assertEquals(3, values.size());
+        assertFalse(values.isEmpty());
+
+        assertTrue(values.contains("One"));
+        assertTrue(values.contains("Two"));
+        assertTrue(values.contains("Three"));
+        assertFalse(values.contains("Four"));
+
+        assertTrue(values.containsAll(List.of("One", "Two", "Three")));
+        assertFalse(values.containsAll(List.of("One", "Four")));
+
+        Map<Object, Object> empty = this.newWith();
+        assertEquals(0, empty.values().size());
+        assertTrue(empty.values().isEmpty());
+
+        if (this.supportsNullValues())
+        {
+            assertFalse(values.contains(null));
+
+            Map<Integer, String> map2 = this.newWithKeysValues(1, null, 2, "2");
+            assertTrue(map2.values().contains(null));
+            assertFalse(map2.values().spliterator().hasCharacteristics(Spliterator.NONNULL));
+        }
     }
 
     class AlwaysEqual
