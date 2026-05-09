@@ -11,6 +11,7 @@
 package org.eclipse.collections.test.map.mutable;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -22,6 +23,7 @@ import java.util.function.BiConsumer;
 
 import org.eclipse.collections.api.factory.Sets;
 import org.eclipse.collections.api.set.MutableSet;
+import org.eclipse.collections.impl.test.Verify;
 import org.eclipse.collections.impl.tuple.ImmutableEntry;
 import org.junit.jupiter.api.Test;
 
@@ -29,6 +31,7 @@ import static org.eclipse.collections.impl.test.Verify.assertSize;
 import static org.eclipse.collections.test.IterableTestCase.assertIterablesEqual;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -58,6 +61,49 @@ public interface MapTestCase
         assertEquals("[Two, One]", map.keySet().toString());
         assertEquals("[2, 1]", map.values().toString());
         assertEquals("[Two=2, One=1]", map.entrySet().toString());
+    }
+
+    @Test
+    default void Map_equalsAndHashCode()
+    {
+        Map<String, Integer> map1 = this.newWithKeysValues("A", 1, "B", 2);
+        Map<String, Integer> map2 = this.newWithKeysValues("B", 2, "A", 1);
+        Verify.assertEqualsAndHashCode(map1, map2);
+
+        Map<String, Integer> hashMap = new HashMap<>();
+        hashMap.put("A", 1);
+        hashMap.put("B", 2);
+        Verify.assertEqualsAndHashCode(map1, hashMap);
+
+        LinkedHashMap<String, Integer> linkedHashMap = new LinkedHashMap<>();
+        linkedHashMap.put("B", 2);
+        linkedHashMap.put("A", 1);
+        Verify.assertEqualsAndHashCode(map1, linkedHashMap);
+
+        Map<String, Integer> empty1 = this.newWithKeysValues();
+        Map<String, Integer> empty2 = this.newWithKeysValues();
+        Verify.assertEqualsAndHashCode(empty1, empty2);
+        Verify.assertEqualsAndHashCode(empty1, new HashMap<>());
+
+        // Inequality: extra entry
+        assertNotEquals(map1, this.newWithKeysValues("A", 1, "B", 2, "C", 3));
+        assertNotEquals(this.newWithKeysValues("A", 1, "B", 2, "C", 3), map1);
+
+        // Inequality: missing entry
+        assertNotEquals(map1, this.newWithKeysValues("A", 1));
+        assertNotEquals(this.newWithKeysValues("A", 1), map1);
+
+        // Inequality: differing value
+        assertNotEquals(map1, this.newWithKeysValues("A", 1, "B", 99));
+        assertNotEquals(this.newWithKeysValues("A", 1, "B", 99), map1);
+
+        // Inequality: differing key
+        assertNotEquals(map1, this.newWithKeysValues("A", 1, "Z", 2));
+        assertNotEquals(this.newWithKeysValues("A", 1, "Z", 2), map1);
+
+        // Inequality: empty vs non-empty
+        assertNotEquals(map1, empty1);
+        assertNotEquals(empty1, map1);
     }
 
     @Test
