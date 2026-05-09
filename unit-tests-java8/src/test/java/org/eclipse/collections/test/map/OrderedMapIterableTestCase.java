@@ -184,4 +184,31 @@ public interface OrderedMapIterableTestCase extends MapIterableTestCase, Ordered
         // TODO Support reverse indexed traversal for ordered maps.
         assertThrows(UnsupportedOperationException.class, () -> this.newWith(9, 8, 7, 6, 5, 4, 3, 2, 1, 0).forEach(7, 5, each -> { }));
     }
+
+    @Test
+    default void OrderedIterable_distinct()
+    {
+        OrderedMap<Object, Integer> map = this.newWith(3, 2, 1);
+        assertIterablesEqual(
+                switch (this.getOrderingType())
+                {
+                    case SORTED_NATURAL -> Lists.immutable.with(1, 2, 3);
+                    case UNORDERED, INSERTION_ORDER, SORTED_REVERSE_NATURAL -> Lists.immutable.with(3, 2, 1);
+                },
+                map.distinct());
+
+        if (!this.allowsDuplicates())
+        {
+            return;
+        }
+
+        OrderedMap<Object, Integer> mapWithDuplicates = this.newWith(3, 3, 3, 2, 2, 1, 0, 0);
+        assertIterablesEqual(
+                switch (this.getOrderingType())
+                {
+                    case SORTED_NATURAL -> Lists.immutable.with(0, 1, 2, 3);
+                    case UNORDERED, INSERTION_ORDER, SORTED_REVERSE_NATURAL -> Lists.immutable.with(3, 2, 1, 0);
+                },
+                mapWithDuplicates.distinct());
+    }
 }

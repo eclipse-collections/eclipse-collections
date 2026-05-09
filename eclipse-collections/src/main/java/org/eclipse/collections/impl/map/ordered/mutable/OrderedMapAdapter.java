@@ -38,6 +38,7 @@ import org.eclipse.collections.api.block.procedure.primitive.ObjectIntProcedure;
 import org.eclipse.collections.api.collection.MutableCollection;
 import org.eclipse.collections.api.factory.Bags;
 import org.eclipse.collections.api.factory.Lists;
+import org.eclipse.collections.api.factory.Sets;
 import org.eclipse.collections.api.factory.primitive.BooleanLists;
 import org.eclipse.collections.api.factory.primitive.ByteLists;
 import org.eclipse.collections.api.factory.primitive.CharLists;
@@ -362,7 +363,16 @@ public class OrderedMapAdapter<K, V>
     @Override
     public MutableList<V> distinct()
     {
-        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".distinct() not implemented yet");
+        MutableList<V> result = Lists.mutable.empty();
+        MutableSet<V> seen = Sets.mutable.empty();
+        this.forEachKeyValue((key, value) ->
+        {
+            if (seen.add(value))
+            {
+                result.add(value);
+            }
+        });
+        return result;
     }
 
     @Override
