@@ -272,4 +272,15 @@ public interface OrderedMapIterableTestCase extends MapIterableTestCase, Ordered
         assertTrue(mapWithDuplicates.corresponds(expectedWithDuplicates, Integer::equals));
         assertFalse(mapWithDuplicates.corresponds(expected, Integer::equals));
     }
+
+    @Test
+    default void ReversibleIterable_toReversed()
+    {
+        OrderedMap<String, Integer> map = this.newWithKeysValues("A", 1, "B", 2, "C", 3);
+
+        OrderedMap<String, Integer> reversed = map.toReversed();
+        assertIterablesEqual(this.newWithKeysValues("C", 3, "B", 2, "A", 1), reversed);
+        assertIterablesEqual(this.newWithKeysValues(), this.<String, Integer>newWithKeysValues().toReversed());
+        assertIterablesEqual(map, reversed.toReversed());
+    }
 }

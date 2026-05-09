@@ -83,6 +83,7 @@ import org.eclipse.collections.impl.multimap.list.FastListMultimap;
 import org.eclipse.collections.impl.partition.list.PartitionFastList;
 import org.eclipse.collections.impl.set.mutable.SetAdapter;
 import org.eclipse.collections.impl.tuple.AbstractImmutableEntry;
+import org.eclipse.collections.impl.tuple.Tuples;
 import org.eclipse.collections.impl.utility.Iterate;
 import org.eclipse.collections.impl.utility.LazyIterate;
 import org.eclipse.collections.impl.utility.MapIterate;
@@ -242,7 +243,12 @@ public class OrderedMapAdapter<K, V>
     @Override
     public MutableOrderedMap<K, V> toReversed()
     {
-        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".toReversed() not implemented yet");
+        MutableList<Pair<K, V>> pairs = Lists.mutable.empty();
+        this.forEachKeyValue((key, value) -> pairs.add(Tuples.pair(key, value)));
+        pairs.reverseThis();
+        MutableOrderedMap<K, V> result = OrderedMapAdapter.adapt(new LinkedHashMap<>(this.size()));
+        pairs.forEach(p -> result.put(p.getOne(), p.getTwo()));
+        return result;
     }
 
     @Override
