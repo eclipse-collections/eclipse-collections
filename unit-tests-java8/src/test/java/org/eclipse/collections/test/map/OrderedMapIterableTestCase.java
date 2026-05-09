@@ -13,6 +13,7 @@ package org.eclipse.collections.test.map;
 import java.util.LinkedHashMap;
 
 import org.eclipse.collections.api.factory.Lists;
+import org.eclipse.collections.api.factory.Stacks;
 import org.eclipse.collections.api.list.ListIterable;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.map.MapIterable;
@@ -282,5 +283,20 @@ public interface OrderedMapIterableTestCase extends MapIterableTestCase, Ordered
         assertIterablesEqual(this.newWithKeysValues("C", 3, "B", 2, "A", 1), reversed);
         assertIterablesEqual(this.newWithKeysValues(), this.<String, Integer>newWithKeysValues().toReversed());
         assertIterablesEqual(map, reversed.toReversed());
+    }
+
+    @Test
+    default void OrderedIterable_toStack()
+    {
+        OrderedMap<Object, Integer> map = this.newWith(3, 2, 1);
+        assertEquals(Stacks.mutable.withAllReversed(map.valuesView()), map.toStack());
+
+        if (!this.allowsDuplicates())
+        {
+            return;
+        }
+
+        OrderedMap<Object, Integer> mapWithDuplicates = this.newWith(3, 3, 2, 1, 1);
+        assertEquals(Stacks.mutable.withAllReversed(mapWithDuplicates.valuesView()), mapWithDuplicates.toStack());
     }
 }

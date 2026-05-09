@@ -82,6 +82,7 @@ import org.eclipse.collections.impl.map.ordered.immutable.ImmutableOrderedMapAda
 import org.eclipse.collections.impl.multimap.list.FastListMultimap;
 import org.eclipse.collections.impl.partition.list.PartitionFastList;
 import org.eclipse.collections.impl.set.mutable.SetAdapter;
+import org.eclipse.collections.impl.stack.mutable.ArrayStack;
 import org.eclipse.collections.impl.tuple.AbstractImmutableEntry;
 import org.eclipse.collections.impl.tuple.Tuples;
 import org.eclipse.collections.impl.utility.Iterate;
@@ -739,7 +740,7 @@ public class OrderedMapAdapter<K, V>
     @Override
     public MutableStack<V> toStack()
     {
-        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".toStack() not implemented yet");
+        return ArrayStack.newStackFromTopToBottom(this);
     }
 
     @Override

@@ -95,6 +95,7 @@ import org.eclipse.collections.api.ordered.ReversibleIterable;
 import org.eclipse.collections.api.partition.list.PartitionMutableList;
 import org.eclipse.collections.api.set.MutableSet;
 import org.eclipse.collections.api.set.sorted.MutableSortedSet;
+import org.eclipse.collections.api.stack.MutableStack;
 import org.eclipse.collections.api.tuple.Pair;
 import org.eclipse.collections.impl.UnmodifiableIteratorAdapter;
 import org.eclipse.collections.impl.tuple.AbstractImmutableEntry;
@@ -1158,6 +1159,12 @@ public class UnmodifiableMutableOrderedMap<K, V>
     public MutableBag<V> toBag()
     {
         return this.delegate.toBag();
+    }
+
+    @Override
+    public MutableStack<V> toStack()
+    {
+        return this.delegate.toStack();
     }
 
     @Override
