@@ -11,6 +11,7 @@
 package org.eclipse.collections.test.map.mutable;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -22,6 +23,7 @@ import java.util.function.BiConsumer;
 
 import org.eclipse.collections.api.factory.Sets;
 import org.eclipse.collections.api.set.MutableSet;
+import org.eclipse.collections.impl.test.Verify;
 import org.eclipse.collections.impl.tuple.ImmutableEntry;
 import org.junit.jupiter.api.Test;
 
@@ -29,6 +31,7 @@ import static org.eclipse.collections.impl.test.Verify.assertSize;
 import static org.eclipse.collections.test.IterableTestCase.assertIterablesEqual;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -101,6 +104,22 @@ public interface MapTestCase
     }
 
     @Test
+    default void Object_equalsAndHashCode()
+    {
+        Map<String, Integer> map1 = this.newWithKeysValues("A", 1, "B", 2);
+        Map<String, Integer> map2 = this.newWithKeysValues("B", 2, "A", 1);
+        Verify.assertEqualsAndHashCode(map1, map2);
+
+        Map<String, Integer> hashMap = new HashMap<>();
+        hashMap.put("A", 1);
+        hashMap.put("B", 2);
+        Verify.assertEqualsAndHashCode(map1, hashMap);
+
+        assertNotEquals(map1, this.newWithKeysValues("A", 1, "B", 99));
+        assertNotEquals(this.newWithKeysValues("A", 1, "B", 99), map1);
+    }
+
+    @Test
     default void Map_clear()
     {
         Map<Object, String> map = this.newWith("Three", "Two", "One");
@@ -110,6 +129,18 @@ public interface MapTestCase
         Map<Object, Object> map2 = this.newWith();
         map2.clear();
         assertIterablesEqual(this.newWith(), map2);
+
+        Map<Integer, String> keySetMap = this.newWithKeysValues(3, "Three", 2, "Two", 1, "One");
+        keySetMap.keySet().clear();
+        assertIterablesEqual(this.newWithKeysValues(), keySetMap);
+
+        Map<Integer, String> valuesMap = this.newWithKeysValues(3, "Three", 2, "Two", 1, "One");
+        valuesMap.values().clear();
+        assertIterablesEqual(this.newWithKeysValues(), valuesMap);
+
+        Map<Integer, String> entrySetMap = this.newWithKeysValues(3, "Three", 2, "Two", 1, "One");
+        entrySetMap.entrySet().clear();
+        assertIterablesEqual(this.newWithKeysValues(), entrySetMap);
     }
 
     @Test
@@ -243,6 +274,7 @@ public interface MapTestCase
             Integer currentValue = each.getValue();
             Integer oldValue = each.setValue(currentValue + 1);
             assertEquals(currentValue, oldValue);
+            assertEquals(Integer.valueOf(currentValue + 1), each.getValue());
         });
         assertIterablesEqual(this.newWithKeysValues("3", 4, "2", 3, "1", 2), map);
     }

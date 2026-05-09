@@ -310,6 +310,43 @@ public interface RichIterableTestCase extends IterableTestCase
     }
 
     @Test
+    default void RichIterable_zip()
+    {
+        if (!this.allowsIterator())
+        {
+            assertThrows(AssertionError.class, () -> this.newWith(3, 2, 1).iterator().hasNext());
+            return;
+        }
+
+        RichIterable<Pair<Integer, Integer>> zipped = this.newWith(3, 2, 1).zip(Lists.mutable.with(4, 5, 6));
+
+        // The first components are the source elements (in the source's iteration order).
+        assertEquals(Bags.mutable.with(3, 2, 1), zipped.collect(Pair::getOne, Bags.mutable.empty()));
+
+        switch (this.getOrderingType())
+        {
+            // Unordered: neither the pairing nor the result container's order is defined, so only the multiset of second components (every argument element, paired once) is asserted.
+            case UNORDERED -> assertEquals(
+                    Bags.mutable.with(4, 5, 6),
+                    zipped.collect(Pair::getTwo, Bags.mutable.empty()));
+            case INSERTION_ORDER, SORTED_REVERSE_NATURAL -> assertEquals(
+                    Lists.mutable.with(Tuples.pair(3, 4), Tuples.pair(2, 5), Tuples.pair(1, 6)),
+                    zipped.toList());
+            case SORTED_NATURAL -> assertEquals(
+                    Lists.mutable.with(Tuples.pair(1, 4), Tuples.pair(2, 5), Tuples.pair(3, 6)),
+                    zipped.toList());
+            default -> fail("Unexpected value: " + this.getOrderingType());
+        }
+
+        // A shorter argument truncates the result.
+        assertEquals(1, this.newWith(3, 2, 1).zip(Lists.mutable.with(4)).size());
+        // Extra argument elements are dropped once the source is exhausted.
+        assertEquals(3, this.newWith(3, 2, 1).zip(Lists.mutable.with(4, 5, 6, 7)).size());
+
+        assertEquals(0, this.<Integer>newWith().zip(Lists.mutable.with(4)).size());
+    }
+
+    @Test
     default void RichIterable_getFirst_empty_null()
     {
         assertNull(this.newWith().getFirst());

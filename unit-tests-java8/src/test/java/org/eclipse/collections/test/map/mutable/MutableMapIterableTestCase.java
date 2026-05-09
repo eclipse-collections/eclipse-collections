@@ -12,6 +12,8 @@ package org.eclipse.collections.test.map.mutable;
 
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.Optional;
 
 import org.eclipse.collections.api.block.function.Function2;
 import org.eclipse.collections.api.factory.Bags;
@@ -19,9 +21,12 @@ import org.eclipse.collections.api.factory.Maps;
 import org.eclipse.collections.api.factory.Sets;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.map.MutableMapIterable;
+import org.eclipse.collections.api.set.MutableSet;
 import org.eclipse.collections.impl.block.factory.Predicates2;
 import org.eclipse.collections.impl.list.Interval;
 import org.eclipse.collections.impl.test.Verify;
+import org.eclipse.collections.impl.tuple.ImmutableEntry;
+import org.eclipse.collections.impl.tuple.Tuples;
 import org.eclipse.collections.impl.utility.Iterate;
 import org.eclipse.collections.test.CollisionsTestCase;
 import org.eclipse.collections.test.map.MapIterableTestCase;
@@ -68,6 +73,14 @@ public interface MutableMapIterableTestCase extends MapIterableTestCase, MapTest
 
     @Override
     <K, V> MutableMapIterable<K, V> newWithKeysValues(Object... elements);
+
+    @Override
+    @Test
+    default void Object_equalsAndHashCode()
+    {
+        MapTestCase.super.Object_equalsAndHashCode();
+        MapIterableTestCase.super.Object_equalsAndHashCode();
+    }
 
     @Override
     @Test
@@ -348,7 +361,128 @@ public interface MutableMapIterableTestCase extends MapIterableTestCase, MapTest
             Integer currentValue = each.getValue();
             Integer oldValue = each.setValue(currentValue + 1);
             assertEquals(currentValue, oldValue);
+            assertEquals(Integer.valueOf(currentValue + 1), each.getValue());
         });
         assertIterablesEqual(this.newWithKeysValues("3", 4, "2", 3, "1", 2), map);
+    }
+
+    @Test
+    default void MutableMapIterable_entrySet_iterator_remove()
+    {
+        MutableMapIterable<Integer, String> map = this.newWithKeysValues(3, "Three", 2, "Two", 1, "One");
+
+        if (!this.allowsIterator())
+        {
+            assertThrows(AssertionError.class, () -> map.entrySet().iterator());
+            return;
+        }
+
+        Iterator<Map.Entry<Integer, String>> iterator = map.entrySet().iterator();
+
+        if (!this.allowsRemove())
+        {
+            iterator.next();
+            assertThrows(UnsupportedOperationException.class, iterator::remove);
+            return;
+        }
+
+        assertThrows(IllegalStateException.class, iterator::remove);
+        MutableSet<Map.Entry<Integer, String>> removed = Sets.mutable.with();
+        while (iterator.hasNext())
+        {
+            removed.add(iterator.next());
+            iterator.remove();
+            assertThrows(IllegalStateException.class, iterator::remove);
+        }
+        assertTrue(map.isEmpty());
+        assertEquals(
+                Sets.immutable.with(
+                        ImmutableEntry.of(3, "Three"),
+                        ImmutableEntry.of(2, "Two"),
+                        ImmutableEntry.of(1, "One")),
+                removed);
+    }
+
+    @Override
+    @Test
+    default void MapIterable_forEachKey()
+    {
+        MapIterableTestCase.super.MapIterable_forEachKey();
+
+        if (this.allowsRemove())
+        {
+            MutableMapIterable<Integer, String> withGap = this.newWithKeysValues(4, "4", 3, "3", 2, "2", 1, "1");
+            // Remove from the middle so traversal skips a tombstone.
+            withGap.removeKey(3);
+            MutableSet<Integer> keys = Sets.mutable.empty();
+            withGap.forEachKey(keys::add);
+            assertEquals(Sets.immutable.with(1, 2, 4), keys);
+        }
+    }
+
+    @Override
+    @Test
+    default void MapIterable_forEachValue()
+    {
+        MapIterableTestCase.super.MapIterable_forEachValue();
+
+        if (this.allowsRemove())
+        {
+            MutableMapIterable<Integer, String> withGap = this.newWithKeysValues(4, "4", 3, "3", 2, "2", 1, "1");
+            // Remove from the middle so traversal skips a tombstone.
+            withGap.removeKey(3);
+            MutableSet<String> values = Sets.mutable.empty();
+            withGap.forEachValue(values::add);
+            assertEquals(Sets.immutable.with("1", "2", "4"), values);
+        }
+    }
+
+    @Override
+    @Test
+    default void MapIterable_forEachKeyValue()
+    {
+        MapIterableTestCase.super.MapIterable_forEachKeyValue();
+
+        if (this.allowsRemove())
+        {
+            MutableMapIterable<Integer, String> withGap = this.newWithKeysValues(4, "Four", 3, "Three", 2, "Two", 1, "One");
+            // Remove from the middle so traversal skips a tombstone.
+            withGap.removeKey(3);
+            MutableSet<String> collected = Sets.mutable.empty();
+            withGap.forEachKeyValue((key, value) -> collected.add(key + value));
+            assertEquals(Sets.immutable.with("4Four", "2Two", "1One"), collected);
+        }
+    }
+
+    @Override
+    @Test
+    default void MapIterable_detect()
+    {
+        MapIterableTestCase.super.MapIterable_detect();
+
+        if (this.allowsRemove())
+        {
+            MutableMapIterable<Integer, String> withGap = this.newWithKeysValues(4, "Four", 3, "Three", 2, "Two", 1, "One");
+            // Remove from the middle so traversal skips a tombstone.
+            withGap.removeKey(3);
+            assertEquals(Tuples.pair(2, "Two"), withGap.detect((key, value) -> "Two".equals(value)));
+            assertNull(withGap.detect((key, value) -> "Three".equals(value)));
+        }
+    }
+
+    @Override
+    @Test
+    default void MapIterable_detectOptional()
+    {
+        MapIterableTestCase.super.MapIterable_detectOptional();
+
+        if (this.allowsRemove())
+        {
+            MutableMapIterable<Integer, String> withGap = this.newWithKeysValues(4, "Four", 3, "Three", 2, "Two", 1, "One");
+            // Remove from the middle so traversal skips a tombstone.
+            withGap.removeKey(3);
+            assertEquals(Optional.of(Tuples.pair(2, "Two")), withGap.detectOptional((key, value) -> "Two".equals(value)));
+            assertSame(Optional.empty(), withGap.detectOptional((key, value) -> "Three".equals(value)));
+        }
     }
 }
