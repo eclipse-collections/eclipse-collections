@@ -25,6 +25,7 @@ import org.eclipse.collections.test.list.TransformsToListTrait;
 import org.junit.jupiter.api.Test;
 
 import static org.eclipse.collections.test.IterableTestCase.assertIterablesEqual;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -210,5 +211,28 @@ public interface OrderedMapIterableTestCase extends MapIterableTestCase, Ordered
                     case UNORDERED, INSERTION_ORDER, SORTED_REVERSE_NATURAL -> Lists.immutable.with(3, 2, 1, 0);
                 },
                 mapWithDuplicates.distinct());
+    }
+
+    @Test
+    default void OrderedIterable_detectIndex()
+    {
+        OrderedMap<Object, Integer> map = this.newWith(3, 2, 1);
+        MutableList<Integer> values = map.valuesView().toList();
+        assertEquals(values.indexOf(1), map.detectIndex(each -> each == 1));
+        assertEquals(values.indexOf(2), map.detectIndex(each -> each == 2));
+        assertEquals(values.indexOf(3), map.detectIndex(each -> each == 3));
+        assertEquals(-1, map.detectIndex(each -> each == 99));
+        assertEquals(-1, this.<Integer>newWith().detectIndex(each -> true));
+
+        if (!this.allowsDuplicates())
+        {
+            return;
+        }
+
+        OrderedMap<Object, Integer> mapWithDuplicates = this.newWith(3, 3, 3, 2, 2, 1);
+        MutableList<Integer> valuesWithDuplicates = mapWithDuplicates.valuesView().toList();
+        assertEquals(valuesWithDuplicates.indexOf(1), mapWithDuplicates.detectIndex(each -> each == 1));
+        assertEquals(valuesWithDuplicates.indexOf(2), mapWithDuplicates.detectIndex(each -> each == 2));
+        assertEquals(valuesWithDuplicates.indexOf(3), mapWithDuplicates.detectIndex(each -> each == 3));
     }
 }

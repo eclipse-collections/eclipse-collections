@@ -727,7 +727,16 @@ public class OrderedMapAdapter<K, V>
     @Override
     public int detectIndex(Predicate<? super V> predicate)
     {
-        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".detectIndex() not implemented yet");
+        int index = 0;
+        for (V value : this)
+        {
+            if (predicate.accept(value))
+            {
+                return index;
+            }
+            index++;
+        }
+        return -1;
     }
 
     @Override
