@@ -26,7 +26,9 @@ import org.junit.jupiter.api.Test;
 
 import static org.eclipse.collections.test.IterableTestCase.assertIterablesEqual;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 public interface OrderedMapIterableTestCase extends MapIterableTestCase, OrderedIterableTestCase, TransformsToListTrait
@@ -234,5 +236,40 @@ public interface OrderedMapIterableTestCase extends MapIterableTestCase, Ordered
         assertEquals(valuesWithDuplicates.indexOf(1), mapWithDuplicates.detectIndex(each -> each == 1));
         assertEquals(valuesWithDuplicates.indexOf(2), mapWithDuplicates.detectIndex(each -> each == 2));
         assertEquals(valuesWithDuplicates.indexOf(3), mapWithDuplicates.detectIndex(each -> each == 3));
+    }
+
+    @Test
+    default void OrderedIterable_corresponds()
+    {
+        OrderedMap<Object, Integer> map = this.newWith(3, 2, 1);
+        MutableList<Integer> expected = switch (this.getOrderingType())
+        {
+            case SORTED_NATURAL -> Lists.mutable.with(1, 2, 3);
+            case UNORDERED, INSERTION_ORDER, SORTED_REVERSE_NATURAL -> Lists.mutable.with(3, 2, 1);
+        };
+        MutableList<Integer> differentOrder = switch (this.getOrderingType())
+        {
+            case SORTED_NATURAL -> Lists.mutable.with(3, 2, 1);
+            case UNORDERED, INSERTION_ORDER, SORTED_REVERSE_NATURAL -> Lists.mutable.with(1, 2, 3);
+        };
+
+        assertTrue(map.corresponds(expected, Integer::equals));
+        assertFalse(map.corresponds(differentOrder, Integer::equals));
+        assertFalse(map.corresponds(Lists.mutable.with(1, 2), Integer::equals));
+        assertTrue(this.<Integer>newWith().corresponds(Lists.mutable.empty(), Integer::equals));
+
+        if (!this.allowsDuplicates())
+        {
+            return;
+        }
+
+        OrderedMap<Object, Integer> mapWithDuplicates = this.newWith(3, 3, 3, 2, 2, 1);
+        MutableList<Integer> expectedWithDuplicates = switch (this.getOrderingType())
+        {
+            case SORTED_NATURAL -> Lists.mutable.with(1, 2, 2, 3, 3, 3);
+            case UNORDERED, INSERTION_ORDER, SORTED_REVERSE_NATURAL -> Lists.mutable.with(3, 3, 3, 2, 2, 1);
+        };
+        assertTrue(mapWithDuplicates.corresponds(expectedWithDuplicates, Integer::equals));
+        assertFalse(mapWithDuplicates.corresponds(expected, Integer::equals));
     }
 }
