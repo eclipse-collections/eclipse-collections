@@ -16,11 +16,11 @@ import java.util.Set;
 
 import org.eclipse.collections.api.factory.Sets;
 import org.eclipse.collections.api.set.MutableSet;
+import org.eclipse.collections.impl.test.Verify;
 import org.eclipse.collections.test.CollectionTestCase;
 import org.junit.jupiter.api.Test;
 
 import static org.eclipse.collections.impl.test.Verify.assertThrows;
-import static org.eclipse.collections.test.IterableTestCase.assertIterablesEqual;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.isOneOf;
@@ -46,16 +46,15 @@ public interface SetTestCase extends CollectionTestCase
 
     @Override
     @Test
-    default void Iterable_toString()
-    {
-        assertThat(this.newWith(2, 1).toString(), isOneOf("[1, 2]", "[2, 1]"));
-    }
-
-    @Override
-    @Test
     default void Iterable_next()
     {
         CollectionTestCase.super.Iterable_next();
+
+        if (!this.allowsIterator())
+        {
+            assertThrows(AssertionError.class, () -> this.newWith(3, 2, 1).iterator().next());
+            return;
+        }
 
         Set<Integer> iterable = this.newWith(3, 2, 1);
 
@@ -68,7 +67,8 @@ public interface SetTestCase extends CollectionTestCase
             assertTrue(mutableSet.add(integer));
         }
 
-        assertIterablesEqual(iterable, mutableSet);
+        // Use Set semantics (order-agnostic) so this works for sorted views like TreeMap.keySet().
+        Verify.assertSetsEqual(iterable, mutableSet);
         assertFalse(iterator.hasNext());
     }
 
@@ -76,12 +76,10 @@ public interface SetTestCase extends CollectionTestCase
     @Test
     default void Iterable_remove()
     {
-        if (!this.allowsRemove())
+        CollectionTestCase.super.Iterable_remove();
+
+        if (!this.allowsIterator() || !this.allowsRemove())
         {
-            Set<Integer> set = this.newWith(3, 2, 1);
-            Iterator<Integer> iterator = set.iterator();
-            iterator.next();
-            assertThrows(UnsupportedOperationException.class, iterator::remove);
             return;
         }
 

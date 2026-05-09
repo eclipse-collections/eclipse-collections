@@ -10,13 +10,17 @@
 
 package org.eclipse.collections.test.map;
 
+import java.util.Collection;
+import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 import org.eclipse.collections.api.factory.Maps;
 import org.eclipse.collections.api.map.MutableMap;
 import org.eclipse.collections.api.map.UnsortedMapIterable;
 import org.eclipse.collections.impl.map.mutable.UnifiedMap;
 import org.eclipse.collections.test.FixedSizeIterableTestCase;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -94,5 +98,51 @@ public class FixedSizeMapTest implements UnsortedMapIterableTestCase, FixedSizeI
             assertNull(result.put((K) elements[i], (V) elements[i + 1]));
         }
         return result;
+    }
+
+    @Nested
+    public class KeySetView implements UnmodifiableMapKeySetTestCase
+    {
+        @SafeVarargs
+        @Override
+        public final <T> Set<T> newWith(T... elements)
+        {
+            Random random = new Random(CURRENT_TIME_MILLIS);
+
+            if (elements.length == 0)
+            {
+                return Maps.fixedSize.<T, Object>of().keySet();
+            }
+            if (elements.length == 1)
+            {
+                return Maps.fixedSize.of(elements[0], random.nextDouble()).keySet();
+            }
+            if (elements.length == 2)
+            {
+                return Maps.fixedSize.of(elements[0], random.nextDouble(), elements[1], random.nextDouble()).keySet();
+            }
+            if (elements.length == 3)
+            {
+                return Maps.fixedSize.of(elements[0], random.nextDouble(), elements[1], random.nextDouble(), elements[2], random.nextDouble()).keySet();
+            }
+
+            MutableMap<T, Object> result = new UnifiedMap<>();
+            for (T element : elements)
+            {
+                assertNull(result.put(element, random.nextDouble()));
+            }
+            return result.toImmutable().castToMap().keySet();
+        }
+    }
+
+    @Nested
+    public class ValuesCollectionView implements UnmodifiableMapValuesCollectionTestCase
+    {
+        @SafeVarargs
+        @Override
+        public final <T> Collection<T> newWith(T... elements)
+        {
+            return ((Map<Object, T>) FixedSizeMapTest.this.newWith(elements)).values();
+        }
     }
 }

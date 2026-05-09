@@ -10,16 +10,25 @@
 
 package org.eclipse.collections.test.map.immutable.sorted;
 
+import java.util.Collection;
+import java.util.Random;
+import java.util.Set;
+
 import org.eclipse.collections.api.map.sorted.ImmutableSortedMap;
 import org.eclipse.collections.api.map.sorted.MutableSortedMap;
 import org.eclipse.collections.impl.block.factory.Comparators;
 import org.eclipse.collections.impl.map.sorted.mutable.TreeSortedMap;
+import org.eclipse.collections.test.map.UnmodifiableMapKeySetTestCase;
+import org.eclipse.collections.test.map.UnmodifiableMapValuesCollectionTestCase;
+import org.junit.jupiter.api.Nested;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
 public class ImmutableTreeMapTest implements ImmutableSortedMapIterableTestCase
 {
+    private static final long CURRENT_TIME_MILLIS = System.currentTimeMillis();
+
     @Override
     public <T> ImmutableSortedMap<Object, T> newWith(T... elements)
     {
@@ -47,5 +56,39 @@ public class ImmutableTreeMapTest implements ImmutableSortedMapIterableTestCase
             assertNull(result.put((K) elements[i], (V) elements[i + 1]));
         }
         return result.toImmutable();
+    }
+
+    @Nested
+    public class KeySetView implements UnmodifiableMapKeySetTestCase
+    {
+        @SafeVarargs
+        @Override
+        public final <T> Set<T> newWith(T... elements)
+        {
+            Random random = new Random(CURRENT_TIME_MILLIS);
+            MutableSortedMap<T, Object> result = new TreeSortedMap<>(Comparators.reverseNaturalOrder());
+            for (T element : elements)
+            {
+                assertNull(result.put(element, random.nextDouble()));
+            }
+            return result.toImmutable().castToMap().keySet();
+        }
+    }
+
+    @Nested
+    public class ValuesCollectionView implements UnmodifiableMapValuesCollectionTestCase
+    {
+        @Override
+        public OrderingType getOrderingType()
+        {
+            return OrderingType.SORTED_REVERSE_NATURAL;
+        }
+
+        @SafeVarargs
+        @Override
+        public final <T> Collection<T> newWith(T... elements)
+        {
+            return ImmutableTreeMapTest.this.newWith(elements).castToMap().values();
+        }
     }
 }

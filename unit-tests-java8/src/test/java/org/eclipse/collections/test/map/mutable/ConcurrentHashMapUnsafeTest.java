@@ -10,12 +10,17 @@
 
 package org.eclipse.collections.test.map.mutable;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 import java.util.Spliterator;
 
 import org.eclipse.collections.api.map.MutableMap;
 import org.eclipse.collections.impl.map.mutable.ConcurrentHashMapUnsafe;
+import org.eclipse.collections.test.map.MapKeySetTestCase;
+import org.eclipse.collections.test.map.MapValuesCollectionTestCase;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import static org.eclipse.collections.test.IterableTestCase.assertIterablesEqual;
@@ -205,5 +210,45 @@ public class ConcurrentHashMapUnsafeTest implements MutableMapTestCase
         Map<Integer, String> map2 = this.newWithKeysValues(1, null, 2, "2");
         assertTrue(map2.values().contains(null));
         assertTrue(map2.values().spliterator().hasCharacteristics(Spliterator.NONNULL));
+    }
+
+    @Nested
+    public class KeySetView implements MapKeySetTestCase
+    {
+        @Override
+        public boolean allowsSerialization()
+        {
+            return false;
+        }
+
+        @SafeVarargs
+        @Override
+        public final <T> Set<T> newWith(T... elements)
+        {
+            Random random = new Random(CURRENT_TIME_MILLIS);
+            MutableMap<T, Object> result = new ConcurrentHashMapUnsafe<>();
+            for (T element : elements)
+            {
+                assertNull(result.put(element, random.nextDouble()));
+            }
+            return result.keySet();
+        }
+    }
+
+    @Nested
+    public class ValuesCollectionView implements MapValuesCollectionTestCase
+    {
+        @Override
+        public boolean allowsSerialization()
+        {
+            return false;
+        }
+
+        @SafeVarargs
+        @Override
+        public final <T> Collection<T> newWith(T... elements)
+        {
+            return ConcurrentHashMapUnsafeTest.this.newWith(elements).values();
+        }
     }
 }

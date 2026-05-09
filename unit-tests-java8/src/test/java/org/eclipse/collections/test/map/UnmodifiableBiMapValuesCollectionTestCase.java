@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Goldman Sachs.
+ * Copyright (c) 2026 Goldman Sachs and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -8,18 +8,9 @@
  * http://www.eclipse.org/org/documents/edl-v10.php.
  */
 
-package org.eclipse.collections.test;
+package org.eclipse.collections.test.map;
 
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
-public interface NoDetectOptionalNullTestCase extends RichIterableTestCase
+public interface UnmodifiableBiMapValuesCollectionTestCase
+        extends BiMapValuesCollectionTestCase, UnmodifiableMapValuesCollectionTestCase
 {
-    @Override
-    @Test
-    default void RichIterable_detectOptionalNull()
-    {
-        assertThrows(NullPointerException.class, () -> this.newWith(1, null, 3));
-    }
 }

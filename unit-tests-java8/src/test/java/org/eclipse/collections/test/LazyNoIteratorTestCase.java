@@ -27,12 +27,6 @@ public interface LazyNoIteratorTestCase extends NoIteratorTestCase, RichIterable
     }
 
     @Override
-    default boolean implementsEquals()
-    {
-        return false;
-    }
-
-    @Override
     default <T> ListIterable<T> getExpectedFiltered(T... elements)
     {
         return Lists.immutable.with(elements);

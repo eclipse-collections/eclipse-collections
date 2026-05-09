@@ -10,6 +10,7 @@
 
 package org.eclipse.collections.test;
 
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
@@ -19,6 +20,7 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.SortedSet;
 
+import org.eclipse.collections.api.InternalIterable;
 import org.eclipse.collections.api.LazyBooleanIterable;
 import org.eclipse.collections.api.LazyByteIterable;
 import org.eclipse.collections.api.LazyCharIterable;
@@ -33,6 +35,7 @@ import org.eclipse.collections.api.bag.Bag;
 import org.eclipse.collections.api.bag.sorted.SortedBag;
 import org.eclipse.collections.api.collection.ImmutableCollection;
 import org.eclipse.collections.api.collection.MutableCollection;
+import org.eclipse.collections.api.factory.Bags;
 import org.eclipse.collections.api.factory.Sets;
 import org.eclipse.collections.api.list.ListIterable;
 import org.eclipse.collections.api.list.primitive.BooleanList;
@@ -48,11 +51,14 @@ import org.eclipse.collections.api.ordered.SortedIterable;
 import org.eclipse.collections.api.set.MutableSet;
 import org.eclipse.collections.api.stack.ImmutableStack;
 import org.eclipse.collections.impl.list.mutable.MultiReaderFastList;
+import org.eclipse.collections.impl.test.SerializeTestHelper;
 import org.eclipse.collections.impl.test.Verify;
 import org.junit.jupiter.api.Test;
 
 import static org.eclipse.collections.impl.test.Verify.assertNotSerializable;
 import static org.eclipse.collections.impl.test.Verify.assertPostSerializedEqualsAndHashCode;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.isOneOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -89,9 +95,9 @@ public interface IterableTestCase
         return true;
     }
 
-    default boolean implementsEquals()
+    static boolean allowsIterator(Object o)
     {
-        return true;
+        return o == null || !o.getClass().getSimpleName().endsWith("NoIterator");
     }
 
     enum OrderingType
@@ -109,6 +115,11 @@ public interface IterableTestCase
 
     static void assertIterablesEqual(Object o1, Object o2)
     {
+        assertNotNull(o1, "Neither item should equal null");
+        assertNotNull(o2, "Neither item should equal null");
+        assertIterablesNotEqual("Neither item should equal new Object()", o1.equals(new Object()));
+        assertIterablesNotEqual("Neither item should equal new Object()", o2.equals(new Object()));
+
         if (!(o1 instanceof Iterable)
                 && !(o1 instanceof PrimitiveIterable)
                 && !(o1 instanceof Map)
@@ -123,6 +134,7 @@ public interface IterableTestCase
         {
             fail("Second argument is not an Iterable: " + o2);
         }
+
         if (o1 instanceof ListIterable<?> && o2 instanceof LazyIterable<?> lazyIterable)
         {
             assertIterablesEqual(o1, lazyIterable.toList());
@@ -174,26 +186,50 @@ public interface IterableTestCase
             return;
         }
 
-        boolean equivalentEmptyCollections = IterableTestCase.areEquivalentEmptyCollections(o1, o2);
-
-        if (!equivalentEmptyCollections)
+        if (!allowsIterator(o1))
         {
+            assertThrows(AssertionError.class, () -> ((Iterable<?>) o1).iterator());
+        }
+        if (!allowsIterator(o2))
+        {
+            assertThrows(AssertionError.class, () -> ((Iterable<?>) o2).iterator());
+        }
+
+        if (!allowsEquals(o1) || !allowsEquals(o2))
+        {
+            if (allowsIterator(o1))
+            {
+                assertEquals(
+                        Bags.mutable.withAll((Collection<?>) o1),
+                        Bags.mutable.withAll((Collection<?>) o2));
+            }
+
+            if (allowsIterator(o2))
+            {
+                assertEquals(
+                        Bags.mutable.withAll((Collection<?>) o2),
+                        Bags.mutable.withAll((Collection<?>) o1));
+            }
+
+            if (!allowsEquals(o1) && !allowsEquals(o2))
+            {
+                return;
+            }
+        }
+
+        if (allowsIterator(o1))
+        {
+            assertEquals(o1, o1);
             assertEquals(o1, o2);
         }
 
-        assertNotNull(o1, "Neither item should equal null");
-        assertNotNull(o2, "Neither item should equal null");
-        assertIterablesNotEqual("Neither item should equal new Object()", o1.equals(new Object()));
-        assertIterablesNotEqual("Neither item should equal new Object()", o2.equals(new Object()));
-        assertEquals(o1, o1);
-        assertEquals(o2, o2);
-        if (!equivalentEmptyCollections)
+        if (allowsIterator(o2))
         {
-            assertEquals(o1, o2);
+            assertEquals(o2, o2);
             assertEquals(o2, o1);
-            assertEquals(o1.hashCode(), o2.hashCode());
         }
 
+        assertEquals(o1.hashCode(), o2.hashCode());
         checkNotSame(o1, o2);
 
         if (o1 instanceof MultiReaderFastList<?> || o2 instanceof MultiReaderFastList<?>)
@@ -201,73 +237,115 @@ public interface IterableTestCase
             return;
         }
 
+        // Verify.assertIterablesEqual uses forEach for InternalIterable types, otherwise iterator.
+        boolean bothInternal = o1 instanceof InternalIterable<?> && o2 instanceof InternalIterable<?>;
+
         if (o1 instanceof SortedIterable<?> || o2 instanceof SortedIterable<?>
                 || o1 instanceof ReversibleIterable<?> || o2 instanceof ReversibleIterable<?>
                 || o1 instanceof List<?> || o2 instanceof List<?>
                 || o1 instanceof SortedSet<?> || o2 instanceof SortedSet<?>)
         {
-            Verify.assertIterablesEqual((Iterable<?>) o1, (Iterable<?>) o2);
-            if (o1 instanceof SortedIterable<?> || o2 instanceof SortedIterable<?>)
+            if (allowsIterator(o1) || bothInternal)
             {
-                assertTrue(IterableTestCase.haveCompatibleComparators(o1, o2));
+                Verify.assertIterablesEqual((Iterable<?>) o1, (Iterable<?>) o2);
+                if (o1 instanceof SortedIterable<?> || o2 instanceof SortedIterable<?>)
+                {
+                    assertTrue(IterableTestCase.haveCompatibleComparators(o1, o2));
+                }
+            }
+
+            if (allowsIterator(o2) || bothInternal)
+            {
+                Verify.assertIterablesEqual((Iterable<?>) o2, (Iterable<?>) o1);
+                if (o1 instanceof SortedIterable<?> || o2 instanceof SortedIterable<?>)
+                {
+                    assertTrue(IterableTestCase.haveCompatibleComparators(o2, o1));
+                }
             }
         }
 
         if (o1 instanceof SortedMap<?, ?> || o2 instanceof SortedMap<?, ?>)
         {
-            assertIterablesEqual(((SortedMap<?, ?>) o1).keySet(), ((SortedMap<?, ?>) o2).keySet());
+            // TODO: Change UnifiedMap.KeySet.equals and AbstractMutableBiMap.EntrySet.equals to iterate over `this` instead of `other` and then these assertions can be made on all Maps.
+            assertIterablesEqual(((Map<?, ?>) o1).keySet(), ((Map<?, ?>) o2).keySet());
+            assertIterablesEqual(((Map<?, ?>) o1).entrySet(), ((Map<?, ?>) o2).entrySet());
+            assertIterablesEqual(((SortedMap<?, ?>) o1).values(), ((SortedMap<?, ?>) o2).values());
         }
 
         if (o1 instanceof Set<?> || o2 instanceof Set<?>)
         {
-            Verify.assertSetsEqual((Set<?>) o1, (Set<?>) o2);
-            if (o1 instanceof SortedSet<?> || o2 instanceof SortedSet<?>)
+            if (allowsIterator(o1) || bothInternal)
             {
-                Verify.assertSortedSetsEqual((SortedSet<?>) o1, (SortedSet<?>) o2);
+                Verify.assertSetsEqual((Set<?>) o1, (Set<?>) o2);
+                if (o1 instanceof SortedSet<?> || o2 instanceof SortedSet<?>)
+                {
+                    Verify.assertSortedSetsEqual((SortedSet<?>) o1, (SortedSet<?>) o2);
+                }
+            }
+
+            if (allowsIterator(o2) || bothInternal)
+            {
+                Verify.assertSetsEqual((Set<?>) o2, (Set<?>) o1);
+                if (o1 instanceof SortedSet<?> || o2 instanceof SortedSet<?>)
+                {
+                    Verify.assertSortedSetsEqual((SortedSet<?>) o2, (SortedSet<?>) o1);
+                }
             }
         }
 
         if (o1 instanceof Bag<?> || o2 instanceof Bag<?>)
         {
-            Verify.assertBagsEqual((Bag<?>) o1, (Bag<?>) o2);
-            if (o1 instanceof SortedBag<?> || o2 instanceof SortedBag<?>)
+            if (allowsIterator(o1) || bothInternal)
             {
-                Verify.assertSortedBagsEqual((SortedBag<?>) o1, (SortedBag<?>) o2);
+                Verify.assertBagsEqual((Bag<?>) o1, (Bag<?>) o2);
+                if (o1 instanceof SortedBag<?> || o2 instanceof SortedBag<?>)
+                {
+                    Verify.assertSortedBagsEqual((SortedBag<?>) o1, (SortedBag<?>) o2);
+                }
+            }
+
+            if (allowsIterator(o2) || bothInternal)
+            {
+                Verify.assertBagsEqual((Bag<?>) o2, (Bag<?>) o1);
+                if (o1 instanceof SortedBag<?> || o2 instanceof SortedBag<?>)
+                {
+                    Verify.assertSortedBagsEqual((SortedBag<?>) o2, (SortedBag<?>) o1);
+                }
             }
         }
     }
 
-    static void checkNotSame(Object o1, Object o2)
+    static void checkNotSame(Object expected, Object actual)
     {
-        if (o1 instanceof String && o2 instanceof String)
+        if (expected instanceof String && actual instanceof String)
         {
             return;
         }
-        if ((o1 instanceof Number && o2 instanceof Number)
-                || (o1 instanceof Boolean && o2 instanceof Boolean)
-                || o1 instanceof ImmutableCollection<?> immutableCollection1 && o2 instanceof ImmutableCollection<?> immutableCollection2
+        if ((expected instanceof Number && actual instanceof Number)
+                || (expected instanceof Boolean && actual instanceof Boolean)
+                || expected instanceof ImmutableCollection<?> immutableCollection1 && actual instanceof ImmutableCollection<?> immutableCollection2
                 && immutableCollection1.isEmpty() && immutableCollection2.isEmpty()
-                && !(o1 instanceof SortedIterable<?>) && !(o2 instanceof SortedIterable<?>)
-                || o1 instanceof ImmutableStack<?> immutableStack1 && o2 instanceof ImmutableStack<?> immutableStack2
+                && !(expected instanceof SortedIterable<?>) && !(actual instanceof SortedIterable<?>)
+                || expected instanceof ImmutableStack<?> immutableStack1 && actual instanceof ImmutableStack<?> immutableStack2
                 && immutableStack1.isEmpty() && immutableStack2.isEmpty())
         {
-            assertSame(o1, o2);
+            assertSame(expected, actual);
             return;
         }
-        if (IterableTestCase.areEquivalentEmptyCollections(o1, o2))
+        if (IterableTestCase.areEquivalentEmptyCollections(expected, actual))
         {
             return;
         }
-        assertNotSame(o1, o2);
+        assertNotSame(expected, actual);
     }
 
-    private static boolean haveCompatibleComparators(Object o1, Object o2)
+    private static boolean haveCompatibleComparators(Object expected, Object actual)
     {
-        if (!(o1 instanceof SortedIterable<?>) && !(o2 instanceof SortedIterable<?>))
+        if (!(expected instanceof SortedIterable<?>) && !(actual instanceof SortedIterable<?>))
         {
             return true;
         }
-        if (!(o1 instanceof SortedIterable<?> sortedIterable1) || !(o2 instanceof SortedIterable<?> sortedIterable2))
+        if (!(expected instanceof SortedIterable<?> sortedIterable1) || !(actual instanceof SortedIterable<?> sortedIterable2))
         {
             return false;
         }
@@ -290,24 +368,32 @@ public interface IterableTestCase
         return true;
     }
 
-    private static boolean areEquivalentEmptyCollections(Object o1, Object o2)
+    static boolean allowsEquals(Object o)
     {
-        return o1 instanceof ImmutableCollection<?> immutableCollection1 && o2 instanceof ImmutableCollection<?> immutableCollection2
-                && immutableCollection1.isEmpty() && immutableCollection2.isEmpty()
-                && (o1 instanceof SortedIterable<?> || o2 instanceof SortedIterable<?>);
+        return !(o instanceof Collection<?>)
+                || o instanceof Set<?>
+                || o instanceof List<?>
+                || o instanceof Bag<?>;
     }
 
-    static void assertIterablesNotEqual(Object o1, Object o2)
+    private static boolean areEquivalentEmptyCollections(Object expected, Object actual)
     {
-        assertNotEquals(o1, o2);
-        assertNotEquals(o2, o1);
+        return expected instanceof ImmutableCollection<?> immutableCollection1 && actual instanceof ImmutableCollection<?> immutableCollection2
+                && immutableCollection1.isEmpty() && immutableCollection2.isEmpty()
+                && (expected instanceof SortedIterable<?> || actual instanceof SortedIterable<?>);
+    }
 
-        assertNotNull(o1, "Neither item should equal null");
-        assertNotNull(o2, "Neither item should equal null");
-        assertNotEquals("Neither item should equal new Object()", o1.equals(new Object()));
-        assertNotEquals("Neither item should equal new Object()", o2.equals(new Object()));
-        assertEquals(o1, o1);
-        assertEquals(o2, o2);
+    static void assertIterablesNotEqual(Object expected, Object actual)
+    {
+        assertNotEquals(expected, actual);
+        assertNotEquals(actual, expected);
+
+        assertNotNull(expected, "Neither item should equal null");
+        assertNotNull(actual, "Neither item should equal null");
+        assertNotEquals("Neither item should equal new Object()", expected.equals(new Object()));
+        assertNotEquals("Neither item should equal new Object()", actual.equals(new Object()));
+        assertEquals(expected, expected);
+        assertEquals(actual, actual);
     }
 
     static <T> void addAllTo(T[] elements, MutableCollection<T> result)
@@ -324,13 +410,43 @@ public interface IterableTestCase
     @Test
     default void Object_equalsAndHashCode()
     {
+        Iterable<Integer> iterable = this.newWith(3, 2, 1);
+
         if (!this.allowsSerialization())
         {
-            assertNotSerializable(this.newWith(3, 2, 1));
+            assertNotSerializable(iterable);
+        }
+        else if (allowsEquals(iterable))
+        {
+            assertPostSerializedEqualsAndHashCode(iterable);
         }
         else
         {
-            assertPostSerializedEqualsAndHashCode(this.newWith(3, 2, 1));
+            // Map view collections (keySet, values) are serializable but inherit
+            // identity-based equals from AbstractCollection — sometimes the round-trip
+            // even changes the runtime type (UnifiedMap.values() serializes as FastList),
+            // so we can't use equals() to verify. Compare contents as bags (order- and
+            // type-agnostic). When the view also lacks iterator() support, fall back to
+            // size + contains checks against the known elements (3, 2, 1).
+            Collection<?> roundTripped = (Collection<?>) SerializeTestHelper.serializeDeserialize(iterable);
+            if (this.allowsIterator())
+            {
+                assertEquals(Bags.mutable.withAll(iterable), Bags.mutable.withAll(roundTripped));
+            }
+            else
+            {
+                assertEquals(3, roundTripped.size());
+                assertTrue(roundTripped.contains(3));
+                assertTrue(roundTripped.contains(2));
+                assertTrue(roundTripped.contains(1));
+            }
+        }
+
+        if (!this.allowsIterator())
+        {
+            // Without iterator(), all the structural inequality assertions below would
+            // delegate through .equals() to iterator() and throw AssertionError.
+            return;
         }
 
         assertIterablesNotEqual(this.newWith(4, 3, 2, 1), this.newWith(3, 2, 1));
@@ -347,12 +463,12 @@ public interface IterableTestCase
             return;
         }
 
-        if (this.allowsSerialization())
+        if (this.allowsSerialization() && allowsEquals(this.newWith(3, 3, 3, 2, 2, 1)))
         {
             assertPostSerializedEqualsAndHashCode(this.newWith(3, 3, 3, 2, 2, 1));
         }
 
-        if (this.implementsEquals())
+        if (allowsEquals(this.newWith(3, 3, 3, 2, 2, 1)))
         {
             Verify.assertEqualsAndHashCode(this.newWith(3, 3, 3, 2, 2, 1), this.newWith(3, 3, 3, 2, 2, 1));
         }
@@ -425,9 +541,31 @@ public interface IterableTestCase
             assertThrows(AssertionError.class, () -> this.newWith(3, 2, 1).iterator().next());
             return;
         }
-        throw new AssertionError("Iterable_remove() must be overridden when allowsIterator() is true");
+
+        if (!this.allowsRemove())
+        {
+            Iterable<Integer> iterable = this.newWith(3, 2, 1);
+            Iterator<Integer> iterator = iterable.iterator();
+            iterator.next();
+            assertThrows(UnsupportedOperationException.class, iterator::remove);
+            return;
+        }
+
+        Iterable<Integer> iterable = this.newWith(3, 2, 1);
+        Iterator<Integer> iterator = iterable.iterator();
+        iterator.next();
+        iterator.remove();
+        assertThat(Bags.mutable.withAll(iterable), isOneOf(
+                Bags.mutable.with(1, 2),
+                Bags.mutable.with(1, 3),
+                Bags.mutable.with(2, 3)));
     }
 
     @Test
-    void Iterable_toString();
+    default void Iterable_toString()
+    {
+        assertThat(this.newWith(2, 1).toString(), isOneOf("[1, 2]", "[2, 1]"));
+        assertThat(this.newWith(3, 2, 1).toString(), isOneOf(
+                "[3, 2, 1]", "[3, 1, 2]", "[2, 3, 1]", "[2, 1, 3]", "[1, 3, 2]", "[1, 2, 3]"));
+    }
 }
