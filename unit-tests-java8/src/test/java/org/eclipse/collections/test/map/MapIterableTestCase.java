@@ -16,12 +16,16 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import org.eclipse.collections.api.bag.MutableBag;
 import org.eclipse.collections.api.collection.MutableCollection;
+import org.eclipse.collections.api.factory.Bags;
 import org.eclipse.collections.api.factory.Maps;
 import org.eclipse.collections.api.factory.Sets;
 import org.eclipse.collections.api.map.MapIterable;
 import org.eclipse.collections.api.map.MutableMap;
+import org.eclipse.collections.api.multimap.Multimap;
 import org.eclipse.collections.api.set.MutableSet;
+import org.eclipse.collections.api.tuple.Pair;
 import org.eclipse.collections.impl.block.procedure.CollectionAddProcedure;
 import org.eclipse.collections.impl.list.Interval;
 import org.eclipse.collections.impl.map.mutable.UnifiedMap;
@@ -230,6 +234,19 @@ public interface MapIterableTestCase extends RichIterableWithDuplicatesTestCase
         MutableMap<Integer, String> result = map1.injectIntoKeyValue(Maps.mutable.empty(),
                 (map, key, value) -> map.withKeyValue(key, value.toString()));
         assertIterablesEqual(Maps.mutable.with(3, "3", 2, "2", 1, "1"), result);
+    }
+
+    @Test
+    default void MapIterable_flip()
+    {
+        MapIterable<String, Integer> map = this.newWithKeysValues("Three", 3, "Two", 2, "One", 1);
+        Multimap<Integer, String> result = map.flip();
+
+        MutableBag<Pair<Integer, String>> expected = Bags.mutable.with(
+                Tuples.pair(3, "Three"),
+                Tuples.pair(2, "Two"),
+                Tuples.pair(1, "One"));
+        assertEquals(expected, result.keyValuePairsView().toBag());
     }
 
     @Test

@@ -440,7 +440,9 @@ public class OrderedMapAdapter<K, V>
     @Override
     public MutableListMultimap<V, K> flip()
     {
-        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".flip() not implemented yet");
+        MutableListMultimap<V, K> result = FastListMultimap.newMultimap();
+        this.forEachKeyValue((key, value) -> result.put(value, key));
+        return result;
     }
 
     @Override
