@@ -38,6 +38,7 @@ import org.eclipse.collections.api.block.procedure.primitive.ObjectIntProcedure;
 import org.eclipse.collections.api.collection.MutableCollection;
 import org.eclipse.collections.api.factory.Bags;
 import org.eclipse.collections.api.factory.Lists;
+import org.eclipse.collections.api.factory.Sets;
 import org.eclipse.collections.api.factory.primitive.BooleanLists;
 import org.eclipse.collections.api.factory.primitive.ByteLists;
 import org.eclipse.collections.api.factory.primitive.CharLists;
@@ -81,7 +82,9 @@ import org.eclipse.collections.impl.map.ordered.immutable.ImmutableOrderedMapAda
 import org.eclipse.collections.impl.multimap.list.FastListMultimap;
 import org.eclipse.collections.impl.partition.list.PartitionFastList;
 import org.eclipse.collections.impl.set.mutable.SetAdapter;
+import org.eclipse.collections.impl.stack.mutable.ArrayStack;
 import org.eclipse.collections.impl.tuple.AbstractImmutableEntry;
+import org.eclipse.collections.impl.tuple.Tuples;
 import org.eclipse.collections.impl.utility.Iterate;
 import org.eclipse.collections.impl.utility.LazyIterate;
 import org.eclipse.collections.impl.utility.MapIterate;
@@ -241,7 +244,12 @@ public class OrderedMapAdapter<K, V>
     @Override
     public MutableOrderedMap<K, V> toReversed()
     {
-        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".toReversed() not implemented yet");
+        MutableList<Pair<K, V>> pairs = Lists.mutable.empty();
+        this.forEachKeyValue((key, value) -> pairs.add(Tuples.pair(key, value)));
+        pairs.reverseThis();
+        MutableOrderedMap<K, V> result = OrderedMapAdapter.adapt(new LinkedHashMap<>(this.size()));
+        pairs.forEach(p -> result.put(p.getOne(), p.getTwo()));
+        return result;
     }
 
     @Override
@@ -362,7 +370,16 @@ public class OrderedMapAdapter<K, V>
     @Override
     public MutableList<V> distinct()
     {
-        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".distinct() not implemented yet");
+        MutableList<V> result = Lists.mutable.empty();
+        MutableSet<V> seen = Sets.mutable.empty();
+        this.forEachKeyValue((key, value) ->
+        {
+            if (seen.add(value))
+            {
+                result.add(value);
+            }
+        });
+        return result;
     }
 
     @Override
@@ -440,7 +457,9 @@ public class OrderedMapAdapter<K, V>
     @Override
     public MutableListMultimap<V, K> flip()
     {
-        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".flip() not implemented yet");
+        MutableListMultimap<V, K> result = FastListMultimap.newMultimap();
+        this.forEachKeyValue((key, value) -> result.put(value, key));
+        return result;
     }
 
     @Override
@@ -691,7 +710,19 @@ public class OrderedMapAdapter<K, V>
     @Override
     public <S> boolean corresponds(OrderedIterable<S> other, Predicate2<? super V, ? super S> predicate)
     {
-        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".corresponds() not implemented yet");
+        if (this.size() != other.size())
+        {
+            return false;
+        }
+        Iterator<S> otherIterator = other.iterator();
+        for (V value : this)
+        {
+            if (!predicate.accept(value, otherIterator.next()))
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override
@@ -709,13 +740,22 @@ public class OrderedMapAdapter<K, V>
     @Override
     public MutableStack<V> toStack()
     {
-        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".toStack() not implemented yet");
+        return ArrayStack.newStackFromTopToBottom(this);
     }
 
     @Override
     public int detectIndex(Predicate<? super V> predicate)
     {
-        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".detectIndex() not implemented yet");
+        int index = 0;
+        for (V value : this)
+        {
+            if (predicate.accept(value))
+            {
+                return index;
+            }
+            index++;
+        }
+        return -1;
     }
 
     @Override
