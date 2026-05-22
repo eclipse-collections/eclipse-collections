@@ -10,31 +10,11 @@
 
 package org.eclipse.collections.test.map;
 
-import java.util.Collection;
-import java.util.List;
-
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 public interface NoIteratorBiMapValuesCollectionTestCase extends BiMapValuesCollectionTestCase
 {
     @Override
     default boolean allowsIterator()
     {
         return false;
-    }
-
-    // TODO: Implement retainAll without delegating to iterator()
-    @Override
-    @Test
-    default void Collection_retainAll()
-    {
-        Collection<Integer> collection = this.newWith(3, 2, 1);
-        AssertionError error = assertThrows(
-                AssertionError.class,
-                () -> collection.retainAll(List.of(1, 3)));
-        assertEquals("No iteration patterns should delegate to iterator()", error.getMessage());
     }
 }
