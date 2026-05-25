@@ -498,13 +498,13 @@ public final class InternalArrayIterate
 
     private static void ensureCapacityForAdditionalSize(int size, Collection<?> target)
     {
-        if (target instanceof FastList<?>)
+        if (target instanceof FastList<?> fastList)
         {
-            ((FastList<?>) target).ensureCapacity(target.size() + size);
+            fastList.ensureCapacity(target.size() + size);
         }
-        else if (target instanceof ArrayList)
+        else if (target instanceof ArrayList<?> arrayList)
         {
-            ((ArrayList<?>) target).ensureCapacity(target.size() + size);
+            arrayList.ensureCapacity(target.size() + size);
         }
     }
 

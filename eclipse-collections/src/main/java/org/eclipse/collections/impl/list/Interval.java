@@ -336,7 +336,7 @@ public final class Interval
     @Override
     public boolean contains(Object object)
     {
-        return object instanceof Integer && this.contains(((Integer) object).intValue());
+        return object instanceof Integer integer && this.contains(integer.intValue());
     }
 
     /**

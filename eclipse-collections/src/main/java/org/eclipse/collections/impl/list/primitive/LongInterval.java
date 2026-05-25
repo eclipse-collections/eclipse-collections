@@ -434,9 +434,8 @@ public final class LongInterval
             return this.from == list.get(0);
         }
 
-        if (otherList instanceof LongInterval)
+        if (otherList instanceof LongInterval otherInterval)
         {
-            LongInterval otherInterval = (LongInterval) otherList;
             return (this.getFirst() == otherInterval.getFirst())
                     && (this.getLast() == otherInterval.getLast())
                     && (this.step == otherInterval.step);

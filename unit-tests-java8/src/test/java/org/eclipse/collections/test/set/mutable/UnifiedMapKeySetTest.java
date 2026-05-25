@@ -20,6 +20,7 @@ import org.eclipse.collections.test.set.SetTestCase;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 // TODO MapIterable.keySet() should return SetIterable, and use SetIterableTestCase here
+// TODO Move standalone assertions into @Nested view classes
 
 public class UnifiedMapKeySetTest implements SetTestCase
 {

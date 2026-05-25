@@ -14,12 +14,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.collections.impl.test.Verify;
 import org.eclipse.collections.test.list.ListTestCase;
-import org.junit.jupiter.api.Test;
-
-import static org.eclipse.collections.impl.test.Verify.assertNotSerializable;
-import static org.eclipse.collections.test.IterableTestCase.assertIterablesNotEqual;
 
 public class ArrayListSubListTest implements ListTestCase
 {
@@ -35,31 +30,8 @@ public class ArrayListSubListTest implements ListTestCase
     }
 
     @Override
-    @Test
-    public void Object_equalsAndHashCode()
+    public boolean allowsSerialization()
     {
-        assertIterablesNotEqual(this.newWith(4, 3, 2, 1), this.newWith(3, 2, 1));
-        assertIterablesNotEqual(this.newWith(3, 2, 1), this.newWith(4, 3, 2, 1));
-
-        assertIterablesNotEqual(this.newWith(2, 1), this.newWith(3, 2, 1));
-        assertIterablesNotEqual(this.newWith(3, 2, 1), this.newWith(2, 1));
-
-        assertIterablesNotEqual(this.newWith(4, 2, 1), this.newWith(3, 2, 1));
-        assertIterablesNotEqual(this.newWith(3, 2, 1), this.newWith(4, 2, 1));
-
-        Verify.assertEqualsAndHashCode(this.newWith(3, 3, 3, 2, 2, 1), this.newWith(3, 3, 3, 2, 2, 1));
-
-        assertIterablesNotEqual(this.newWith(3, 3, 2, 1), this.newWith(3, 2, 1));
-        assertIterablesNotEqual(this.newWith(3, 2, 1), this.newWith(3, 3, 2, 1));
-
-        assertIterablesNotEqual(this.newWith(3, 3, 2, 1), this.newWith(3, 2, 2, 1));
-        assertIterablesNotEqual(this.newWith(3, 2, 2, 1), this.newWith(3, 3, 2, 1));
-    }
-
-    @Override
-    @Test
-    public void Object_PostSerializedEqualsAndHashCode()
-    {
-        assertNotSerializable(this.newWith());
+        return false;
     }
 }

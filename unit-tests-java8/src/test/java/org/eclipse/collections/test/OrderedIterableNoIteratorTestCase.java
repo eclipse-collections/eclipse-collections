@@ -19,13 +19,6 @@ public interface OrderedIterableNoIteratorTestCase extends NoIteratorTestCase, O
 {
     @Override
     @Test
-    default void Iterable_next()
-    {
-        NoIteratorTestCase.super.Iterable_next();
-    }
-
-    @Override
-    @Test
     default void OrderedIterable_takeWhile()
     {
         OrderedIterable<Integer> iterable = (OrderedIterable<Integer>) this.newWith(6, 5, 4, 3, 2, 1);

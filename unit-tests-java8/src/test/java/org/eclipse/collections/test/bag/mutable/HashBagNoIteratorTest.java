@@ -31,37 +31,9 @@ public class HashBagNoIteratorTest implements MutableBagTestCase, NoIteratorTest
 
     @Override
     @Test
-    public void Iterable_next()
-    {
-        NoIteratorTestCase.super.Iterable_next();
-    }
-
-    @Override
-    @Test
     public void Iterable_remove()
     {
         NoIteratorTestCase.super.Iterable_remove();
-    }
-
-    @Override
-    @Test
-    public void RichIterable_iterator_iterationOrder()
-    {
-        NoIteratorTestCase.super.RichIterable_iterator_iterationOrder();
-    }
-
-    @Override
-    @Test
-    public void RichIterable_getFirst()
-    {
-        NoIteratorTestCase.super.RichIterable_getFirst();
-    }
-
-    @Override
-    @Test
-    public void RichIterable_getLast()
-    {
-        NoIteratorTestCase.super.RichIterable_getLast();
     }
 
     public static class HashBagNoIterator<T> extends HashBag<T>

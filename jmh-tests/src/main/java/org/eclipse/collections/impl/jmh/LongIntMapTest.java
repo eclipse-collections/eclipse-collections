@@ -14,7 +14,6 @@ import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import org.eclipse.collections.api.map.primitive.MutableLongIntMap;
-import org.eclipse.collections.impl.jmh.runner.AbstractJMHTestRunner;
 import org.eclipse.collections.impl.map.mutable.primitive.LongIntHashMap;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;

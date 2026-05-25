@@ -16,8 +16,16 @@ import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.test.list.TransformsToListTrait;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 public interface LazyNoIteratorTestCase extends NoIteratorTestCase, RichIterableWithDuplicatesTestCase, TransformsToListTrait
 {
+    @Override
+    default boolean allowsSerialization()
+    {
+        return false;
+    }
+
     @Override
     default <T> ListIterable<T> getExpectedFiltered(T... elements)
     {
@@ -38,15 +46,9 @@ public interface LazyNoIteratorTestCase extends NoIteratorTestCase, RichIterable
 
     @Override
     @Test
-    default void Object_PostSerializedEqualsAndHashCode()
+    default void RichIterable_getOnly()
     {
-        // Not applicable
-    }
-
-    @Override
-    @Test
-    default void Object_equalsAndHashCode()
-    {
-        // Not applicable
+        // TODO: Optimize getOnly() to avoid delegating to iterator().
+        assertThrows(AssertionError.class, () -> this.newWith(1).getOnly());
     }
 }

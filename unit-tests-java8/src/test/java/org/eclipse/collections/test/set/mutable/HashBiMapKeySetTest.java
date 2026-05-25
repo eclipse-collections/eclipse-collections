@@ -16,6 +16,7 @@ import org.eclipse.collections.api.bimap.MutableBiMap;
 import org.eclipse.collections.impl.bimap.mutable.HashBiMap;
 import org.eclipse.collections.test.set.SetTestCase;
 
+// TODO Move standalone assertions into @Nested view classes
 public class HashBiMapKeySetTest implements SetTestCase
 {
     @Override

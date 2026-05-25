@@ -14,11 +14,18 @@ import java.util.Collections;
 import java.util.NavigableSet;
 import java.util.TreeSet;
 
+import org.eclipse.collections.test.IterableTestCase;
 import org.eclipse.collections.test.set.sorted.NavigableSetTestCase;
 
 public class TreeSetNaturalOrderTest
         implements NavigableSetTestCase
 {
+    @Override
+    public IterableTestCase.OrderingType getOrderingType()
+    {
+        return IterableTestCase.OrderingType.SORTED_NATURAL;
+    }
+
     @SafeVarargs
     @Override
     public final <T> NavigableSet<T> newWith(T... elements)

@@ -12,12 +12,14 @@ package org.eclipse.collections.test;
 
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 public interface NoDetectOptionalNullTestCase extends RichIterableTestCase
 {
     @Override
     @Test
     default void RichIterable_detectOptionalNull()
     {
-        // Not applicable
+        assertThrows(NullPointerException.class, () -> this.newWith(1, null, 3));
     }
 }

@@ -90,7 +90,7 @@ public abstract class AbstractMutableList<T>
     @Override
     public boolean equals(Object that)
     {
-        return this == that || (that instanceof List && ListIterate.equals(this, (List<?>) that));
+        return this == that || (that instanceof List<?> list && ListIterate.equals(this, list));
     }
 
     @Override

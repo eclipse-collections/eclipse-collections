@@ -32,6 +32,7 @@ import org.eclipse.collections.api.ShortIterable;
 import org.eclipse.collections.api.bag.Bag;
 import org.eclipse.collections.api.bag.ImmutableBag;
 import org.eclipse.collections.api.bag.MutableBag;
+import org.eclipse.collections.api.bimap.MutableBiMap;
 import org.eclipse.collections.api.block.function.Function;
 import org.eclipse.collections.api.block.function.Function2;
 import org.eclipse.collections.api.block.function.primitive.DoubleObjectToDoubleFunction;
@@ -326,7 +327,14 @@ public interface RichIterableTestCase extends IterableTestCase
         RichIterable<Integer> iterable = this.newWith(3, 2, 1);
         Integer first = iterable.getFirst();
         assertThat(first, isOneOf(3, 2, 1));
-        assertEquals(iterable.iterator().next(), first);
+        if (this.allowsIterator())
+        {
+            assertEquals(iterable.iterator().next(), first);
+        }
+        else
+        {
+            assertThrows(AssertionError.class, () -> iterable.iterator().next());
+        }
 
         switch (this.getOrderingType())
         {
@@ -344,7 +352,14 @@ public interface RichIterableTestCase extends IterableTestCase
         RichIterable<Integer> iterableWithDuplicates = this.newWith(3, 3, 3, 2, 2, 1);
         Integer firstWithDuplicates = iterableWithDuplicates.getFirst();
         assertThat(firstWithDuplicates, isOneOf(3, 2, 1));
-        assertEquals(iterableWithDuplicates.iterator().next(), firstWithDuplicates);
+        if (this.allowsIterator())
+        {
+            assertEquals(iterableWithDuplicates.iterator().next(), firstWithDuplicates);
+        }
+        else
+        {
+            assertThrows(AssertionError.class, () -> iterableWithDuplicates.iterator().next());
+        }
 
         switch (this.getOrderingType())
         {
@@ -361,13 +376,20 @@ public interface RichIterableTestCase extends IterableTestCase
         RichIterable<Integer> iterable = this.newWith(3, 2, 1);
         Integer last = iterable.getLast();
         assertThat(last, isOneOf(3, 2, 1));
-        Iterator<Integer> iterator = iterable.iterator();
-        Integer iteratorLast = null;
-        while (iterator.hasNext())
+        if (this.allowsIterator())
         {
-            iteratorLast = iterator.next();
+            Iterator<Integer> iterator = iterable.iterator();
+            Integer iteratorLast = null;
+            while (iterator.hasNext())
+            {
+                iteratorLast = iterator.next();
+            }
+            assertEquals(iteratorLast, last);
         }
-        assertEquals(iteratorLast, last);
+        else
+        {
+            assertThrows(AssertionError.class, () -> iterable.iterator().next());
+        }
 
         switch (this.getOrderingType())
         {
@@ -385,13 +407,20 @@ public interface RichIterableTestCase extends IterableTestCase
         RichIterable<Integer> iterableWithDuplicates = this.newWith(3, 3, 3, 2, 2, 1);
         Integer lastWithDuplicates = iterableWithDuplicates.getLast();
         assertThat(lastWithDuplicates, isOneOf(3, 2, 1));
-        Iterator<Integer> iteratorWithDuplicates = iterableWithDuplicates.iterator();
-        Integer iteratorLastWithDuplicates = null;
-        while (iteratorWithDuplicates.hasNext())
+        if (this.allowsIterator())
         {
-            iteratorLastWithDuplicates = iteratorWithDuplicates.next();
+            Iterator<Integer> iterator = iterableWithDuplicates.iterator();
+            Integer iteratorLast = null;
+            while (iterator.hasNext())
+            {
+                iteratorLast = iterator.next();
+            }
+            assertEquals(iteratorLast, lastWithDuplicates);
         }
-        assertEquals(iteratorLastWithDuplicates, lastWithDuplicates);
+        else
+        {
+            assertThrows(AssertionError.class, () -> iterableWithDuplicates.iterator().next());
+        }
 
         switch (this.getOrderingType())
         {
@@ -409,9 +438,16 @@ public interface RichIterableTestCase extends IterableTestCase
         Integer only = iterable.getOnly();
         assertThat(only, is(3));
 
-        Iterator<Integer> iterator = iterable.iterator();
-        assertThat(iterator.next(), is(only));
-        assertThat(iterator.hasNext(), is(false));
+        if (this.allowsIterator())
+        {
+            Iterator<Integer> iterator = iterable.iterator();
+            assertThat(iterator.next(), is(only));
+            assertThat(iterator.hasNext(), is(false));
+        }
+        else
+        {
+            assertThrows(AssertionError.class, () -> iterable.iterator().next());
+        }
 
         assertThrows(IllegalStateException.class, () -> this.newWith().getOnly());
         assertThrows(IllegalStateException.class, () -> this.newWith(1, 2).getOnly());
@@ -755,6 +791,11 @@ public interface RichIterableTestCase extends IterableTestCase
     @Test
     default void RichIterable_iterator_iterationOrder()
     {
+        if (!this.allowsIterator())
+        {
+            assertThrows(AssertionError.class, () -> this.getInstanceUnderTest().iterator().hasNext());
+            return;
+        }
         MutableCollection<Integer> iterationOrder = this.newMutableForFilter();
         Iterator<Integer> iterator = this.getInstanceUnderTest().iterator();
         while (iterator.hasNext())
@@ -3773,6 +3814,12 @@ public interface RichIterableTestCase extends IterableTestCase
                 target,
                 iterable.toList());
 
+        {
+            RichIterable<Integer> iterable2 = this.newWith(4, 3, 2, 1);
+            assertTrue(iterable2.toList().add(99));
+            assertIterablesEqual(this.newWith(4, 3, 2, 1), iterable2);
+        }
+
         if (!this.allowsDuplicates())
         {
             return;
@@ -3872,6 +3919,14 @@ public interface RichIterableTestCase extends IterableTestCase
                 Lists.immutable.with(4, 3, 2, 1),
                 iterable.toSortedListBy(each -> each * -1));
 
+        {
+            RichIterable<Integer> iterable2 = this.newWith(4, 3, 2, 1);
+            assertTrue(iterable2.toSortedList().add(99));
+            assertTrue(iterable2.toSortedList(Comparators.reverseNaturalOrder()).add(99));
+            assertTrue(iterable2.toSortedListBy(Functions.identity()).add(99));
+            assertIterablesEqual(this.newWith(4, 3, 2, 1), iterable2);
+        }
+
         if (!this.allowsDuplicates())
         {
             return;
@@ -3902,6 +3957,10 @@ public interface RichIterableTestCase extends IterableTestCase
         assertIterablesEqual(
                 Sets.immutable.with(4, 3, 2, 1),
                 this.newWith(4, 3, 2, 1).toSet());
+
+        RichIterable<Integer> iterable = this.newWith(4, 3, 2, 1);
+        assertTrue(iterable.toSet().add(99));
+        assertIterablesEqual(this.newWith(4, 3, 2, 1), iterable);
 
         if (!this.allowsDuplicates())
         {
@@ -3934,6 +3993,14 @@ public interface RichIterableTestCase extends IterableTestCase
                 SortedSets.immutable.with(Comparators.byFunction((Integer each) -> each * -1), 4, 3, 2, 1),
                 iterable.toSortedSetBy(each -> each * -1));
 
+        {
+            RichIterable<Integer> iterable2 = this.newWith(4, 3, 2, 1);
+            assertTrue(iterable2.toSortedSet().add(99));
+            assertTrue(iterable2.toSortedSet(Comparators.reverseNaturalOrder()).add(99));
+            assertTrue(iterable2.toSortedSetBy(Functions.identity()).add(99));
+            assertIterablesEqual(this.newWith(4, 3, 2, 1), iterable2);
+        }
+
         if (!this.allowsDuplicates())
         {
             return;
@@ -3965,6 +4032,10 @@ public interface RichIterableTestCase extends IterableTestCase
                 Bags.immutable.with(4, 3, 2, 1),
                 this.newWith(4, 3, 2, 1).toBag());
 
+        RichIterable<Integer> iterable = this.newWith(4, 3, 2, 1);
+        assertTrue(iterable.toBag().add(99));
+        assertIterablesEqual(this.newWith(4, 3, 2, 1), iterable);
+
         if (!this.allowsDuplicates())
         {
             return;
@@ -3995,6 +4066,14 @@ public interface RichIterableTestCase extends IterableTestCase
         assertIterablesEqual(
                 TreeBag.newBagWith(Comparators.byFunction((Integer each) -> each * -1), 4, 3, 2, 1),
                 iterable.toSortedBagBy(each -> each * -1));
+
+        {
+            RichIterable<Integer> iterable2 = this.newWith(4, 3, 2, 1);
+            assertTrue(iterable2.toSortedBag().add(99));
+            assertTrue(iterable2.toSortedBag(Comparators.reverseNaturalOrder()).add(99));
+            assertTrue(iterable2.toSortedBagBy(Functions.identity()).add(99));
+            assertIterablesEqual(this.newWith(4, 3, 2, 1), iterable2);
+        }
 
         if (!this.allowsDuplicates())
         {
@@ -4035,6 +4114,12 @@ public interface RichIterableTestCase extends IterableTestCase
                         Tuples.pair("1", 1)),
                 iterable.toMap(Object::toString, each -> each % 10));
 
+        {
+            RichIterable<Integer> iterable2 = this.newWith(4, 3, 2, 1);
+            iterable2.toMap(Object::toString, each -> each).put("99", 99);
+            assertIterablesEqual(this.newWith(4, 3, 2, 1), iterable2);
+        }
+
         if (!this.allowsDuplicates())
         {
             return;
@@ -4069,6 +4154,10 @@ public interface RichIterableTestCase extends IterableTestCase
         assertIterablesEqual(
                 jdkMap,
                 iterable.toMap(Object::toString, each -> each % 10, new HashMap<>()));
+
+        RichIterable<Integer> iterable2 = this.newWith(4, 3, 2, 1);
+        iterable2.toMap(Object::toString, each -> each, new HashMap<>()).put("99", 99);
+        assertIterablesEqual(this.newWith(4, 3, 2, 1), iterable2);
 
         if (!this.allowsDuplicates())
         {
@@ -4112,6 +4201,12 @@ public interface RichIterableTestCase extends IterableTestCase
                         pairs),
                 iterable.toSortedMapBy(Functions.getStringPassThru(), Object::toString, each -> each % 10));
 
+        RichIterable<Integer> iterable2 = this.newWith(4, 3, 2, 1);
+        iterable2.toSortedMap(Object::toString, each -> each).put("99", 99);
+        iterable2.toSortedMap(Comparators.reverseNaturalOrder(), Object::toString, each -> each).put("99", 99);
+        iterable2.toSortedMapBy(Functions.getStringPassThru(), Object::toString, each -> each).put("99", 99);
+        assertIterablesEqual(this.newWith(4, 3, 2, 1), iterable2);
+
         if (!this.allowsDuplicates())
         {
             return;
@@ -4151,6 +4246,10 @@ public interface RichIterableTestCase extends IterableTestCase
         Object[] array = this.newWith(3, 2, 1).toArray();
         assertIterablesEqual(Bags.immutable.with(3, 2, 1), HashBag.newBagWith(array));
 
+        RichIterable<Integer> iterable = this.newWith(3, 2, 1);
+        iterable.toArray()[0] = 99;
+        assertIterablesEqual(this.newWith(3, 2, 1), iterable);
+
         if (!this.allowsDuplicates())
         {
             return;
@@ -4158,6 +4257,24 @@ public interface RichIterableTestCase extends IterableTestCase
 
         Object[] array2 = this.newWith(3, 3, 3, 2, 2, 1).toArray();
         assertIterablesEqual(Bags.immutable.with(3, 3, 3, 2, 2, 1), HashBag.newBagWith(array2));
+    }
+
+    @Test
+    default void RichIterable_toBiMap()
+    {
+        RichIterable<Integer> iterable = this.newWith(13, 12, 11, 3, 2, 1);
+
+        MutableBiMap<String, Integer> biMap = iterable.toBiMap(Object::toString, Functions.identity());
+        assertEquals(Integer.valueOf(13), biMap.get("13"));
+        assertEquals(Integer.valueOf(12), biMap.get("12"));
+        assertEquals(Integer.valueOf(11), biMap.get("11"));
+        assertEquals(Integer.valueOf(3), biMap.get("3"));
+        assertEquals(Integer.valueOf(2), biMap.get("2"));
+        assertEquals(Integer.valueOf(1), biMap.get("1"));
+
+        RichIterable<Integer> iterable2 = this.newWith(4, 3, 2, 1);
+        iterable2.toBiMap(Object::toString, Functions.identity()).put("99", 99);
+        assertIterablesEqual(this.newWith(4, 3, 2, 1), iterable2);
     }
 
     @Test

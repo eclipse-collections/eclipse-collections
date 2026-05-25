@@ -11,6 +11,7 @@
 package org.eclipse.collections.impl.jmh.list
 
 import scala.collection.mutable
+import scala.collection.parallel.CollectionConverters._
 
 object ScalaListIterationTest
 {

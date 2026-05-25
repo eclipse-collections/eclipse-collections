@@ -122,9 +122,8 @@ public abstract class AbstractMultimap<K, V, C extends RichIterable<V>>
         {
             return true;
         }
-        if (object instanceof Multimap)
+        if (object instanceof Multimap<?, ?> that)
         {
-            Multimap<?, ?> that = (Multimap<?, ?>) object;
             return this.getMap().equals(that.toMap());
         }
         return false;

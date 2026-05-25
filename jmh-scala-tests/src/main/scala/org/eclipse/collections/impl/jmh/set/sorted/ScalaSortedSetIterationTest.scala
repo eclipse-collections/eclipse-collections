@@ -11,6 +11,7 @@
 package org.eclipse.collections.impl.jmh.set.sorted
 
 import scala.collection.{immutable, mutable}
+import scala.collection.parallel.CollectionConverters._
 
 object ScalaSortedSetIterationTest
 {

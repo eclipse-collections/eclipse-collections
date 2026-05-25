@@ -14,6 +14,7 @@ import org.junit.Assert
 
 import scala.collection.mutable
 import scala.collection.mutable.ArrayBuffer
+import scala.collection.parallel.CollectionConverters._
 
 object FunctionalInterfaceScalaTest
 {

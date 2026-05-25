@@ -66,9 +66,9 @@ public abstract class AbstractTransformerBasedCombiner<V, T, BT extends Procedur
 
     private Collection<V> createResultForCollection(Iterable<T> sourceCollection, int initialCapacity)
     {
-        if (sourceCollection instanceof Collection)
+        if (sourceCollection instanceof Collection<?> collection)
         {
-            return DefaultSpeciesNewStrategy.INSTANCE.speciesNew((Collection<?>) sourceCollection, initialCapacity);
+            return DefaultSpeciesNewStrategy.INSTANCE.speciesNew(collection, initialCapacity);
         }
         return Lists.mutable.withInitialCapacity(initialCapacity);
     }

@@ -13,6 +13,7 @@ package org.eclipse.collections.impl.set.sorted.immutable;
 import org.eclipse.collections.api.factory.SortedSets;
 import org.eclipse.collections.api.set.sorted.MutableSortedSet;
 import org.eclipse.collections.impl.block.factory.Comparators;
+import org.eclipse.collections.test.IterableTestCase;
 import org.eclipse.collections.test.set.immutable.sorted.ImmutableSortedSetIterableTestCase;
 import org.eclipse.collections.test.set.sorted.NavigableSetTestCase;
 import org.junit.jupiter.api.Test;
@@ -21,6 +22,12 @@ public interface ImmutableSortedSetTestCase extends ImmutableSortedSetIterableTe
 {
     @Override
     <T> AbstractImmutableSortedSet<T> newWith(T... elements);
+
+    @Override
+    default IterableTestCase.OrderingType getOrderingType()
+    {
+        return IterableTestCase.OrderingType.SORTED_REVERSE_NATURAL;
+    }
 
     @Override
     default boolean allowsAdd()

@@ -10,16 +10,24 @@
 
 package org.eclipse.collections.test.map.mutable.sorted;
 
+import java.util.Collection;
 import java.util.NavigableMap;
+import java.util.Random;
+import java.util.Set;
 import java.util.TreeMap;
 
 import org.eclipse.collections.impl.block.factory.Comparators;
+import org.eclipse.collections.test.map.MapKeySetTestCase;
+import org.eclipse.collections.test.map.MapValuesCollectionTestCase;
+import org.junit.jupiter.api.Nested;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
 public class TreeMapTest implements NavigableMapTestCase
 {
+    private static final long CURRENT_TIME_MILLIS = System.currentTimeMillis();
+
     @Override
     public <T> NavigableMap<Object, T> newWith(T... elements)
     {
@@ -47,5 +55,57 @@ public class TreeMapTest implements NavigableMapTestCase
             assertNull(result.put((K) elements[i], (V) elements[i + 1]));
         }
         return result;
+    }
+
+    @Nested
+    public class KeySetView implements MapKeySetTestCase
+    {
+        @Override
+        public OrderingType getOrderingType()
+        {
+            return OrderingType.SORTED_REVERSE_NATURAL;
+        }
+
+        @Override
+        public boolean allowsSerialization()
+        {
+            return false;
+        }
+
+        @SafeVarargs
+        @Override
+        public final <T> Set<T> newWith(T... elements)
+        {
+            Random random = new Random(CURRENT_TIME_MILLIS);
+            NavigableMap<T, Object> result = new TreeMap<>(Comparators.reverseNaturalOrder());
+            for (T element : elements)
+            {
+                assertNull(result.put(element, random.nextDouble()));
+            }
+            return result.keySet();
+        }
+    }
+
+    @Nested
+    public class ValuesCollectionView implements MapValuesCollectionTestCase
+    {
+        @Override
+        public OrderingType getOrderingType()
+        {
+            return OrderingType.SORTED_REVERSE_NATURAL;
+        }
+
+        @Override
+        public boolean allowsSerialization()
+        {
+            return false;
+        }
+
+        @SafeVarargs
+        @Override
+        public final <T> Collection<T> newWith(T... elements)
+        {
+            return TreeMapTest.this.newWith(elements).values();
+        }
     }
 }

@@ -16,10 +16,6 @@ import java.util.TreeMap;
 
 import org.eclipse.collections.impl.block.factory.Comparators;
 import org.eclipse.collections.test.set.sorted.SortedSetTestCase;
-import org.junit.jupiter.api.Test;
-
-import static org.eclipse.collections.impl.test.Verify.assertNotSerializable;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TreeMapKeySetHeadSetTest implements SortedSetTestCase
 {
@@ -80,24 +76,8 @@ public class TreeMapKeySetHeadSetTest implements SortedSetTestCase
     }
 
     @Override
-    @Test
-    public void Object_PostSerializedEqualsAndHashCode()
+    public boolean allowsSerialization()
     {
-        assertNotSerializable(this.newWith(1, 2, 3));
-    }
-
-    @Override
-    @Test
-    public void Object_equalsAndHashCode()
-    {
-        assertEquals(this.newWith(4, 3, 2, 1), this.newWith(4, 3, 2, 1));
-        assertEquals(this.newWith(3, 2, 1), this.newWith(3, 2, 1));
-    }
-
-    @Override
-    @Test
-    public void Iterable_toString()
-    {
-        assertEquals("[3, 2, 1]", this.newWith(3, 2, 1).toString());
+        return false;
     }
 }

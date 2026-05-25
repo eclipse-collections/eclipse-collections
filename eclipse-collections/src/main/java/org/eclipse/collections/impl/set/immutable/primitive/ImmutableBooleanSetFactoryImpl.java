@@ -89,9 +89,9 @@ public class ImmutableBooleanSetFactoryImpl implements ImmutableBooleanSetFactor
     @Override
     public ImmutableBooleanSet withAll(BooleanIterable items)
     {
-        if (items instanceof ImmutableBooleanSet)
+        if (items instanceof ImmutableBooleanSet immutableBooleanSet)
         {
-            return (ImmutableBooleanSet) items;
+            return immutableBooleanSet;
         }
         return this.with(items.toArray());
     }

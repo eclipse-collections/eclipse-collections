@@ -13,7 +13,9 @@ package org.eclipse.collections.test;
 import java.util.Arrays;
 import java.util.Collection;
 
+import org.eclipse.collections.api.factory.Bags;
 import org.eclipse.collections.api.factory.Lists;
+import org.eclipse.collections.impl.bag.mutable.HashBag;
 import org.junit.jupiter.api.Test;
 
 import static org.eclipse.collections.impl.test.Verify.assertContains;
@@ -24,8 +26,10 @@ import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -201,6 +205,14 @@ public interface CollectionTestCase extends IterableTestCase, CollisionsTestCase
             Collection<Integer> collection4 = this.newWith(5, 4, 3, 2, 1);
             assertTrue(collection4.removeAll(Lists.mutable.with(4, 2)));
             assertIterablesEqual(this.newWith(5, 3, 1), collection4);
+
+            Collection<Integer> collection5 = this.newWith(3, 2, 1);
+            assertTrue(collection5.removeAll(Lists.mutable.with(1, 2, 3)));
+            assertIterablesEqual(this.newWith(), collection5);
+
+            Collection<Integer> collection6 = this.newWith(3, 2, 1);
+            assertTrue(collection6.removeAll(Lists.mutable.with(1, 2, 3, 4)));
+            assertIterablesEqual(this.newWith(), collection6);
         }
 
         if (this.allowsDuplicates())
@@ -244,5 +256,187 @@ public interface CollectionTestCase extends IterableTestCase, CollisionsTestCase
         assertIterablesEqual(this.newWith(), collection);
         collection.clear();
         assertThat(collection, is(empty()));
+    }
+
+    @Test
+    default void Collection_toArray()
+    {
+        Collection<Integer> collection = this.newWith(3, 2, 1);
+        Object[] array = collection.toArray();
+        assertEquals(collection.size(), array.length);
+        switch (this.getOrderingType())
+        {
+            case SORTED_NATURAL -> assertArrayEquals(new Object[]{1, 2, 3}, array);
+            case INSERTION_ORDER, SORTED_REVERSE_NATURAL -> assertArrayEquals(new Object[]{3, 2, 1}, array);
+            case UNORDERED -> assertIterablesEqual(Bags.immutable.with(3, 2, 1), HashBag.newBagWith(array));
+            default -> throw new AssertionError("Unexpected ordering type: " + this.getOrderingType());
+        }
+
+        if (this.allowsDuplicates())
+        {
+            Collection<Integer> withDuplicates = this.newWith(3, 3, 3, 2, 2, 1);
+            Object[] array2 = withDuplicates.toArray();
+            assertEquals(withDuplicates.size(), array2.length);
+            switch (this.getOrderingType())
+            {
+                case SORTED_NATURAL -> assertArrayEquals(new Object[]{1, 2, 2, 3, 3, 3}, array2);
+                case INSERTION_ORDER, SORTED_REVERSE_NATURAL -> assertArrayEquals(new Object[]{3, 3, 3, 2, 2, 1}, array2);
+                case UNORDERED -> assertIterablesEqual(Bags.immutable.with(3, 3, 3, 2, 2, 1), HashBag.newBagWith(array2));
+                default -> throw new AssertionError("Unexpected ordering type: " + this.getOrderingType());
+            }
+        }
+
+        Object[] emptyArray = this.newWith().toArray();
+        assertEquals(0, emptyArray.length);
+
+        // toArray(T[]) - exact size target
+        Integer[] exactSize = new Integer[collection.size()];
+        Integer[] result = collection.toArray(exactSize);
+        switch (this.getOrderingType())
+        {
+            case SORTED_NATURAL -> assertArrayEquals(new Object[]{1, 2, 3}, result);
+            case INSERTION_ORDER, SORTED_REVERSE_NATURAL -> assertArrayEquals(new Object[]{3, 2, 1}, result);
+            case UNORDERED -> assertIterablesEqual(Bags.immutable.with(3, 2, 1), HashBag.newBagWith(result));
+            default -> throw new AssertionError("Unexpected ordering type: " + this.getOrderingType());
+        }
+
+        // toArray(T[]) - larger target (null-terminated, remaining untouched)
+        Integer[] larger = new Integer[collection.size() + 2];
+        larger[collection.size()] = 99;
+        larger[collection.size() + 1] = 99;
+        Integer[] result2 = collection.toArray(larger);
+        assertEquals(larger, result2);
+        assertNull(result2[collection.size()]);
+        switch (this.getOrderingType())
+        {
+            case SORTED_NATURAL -> assertArrayEquals(new Integer[]{1, 2, 3, null, 99}, result2);
+            case INSERTION_ORDER, SORTED_REVERSE_NATURAL -> assertArrayEquals(new Integer[]{3, 2, 1, null, 99}, result2);
+            case UNORDERED ->
+            {
+                assertIterablesEqual(
+                        Bags.immutable.with(3, 2, 1),
+                        HashBag.newBagWith(result2[0], result2[1], result2[2]));
+                assertEquals(99, result2[4]);
+            }
+            default -> throw new AssertionError("Unexpected ordering type: " + this.getOrderingType());
+        }
+
+        // toArray(T[]) - smaller target (new array allocated)
+        Integer[] smaller = new Integer[1];
+        Integer[] result3 = collection.toArray(smaller);
+        assertEquals(collection.size(), result3.length);
+        switch (this.getOrderingType())
+        {
+            case SORTED_NATURAL -> assertArrayEquals(new Object[]{1, 2, 3}, result3);
+            case INSERTION_ORDER, SORTED_REVERSE_NATURAL -> assertArrayEquals(new Object[]{3, 2, 1}, result3);
+            case UNORDERED -> assertIterablesEqual(Bags.immutable.with(3, 2, 1), HashBag.newBagWith(result3));
+            default -> throw new AssertionError("Unexpected ordering type: " + this.getOrderingType());
+        }
+
+        Integer[] emptyTarget = new Integer[0];
+        Integer[] emptyResult = this.<Integer>newWith().toArray(emptyTarget);
+        assertEquals(0, emptyResult.length);
+    }
+
+    @Test
+    default void Collection_containsAll()
+    {
+        Collection<Integer> collection = this.newWith(3, 2, 1);
+
+        assertTrue(collection.containsAll(Lists.mutable.with(1)));
+        assertTrue(collection.containsAll(Lists.mutable.with(1, 2)));
+        assertTrue(collection.containsAll(Lists.mutable.with(1, 2, 3)));
+        assertTrue(collection.containsAll(Lists.mutable.with(3, 3, 3)));
+        assertTrue(collection.containsAll(Lists.mutable.with()));
+        assertFalse(collection.containsAll(Lists.mutable.with(4)));
+        assertFalse(collection.containsAll(Lists.mutable.with(1, 2, 3, 4)));
+        assertFalse(collection.containsAll(Lists.mutable.with(4, 5, 6)));
+
+        Collection<Integer> empty = this.newWith();
+        assertTrue(empty.containsAll(Lists.mutable.with()));
+        assertFalse(empty.containsAll(Lists.mutable.with(1)));
+    }
+
+    @Test
+    default void Collection_addAll()
+    {
+        Collection<Integer> collection = this.newWith(3, 2, 1);
+
+        if (!this.allowsAdd())
+        {
+            assertThrows(UnsupportedOperationException.class, () -> collection.addAll(Lists.mutable.with(4, 5)));
+            assertIterablesEqual(this.newWith(3, 2, 1), collection);
+            return;
+        }
+
+        assertTrue(collection.addAll(Lists.mutable.with(4, 5)));
+        assertTrue(collection.contains(4));
+        assertTrue(collection.contains(5));
+        assertTrue(collection.containsAll(Lists.mutable.with(1, 2, 3, 4, 5)));
+
+        Collection<Integer> collection2 = this.newWith(3, 2, 1);
+        assertEquals(this.allowsDuplicates(), collection2.addAll(Lists.mutable.with(1, 2)));
+        if (this.allowsDuplicates())
+        {
+            assertIterablesEqual(this.newWith(3, 2, 1, 1, 2), collection2);
+        }
+        else
+        {
+            assertIterablesEqual(this.newWith(3, 2, 1), collection2);
+        }
+
+        Collection<Integer> collection3 = this.newWith(3, 2, 1);
+        assertFalse(collection3.addAll(Lists.mutable.with()));
+        assertIterablesEqual(this.newWith(3, 2, 1), collection3);
+    }
+
+    @Test
+    default void Collection_retainAll()
+    {
+        Collection<Integer> collection = this.newWith(3, 2, 1);
+
+        if (!this.allowsRemove())
+        {
+            assertThrows(UnsupportedOperationException.class, () -> collection.retainAll(Lists.mutable.with(1, 2)));
+            assertIterablesEqual(this.newWith(3, 2, 1), collection);
+            return;
+        }
+
+        {
+            Collection<Integer> collection1 = this.newWith(3, 2, 1);
+            assertTrue(collection1.retainAll(Lists.mutable.with(1, 2)));
+            assertIterablesEqual(this.newWith(2, 1), collection1);
+        }
+
+        {
+            Collection<Integer> collection2 = this.newWith(3, 2, 1);
+            assertFalse(collection2.retainAll(Lists.mutable.with(1, 2, 3)));
+            assertIterablesEqual(this.newWith(3, 2, 1), collection2);
+        }
+
+        {
+            Collection<Integer> collection3 = this.newWith(3, 2, 1);
+            assertFalse(collection3.retainAll(Lists.mutable.with(1, 2, 3, 4)));
+            assertIterablesEqual(this.newWith(3, 2, 1), collection3);
+        }
+
+        {
+            Collection<Integer> collection4 = this.newWith(3, 2, 1);
+            assertTrue(collection4.retainAll(Lists.mutable.with()));
+            assertIterablesEqual(this.newWith(), collection4);
+        }
+
+        {
+            Collection<Integer> collection5 = this.newWith(3, 2, 1);
+            assertTrue(collection5.retainAll(Lists.mutable.with(4, 5)));
+            assertIterablesEqual(this.newWith(), collection5);
+        }
+
+        if (this.allowsDuplicates())
+        {
+            Collection<Integer> collection6 = this.newWith(3, 3, 3, 2, 2, 1);
+            assertTrue(collection6.retainAll(Lists.mutable.with(1, 3)));
+            assertIterablesEqual(this.newWith(3, 3, 3, 1), collection6);
+        }
     }
 }

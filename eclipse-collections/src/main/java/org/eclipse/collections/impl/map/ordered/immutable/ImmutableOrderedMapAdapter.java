@@ -56,9 +56,11 @@ import org.eclipse.collections.api.map.primitive.ImmutableObjectLongMap;
 import org.eclipse.collections.api.multimap.list.ImmutableListMultimap;
 import org.eclipse.collections.api.ordered.OrderedIterable;
 import org.eclipse.collections.api.partition.list.PartitionImmutableList;
+import org.eclipse.collections.api.stack.MutableStack;
 import org.eclipse.collections.api.tuple.Pair;
 import org.eclipse.collections.impl.map.AbstractMapIterable;
 import org.eclipse.collections.impl.map.ordered.mutable.OrderedMapAdapter;
+import org.eclipse.collections.impl.stack.mutable.ArrayStack;
 
 public class ImmutableOrderedMapAdapter<K, V>
         extends AbstractMapIterable<K, V>
@@ -149,6 +151,12 @@ public class ImmutableOrderedMapAdapter<K, V>
     public RichIterable<V> valuesView()
     {
         return this.delegate.valuesView();
+    }
+
+    @Override
+    public MutableStack<V> toStack()
+    {
+        return ArrayStack.newStackFromTopToBottom(this);
     }
 
     @Override

@@ -603,20 +603,6 @@ Arrays, Maps or Strings. The iteration protocol was inspired by the Smalltalk co
     <profiles>
 
         <profile>
-            <id>java-8</id>
-
-            <!--Keep this to Java 8 as we do not want JMH to be running for every build-->
-            <activation>
-                <jdk>1.8</jdk>
-            </activation>
-
-            <modules>
-                <module>jmh-scala-tests</module>
-                <module>jmh-tests</module>
-            </modules>
-        </profile>
-
-        <profile>
             <id>all</id>
 
             <modules>
@@ -630,6 +616,8 @@ Arrays, Maps or Strings. The iteration protocol was inspired by the Smalltalk co
                 <module>serialization-tests</module>
                 <module>acceptance-tests</module>
                 <module>performance-tests</module>
+                <module>jmh-tests</module>
+                <module>jmh-scala-tests</module>
             </modules>
         </profile>
 

@@ -16,9 +16,6 @@ import java.util.TreeSet;
 
 import org.eclipse.collections.impl.block.factory.Comparators;
 import org.eclipse.collections.test.set.sorted.SortedSetTestCase;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TreeSetHeadSetTest implements SortedSetTestCase
 {
@@ -65,22 +62,5 @@ public class TreeSetHeadSetTest implements SortedSetTestCase
     public boolean allowsDuplicates()
     {
         return false;
-    }
-
-    @Override
-    @Test
-    public void Object_equalsAndHashCode()
-    {
-        org.eclipse.collections.impl.test.Verify.assertPostSerializedEqualsAndHashCode(this.newWith(3, 2, 1));
-
-        assertEquals(this.newWith(4, 3, 2, 1), this.newWith(4, 3, 2, 1));
-        assertEquals(this.newWith(3, 2, 1), this.newWith(3, 2, 1));
-    }
-
-    @Override
-    @Test
-    public void Iterable_toString()
-    {
-        assertEquals("[3, 2, 1]", this.newWith(3, 2, 1).toString());
     }
 }

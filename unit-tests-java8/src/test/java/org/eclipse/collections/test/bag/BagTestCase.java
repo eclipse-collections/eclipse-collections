@@ -29,6 +29,7 @@ import static org.hamcrest.Matchers.isOneOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public interface BagTestCase extends RichIterableWithDuplicatesTestCase
@@ -49,6 +50,11 @@ public interface BagTestCase extends RichIterableWithDuplicatesTestCase
     @Test
     default void RichIterable_iterator_iterationOrder()
     {
+        if (!this.allowsIterator())
+        {
+            assertThrows(AssertionError.class, () -> this.getInstanceUnderTest().iterator().hasNext());
+            return;
+        }
         MutableCollection<Integer> iterationOrder = this.newMutableForFilter();
         Iterator<Integer> iterator = this.getInstanceUnderTest().iterator();
         while (iterator.hasNext())

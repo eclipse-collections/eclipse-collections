@@ -33,7 +33,7 @@ public class FlatCollectIterableTestNoIteratorTest implements LazyNoIteratorTest
             @Override
             public Iterator<T> iterator()
             {
-                throw new UnsupportedOperationException("No iteration patterns should delegate to iterator()");
+                throw new AssertionError("No iteration patterns should delegate to iterator()");
             }
         };
     }

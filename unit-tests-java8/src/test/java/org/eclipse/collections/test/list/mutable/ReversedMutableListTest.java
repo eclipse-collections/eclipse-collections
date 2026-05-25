@@ -20,7 +20,7 @@ import org.eclipse.collections.impl.test.SerializeTestHelper;
 import org.eclipse.collections.impl.test.Verify;
 import org.junit.jupiter.api.Test;
 
-import static org.eclipse.collections.test.IterableTestCase.*;
+import static org.eclipse.collections.test.IterableTestCase.assertIterablesEqual;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
@@ -131,12 +131,16 @@ public class ReversedMutableListTest implements MutableListTestCase
                 () -> delegate.reversed().addAll(delegate.size() + 1, Lists.mutable.with(8)));
     }
 
+    @Override
     @Test
     public void Collection_addAll()
     {
+        MutableListTestCase.super.Collection_addAll();
+
         MutableList<Integer> delegate = FastList.newListWith(1, 2, 3);
         MutableList<Integer> reversed = delegate.reversed();
         reversed.addAll(Lists.mutable.with(7, 8));
+        assertEquals(Lists.mutable.with(8, 7, 1, 2, 3), delegate);
         assertEquals(Lists.mutable.with(3, 2, 1, 7, 8), reversed);
     }
 
@@ -166,9 +170,12 @@ public class ReversedMutableListTest implements MutableListTestCase
         assertEquals(Lists.mutable.with(99, 2, 1), reversed);
     }
 
+    @Override
     @Test
-    public void Collection_removeAll()
+    public void Collection_remove_removeAll()
     {
+        MutableListTestCase.super.Collection_remove_removeAll();
+
         MutableList<Integer> delegate = FastList.newListWith(1, 2, 3, 4, 5);
         MutableList<Integer> reversed = delegate.reversed();
         reversed.removeAll(Lists.mutable.with(2, 4));
@@ -176,9 +183,12 @@ public class ReversedMutableListTest implements MutableListTestCase
         assertEquals(Lists.mutable.with(5, 3, 1), reversed);
     }
 
+    @Override
     @Test
     public void Collection_retainAll()
     {
+        MutableListTestCase.super.Collection_retainAll();
+
         MutableList<Integer> delegate = FastList.newListWith(1, 2, 3, 4, 5);
         MutableList<Integer> reversed = delegate.reversed();
         reversed.retainAll(Lists.mutable.with(2, 4));

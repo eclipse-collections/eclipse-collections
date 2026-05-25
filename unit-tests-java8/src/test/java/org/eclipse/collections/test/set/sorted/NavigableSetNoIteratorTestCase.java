@@ -13,6 +13,7 @@ package org.eclipse.collections.test.set.sorted;
 import java.util.Comparator;
 import java.util.NavigableSet;
 
+import org.eclipse.collections.api.factory.Lists;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -36,24 +37,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public interface NavigableSetNoIteratorTestCase extends NavigableSetTestCase
 {
     @Override
-    @Test
-    default void Iterable_next()
+    default boolean allowsIterator()
     {
-        assertThrows(AssertionError.class, () -> this.newWith(3, 2, 1).iterator());
-    }
-
-    @Override
-    @Test
-    default void Iterable_remove()
-    {
-        assertThrows(AssertionError.class, () -> this.newWith(3, 2, 1).iterator());
-    }
-
-    @Override
-    @Test
-    default void Iterable_hasNext()
-    {
-        assertThrows(AssertionError.class, () -> this.newWith(3, 2, 1).iterator());
+        return false;
     }
 
     @Override
@@ -71,7 +57,7 @@ public interface NavigableSetNoIteratorTestCase extends NavigableSetTestCase
     }
 
     /**
-     * {@link java.util.AbstractCollection#toString()} delegates to iterator().
+     * TODO: Optimize {@link java.util.AbstractCollection#toString()} to not delegate to iterator().
      */
     @Override
     @Test
@@ -81,8 +67,8 @@ public interface NavigableSetNoIteratorTestCase extends NavigableSetTestCase
     }
 
     /**
-     * {@link java.util.AbstractSet#hashCode()} delegates to iterator().
-     * {@link java.util.AbstractSet#equals(Object)} delegates to iterator() via containsAll().
+     * TODO: Optimize {@link java.util.AbstractSet#hashCode()} and
+     * {@link java.util.AbstractSet#equals(Object)} to not delegate to iterator().
      */
     @Override
     @Test
@@ -107,6 +93,41 @@ public interface NavigableSetNoIteratorTestCase extends NavigableSetTestCase
     }
 
     /**
+     * TODO: Optimize {@link java.util.AbstractCollection#toArray()} to not delegate to iterator().
+     */
+    @Override
+    @Test
+    default void Collection_toArray()
+    {
+        assertThrows(AssertionError.class, () -> this.newWith(3, 2, 1).toArray());
+        assertThrows(AssertionError.class, () -> this.newWith(3, 2, 1).toArray(new Integer[0]));
+    }
+
+    /**
+     * TODO: Optimize {@link org.eclipse.collections.test.IterableTestCase#assertIterablesEqual(Object, Object)} to not trigger equals()/iterator() for no-iterator sets.
+     */
+    @Override
+    @Test
+    default void Collection_addAll()
+    {
+        NavigableSet<Integer> collection = this.newWith(3, 2, 1);
+        assertTrue(collection.addAll(Lists.mutable.with(4, 5)));
+        assertEquals(5, collection.size());
+        assertTrue(collection.contains(4));
+        assertTrue(collection.contains(5));
+    }
+
+    /**
+     * TODO: Optimize {@link java.util.AbstractCollection#retainAll(java.util.Collection)} to not delegate to iterator().
+     */
+    @Override
+    @Test
+    default void Collection_retainAll()
+    {
+        assertThrows(AssertionError.class, () -> this.newWith(3, 2, 1).retainAll(Lists.mutable.with(1, 2)));
+    }
+
+    /**
      * Overrides parent which uses assertIterablesEqual (triggers equals/iterator).
      * Verifies add() works without iteration.
      */
@@ -123,8 +144,16 @@ public interface NavigableSetNoIteratorTestCase extends NavigableSetTestCase
     }
 
     /**
-     * Overrides parent which uses assertIterablesEqual (triggers equals/iterator).
-     * Verifies remove() works without iteration.
+     * TODO: Optimize {@link java.util.AbstractCollection#removeAll(java.util.Collection)} to not delegate to iterator().
+     *
+     * <p>{@link java.util.AbstractSet#removeAll(java.util.Collection)} already has a partial optimization: when
+     * {@code c.size() <= this.size()}, it iterates over {@code c} and calls {@code this.remove(e)},
+     * avoiding {@code this.iterator()}. When {@code c.size() > this.size()}, it falls back to
+     * {@link java.util.AbstractCollection#removeAll(java.util.Collection)}, which does use
+     * {@code this.iterator()}.
+     *
+     * <p>Overrides parent which uses assertIterablesEqual (triggers equals/iterator).
+     * Verifies remove() and removeAll() work without iteration.
      */
     @Override
     @Test
@@ -136,6 +165,15 @@ public interface NavigableSetNoIteratorTestCase extends NavigableSetTestCase
         assertFalse(collection.contains(2));
         assertTrue(collection.contains(1));
         assertTrue(collection.contains(3));
+
+        // c.size() (2) < this.size() (3): AbstractSet iterates over c, no iterator() call.
+        NavigableSet<Integer> set1 = this.newWith(3, 2, 1);
+        assertTrue(set1.removeAll(Lists.mutable.with(1, 2)));
+        assertEquals(1, set1.size());
+        assertTrue(set1.contains(3));
+
+        // c.size() (4) > this.size() (3): AbstractSet falls back to AbstractCollection, calling iterator().
+        assertThrows(AssertionError.class, () -> this.newWith(3, 2, 1).removeAll(Lists.mutable.with(1, 2, 3, 4)));
     }
 
     /**

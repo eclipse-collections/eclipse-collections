@@ -21,6 +21,9 @@ import org.eclipse.collections.impl.block.factory.HashingStrategies;
 import org.eclipse.collections.impl.map.strategy.mutable.UnifiedMapWithHashingStrategy;
 import org.eclipse.collections.impl.tuple.ImmutableEntry;
 import org.eclipse.collections.test.NoIteratorTestCase;
+import org.eclipse.collections.test.map.NoIteratorMapKeySetTestCase;
+import org.eclipse.collections.test.map.NoIteratorMapValuesCollectionTestCase;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -62,13 +65,6 @@ public class UnifiedMapWithHashingStrategyNoIteratorTest implements MutableMapTe
 
     @Override
     @Test
-    public void Iterable_next()
-    {
-        NoIteratorTestCase.super.Iterable_next();
-    }
-
-    @Override
-    @Test
     public void Iterable_remove()
     {
         NoIteratorTestCase.super.Iterable_remove();
@@ -76,37 +72,10 @@ public class UnifiedMapWithHashingStrategyNoIteratorTest implements MutableMapTe
 
     @Override
     @Test
-    public void RichIterable_getFirst()
+    public void RichIterable_getOnly()
     {
-        NoIteratorTestCase.super.RichIterable_getFirst();
-    }
-
-    @Override
-    @Test
-    public void RichIterable_getLast()
-    {
-        NoIteratorTestCase.super.RichIterable_getLast();
-    }
-
-    @Override
-    @Test
-    public void RichIterable_getFirst_and_getLast()
-    {
-        // Not applicable
-    }
-
-    @Override
-    @Test
-    public void RichIterable_getLast_empty_null()
-    {
-        // Not applicable
-    }
-
-    @Override
-    @Test
-    public void RichIterable_fused_collectMakeString()
-    {
-        // Not applicable
+        // TODO: Optimize getOnly() to avoid delegating to iterator().
+        assertThrows(AssertionError.class, () -> this.newWith(1).getOnly());
     }
 
     @Override
@@ -235,6 +204,34 @@ public class UnifiedMapWithHashingStrategyNoIteratorTest implements MutableMapTe
             {
                 throw new AssertionError("No iteration patterns should delegate to iterator()");
             }
+        }
+    }
+
+    @Nested
+    public class KeySetView implements NoIteratorMapKeySetTestCase
+    {
+        @SafeVarargs
+        @Override
+        public final <T> Set<T> newWith(T... elements)
+        {
+            Random random = new Random(CURRENT_TIME_MILLIS);
+            MutableMap<T, Object> result = new UnifiedMapWithHashingStrategyNoIterator<>();
+            for (T element : elements)
+            {
+                assertNull(result.put(element, random.nextDouble()));
+            }
+            return result.keySet();
+        }
+    }
+
+    @Nested
+    public class ValuesCollectionView implements NoIteratorMapValuesCollectionTestCase
+    {
+        @SafeVarargs
+        @Override
+        public final <T> Collection<T> newWith(T... elements)
+        {
+            return UnifiedMapWithHashingStrategyNoIteratorTest.this.newWith(elements).values();
         }
     }
 }

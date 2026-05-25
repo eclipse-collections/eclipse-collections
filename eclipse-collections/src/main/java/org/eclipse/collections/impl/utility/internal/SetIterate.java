@@ -30,13 +30,13 @@ public final class SetIterate
      */
     public static boolean removeAllIterable(Set<?> collection, Iterable<?> iterable)
     {
-        if (iterable instanceof Set<?> && ((Set<?>) iterable).size() > collection.size())
+        if (iterable instanceof Set<?> set && set.size() > collection.size())
         {
             boolean modified = false;
             Iterator<?> e = collection.iterator();
             while (e.hasNext())
             {
-                if (((Set<?>) iterable).contains(e.next()))
+                if (set.contains(e.next()))
                 {
                     e.remove();
                     modified = true;

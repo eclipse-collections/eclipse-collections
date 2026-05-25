@@ -61,7 +61,7 @@ final class ImmutableEmptySet<T>
         {
             return true;
         }
-        return other instanceof Set && ((Set<?>) other).isEmpty();
+        return other instanceof Set<?> set && set.isEmpty();
     }
 
     @Override

@@ -12,20 +12,11 @@ package org.eclipse.collections.impl.jmh.list;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.LongAdder;
 
-import org.eclipse.collections.api.list.ImmutableList;
-import org.eclipse.collections.api.list.MutableList;
-import org.eclipse.collections.impl.Counter;
-import org.eclipse.collections.impl.factory.Lists;
-import org.eclipse.collections.impl.jmh.runner.AbstractJMHTestRunner;
-import org.eclipse.collections.impl.list.Interval;
 import org.eclipse.collections.impl.list.primitive.LongInterval;
 import org.eclipse.collections.impl.utility.ArrayListIterate;
 import org.eclipse.collections.impl.utility.Iterate;

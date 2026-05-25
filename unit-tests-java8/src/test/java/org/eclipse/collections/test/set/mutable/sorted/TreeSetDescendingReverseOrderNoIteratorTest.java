@@ -13,10 +13,17 @@ package org.eclipse.collections.test.set.mutable.sorted;
 import java.util.Collections;
 import java.util.NavigableSet;
 
+import org.eclipse.collections.test.IterableTestCase;
 import org.eclipse.collections.test.set.sorted.NavigableSetTestCase;
 
 public class TreeSetDescendingReverseOrderNoIteratorTest implements NavigableSetTestCase
 {
+    @Override
+    public IterableTestCase.OrderingType getOrderingType()
+    {
+        return IterableTestCase.OrderingType.SORTED_NATURAL;
+    }
+
     @SafeVarargs
     @Override
     public final <T> NavigableSet<T> newWith(T... elements)

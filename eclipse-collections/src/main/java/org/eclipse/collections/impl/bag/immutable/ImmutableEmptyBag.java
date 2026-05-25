@@ -108,7 +108,7 @@ final class ImmutableEmptyBag<T>
         {
             return true;
         }
-        return obj instanceof Bag && ((Bag<?>) obj).isEmpty();
+        return obj instanceof Bag<?> bag && bag.isEmpty();
     }
 
     @Override

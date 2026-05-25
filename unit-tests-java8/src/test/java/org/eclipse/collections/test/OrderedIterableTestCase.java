@@ -28,7 +28,7 @@ import org.eclipse.collections.impl.tuple.Tuples;
 import org.eclipse.collections.impl.tuple.primitive.PrimitiveTuples;
 import org.junit.jupiter.api.Test;
 
-import static org.eclipse.collections.test.IterableTestCase.*;
+import static org.eclipse.collections.test.IterableTestCase.assertIterablesEqual;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -220,6 +220,12 @@ public interface OrderedIterableTestCase extends RichIterableTestCase
     default void Iterable_next()
     {
         RichIterableTestCase.super.Iterable_next();
+
+        if (!this.allowsIterator())
+        {
+            assertThrows(AssertionError.class, () -> this.newWith(3, 2, 1).iterator().next());
+            return;
+        }
 
         Iterator<Integer> iterator = this.newWith(3, 2, 1).iterator();
         switch (this.getOrderingType())

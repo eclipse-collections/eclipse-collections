@@ -387,24 +387,24 @@ public final class Iterate
      */
     public static <T> Collection<T> selectInstancesOf(Iterable<?> iterable, Class<T> clazz)
     {
-        if (iterable instanceof MutableCollection)
+        if (iterable instanceof MutableCollection<?> mutableCollection)
         {
-            return ((MutableCollection<?>) iterable).selectInstancesOf(clazz);
+            return mutableCollection.selectInstancesOf(clazz);
         }
-        if (iterable instanceof ArrayList)
+        if (iterable instanceof ArrayList<?> arrayList)
         {
-            return ArrayListIterate.selectInstancesOf((ArrayList<?>) iterable, clazz);
+            return ArrayListIterate.selectInstancesOf(arrayList, clazz);
         }
-        if (iterable instanceof List)
+        if (iterable instanceof List<?> list)
         {
-            return ListIterate.selectInstancesOf((List<?>) iterable, clazz);
+            return ListIterate.selectInstancesOf(list, clazz);
         }
-        if (iterable instanceof Collection)
+        if (iterable instanceof Collection<?> collection)
         {
             return IterableIterate.selectInstancesOf(
                     iterable,
                     clazz,
-                    DefaultSpeciesNewStrategy.INSTANCE.speciesNew((Collection<?>) iterable));
+                    DefaultSpeciesNewStrategy.INSTANCE.speciesNew(collection));
         }
         if (iterable != null)
         {
@@ -1794,13 +1794,13 @@ public final class Iterate
         {
             return true;
         }
-        if (iterable instanceof RichIterable)
+        if (iterable instanceof RichIterable<?> richIterable)
         {
-            return ((RichIterable<?>) iterable).isEmpty();
+            return richIterable.isEmpty();
         }
-        if (iterable instanceof Collection)
+        if (iterable instanceof Collection<?> collection)
         {
-            return ((Collection<?>) iterable).isEmpty();
+            return collection.isEmpty();
         }
         return IterableIterate.isEmpty(iterable);
     }
@@ -2753,13 +2753,13 @@ public final class Iterate
      */
     public static int sizeOf(Iterable<?> iterable)
     {
-        if (iterable instanceof Collection)
+        if (iterable instanceof Collection<?> collection)
         {
-            return ((Collection<?>) iterable).size();
+            return collection.size();
         }
-        if (iterable instanceof RichIterable)
+        if (iterable instanceof RichIterable<?> richIterable)
         {
-            return ((RichIterable<?>) iterable).size();
+            return richIterable.size();
         }
         return Iterate.count(iterable, Predicates.alwaysTrue());
     }
@@ -2771,13 +2771,13 @@ public final class Iterate
      */
     public static boolean contains(Iterable<?> iterable, Object value)
     {
-        if (iterable instanceof Collection)
+        if (iterable instanceof Collection<?> collection)
         {
-            return ((Collection<?>) iterable).contains(value);
+            return collection.contains(value);
         }
-        if (iterable instanceof RichIterable)
+        if (iterable instanceof RichIterable<?> richIterable)
         {
-            return ((RichIterable<?>) iterable).contains(value);
+            return richIterable.contains(value);
         }
         return IterableIterate.detectIndex(iterable, Predicates.equal(value)) > -1;
     }

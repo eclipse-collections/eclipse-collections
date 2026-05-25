@@ -13,6 +13,7 @@ package org.eclipse.collections.impl.jmh
 import org.junit.Assert
 
 import scala.collection.mutable.ArrayBuffer
+import scala.collection.parallel.CollectionConverters._
 
 object CountScalaTest
 {
@@ -58,10 +59,10 @@ object CountScalaTest
         // deoptimize scala.collection.IndexedSeqOptimized.foreach()
         if (megamorphicWarmupLevel > 1)
         {
-            this.integers.view.foreach(Assert.assertNotNull)
+            this.integers.view.foreach(Assert.assertNotNull(_))
             this.integers.view.foreach(each => Assert.assertEquals(each, each))
             this.integers.view.foreach(each => Assert.assertNotEquals(null, each))
-            this.integers.par.foreach(Assert.assertNotNull)
+            this.integers.par.foreach(Assert.assertNotNull(_))
             this.integers.par.foreach(each => Assert.assertEquals(each, each))
             this.integers.par.foreach(each => Assert.assertNotEquals(null, each))
         }
@@ -70,7 +71,7 @@ object CountScalaTest
         // deoptimize scala.collection.IndexedSeqOptimized.foreach()
         if (megamorphicWarmupLevel > 2)
         {
-            this.integers.foreach(Assert.assertNotNull)
+            this.integers.foreach(Assert.assertNotNull(_))
             this.integers.foreach(each => Assert.assertEquals(each, each))
             this.integers.foreach(each => Assert.assertNotEquals(null, each))
         }

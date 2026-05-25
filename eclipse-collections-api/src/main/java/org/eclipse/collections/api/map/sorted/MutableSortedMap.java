@@ -71,14 +71,6 @@ public interface MutableSortedMap<K, V>
             Function<? super E, ? extends K> keyFunction,
             Function<? super E, ? extends V> valueFunction);
 
-    /**
-     * Return the value in the Map that corresponds to the specified key, or if there is no value
-     * at the key, return the result of evaluating the specified one argument Function
-     * using the specified parameter, and put that value in the map at the specified key.
-     */
-    @Override
-    <P> V getIfAbsentPutWith(K key, Function<? super P, ? extends V> function, P parameter);
-
     @Override
     MutableSortedMap<K, V> asUnmodifiable();
 

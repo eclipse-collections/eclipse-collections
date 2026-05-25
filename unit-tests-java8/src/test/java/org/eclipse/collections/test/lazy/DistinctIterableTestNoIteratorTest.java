@@ -11,17 +11,13 @@
 package org.eclipse.collections.test.lazy;
 
 import org.eclipse.collections.api.LazyIterable;
-import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.list.ListIterable;
-import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.impl.lazy.DistinctIterable;
-import org.eclipse.collections.test.NoIteratorTestCase;
+import org.eclipse.collections.test.LazyNoIteratorTestCase;
 import org.eclipse.collections.test.RichIterableUniqueTestCase;
-import org.eclipse.collections.test.list.TransformsToListTrait;
 import org.eclipse.collections.test.list.mutable.FastListNoIterator;
 import org.junit.jupiter.api.Test;
 
-public class DistinctIterableTestNoIteratorTest implements NoIteratorTestCase, RichIterableUniqueTestCase, TransformsToListTrait
+public class DistinctIterableTestNoIteratorTest implements LazyNoIteratorTestCase, RichIterableUniqueTestCase
 {
     @Override
     public <T> LazyIterable<T> newWith(T... elements)
@@ -30,41 +26,19 @@ public class DistinctIterableTestNoIteratorTest implements NoIteratorTestCase, R
     }
 
     @Override
-    public <T> ListIterable<T> getExpectedFiltered(T... elements)
+    public boolean allowsDuplicates()
     {
-        return Lists.immutable.with(elements);
-    }
-
-    @Override
-    public <T> MutableList<T> newMutableForFilter(T... elements)
-    {
-        return Lists.mutable.with(elements);
-    }
-
-    @Override
-    public <T> ListIterable<T> getExpectedTransformed(T... elements)
-    {
-        return Lists.immutable.with(elements);
+        // DistinctIterable deduplicates its input
+        return false;
     }
 
     @Override
     @Test
     public void Iterable_sanity_check()
     {
-        // Not applicable. DistinctIterable wraps an instance that does have duplicates and behaves like it has no duplicates.
-    }
-
-    @Override
-    @Test
-    public void Object_PostSerializedEqualsAndHashCode()
-    {
-        // Not applicable
-    }
-
-    @Override
-    @Test
-    public void Object_equalsAndHashCode()
-    {
-        // Not applicable
+        // DistinctIterable wraps an instance that has duplicates and behaves like it has no duplicates,
+        // so neither parent's sanity check applies; just verify construction doesn't throw.
+        String s = "";
+        this.newWith(s, s);
     }
 }

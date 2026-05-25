@@ -12,13 +12,8 @@ package org.eclipse.collections.impl.jmh.map
 
 class PresizableHashMap[K, V](val _initialSize: Int) extends scala.collection.mutable.HashMap[K, V]
 {
-    private def initialCapacity =
-        if (_initialSize == 0) 1
-        else smallestPowerOfTwoGreaterThan((_initialSize.toLong * 1000 / _loadFactor).asInstanceOf[Int])
-
-    private def smallestPowerOfTwoGreaterThan(n: Int): Int =
-        if (n > 1) Integer.highestOneBit(n - 1) << 1 else 1
-
-    table = new Array(initialCapacity)
-    threshold = ((initialCapacity.toLong * _loadFactor) / 1000).toInt
+    if (_initialSize > 0)
+    {
+        this.sizeHint(_initialSize)
+    }
 }

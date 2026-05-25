@@ -88,9 +88,9 @@ public final class BooleanHashBag implements MutableBooleanBag, Externalizable
 
     public static BooleanHashBag newBag(BooleanIterable source)
     {
-        if (source instanceof BooleanHashBag)
+        if (source instanceof BooleanHashBag booleanHashBag)
         {
-            return new BooleanHashBag((BooleanHashBag) source);
+            return new BooleanHashBag(booleanHashBag);
         }
 
         return new BooleanHashBag(source);
@@ -300,9 +300,8 @@ public final class BooleanHashBag implements MutableBooleanBag, Externalizable
         {
             return false;
         }
-        if (source instanceof BooleanBag)
+        if (source instanceof BooleanBag otherBag)
         {
-            BooleanBag otherBag = (BooleanBag) source;
             otherBag.forEachWithOccurrences(this::addOccurrences);
         }
         else
@@ -347,9 +346,8 @@ public final class BooleanHashBag implements MutableBooleanBag, Externalizable
             return false;
         }
         int oldSize = this.size();
-        if (source instanceof BooleanBag)
+        if (source instanceof BooleanBag otherBag)
         {
-            BooleanBag otherBag = (BooleanBag) source;
             otherBag.forEachWithOccurrences((each, occurrences) ->
             {
                 if (each)
@@ -385,7 +383,7 @@ public final class BooleanHashBag implements MutableBooleanBag, Externalizable
     public boolean retainAll(BooleanIterable elements)
     {
         int oldSize = this.size();
-        BooleanSet set = elements instanceof BooleanSet ? (BooleanSet) elements : elements.toSet();
+        BooleanSet set = elements instanceof BooleanSet booleanSet ? booleanSet : elements.toSet();
         if (!set.contains(true) && this.containsTrue())
         {
             this.trueCount = 0;

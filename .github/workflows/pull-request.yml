@@ -204,7 +204,7 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: 17
-      - run: ./mvnw --color=always install --projects performance-tests --also-make --activate-profiles all -DskipTests=true
+      - run: ./mvnw --color=always install --projects performance-tests,jmh-tests,jmh-scala-tests --also-make --activate-profiles all -DskipTests=true
         env:
           MAVEN_OPTS: '-Xmx1g'
 
