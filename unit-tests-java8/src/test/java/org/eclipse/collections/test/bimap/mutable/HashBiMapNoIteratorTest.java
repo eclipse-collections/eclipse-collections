@@ -12,7 +12,6 @@ package org.eclipse.collections.test.bimap.mutable;
 
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
@@ -28,7 +27,6 @@ import org.eclipse.collections.test.map.mutable.MapTestCase;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -162,18 +160,6 @@ public class HashBiMapNoIteratorTest implements MutableBiMapTestCase, NoIterator
     @Nested
     public class KeySetView implements NoIteratorMapKeySetTestCase
     {
-        // TODO: Implement Set.retainAll on AbstractMutableBiMap.KeySet without delegating to iterator()
-        @Override
-        @Test
-        public void Collection_retainAll()
-        {
-            Collection<Integer> collection = this.newWith(3, 2, 1);
-            AssertionError error = assertThrows(
-                    AssertionError.class,
-                    () -> collection.retainAll(List.of(1, 3)));
-            assertEquals("No iteration patterns should delegate to iterator()", error.getMessage());
-        }
-
         @SafeVarargs
         @Override
         public final <T> Set<T> newWith(T... elements)
