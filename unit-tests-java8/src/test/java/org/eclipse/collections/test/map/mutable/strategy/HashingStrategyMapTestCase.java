@@ -23,6 +23,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public interface HashingStrategyMapTestCase extends MutableMapTestCase
@@ -89,6 +90,56 @@ public interface HashingStrategyMapTestCase extends MutableMapTestCase
 
         assertTrue(keys.contains(3));
         assertTrue(keys.contains(4));
+    }
+
+    @Override
+    @Test
+    default void Map_computeIfAbsent()
+    {
+        MutableMapTestCase.super.Map_computeIfAbsent();
+
+        MutableMap<Integer, Integer> map = this.newMapWithConstantStrategy();
+        map.put(1, 10);
+        // key 2 is strategy-equal to key 1 — must return existing value without calling function
+        Integer result = map.computeIfAbsent(2, k -> 99);
+        assertEquals(Integer.valueOf(10), result);
+        assertEquals(1, map.size());
+    }
+
+    @Override
+    @Test
+    default void Map_computeIfPresent()
+    {
+        MutableMapTestCase.super.Map_computeIfPresent();
+
+        MutableMap<Integer, Integer> map = this.newMapWithConstantStrategy();
+        map.put(1, 10);
+        // key 2 is strategy-equal to key 1 — must apply function to existing value
+        Integer result = map.computeIfPresent(2, (k, v) -> v + 5);
+        assertEquals(Integer.valueOf(15), result);
+        assertEquals(1, map.size());
+
+        MutableMap<Integer, Integer> emptyMap = this.newMapWithConstantStrategy();
+        assertNull(emptyMap.computeIfPresent(1, (k, v) -> v + 5));
+    }
+
+    @Override
+    @Test
+    default void Map_compute()
+    {
+        MutableMapTestCase.super.Map_compute();
+
+        MutableMap<Integer, Integer> map = this.newMapWithConstantStrategy();
+        map.put(1, 10);
+        // key 2 is strategy-equal to key 1 — must apply function to existing value
+        Integer result = map.compute(2, (k, v) -> v == null ? 1 : v + 5);
+        assertEquals(Integer.valueOf(15), result);
+        assertEquals(1, map.size());
+
+        MutableMap<Integer, Integer> emptyMap = this.newMapWithConstantStrategy();
+        Integer inserted = emptyMap.compute(1, (k, v) -> v == null ? 42 : v + 1);
+        assertEquals(Integer.valueOf(42), inserted);
+        assertEquals(1, emptyMap.size());
     }
 
     class ConstantHashingStrategy implements HashingStrategy<Object>

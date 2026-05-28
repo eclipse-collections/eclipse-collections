@@ -452,6 +452,24 @@ public final class ConcurrentMutableHashMap<K, V>
     }
 
     @Override
+    public V computeIfAbsent(K key, java.util.function.Function<? super K, ? extends V> mappingFunction)
+    {
+        return this.delegate.computeIfAbsent(key, mappingFunction);
+    }
+
+    @Override
+    public V computeIfPresent(K key, BiFunction<? super K, ? super V, ? extends V> remappingFunction)
+    {
+        return this.delegate.computeIfPresent(key, remappingFunction);
+    }
+
+    @Override
+    public V compute(K key, BiFunction<? super K, ? super V, ? extends V> remappingFunction)
+    {
+        return this.delegate.compute(key, remappingFunction);
+    }
+
+    @Override
     public ImmutableMap<K, V> toImmutable()
     {
         return Maps.immutable.ofMap(this);
