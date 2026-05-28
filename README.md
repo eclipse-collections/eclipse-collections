@@ -202,3 +202,10 @@ We welcome contributions! We accept contributions via pull requests here in GitH
 [10-4-Release]: https://github.com/eclipse-collections/eclipse-collections/releases/tag/10.4.0
 [11-0-Release]: https://github.com/eclipse-collections/eclipse-collections/releases/tag/11.0.0
 [11-1-Release]: https://github.com/eclipse-collections/eclipse-collections/releases/tag/11.1.0
+
+
+---
+
+## Beginner Friendly Contributions
+
+If you're new to Eclipse Collections, start with small documentation improvements such as fixing typos, improving examples, or clarifying existing explanations. This helps maintain high-quality documentation and is a great way to get familiar with the project.
