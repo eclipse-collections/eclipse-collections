@@ -319,6 +319,51 @@ public abstract class AbstractSynchronizedMapIterable<K, V>
     }
 
     @Override
+    public V computeIfAbsent(K key, java.util.function.Function<? super K, ? extends V> mappingFunction)
+    {
+        synchronized (this.lock)
+        {
+            return this.getDelegate().computeIfAbsent(key, mappingFunction);
+        }
+    }
+
+    @Override
+    public V computeIfPresent(K key, BiFunction<? super K, ? super V, ? extends V> remappingFunction)
+    {
+        synchronized (this.lock)
+        {
+            return this.getDelegate().computeIfPresent(key, remappingFunction);
+        }
+    }
+
+    @Override
+    public V compute(K key, BiFunction<? super K, ? super V, ? extends V> remappingFunction)
+    {
+        synchronized (this.lock)
+        {
+            return this.getDelegate().compute(key, remappingFunction);
+        }
+    }
+
+    @Override
+    public void replaceAll(BiFunction<? super K, ? super V, ? extends V> function)
+    {
+        synchronized (this.lock)
+        {
+            this.getDelegate().replaceAll(function);
+        }
+    }
+
+    @Override
+    public V putIfAbsent(K key, V value)
+    {
+        synchronized (this.lock)
+        {
+            return this.getDelegate().putIfAbsent(key, value);
+        }
+    }
+
+    @Override
     public <VV> MutableMapIterable<VV, V> groupByUniqueKey(Function<? super V, ? extends VV> function)
     {
         synchronized (this.lock)

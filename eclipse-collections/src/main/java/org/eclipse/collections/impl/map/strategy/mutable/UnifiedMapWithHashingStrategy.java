@@ -710,6 +710,285 @@ public class UnifiedMapWithHashingStrategy<K, V> extends AbstractMutableMap<K, V
     }
 
     @Override
+    public V computeIfAbsent(K key, java.util.function.Function<? super K, ? extends V> mappingFunction)
+    {
+        Objects.requireNonNull(mappingFunction, "mappingFunction cannot be null");
+        int index = this.index(key);
+        Object cur = this.table[index];
+        if (cur == null)
+        {
+            V newValue = mappingFunction.apply(key);
+            if (newValue != null)
+            {
+                this.table[index] = UnifiedMapWithHashingStrategy.toSentinelIfNull(key);
+                this.table[index + 1] = newValue;
+                if (++this.occupied > this.maxSize)
+                {
+                    this.rehash(this.table.length);
+                }
+            }
+            return newValue;
+        }
+        if (cur != CHAINED_KEY && this.nonNullTableObjectEquals(cur, key))
+        {
+            V oldValue = (V) this.table[index + 1];
+            if (oldValue != null)
+            {
+                return oldValue;
+            }
+            V newValue = mappingFunction.apply(key);
+            if (newValue != null)
+            {
+                this.table[index + 1] = newValue;
+            }
+            return newValue;
+        }
+        return this.chainedComputeIfAbsent(key, index, mappingFunction);
+    }
+
+    private V chainedComputeIfAbsent(K key, int index, java.util.function.Function<? super K, ? extends V> mappingFunction)
+    {
+        if (this.table[index] == CHAINED_KEY)
+        {
+            Object[] chain = (Object[]) this.table[index + 1];
+            for (int i = 0; i < chain.length; i += 2)
+            {
+                if (chain[i] == null)
+                {
+                    V newValue = mappingFunction.apply(key);
+                    if (newValue != null)
+                    {
+                        chain[i] = UnifiedMapWithHashingStrategy.toSentinelIfNull(key);
+                        chain[i + 1] = newValue;
+                        if (++this.occupied > this.maxSize)
+                        {
+                            this.rehash(this.table.length);
+                        }
+                    }
+                    return newValue;
+                }
+                if (this.nonNullTableObjectEquals(chain[i], key))
+                {
+                    V oldValue = (V) chain[i + 1];
+                    if (oldValue != null)
+                    {
+                        return oldValue;
+                    }
+                    V newValue = mappingFunction.apply(key);
+                    if (newValue != null)
+                    {
+                        chain[i + 1] = newValue;
+                    }
+                    return newValue;
+                }
+            }
+            V newValue = mappingFunction.apply(key);
+            if (newValue != null)
+            {
+                Object[] newChain = new Object[chain.length + 4];
+                System.arraycopy(chain, 0, newChain, 0, chain.length);
+                this.table[index + 1] = newChain;
+                newChain[chain.length] = UnifiedMapWithHashingStrategy.toSentinelIfNull(key);
+                newChain[chain.length + 1] = newValue;
+                if (++this.occupied > this.maxSize)
+                {
+                    this.rehash(this.table.length);
+                }
+            }
+            return newValue;
+        }
+        V newValue = mappingFunction.apply(key);
+        if (newValue != null)
+        {
+            Object[] newChain = new Object[4];
+            newChain[0] = this.table[index];
+            newChain[1] = this.table[index + 1];
+            newChain[2] = UnifiedMapWithHashingStrategy.toSentinelIfNull(key);
+            newChain[3] = newValue;
+            this.table[index] = CHAINED_KEY;
+            this.table[index + 1] = newChain;
+            if (++this.occupied > this.maxSize)
+            {
+                this.rehash(this.table.length);
+            }
+        }
+        return newValue;
+    }
+
+    @Override
+    public V computeIfPresent(K key, BiFunction<? super K, ? super V, ? extends V> remappingFunction)
+    {
+        Objects.requireNonNull(remappingFunction, "remappingFunction cannot be null");
+        int index = this.index(key);
+        Object cur = this.table[index];
+        if (cur == null)
+        {
+            return null;
+        }
+        if (cur != CHAINED_KEY && this.nonNullTableObjectEquals(cur, key))
+        {
+            V oldValue = (V) this.table[index + 1];
+            if (oldValue == null)
+            {
+                return null;
+            }
+            V newValue = remappingFunction.apply(key, oldValue);
+            if (newValue == null)
+            {
+                this.table[index] = null;
+                --this.occupied;
+            }
+            else
+            {
+                this.table[index + 1] = newValue;
+            }
+            return newValue;
+        }
+        return this.chainedComputeIfPresent(key, index, remappingFunction);
+    }
+
+    private V chainedComputeIfPresent(K key, int index, BiFunction<? super K, ? super V, ? extends V> remappingFunction)
+    {
+        if (this.table[index] == CHAINED_KEY)
+        {
+            Object[] chain = (Object[]) this.table[index + 1];
+            for (int i = 0; i < chain.length; i += 2)
+            {
+                if (chain[i] == null)
+                {
+                    return null;
+                }
+                if (this.nonNullTableObjectEquals(chain[i], key))
+                {
+                    V oldValue = (V) chain[i + 1];
+                    if (oldValue == null)
+                    {
+                        return null;
+                    }
+                    V newValue = remappingFunction.apply(key, oldValue);
+                    if (newValue == null)
+                    {
+                        this.overwriteWithLastElementFromChain(chain, index, i);
+                    }
+                    else
+                    {
+                        chain[i + 1] = newValue;
+                    }
+                    return newValue;
+                }
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public V compute(K key, BiFunction<? super K, ? super V, ? extends V> remappingFunction)
+    {
+        Objects.requireNonNull(remappingFunction, "remappingFunction cannot be null");
+        int index = this.index(key);
+        Object cur = this.table[index];
+        if (cur == null)
+        {
+            V newValue = remappingFunction.apply(key, null);
+            if (newValue != null)
+            {
+                this.table[index] = UnifiedMapWithHashingStrategy.toSentinelIfNull(key);
+                this.table[index + 1] = newValue;
+                if (++this.occupied > this.maxSize)
+                {
+                    this.rehash(this.table.length);
+                }
+            }
+            return newValue;
+        }
+        if (cur != CHAINED_KEY && this.nonNullTableObjectEquals(cur, key))
+        {
+            V oldValue = (V) this.table[index + 1];
+            V newValue = remappingFunction.apply(key, oldValue);
+            if (newValue == null)
+            {
+                this.table[index] = null;
+                --this.occupied;
+            }
+            else
+            {
+                this.table[index + 1] = newValue;
+            }
+            return newValue;
+        }
+        return this.chainedCompute(key, index, remappingFunction);
+    }
+
+    private V chainedCompute(K key, int index, BiFunction<? super K, ? super V, ? extends V> remappingFunction)
+    {
+        if (this.table[index] == CHAINED_KEY)
+        {
+            Object[] chain = (Object[]) this.table[index + 1];
+            for (int i = 0; i < chain.length; i += 2)
+            {
+                if (chain[i] == null)
+                {
+                    V newValue = remappingFunction.apply(key, null);
+                    if (newValue != null)
+                    {
+                        chain[i] = UnifiedMapWithHashingStrategy.toSentinelIfNull(key);
+                        chain[i + 1] = newValue;
+                        if (++this.occupied > this.maxSize)
+                        {
+                            this.rehash(this.table.length);
+                        }
+                    }
+                    return newValue;
+                }
+                if (this.nonNullTableObjectEquals(chain[i], key))
+                {
+                    V oldValue = (V) chain[i + 1];
+                    V newValue = remappingFunction.apply(key, oldValue);
+                    if (newValue == null)
+                    {
+                        this.overwriteWithLastElementFromChain(chain, index, i);
+                    }
+                    else
+                    {
+                        chain[i + 1] = newValue;
+                    }
+                    return newValue;
+                }
+            }
+            V newValue = remappingFunction.apply(key, null);
+            if (newValue != null)
+            {
+                Object[] newChain = new Object[chain.length + 4];
+                System.arraycopy(chain, 0, newChain, 0, chain.length);
+                this.table[index + 1] = newChain;
+                newChain[chain.length] = UnifiedMapWithHashingStrategy.toSentinelIfNull(key);
+                newChain[chain.length + 1] = newValue;
+                if (++this.occupied > this.maxSize)
+                {
+                    this.rehash(this.table.length);
+                }
+            }
+            return newValue;
+        }
+        V newValue = remappingFunction.apply(key, null);
+        if (newValue != null)
+        {
+            Object[] newChain = new Object[4];
+            newChain[0] = this.table[index];
+            newChain[1] = this.table[index + 1];
+            newChain[2] = UnifiedMapWithHashingStrategy.toSentinelIfNull(key);
+            newChain[3] = newValue;
+            this.table[index] = CHAINED_KEY;
+            this.table[index + 1] = newChain;
+            if (++this.occupied > this.maxSize)
+            {
+                this.rehash(this.table.length);
+            }
+        }
+        return newValue;
+    }
+
+    @Override
     public V getIfAbsentPut(K key, Function0<? extends V> function)
     {
         int index = this.index(key);
