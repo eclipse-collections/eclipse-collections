@@ -24,6 +24,11 @@ Finally, submit a pull request.
 
 Details on [working with GitHub for Eclipse Collections](https://github.com/eclipse-collections/eclipse-collections/wiki/Working-with-GitHub) is located at the Wiki.
 
+AI Policy
+---------
+
+Please see the [AI Policy](AI_POLICY.md) for contributions that include AI generated output.
+
 Contact us
 ----------
 
