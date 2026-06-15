@@ -9,6 +9,9 @@
 ## Documentation Changes
 * Improved Javadoc for 'Sets' factory class ([#782](https://github.com/eclipse-collections/eclipse-collections/issues/782))
 
+## API Changes
+* Added category annotations package
+
 13.0.0
 ====================
 
