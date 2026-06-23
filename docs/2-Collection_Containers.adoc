@@ -1109,6 +1109,66 @@ Primitive stack implementations are similar to JCF *ArrayStack* but optimized fo
 === Primitive bags
 
 Primitive bag implementations are similar to JCF *HashBag*, but both _item_ and _count_ are primitives.
+They allow duplicate elements and provide efficient querying of the number of occurrences of each element.
+
+.Creating primitive bags
+====
+[source,java]
+----
+MutableBooleanBag booleanBag = BooleanHashBag.newBagWith(true, false, true, true, false);
+
+// or
+
+MutableBooleanBag booleanBag2 = new BooleanHashBag();
+booleanBag2.add(true);
+booleanBag2.add(false);
+booleanBag2.addOccurrences(true, 3);
+----
+
+.Iteration patterns on primitive bags
+====
+[source,java]
+----
+MutableBooleanBag bag = BooleanHashBag.newBagWith(true, false, true, true, false);
+
+// Iterate with occurrence counts
+bag.forEachWithOccurrences((item, count) ->
+    System.out.println("Item: " + item + ", Occurrences: " + count));
+
+// Lazy iteration for deferred evaluation
+LazyBooleanIterable lazy = bag.asLazy();
+MutableBooleanBag filtered = lazy.select(x -> x).toBag();
+
+// Select elements by occurrence count
+MutableIntBag intBag = IntBags.mutable.with(1, 1, 1, 2, 2, 3);
+MutableIntBag frequent = intBag.selectByOccurrences(count -> count >= 2);
+
+// Check conditions with occurrence counts
+boolean anyMatch = intBag.anySatisfyWithOccurrences((each, count) -> each == 1 && count == 3);
+
+// Statistical operations
+int sum = intBag.sum();
+int min = intBag.min();
+int max = intBag.max();
+IntSummaryStatistics stats = intBag.summaryStatistics();
+
+// Collect with occurrences
+MutableBag<IntIntPair> pairs = intBag.collectWithOccurrences((each, count) ->
+    PrimitiveTuples.pair(each, count));
+
+// Chunking for batch processing
+RichIterable<IntIterable> chunks = intBag.chunk(2);
+----
+
+.Other primitive bag types
+====
+[source,java]
+----
+MutableIntBag intBag = IntBags.mutable.with(1, 2, 3, 1, 2, 3);
+MutableLongBag longBag = LongBags.mutable.with(100L, 200L, 100L);
+MutableDoubleBag doubleBag = DoubleBags.mutable.with(1.5, 2.5, 1.5);
+MutableCharBag charBag = CharBags.mutable.with('a', 'b', 'a', 'c');
+----
 
 === Primitive Maps
 
