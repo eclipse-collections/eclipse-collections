@@ -36,11 +36,9 @@ import org.eclipse.collections.api.block.procedure.primitive.ObjectIntProcedure;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.list.ParallelListIterable;
 import org.eclipse.collections.impl.AbstractRichIterable;
-import org.eclipse.collections.impl.block.factory.Predicates;
 import org.eclipse.collections.impl.lazy.parallel.list.NonParallelListIterable;
 import org.eclipse.collections.impl.parallel.BatchIterable;
 import org.eclipse.collections.impl.parallel.ParallelIterate;
-import org.eclipse.collections.impl.utility.Iterate;
 
 /**
  * CompositeFastList behaves like a list, but is composed of at least one list.
@@ -246,7 +244,7 @@ public final class CompositeFastList<E>
     @Override
     public boolean containsAll(Collection<?> collection)
     {
-        return Iterate.allSatisfy(collection, Predicates.in(this));
+        return this.containsAllIterable(collection);
     }
 
     @Override

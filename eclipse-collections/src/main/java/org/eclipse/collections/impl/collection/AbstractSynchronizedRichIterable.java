@@ -269,7 +269,7 @@ public abstract class AbstractSynchronizedRichIterable<T> implements RichIterabl
     {
         synchronized (this.lock)
         {
-            return this.delegate.containsAll(coll);
+            return this.delegate.containsAllIterable(coll);
         }
     }
 
