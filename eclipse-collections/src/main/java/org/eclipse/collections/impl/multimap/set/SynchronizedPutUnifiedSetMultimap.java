@@ -36,7 +36,7 @@ import org.eclipse.collections.impl.utility.Iterate;
 /**
  * A Multimap that is optimized for parallel writes, but is not protected for concurrent reads.
  */
-public final class SynchronizedPutUnifiedSetMultimap<K, V>
+public class SynchronizedPutUnifiedSetMultimap<K, V>
         extends AbstractSynchronizedPutMultimap<K, V, MutableSet<V>> implements MutableSetMultimap<K, V>, Externalizable
 {
     private static final long serialVersionUID = 42L;

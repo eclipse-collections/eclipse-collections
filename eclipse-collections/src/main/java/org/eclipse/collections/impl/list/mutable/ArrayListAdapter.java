@@ -41,14 +41,14 @@ import org.eclipse.collections.impl.utility.internal.RandomAccessListIterate;
  * To create a new wrapper around an existing ArrayList instance, use the {@link #adapt(ArrayList)} factory method. To
  * create a new empty wrapper, use the {@link #newList()} or {@link #newList(int)} factory methods.
  */
-public final class ArrayListAdapter<T>
+public class ArrayListAdapter<T>
         extends AbstractListAdapter<T>
         implements RandomAccess, Serializable
 {
     private static final long serialVersionUID = 1L;
     private final ArrayList<T> delegate;
 
-    private ArrayListAdapter(ArrayList<T> newDelegate)
+    protected ArrayListAdapter(ArrayList<T> newDelegate)
     {
         if (newDelegate == null)
         {
