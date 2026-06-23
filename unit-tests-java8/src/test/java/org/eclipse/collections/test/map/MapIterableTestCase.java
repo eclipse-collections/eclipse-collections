@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import org.eclipse.collections.api.bag.MutableBag;
+import org.eclipse.collections.api.bag.Bag;
 import org.eclipse.collections.api.collection.MutableCollection;
 import org.eclipse.collections.api.factory.Bags;
 import org.eclipse.collections.api.factory.Maps;
@@ -242,11 +242,19 @@ public interface MapIterableTestCase extends RichIterableWithDuplicatesTestCase
         MapIterable<String, Integer> map = this.newWithKeysValues("Three", 3, "Two", 2, "One", 1);
         Multimap<Integer, String> result = map.flip();
 
-        MutableBag<Pair<Integer, String>> expected = Bags.mutable.with(
+        assertEquals(3, result.size());
+        assertEquals(3, result.sizeDistinct());
+
+        Bag<Pair<Integer, String>> expectedPairs = Bags.mutable.with(
                 Tuples.pair(3, "Three"),
                 Tuples.pair(2, "Two"),
                 Tuples.pair(1, "One"));
-        assertEquals(expected, result.keyValuePairsView().toBag());
+        assertIterablesEqual(expectedPairs, result.keyValuePairsView().toBag());
+
+        assertIterablesEqual(Sets.mutable.with(1, 2, 3), result.keysView().toSet());
+        assertIterablesEqual(Bags.mutable.with("Three", "Two", "One"), result.valuesView().toBag());
+
+        map.forEachKeyValue((key, value) -> assertTrue(result.containsKeyAndValue(value, key)));
     }
 
     @Test

@@ -10,7 +10,6 @@
 
 package org.eclipse.collections.impl.map.ordered.mutable;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.eclipse.collections.api.factory.map.ordered.MutableOrderedMapFactory;
@@ -25,7 +24,7 @@ public class MutableOrderedMapFactoryImpl implements MutableOrderedMapFactory
     @Override
     public <K, V> MutableOrderedMap<K, V> empty()
     {
-        return OrderedMapAdapter.adapt(new LinkedHashMap<>());
+        return new OrderedHashMap<>();
     }
 
     @Override
@@ -49,11 +48,7 @@ public class MutableOrderedMapFactoryImpl implements MutableOrderedMapFactory
     @Override
     public <K, V> MutableOrderedMap<K, V> withInitialCapacity(int capacity)
     {
-        if (capacity < 0)
-        {
-            throw new IllegalArgumentException("initial capacity cannot be less than 0");
-        }
-        return OrderedMapAdapter.adapt(new LinkedHashMap<>(capacity));
+        return new OrderedHashMap<>(capacity);
     }
 
     @Override

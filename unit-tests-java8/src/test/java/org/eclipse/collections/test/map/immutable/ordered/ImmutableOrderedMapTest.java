@@ -270,6 +270,38 @@ public class ImmutableOrderedMapTest
         assertEquals(this.newWithKeysValues(1, "1", 2, "2", 3, "3"), map);
     }
 
+    @Override
+    @Test
+    public void ReversibleIterable_detectLastIndex()
+    {
+        // TODO Support detectLastIndex for ImmutableOrderedMapAdapter.
+        assertThrows(UnsupportedOperationException.class, () -> this.newWith(3, 2, 1).detectLastIndex(each -> true));
+    }
+
+    @Override
+    @Test
+    public void OrderedIterable_forEach_from_to()
+    {
+        // TODO Support indexed traversal for ImmutableOrderedMapAdapter.
+        assertThrows(UnsupportedOperationException.class, () -> this.newWith(3, 2, 1).forEach(0, 1, each -> { }));
+    }
+
+    @Override
+    @Test
+    public void OrderedIterable_forEachWithIndex_from_to()
+    {
+        // TODO Support indexed traversal for ImmutableOrderedMapAdapter.
+        assertThrows(UnsupportedOperationException.class, () -> this.newWith(3, 2, 1).forEachWithIndex(0, 1, (each, index) -> { }));
+    }
+
+    @Override
+    @Test
+    public void ReversibleIterable_reverseForEach()
+    {
+        // TODO Support reverseForEach for ImmutableOrderedMapAdapter (depends on forEach(int, int)).
+        assertThrows(UnsupportedOperationException.class, () -> this.newWith(3, 2, 1).reverseForEach(each -> { }));
+    }
+
     @Nested
     public class KeySetView implements UnmodifiableMapKeySetTestCase
     {
