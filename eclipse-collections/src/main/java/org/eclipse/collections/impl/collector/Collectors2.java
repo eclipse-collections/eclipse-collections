@@ -1461,14 +1461,19 @@ public final class Collectors2
         Function2<MutableObjectLongMap<V>, T, MutableObjectLongMap<V>> accumulator =
                 PrimitiveFunctions.sumByIntFunction(groupBy, function);
         return Collector.of(
-                ObjectLongMaps.mutable::empty,
+                () ->
+                {
+                    MutableObjectLongMap<V> map = ObjectLongMaps.mutable.empty();
+                    return map.asSynchronized();
+                },
                 accumulator::value,
                 (map1, map2) ->
                 {
                     map2.forEachKeyValue(map1::addToValue);
                     return map1;
                 },
-                Collector.Characteristics.UNORDERED);
+                Collector.Characteristics.UNORDERED,
+                Collector.Characteristics.CONCURRENT);
     }
 
     /**
@@ -1490,15 +1495,19 @@ public final class Collectors2
     {
         Function2<MutableObjectLongMap<V>, T, MutableObjectLongMap<V>> accumulator =
                 PrimitiveFunctions.sumByLongFunction(groupBy, function);
-        return Collector.of(
-                ObjectLongMaps.mutable::empty,
+        return Collector.of(() ->
+                {
+                    MutableObjectLongMap<V> map = ObjectLongMaps.mutable.empty();
+                    return map.asSynchronized();
+                },
                 accumulator::value,
                 (map1, map2) ->
                 {
                     map2.forEachKeyValue(map1::addToValue);
                     return map1;
                 },
-                Collector.Characteristics.UNORDERED);
+                Collector.Characteristics.UNORDERED
+                , Collector.Characteristics.CONCURRENT);
     }
 
     /**
@@ -1521,14 +1530,28 @@ public final class Collectors2
         Function2<MutableObjectDoubleMap<V>, T, MutableObjectDoubleMap<V>> accumulator =
                 PrimitiveFunctions.sumByFloatFunction(groupBy, function);
         return Collector.of(
-                ObjectDoubleMaps.mutable::empty,
-                accumulator::value,
+                () ->
+                {
+                    MutableObjectDoubleMap<V> map = ObjectDoubleMaps.mutable.empty();
+                    return map.asSynchronized();
+                },
+                (map, each) ->
+                {
+                    synchronized (map)
+                    {
+                        accumulator.value(map, each);
+                    }
+                },
                 (map1, map2) ->
                 {
-                    map2.forEachKeyValue(map1::addToValue);
+                    synchronized (map1)
+                    {
+                        map2.forEachKeyValue(map1::addToValue);
+                    }
                     return map1;
                 },
-                Collector.Characteristics.UNORDERED);
+                Collector.Characteristics.UNORDERED,
+                Collector.Characteristics.CONCURRENT);
     }
 
     /**
@@ -1551,14 +1574,28 @@ public final class Collectors2
         Function2<MutableObjectDoubleMap<V>, T, MutableObjectDoubleMap<V>> accumulator =
                 PrimitiveFunctions.sumByDoubleFunction(groupBy, function);
         return Collector.of(
-                ObjectDoubleMaps.mutable::empty,
-                accumulator::value,
+                () ->
+                {
+                    MutableObjectDoubleMap<V> map = ObjectDoubleMaps.mutable.empty();
+                    return map.asSynchronized();
+                },
+                (map, each) ->
+                {
+                    synchronized (map)
+                    {
+                        accumulator.value(map, each);
+                    }
+                },
                 (map1, map2) ->
                 {
-                    map2.forEachKeyValue(map1::addToValue);
+                    synchronized (map1)
+                    {
+                        map2.forEachKeyValue(map1::addToValue);
+                    }
                     return map1;
                 },
-                Collector.Characteristics.UNORDERED);
+                Collector.Characteristics.UNORDERED,
+                Collector.Characteristics.CONCURRENT);
     }
 
     /**
@@ -1581,24 +1618,35 @@ public final class Collectors2
             Function<? super T, BigDecimal> function)
     {
         return Collector.of(
-                Maps.mutable::empty,
+                () ->
+                {
+                    MutableMap<V, BigDecimal> map = Maps.mutable.empty();
+                    return map.asSynchronized();
+                },
                 (map, each) ->
                 {
-                    V key = groupBy.apply(each);
-                    BigDecimal oldValue = map.get(key);
-                    BigDecimal valueToAdd = function.valueOf(each);
-                    map.put(key, oldValue == null ? valueToAdd : oldValue.add(valueToAdd));
+                    synchronized (map)
+                    {
+                        V key = groupBy.apply(each);
+                        BigDecimal oldValue = map.get(key);
+                        BigDecimal valueToAdd = function.valueOf(each);
+                        map.put(key, oldValue == null ? valueToAdd : oldValue.add(valueToAdd));
+                    }
                 },
                 (map1, map2) ->
                 {
-                    map2.forEachKeyValue((key, value) ->
+                    synchronized (map1)
                     {
-                        BigDecimal oldValue = map1.get(key);
-                        map1.put(key, oldValue == null ? value : oldValue.add(value));
-                    });
+                        map2.forEachKeyValue((key, value) ->
+                        {
+                            BigDecimal oldValue = map1.get(key);
+                            map1.put(key, oldValue == null ? value : oldValue.add(value));
+                        });
+                    }
                     return map1;
                 },
-                Collector.Characteristics.UNORDERED);
+                Collector.Characteristics.UNORDERED,
+                Collector.Characteristics.CONCURRENT);
     }
 
     /**
@@ -1621,24 +1669,35 @@ public final class Collectors2
             Function<? super T, BigInteger> function)
     {
         return Collector.of(
-                Maps.mutable::empty,
+                () ->
+                {
+                    MutableMap<V, BigInteger> map = Maps.mutable.empty();
+                    return map.asSynchronized();
+                },
                 (map, each) ->
                 {
-                    V key = groupBy.apply(each);
-                    BigInteger oldValue = map.get(key);
-                    BigInteger valueToAdd = function.valueOf(each);
-                    map.put(key, oldValue == null ? valueToAdd : oldValue.add(valueToAdd));
+                    synchronized (map)
+                    {
+                        V key = groupBy.apply(each);
+                        BigInteger oldValue = map.get(key);
+                        BigInteger valueToAdd = function.valueOf(each);
+                        map.put(key, oldValue == null ? valueToAdd : oldValue.add(valueToAdd));
+                    }
                 },
                 (map1, map2) ->
                 {
-                    map2.forEachKeyValue((key, value) ->
+                    synchronized (map1)
                     {
-                        BigInteger oldValue = map1.get(key);
-                        map1.put(key, oldValue == null ? value : oldValue.add(value));
-                    });
+                        map2.forEachKeyValue((key, value) ->
+                        {
+                            BigInteger oldValue = map1.get(key);
+                            map1.put(key, oldValue == null ? value : oldValue.add(value));
+                        });
+                    }
                     return map1;
                 },
-                Collector.Characteristics.UNORDERED);
+                Collector.Characteristics.UNORDERED,
+                Collector.Characteristics.CONCURRENT);
     }
 
     /**
