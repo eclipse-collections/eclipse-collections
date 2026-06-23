@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Goldman Sachs.
+ * Copyright (c) 2026 Goldman Sachs and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -13,10 +13,13 @@
  * <p>
  *     All the iteration patterns in this package are internal. It is used by iterators specialized for various collections.
  * <p>
- *     This package contains 10 Iteration implementations:
+ *     This package contains the following internal utilities:
  * <ul>
  *     <li>
  *          {@link org.eclipse.collections.impl.utility.internal.DefaultSpeciesNewStrategy} - creates a new instance of a collection based on the class type of collection.
+ *     </li>
+ *     <li>
+ *          {@link org.eclipse.collections.impl.utility.internal.EnumUniverse} - a cached, GC-aware accessor for the universe (array of all constants) of an enum type.
  *     </li>
  *     <li>
  *          {@link org.eclipse.collections.impl.utility.internal.InternalArrayIterate} -  a final class with static iterator methods.
