@@ -26,7 +26,7 @@
         <!-- project defaults -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <tycho-version>4.0.13</tycho-version>
+        <tycho-version>5.0.2</tycho-version>
     </properties>
 
     <build>
