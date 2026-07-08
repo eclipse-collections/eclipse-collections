@@ -24,6 +24,18 @@ public interface ImmutableSortedMapIterableTestCase extends SortedMapIterableTes
     <K, V> ImmutableSortedMap<K, V> newWithKeysValues(Object... elements);
 
     @Override
+    default boolean allowsPut()
+    {
+        return false;
+    }
+
+    @Override
+    default boolean supportsNonComparableKeys()
+    {
+        return false;
+    }
+
+    @Override
     @Test
     default void Iterable_remove()
     {

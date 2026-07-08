@@ -465,12 +465,6 @@ public class TreeSortedMap<K, V>
     }
 
     @Override
-    public String toString()
-    {
-        return this.treeMap.toString();
-    }
-
-    @Override
     public void writeExternal(ObjectOutput out) throws IOException
     {
         out.writeObject(this.comparator());

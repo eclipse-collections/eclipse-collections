@@ -28,6 +28,12 @@ public interface UnmodifiableMutableMapIterableTestCase
         extends MutableMapIterableTestCase, FixedSizeIterableTestCase
 {
     @Override
+    default boolean allowsPut()
+    {
+        return false;
+    }
+
+    @Override
     @Test
     default void MutableMapIterable_removeKey()
     {

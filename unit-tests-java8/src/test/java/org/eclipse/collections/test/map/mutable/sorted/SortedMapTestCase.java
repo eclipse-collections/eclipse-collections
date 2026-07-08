@@ -49,6 +49,12 @@ public interface SortedMapTestCase extends MapTestCase
         return false;
     }
 
+    @Override
+    default boolean supportsNonComparableKeys()
+    {
+        return false;
+    }
+
     @Test
     default void SortedMap_comparator_isOneOfExpected()
     {

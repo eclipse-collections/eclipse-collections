@@ -28,6 +28,18 @@ public interface UnmodifiableMutableSortedMapTestCase extends UnmodifiableMutabl
     }
 
     @Override
+    default boolean allowsPut()
+    {
+        return false;
+    }
+
+    @Override
+    default boolean supportsNonComparableKeys()
+    {
+        return false;
+    }
+
+    @Override
     @Test
     default void Iterable_remove()
     {

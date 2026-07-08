@@ -1492,33 +1492,6 @@ public class ConcurrentHashMapUnsafe<K, V>
     }
 
     @Override
-    public String toString()
-    {
-        if (this.isEmpty())
-        {
-            return "{}";
-        }
-        Iterator<Map.Entry<K, V>> iterator = this.entrySet().iterator();
-
-        StringBuilder sb = new StringBuilder();
-        sb.append('{');
-        while (true)
-        {
-            Map.Entry<K, V> e = iterator.next();
-            K key = e.getKey();
-            V value = e.getValue();
-            sb.append(key == this ? "(this Map)" : key);
-            sb.append('=');
-            sb.append(value == this ? "(this Map)" : value);
-            if (!iterator.hasNext())
-            {
-                return sb.append('}').toString();
-            }
-            sb.append(", ");
-        }
-    }
-
-    @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException
     {
         int size = in.readInt();

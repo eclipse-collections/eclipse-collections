@@ -75,6 +75,16 @@ public interface MapIterableTestCase extends RichIterableWithDuplicatesTestCase
         return true;
     }
 
+    default boolean allowsPut()
+    {
+        return true;
+    }
+
+    default boolean supportsNonComparableKeys()
+    {
+        return true;
+    }
+
     @Test
     default void serialization()
     {
@@ -106,6 +116,34 @@ public interface MapIterableTestCase extends RichIterableWithDuplicatesTestCase
         assertEquals(
                 "[10:4, 9:4, 8:4, 7:4, 6:3, 5:3, 4:3, 3:2, 2:2, 1:1]",
                 this.newWith(4, 4, 4, 4, 3, 3, 3, 2, 2, 1).keyValuesView().toString());
+
+        if (this.allowsPut() && this.supportsNonComparableKeys())
+        {
+            MapIterable<Object, Object> selfKey = this.newWithKeysValues();
+            ((Map<Object, Object>) selfKey).put(selfKey, "value");
+            assertEquals("{(this Map)=value}", selfKey.toString());
+
+            MapIterable<Object, Object> selfValue = this.newWithKeysValues();
+            ((Map<Object, Object>) selfValue).put("key", selfValue);
+            assertEquals("{key=(this Map)}", selfValue.toString());
+        }
+        else if (!this.allowsPut())
+        {
+            MapIterable<Object, Object> selfKey = this.newWithKeysValues();
+            assertThrows(UnsupportedOperationException.class, () -> ((Map<Object, Object>) selfKey).put(selfKey, "value"));
+
+            MapIterable<Object, Object> selfValue = this.newWithKeysValues();
+            assertThrows(UnsupportedOperationException.class, () -> ((Map<Object, Object>) selfValue).put("key", selfValue));
+        }
+        else
+        {
+            MapIterable<Object, Object> selfKey = this.newWithKeysValues();
+            assertThrows(ClassCastException.class, () -> ((Map<Object, Object>) selfKey).put(selfKey, "value"));
+
+            MapIterable<Object, Object> selfValue = this.newWithKeysValues();
+            ((Map<Object, Object>) selfValue).put("key", selfValue);
+            assertEquals("{key=(this Map)}", selfValue.toString());
+        }
     }
 
     @Override

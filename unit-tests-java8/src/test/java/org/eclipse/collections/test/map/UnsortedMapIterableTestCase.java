@@ -10,6 +10,8 @@
 
 package org.eclipse.collections.test.map;
 
+import java.util.Map;
+
 import org.eclipse.collections.api.RichIterable;
 import org.eclipse.collections.api.bag.MutableBag;
 import org.eclipse.collections.api.bag.UnsortedBag;
@@ -25,6 +27,8 @@ import org.junit.jupiter.api.Test;
 import static org.eclipse.collections.test.IterableTestCase.assertIterablesEqual;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.isOneOf;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public interface UnsortedMapIterableTestCase
         extends MapIterableTestCase, UnorderedIterableTestCase, TransformsToBagTrait
@@ -58,6 +62,34 @@ public interface UnsortedMapIterableTestCase
         assertThat(map.valuesView().toString(), isOneOf("[1, 2]", "[2, 1]"));
         assertThat(map.keyValuesView().toString(), isOneOf("[One:1, Two:2]", "[Two:2, One:1]"));
         assertThat(map.asLazy().toString(), isOneOf("[1, 2]", "[2, 1]"));
+
+        if (this.allowsPut() && this.supportsNonComparableKeys())
+        {
+            MapIterable<Object, Object> selfKey = this.newWithKeysValues();
+            ((Map<Object, Object>) selfKey).put(selfKey, "value");
+            assertEquals("{(this Map)=value}", selfKey.toString());
+
+            MapIterable<Object, Object> selfValue = this.newWithKeysValues();
+            ((Map<Object, Object>) selfValue).put("key", selfValue);
+            assertEquals("{key=(this Map)}", selfValue.toString());
+        }
+        else if (!this.allowsPut())
+        {
+            MapIterable<Object, Object> selfKey = this.newWithKeysValues();
+            assertThrows(UnsupportedOperationException.class, () -> ((Map<Object, Object>) selfKey).put(selfKey, "value"));
+
+            MapIterable<Object, Object> selfValue = this.newWithKeysValues();
+            assertThrows(UnsupportedOperationException.class, () -> ((Map<Object, Object>) selfValue).put("key", selfValue));
+        }
+        else
+        {
+            MapIterable<Object, Object> selfKey = this.newWithKeysValues();
+            assertThrows(ClassCastException.class, () -> ((Map<Object, Object>) selfKey).put(selfKey, "value"));
+
+            MapIterable<Object, Object> selfValue = this.newWithKeysValues();
+            ((Map<Object, Object>) selfValue).put("key", selfValue);
+            assertEquals("{key=(this Map)}", selfValue.toString());
+        }
     }
 
     @Override
