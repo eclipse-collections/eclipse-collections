@@ -10,6 +10,7 @@
 
 package org.eclipse.collections.impl.collection.mutable;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -84,6 +85,7 @@ import org.eclipse.collections.api.set.sorted.MutableSortedSet;
 import org.eclipse.collections.api.tuple.Pair;
 import org.eclipse.collections.api.tuple.Twin;
 import org.eclipse.collections.impl.block.factory.PrimitiveFunctions;
+import org.eclipse.collections.impl.block.procedure.AppendStringWithSelfProcedure;
 import org.eclipse.collections.impl.block.procedure.MutatingAggregationProcedure;
 import org.eclipse.collections.impl.utility.LazyIterate;
 
@@ -1327,37 +1329,27 @@ public abstract class AbstractMultiReaderMutableCollection<T> implements Mutable
     @Override
     public String toString()
     {
-        try (LockWrapper wrapper = this.lockWrapper.acquireReadLock())
-        {
-            return this.getDelegate().toString();
-        }
+        return this.makeString("[", ", ", "]");
     }
 
     @Override
     public String makeString()
     {
-        try (LockWrapper wrapper = this.lockWrapper.acquireReadLock())
-        {
-            return this.getDelegate().makeString();
-        }
+        return this.makeString(", ");
     }
 
     @Override
     public String makeString(String separator)
     {
-        try (LockWrapper wrapper = this.lockWrapper.acquireReadLock())
-        {
-            return this.getDelegate().makeString(separator);
-        }
+        return this.makeString("", separator, "");
     }
 
     @Override
     public String makeString(String start, String separator, String end)
     {
-        try (LockWrapper wrapper = this.lockWrapper.acquireReadLock())
-        {
-            return this.getDelegate().makeString(start, separator, end);
-        }
+        Appendable stringBuilder = new StringBuilder();
+        this.appendString(stringBuilder, start, separator, end);
+        return stringBuilder.toString();
     }
 
     @Override
@@ -1372,19 +1364,13 @@ public abstract class AbstractMultiReaderMutableCollection<T> implements Mutable
     @Override
     public void appendString(Appendable appendable)
     {
-        try (LockWrapper wrapper = this.lockWrapper.acquireReadLock())
-        {
-            this.getDelegate().appendString(appendable);
-        }
+        this.appendString(appendable, "", ", ", "");
     }
 
     @Override
     public void appendString(Appendable appendable, String separator)
     {
-        try (LockWrapper wrapper = this.lockWrapper.acquireReadLock())
-        {
-            this.getDelegate().appendString(appendable, separator);
-        }
+        this.appendString(appendable, "", separator, "");
     }
 
     @Override
@@ -1392,7 +1378,18 @@ public abstract class AbstractMultiReaderMutableCollection<T> implements Mutable
     {
         try (LockWrapper wrapper = this.lockWrapper.acquireReadLock())
         {
-            this.getDelegate().appendString(appendable, start, separator, end);
+            Procedure<T> appendStringProcedure =
+                    new AppendStringWithSelfProcedure<>(appendable, separator, this, "(this Collection)");
+            try
+            {
+                appendable.append(start);
+                this.getDelegate().forEach(appendStringProcedure);
+                appendable.append(end);
+            }
+            catch (IOException e)
+            {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -2235,43 +2232,56 @@ public abstract class AbstractMultiReaderMutableCollection<T> implements Mutable
         @Override
         public String toString()
         {
-            return this.delegate.toString();
+            return this.makeString("[", ", ", "]");
         }
 
         @Override
         public String makeString()
         {
-            return this.delegate.makeString();
+            return this.makeString(", ");
         }
 
         @Override
         public String makeString(String separator)
         {
-            return this.delegate.makeString(separator);
+            return this.makeString("", separator, "");
         }
 
         @Override
         public String makeString(String start, String separator, String end)
         {
-            return this.delegate.makeString(start, separator, end);
+            Appendable stringBuilder = new StringBuilder();
+            this.appendString(stringBuilder, start, separator, end);
+            return stringBuilder.toString();
         }
 
         @Override
         public void appendString(Appendable appendable)
         {
-            this.delegate.appendString(appendable);
+            this.appendString(appendable, "", ", ", "");
         }
 
         @Override
         public void appendString(Appendable appendable, String separator)
         {
-            this.delegate.appendString(appendable, separator);
+            this.appendString(appendable, "", separator, "");
         }
 
         @Override
         public void appendString(Appendable appendable, String start, String separator, String end)
         {
-            this.delegate.appendString(appendable, start, separator, end);
+            Procedure<T> appendStringProcedure =
+                    new AppendStringWithSelfProcedure<>(appendable, separator, this, "(this Collection)");
+            try
+            {
+                appendable.append(start);
+                this.delegate.forEach(appendStringProcedure);
+                appendable.append(end);
+            }
+            catch (IOException e)
+            {
+                throw new RuntimeException(e);
+            }
         }
 
         @Override

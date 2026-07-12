@@ -56,4 +56,24 @@ public interface MutableStackTestCase extends StackIterableTestCase
         assertEquals(Integer.valueOf(3), mutableStack.pop());
         assertThrows(EmptyStackException.class, mutableStack::pop);
     }
+
+    @Override
+    @Test
+    default void RichIterable_makeString_appendString()
+    {
+        StackIterableTestCase.super.RichIterable_makeString_appendString();
+
+        MutableStack<Object> stack = this.newWith();
+        stack.push(stack);
+        String expected = "(this Collection)";
+
+        assertEquals("[" + expected + "]", stack.toString());
+        assertEquals(expected, stack.makeString());
+        assertEquals(expected, stack.makeString("/"));
+        assertEquals("[" + expected + "]", stack.makeString("[", "/", "]"));
+
+        StringBuilder builder = new StringBuilder();
+        stack.appendString(builder, "[", "/", "]");
+        assertEquals("[" + expected + "]", builder.toString());
+    }
 }

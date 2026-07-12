@@ -51,11 +51,10 @@ public class SetAdapterTest extends AbstractMutableSetTestCase
     {
         MutableCollection<Object> collection = this.newWith(1);
         collection.add(collection);
-        String simpleName = collection.getClass().getSimpleName();
         String string = collection.toString();
         assertTrue(
-                ("[1, (this " + simpleName + ")]").equals(string)
-                        || ("[(this " + simpleName + "), 1]").equals(string));
+                "[1, (this Collection)]".equals(string)
+                        || "[(this Collection), 1]".equals(string));
     }
 
     @Override
