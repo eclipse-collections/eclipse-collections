@@ -738,6 +738,10 @@ abstract class AbstractMutableBiMap<K, V> extends AbstractBiMap<K, V> implements
         @Override
         public boolean equals(Object obj)
         {
+            if (obj == this)
+            {
+                return true;
+            }
             return AbstractMutableBiMap.this.delegate.keySet().equals(obj);
         }
 
@@ -991,6 +995,10 @@ abstract class AbstractMutableBiMap<K, V> extends AbstractBiMap<K, V> implements
         @Override
         public boolean equals(Object obj)
         {
+            if (obj == this)
+            {
+                return true;
+            }
             if (obj instanceof Set<?> other)
             {
                 if (other.size() == this.size())

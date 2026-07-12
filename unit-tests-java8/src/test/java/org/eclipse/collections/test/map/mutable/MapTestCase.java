@@ -101,6 +101,30 @@ public interface MapTestCase
     }
 
     @Test
+    default void Object_equalsAndHashCode()
+    {
+        if (!this.allowsPut())
+        {
+            return;
+        }
+
+        if (this.supportsNonComparableKeys())
+        {
+            Map<Object, Object> selfKey = this.newWithKeysValues();
+            selfKey.put(selfKey, "value");
+
+            assertEquals(selfKey, selfKey);
+            assertThrows(StackOverflowError.class, selfKey::hashCode);
+        }
+
+        Map<Object, Object> selfValue = this.newWithKeysValues();
+        selfValue.put("key", selfValue);
+
+        assertEquals(selfValue, selfValue);
+        assertThrows(StackOverflowError.class, selfValue::hashCode);
+    }
+
+    @Test
     default void Map_clear()
     {
         Map<Object, String> map = this.newWith("Three", "Two", "One");

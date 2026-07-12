@@ -183,6 +183,10 @@ public abstract class AbstractListAdapter<T>
     @Override
     public boolean equals(Object o)
     {
+        if (o == this)
+        {
+            return true;
+        }
         return this.getDelegate().equals(o);
     }
 

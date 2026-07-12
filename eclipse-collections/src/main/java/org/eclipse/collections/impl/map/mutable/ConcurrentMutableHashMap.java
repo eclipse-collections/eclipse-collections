@@ -348,6 +348,10 @@ public final class ConcurrentMutableHashMap<K, V>
     @Override
     public boolean equals(Object o)
     {
+        if (o == this)
+        {
+            return true;
+        }
         return this.delegate.equals(o);
     }
 

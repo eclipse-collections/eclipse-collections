@@ -10,7 +10,14 @@
 
 package org.eclipse.collections.test.map;
 
+import java.util.ArrayList;
+import java.util.Set;
+
 import org.eclipse.collections.test.set.SetTestCase;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public interface MapKeySetTestCase extends SetTestCase
 {
@@ -18,5 +25,32 @@ public interface MapKeySetTestCase extends SetTestCase
     default boolean allowsAdd()
     {
         return false;
+    }
+
+    @Override
+    @Test
+    default void Object_equalsAndHashCode()
+    {
+        SetTestCase.super.Object_equalsAndHashCode();
+
+        RecursiveComparableList recursiveList = new RecursiveComparableList();
+        Set<RecursiveComparableList> set = this.newWith(recursiveList);
+        recursiveList.add(recursiveList);
+
+        assertEquals(set, set);
+        assertThrows(StackOverflowError.class, set::hashCode);
+    }
+
+    final class RecursiveComparableList
+            extends ArrayList<Object>
+            implements Comparable<RecursiveComparableList>
+    {
+        private static final long serialVersionUID = 1L;
+
+        @Override
+        public int compareTo(RecursiveComparableList other)
+        {
+            return 0;
+        }
     }
 }

@@ -24,6 +24,14 @@ public interface MutableSetTestCase extends SetTestCase, UnsortedSetIterableTest
     <T> MutableSet<T> newWith(T... elements);
 
     @Override
+    @Test
+    default void RichIterable_makeString_appendString()
+    {
+        UnsortedSetIterableTestCase.super.RichIterable_makeString_appendString();
+        MutableCollectionUniqueTestCase.super.RichIterable_makeString_appendString();
+    }
+
+    @Override
     default boolean allowsDuplicates()
     {
         return false;

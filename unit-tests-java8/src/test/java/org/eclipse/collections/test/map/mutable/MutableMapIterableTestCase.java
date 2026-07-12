@@ -79,6 +79,14 @@ public interface MutableMapIterableTestCase extends MapIterableTestCase, MapTest
 
     @Override
     @Test
+    default void Object_equalsAndHashCode()
+    {
+        MapIterableTestCase.super.Object_equalsAndHashCode();
+        MapTestCase.super.Object_equalsAndHashCode();
+    }
+
+    @Override
+    @Test
     default void Iterable_remove()
     {
         MutableMapIterable<Object, Integer> iterable = this.newWith(3, 3, 3, 2, 2, 1);

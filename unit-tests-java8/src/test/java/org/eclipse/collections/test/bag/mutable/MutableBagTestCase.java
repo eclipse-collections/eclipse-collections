@@ -14,9 +14,18 @@ import org.eclipse.collections.api.bag.MutableBag;
 import org.eclipse.collections.test.MutableUnorderedIterableTestCase;
 import org.eclipse.collections.test.bag.UnsortedBagTestCase;
 import org.eclipse.collections.test.bag.mutable.sorted.MutableBagIterableTestCase;
+import org.junit.jupiter.api.Test;
 
 public interface MutableBagTestCase extends UnsortedBagTestCase, MutableUnorderedIterableTestCase, MutableBagIterableTestCase
 {
     @Override
     <T> MutableBag<T> newWith(T... elements);
+
+    @Override
+    @Test
+    default void RichIterable_makeString_appendString()
+    {
+        UnsortedBagTestCase.super.RichIterable_makeString_appendString();
+        MutableBagIterableTestCase.super.RichIterable_makeString_appendString();
+    }
 }

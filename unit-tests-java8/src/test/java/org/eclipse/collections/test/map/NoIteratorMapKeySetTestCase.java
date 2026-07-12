@@ -34,6 +34,8 @@ public interface NoIteratorMapKeySetTestCase extends MapKeySetTestCase
     @Test
     default void Object_equalsAndHashCode()
     {
+        MapKeySetTestCase.super.Object_equalsAndHashCode();
+
         AssertionError error = assertThrows(
                 AssertionError.class,
                 () -> this.newWith(3, 2, 1).equals(this.newWith(3, 2, 1)));

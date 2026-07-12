@@ -103,6 +103,14 @@ public class ImmutableOrderedMapTest
 
     @Override
     @Test
+    public void Object_equalsAndHashCode()
+    {
+        OrderedMapIterableTestCase.super.Object_equalsAndHashCode();
+        MapTestCase.super.Object_equalsAndHashCode();
+    }
+
+    @Override
+    @Test
     public void Iterable_remove()
     {
         FixedSizeIterableTestCase.super.Iterable_remove();

@@ -52,4 +52,11 @@ public interface UnmodifiableMutableSortedMapTestCase extends UnmodifiableMutabl
     {
         MutableSortedMapIterableTestCase.super.Iterable_toString();
     }
+
+    @Override
+    @Test
+    default void Object_equalsAndHashCode()
+    {
+        MutableSortedMapIterableTestCase.super.Object_equalsAndHashCode();
+    }
 }

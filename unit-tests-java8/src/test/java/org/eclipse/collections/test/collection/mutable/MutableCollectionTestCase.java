@@ -261,9 +261,12 @@ public interface MutableCollectionTestCase extends CollectionTestCase, RichItera
         assertEquals(Integer.valueOf(81), collection.injectIntoWith(1, (a, b, c) -> a + b + c, 5));
     }
 
+    @Override
     @Test
-    default void MutableCollection_toStringWithSelfReference()
+    default void Object_equalsAndHashCode()
     {
+        CollectionTestCase.super.Object_equalsAndHashCode();
+
         if (!this.allowsAdd() || !this.supportsNonComparableElements())
         {
             return;
@@ -271,11 +274,14 @@ public interface MutableCollectionTestCase extends CollectionTestCase, RichItera
 
         MutableCollection<Object> collection = this.newWith();
         collection.add(collection);
-        assertEquals("[(this Collection)]", collection.toString());
+
+        assertEquals(collection, collection);
+        assertThrows(StackOverflowError.class, collection::hashCode);
     }
 
+    @Override
     @Test
-    default void MutableCollection_makeStringWithSelfReference()
+    default void RichIterable_makeString_appendString()
     {
         RichIterableTestCase.super.RichIterable_makeString_appendString();
 

@@ -226,6 +226,10 @@ public class TreeSortedMap<K, V>
     @Override
     public boolean equals(Object o)
     {
+        if (o == this)
+        {
+            return true;
+        }
         return this.treeMap.equals(o);
     }
 
