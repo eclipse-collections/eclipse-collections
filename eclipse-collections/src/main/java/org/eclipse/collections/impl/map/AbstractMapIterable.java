@@ -10,6 +10,7 @@
 
 package org.eclipse.collections.impl.map;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.Optional;
 
@@ -24,6 +25,7 @@ import org.eclipse.collections.api.block.procedure.Procedure2;
 import org.eclipse.collections.api.block.procedure.primitive.ObjectIntProcedure;
 import org.eclipse.collections.api.map.MapIterable;
 import org.eclipse.collections.impl.AbstractRichIterable;
+import org.eclipse.collections.impl.block.procedure.AppendStringWithSelfProcedure;
 import org.eclipse.collections.impl.block.procedure.MapIterableToStringProcedure;
 
 public abstract class AbstractMapIterable<K, V> extends AbstractRichIterable<V> implements MapIterable<K, V>
@@ -50,6 +52,22 @@ public abstract class AbstractMapIterable<K, V> extends AbstractRichIterable<V> 
         MapIterableToStringProcedure<K, V> procedure = new MapIterableToStringProcedure<>(this);
         this.forEachKeyValue(procedure);
         return procedure.getString();
+    }
+
+    @Override
+    public void appendString(Appendable appendable, String start, String separator, String end)
+    {
+        Procedure<V> procedure = new AppendStringWithSelfProcedure<>(appendable, separator, this, "(this Map)");
+        try
+        {
+            appendable.append(start);
+            this.forEachValue(procedure);
+            appendable.append(end);
+        }
+        catch (IOException e)
+        {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

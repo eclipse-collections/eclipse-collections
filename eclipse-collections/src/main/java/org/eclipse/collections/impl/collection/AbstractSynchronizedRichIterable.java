@@ -1218,56 +1218,11 @@ public abstract class AbstractSynchronizedRichIterable<T> implements RichIterabl
     }
 
     @Override
-    public String makeString()
-    {
-        synchronized (this.lock)
-        {
-            return this.delegate.makeString();
-        }
-    }
-
-    @Override
-    public String makeString(String separator)
-    {
-        synchronized (this.lock)
-        {
-            return this.delegate.makeString(separator);
-        }
-    }
-
-    @Override
-    public String makeString(String start, String separator, String end)
-    {
-        synchronized (this.lock)
-        {
-            return this.delegate.makeString(start, separator, end);
-        }
-    }
-
-    @Override
     public String makeString(Function<? super T, Object> function, String start, String separator, String end)
     {
         synchronized (this.lock)
         {
             return this.delegate.makeString(function, start, separator, end);
-        }
-    }
-
-    @Override
-    public void appendString(Appendable appendable)
-    {
-        synchronized (this.lock)
-        {
-            this.delegate.appendString(appendable);
-        }
-    }
-
-    @Override
-    public void appendString(Appendable appendable, String separator)
-    {
-        synchronized (this.lock)
-        {
-            this.delegate.appendString(appendable, separator);
         }
     }
 
