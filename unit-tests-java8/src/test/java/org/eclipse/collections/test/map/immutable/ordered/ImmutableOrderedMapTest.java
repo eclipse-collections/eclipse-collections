@@ -70,6 +70,12 @@ public class ImmutableOrderedMapTest
     }
 
     @Override
+    public boolean allowsPut()
+    {
+        return false;
+    }
+
+    @Override
     public boolean supportsNullKeys()
     {
         return true;
@@ -77,6 +83,12 @@ public class ImmutableOrderedMapTest
 
     @Override
     public boolean supportsNullValues()
+    {
+        return true;
+    }
+
+    @Override
+    public boolean supportsNonComparableKeys()
     {
         return true;
     }

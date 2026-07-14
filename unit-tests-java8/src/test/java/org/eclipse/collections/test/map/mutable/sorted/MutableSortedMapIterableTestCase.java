@@ -36,6 +36,18 @@ public interface MutableSortedMapIterableTestCase extends SortedMapIterableTestC
     }
 
     @Override
+    default boolean allowsPut()
+    {
+        return true;
+    }
+
+    @Override
+    default boolean supportsNonComparableKeys()
+    {
+        return false;
+    }
+
+    @Override
     @Test
     default void Iterable_toString()
     {

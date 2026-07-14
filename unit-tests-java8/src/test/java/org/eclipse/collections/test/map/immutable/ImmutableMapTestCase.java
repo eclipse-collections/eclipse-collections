@@ -24,6 +24,12 @@ public interface ImmutableMapTestCase extends UnsortedMapIterableTestCase, Immut
     <K, V> ImmutableMap<K, V> newWithKeysValues(Object... elements);
 
     @Override
+    default boolean allowsPut()
+    {
+        return false;
+    }
+
+    @Override
     @Test
     default void Iterable_remove()
     {

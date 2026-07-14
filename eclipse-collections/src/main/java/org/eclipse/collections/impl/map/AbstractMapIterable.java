@@ -24,6 +24,7 @@ import org.eclipse.collections.api.block.procedure.Procedure2;
 import org.eclipse.collections.api.block.procedure.primitive.ObjectIntProcedure;
 import org.eclipse.collections.api.map.MapIterable;
 import org.eclipse.collections.impl.AbstractRichIterable;
+import org.eclipse.collections.impl.block.procedure.MapIterableToStringProcedure;
 
 public abstract class AbstractMapIterable<K, V> extends AbstractRichIterable<V> implements MapIterable<K, V>
 {
@@ -41,6 +42,14 @@ public abstract class AbstractMapIterable<K, V> extends AbstractRichIterable<V> 
 
         V oValue = map.get(key);
         return oValue == value || oValue != null && oValue.equals(value);
+    }
+
+    @Override
+    public String toString()
+    {
+        MapIterableToStringProcedure<K, V> procedure = new MapIterableToStringProcedure<>(this);
+        this.forEachKeyValue(procedure);
+        return procedure.getString();
     }
 
     @Override

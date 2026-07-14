@@ -111,12 +111,6 @@ public final class ConcurrentMutableHashMap<K, V>
     }
 
     @Override
-    public String toString()
-    {
-        return this.delegate.toString();
-    }
-
-    @Override
     public MutableMap<K, V> clone()
     {
         return ConcurrentMutableHashMap.newMap(this.delegate);

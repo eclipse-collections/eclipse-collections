@@ -35,6 +35,7 @@ import org.eclipse.collections.api.map.primitive.MutableObjectLongMap;
 import org.eclipse.collections.api.multimap.MutableMultimap;
 import org.eclipse.collections.api.partition.PartitionMutableCollection;
 import org.eclipse.collections.api.tuple.Pair;
+import org.eclipse.collections.impl.block.procedure.MapIterableToStringProcedure;
 import org.eclipse.collections.impl.collection.AbstractSynchronizedRichIterable;
 import org.eclipse.collections.impl.tuple.AbstractImmutableEntry;
 import org.eclipse.collections.impl.utility.LazyIterate;
@@ -149,6 +150,17 @@ public abstract class AbstractSynchronizedMapIterable<K, V>
         synchronized (this.lock)
         {
             this.getDelegate().forEachKeyValue(procedure2);
+        }
+    }
+
+    @Override
+    public String toString()
+    {
+        synchronized (this.lock)
+        {
+            MapIterableToStringProcedure<K, V> procedure = new MapIterableToStringProcedure<>(this);
+            this.getDelegate().forEachKeyValue(procedure);
+            return procedure.getString();
         }
     }
 

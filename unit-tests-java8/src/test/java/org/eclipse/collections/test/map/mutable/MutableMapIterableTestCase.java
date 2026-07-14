@@ -52,6 +52,18 @@ public interface MutableMapIterableTestCase extends MapIterableTestCase, MapTest
     }
 
     @Override
+    default boolean allowsPut()
+    {
+        return true;
+    }
+
+    @Override
+    default boolean supportsNonComparableKeys()
+    {
+        return true;
+    }
+
+    @Override
     <T> MutableMapIterable<Object, T> newWith(T... elements);
 
     @Override

@@ -53,12 +53,6 @@ public class MapAdapter<K, V>
     }
 
     @Override
-    public String toString()
-    {
-        return this.delegate.toString();
-    }
-
-    @Override
     public MutableMap<K, V> clone()
     {
         return UnifiedMap.newMap(this.delegate);

@@ -16,6 +16,12 @@ import org.junit.jupiter.api.Test;
 public interface UnmodifiableBiMapTestCase extends MutableBiMapTestCase, FixedSizeIterableTestCase
 {
     @Override
+    default boolean allowsPut()
+    {
+        return false;
+    }
+
+    @Override
     @Test
     default void Iterable_remove()
     {

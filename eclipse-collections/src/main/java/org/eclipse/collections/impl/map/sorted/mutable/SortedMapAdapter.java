@@ -211,12 +211,6 @@ public class SortedMapAdapter<K, V>
     }
 
     @Override
-    public String toString()
-    {
-        return this.delegate.toString();
-    }
-
-    @Override
     public MutableSortedMap<K, V> clone()
     {
         return TreeSortedMap.newMap(this.delegate);
