@@ -100,6 +100,12 @@ public class FixedSizeMapTest implements UnsortedMapIterableTestCase, FixedSizeI
         return result;
     }
 
+    @Override
+    public boolean allowsPut()
+    {
+        return false;
+    }
+
     @Nested
     public class KeySetView implements UnmodifiableMapKeySetTestCase
     {

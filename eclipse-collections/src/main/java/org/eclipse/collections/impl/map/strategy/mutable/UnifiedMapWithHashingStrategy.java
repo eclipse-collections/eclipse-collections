@@ -1900,38 +1900,6 @@ public class UnifiedMapWithHashingStrategy<K, V> extends AbstractMutableMap<K, V
         return hashCode;
     }
 
-    @Override
-    public String toString()
-    {
-        StringBuilder builder = new StringBuilder();
-        builder.append('{');
-
-        this.forEachKeyValue(new Procedure2<K, V>()
-        {
-            private boolean first = true;
-
-            @Override
-            public void value(K key, V value)
-            {
-                if (this.first)
-                {
-                    this.first = false;
-                }
-                else
-                {
-                    builder.append(", ");
-                }
-
-                builder.append(key == UnifiedMapWithHashingStrategy.this ? "(this Map)" : key);
-                builder.append('=');
-                builder.append(value == UnifiedMapWithHashingStrategy.this ? "(this Map)" : value);
-            }
-        });
-
-        builder.append('}');
-        return builder.toString();
-    }
-
     public boolean trimToSize()
     {
         if (this.table.length <= this.fastCeil(this.occupied / this.loadFactor) << 2)

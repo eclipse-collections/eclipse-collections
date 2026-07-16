@@ -225,12 +225,6 @@ public class OrderedMapAdapter<K, V>
     }
 
     @Override
-    public String toString()
-    {
-        return this.delegate.toString();
-    }
-
-    @Override
     public MutableOrderedMap<K, V> clone()
     {
         throw new UnsupportedOperationException();

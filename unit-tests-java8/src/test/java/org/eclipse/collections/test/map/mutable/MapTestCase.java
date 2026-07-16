@@ -52,12 +52,52 @@ public interface MapTestCase
         return true;
     }
 
+    default boolean allowsPut()
+    {
+        return true;
+    }
+
+    default boolean supportsNonComparableKeys()
+    {
+        return true;
+    }
+
     default void Iterable_toString()
     {
         Map<String, Integer> map = this.newWithKeysValues("Two", 2, "One", 1);
         assertEquals("[Two, One]", map.keySet().toString());
         assertEquals("[2, 1]", map.values().toString());
         assertEquals("[Two=2, One=1]", map.entrySet().toString());
+
+        assertEquals("{}", this.newWithKeysValues().toString());
+
+        if (this.allowsPut() && this.supportsNonComparableKeys())
+        {
+            Map<Object, Object> selfKey = this.newWithKeysValues();
+            selfKey.put(selfKey, "value");
+            assertEquals("{(this Map)=value}", selfKey.toString());
+
+            Map<Object, Object> selfValue = this.newWithKeysValues();
+            selfValue.put("key", selfValue);
+            assertEquals("{key=(this Map)}", selfValue.toString());
+        }
+        else if (!this.allowsPut())
+        {
+            Map<Object, Object> selfKey = this.newWithKeysValues();
+            assertThrows(UnsupportedOperationException.class, () -> selfKey.put(selfKey, "value"));
+
+            Map<Object, Object> selfValue = this.newWithKeysValues();
+            assertThrows(UnsupportedOperationException.class, () -> selfValue.put("key", selfValue));
+        }
+        else
+        {
+            Map<Object, Object> selfKey = this.newWithKeysValues();
+            assertThrows(ClassCastException.class, () -> selfKey.put(selfKey, "value"));
+
+            Map<Object, Object> selfValue = this.newWithKeysValues();
+            selfValue.put("key", selfValue);
+            assertEquals("{key=(this Map)}", selfValue.toString());
+        }
     }
 
     @Test

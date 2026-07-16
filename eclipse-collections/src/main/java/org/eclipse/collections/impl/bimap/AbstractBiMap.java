@@ -66,6 +66,7 @@ import org.eclipse.collections.api.multimap.MutableMultimap;
 import org.eclipse.collections.api.set.MutableSet;
 import org.eclipse.collections.api.set.sorted.MutableSortedSet;
 import org.eclipse.collections.api.tuple.Pair;
+import org.eclipse.collections.impl.block.procedure.MapIterableToStringProcedure;
 
 public abstract class AbstractBiMap<K, V> implements BiMap<K, V>
 {
@@ -327,7 +328,9 @@ public abstract class AbstractBiMap<K, V> implements BiMap<K, V>
     @Override
     public String toString()
     {
-        return this.getDelegate().toString();
+        MapIterableToStringProcedure<K, V> procedure = new MapIterableToStringProcedure<>(this);
+        this.forEachKeyValue(procedure);
+        return procedure.getString();
     }
 
     @Override

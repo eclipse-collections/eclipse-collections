@@ -11,6 +11,7 @@
 package org.eclipse.collections.test.bimap;
 
 import java.util.Iterator;
+import java.util.Map;
 
 import org.eclipse.collections.api.bimap.BiMap;
 import org.eclipse.collections.api.factory.Sets;
@@ -22,6 +23,7 @@ import org.junit.jupiter.api.Test;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.isOneOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public interface UnsortedBiMapTestCase extends BiMapTestCase, TransformsToBagTrait, UnsortedSetLikeTestTrait
 {
@@ -39,6 +41,21 @@ public interface UnsortedBiMapTestCase extends BiMapTestCase, TransformsToBagTra
         assertThat(bimap.valuesView().toString(), isOneOf("[1, 2]", "[2, 1]"));
         assertThat(bimap.keyValuesView().toString(), isOneOf("[One:1, Two:2]", "[Two:2, One:1]"));
         assertThat(bimap.asLazy().toString(), isOneOf("[1, 2]", "[2, 1]"));
+
+        if (this.allowsPut())
+        {
+            Map<Object, Object> selfKey = (Map<Object, Object>) this.newWithKeysValues();
+            selfKey.put(selfKey, "value");
+            assertEquals("{(this Map)=value}", selfKey.toString());
+        }
+        else
+        {
+            BiMap<Object, Object> selfKey = this.newWithKeysValues();
+            assertThrows(UnsupportedOperationException.class, () -> ((Map<Object, Object>) selfKey).put(selfKey, "value"));
+
+            BiMap<Object, Object> selfValue = this.newWithKeysValues();
+            assertThrows(UnsupportedOperationException.class, () -> ((Map<Object, Object>) selfValue).put("key", selfValue));
+        }
     }
 
     @Override
