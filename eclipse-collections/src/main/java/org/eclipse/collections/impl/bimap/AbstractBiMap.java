@@ -10,6 +10,7 @@
 
 package org.eclipse.collections.impl.bimap;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Map;
@@ -66,6 +67,7 @@ import org.eclipse.collections.api.multimap.MutableMultimap;
 import org.eclipse.collections.api.set.MutableSet;
 import org.eclipse.collections.api.set.sorted.MutableSortedSet;
 import org.eclipse.collections.api.tuple.Pair;
+import org.eclipse.collections.impl.block.procedure.AppendStringWithSelfProcedure;
 import org.eclipse.collections.impl.block.procedure.MapIterableToStringProcedure;
 
 public abstract class AbstractBiMap<K, V> implements BiMap<K, V>
@@ -334,39 +336,20 @@ public abstract class AbstractBiMap<K, V> implements BiMap<K, V>
     }
 
     @Override
-    public String makeString()
-    {
-        return this.getDelegate().makeString();
-    }
-
-    @Override
-    public String makeString(String separator)
-    {
-        return this.getDelegate().makeString(separator);
-    }
-
-    @Override
-    public String makeString(String start, String separator, String end)
-    {
-        return this.getDelegate().makeString(start, separator, end);
-    }
-
-    @Override
-    public void appendString(Appendable appendable)
-    {
-        this.getDelegate().appendString(appendable);
-    }
-
-    @Override
-    public void appendString(Appendable appendable, String separator)
-    {
-        this.getDelegate().appendString(appendable, separator);
-    }
-
-    @Override
     public void appendString(Appendable appendable, String start, String separator, String end)
     {
-        this.getDelegate().appendString(appendable, start, separator, end);
+        Procedure<V> appendStringProcedure =
+                new AppendStringWithSelfProcedure<>(appendable, separator, this, "(this Map)");
+        try
+        {
+            appendable.append(start);
+            this.forEachValue(appendStringProcedure);
+            appendable.append(end);
+        }
+        catch (IOException e)
+        {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

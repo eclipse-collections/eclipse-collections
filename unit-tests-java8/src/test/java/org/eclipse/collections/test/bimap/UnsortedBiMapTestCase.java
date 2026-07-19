@@ -32,6 +32,14 @@ public interface UnsortedBiMapTestCase extends BiMapTestCase, TransformsToBagTra
 
     @Override
     @Test
+    default void RichIterable_makeString_appendString()
+    {
+        BiMapTestCase.super.RichIterable_makeString_appendString();
+        UnsortedSetLikeTestTrait.super.RichIterable_makeString_appendString();
+    }
+
+    @Override
+    @Test
     default void Iterable_toString()
     {
         BiMap<String, Integer> bimap = this.newWithKeysValues("Two", 2, "One", 1);

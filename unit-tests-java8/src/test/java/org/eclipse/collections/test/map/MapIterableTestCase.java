@@ -85,12 +85,53 @@ public interface MapIterableTestCase extends RichIterableWithDuplicatesTestCase
         return true;
     }
 
+    default boolean supportsSelfReferentialValues()
+    {
+        return true;
+    }
+
     @Test
     default void serialization()
     {
         MapIterable<Object, String> original = this.newWith("Three", "Two", "One");
         MapIterable<Object, String> copy = SerializeTestHelper.serializeDeserialize(original);
         assertIterablesEqual(copy, original);
+    }
+
+    @Override
+    @Test
+    default void RichIterable_makeString_appendString()
+    {
+        RichIterableWithDuplicatesTestCase.super.RichIterable_makeString_appendString();
+
+        // A map holding itself as a value must render "(this Map)" instead of recursing.
+        // BiMap indexes by value, so a self-referential value overflows hashCode() at put time;
+        // it disables this via supportsSelfReferentialValues() and covers the case with its inverse.
+        if (this.allowsPut() && this.supportsSelfReferentialValues())
+        {
+            MapIterable<Object, Object> selfValue = this.newWithKeysValues();
+            ((Map<Object, Object>) selfValue).put("key", selfValue);
+            MapIterableTestCase.assertMakeStringAndAppendStringWithSelfReference(selfValue);
+        }
+    }
+
+    static void assertMakeStringAndAppendStringWithSelfReference(MapIterable<Object, Object> selfValue)
+    {
+        assertEquals("(this Map)", selfValue.makeString());
+        assertEquals("(this Map)", selfValue.makeString("/"));
+        assertEquals("[(this Map)]", selfValue.makeString("[", "/", "]"));
+
+        StringBuilder builder1 = new StringBuilder();
+        selfValue.appendString(builder1);
+        assertEquals("(this Map)", builder1.toString());
+
+        StringBuilder builder2 = new StringBuilder();
+        selfValue.appendString(builder2, "/");
+        assertEquals("(this Map)", builder2.toString());
+
+        StringBuilder builder3 = new StringBuilder();
+        selfValue.appendString(builder3, "[", "/", "]");
+        assertEquals("[(this Map)]", builder3.toString());
     }
 
     @Override
