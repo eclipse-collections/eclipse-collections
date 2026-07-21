@@ -785,4 +785,56 @@ public class Collectors2AdditionalTest
                         .collect(Collectors2.summingBigInteger(vh -> BigInteger.valueOf(vh.getLongValue())));
         assertEquals(BigInteger.valueOf(2_500_000L), sum);
     }
+    @Test
+    public void sumByInt_parallel()
+    {
+        assertEquals(
+                LARGE_INTERVAL.sumByInt(each -> each.intValue() % 2, Integer::intValue),
+                LARGE_INTERVAL.parallelStream()
+                        .collect(Collectors2.sumByInt(each -> each.intValue() % 2, Integer::intValue)));
+    }
+    @Test
+    public void sumByLong_parallel()
+    {
+        assertEquals(
+                LARGE_INTERVAL.sumByLong(each -> each.intValue() % 2, Integer::longValue),
+                LARGE_INTERVAL.parallelStream()
+                        .collect(Collectors2.sumByLong(each -> each.intValue() % 2, Integer::longValue)));
+    }
+    @Test
+    public void sumByFloat_parallel()
+    {
+        assertEquals(
+                LARGE_INTERVAL.sumByFloat(each -> each.intValue() % 2, Integer::floatValue),
+                LARGE_INTERVAL.parallelStream()
+                        .collect(Collectors2.sumByFloat(each -> each.intValue() % 2, Integer::floatValue)));
+    }
+    @Test
+    public void sumByDouble_parallel()
+    {
+        for (int i = 0; i < 100; i++)
+        {
+            assertEquals(
+                    LARGE_INTERVAL.sumByDouble(each -> each.intValue() % 2, Integer::doubleValue),
+                    LARGE_INTERVAL.parallelStream()
+                            .collect(Collectors2.sumByDouble(each -> each.intValue() % 2, Integer::doubleValue)));
+        }
+    }
+    @Test
+    public void sumByBigDecimal_parallel()
+    {
+        assertEquals(
+                Iterate.sumByBigDecimal(LARGE_INTERVAL, each -> Integer.valueOf(each.intValue() % 2), each -> new BigDecimal(each)),
+                LARGE_INTERVAL.parallelStream()
+                        .collect(Collectors2.sumByBigDecimal(each -> Integer.valueOf(each.intValue() % 2), each -> new BigDecimal(each))));
+    }
+
+    @Test
+    public void sumByBigInteger_parallel()
+    {
+        assertEquals(
+                Iterate.sumByBigInteger(LARGE_INTERVAL, each -> Integer.valueOf(each.intValue() % 2), each -> BigInteger.valueOf(each.longValue())),
+                LARGE_INTERVAL.parallelStream()
+                        .collect(Collectors2.sumByBigInteger(each -> Integer.valueOf(each.intValue() % 2), each -> BigInteger.valueOf(each.longValue()))));
+    }
 }
