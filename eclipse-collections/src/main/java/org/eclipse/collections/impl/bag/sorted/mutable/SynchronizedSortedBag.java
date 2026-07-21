@@ -73,12 +73,12 @@ public class SynchronizedSortedBag<T>
 {
     private static final long serialVersionUID = 2L;
 
-    SynchronizedSortedBag(MutableSortedBag<T> bag)
+    protected SynchronizedSortedBag(MutableSortedBag<T> bag)
     {
         super(bag);
     }
 
-    SynchronizedSortedBag(MutableSortedBag<T> bag, Object newLock)
+    protected SynchronizedSortedBag(MutableSortedBag<T> bag, Object newLock)
     {
         super(bag, newLock);
     }
