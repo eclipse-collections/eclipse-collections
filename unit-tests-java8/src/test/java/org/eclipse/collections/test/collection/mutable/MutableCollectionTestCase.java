@@ -260,4 +260,49 @@ public interface MutableCollectionTestCase extends CollectionTestCase, RichItera
         MutableCollection<Integer> collection = this.newWith(4, 4, 4, 4, 3, 3, 3, 2, 2, 1);
         assertEquals(Integer.valueOf(81), collection.injectIntoWith(1, (a, b, c) -> a + b + c, 5));
     }
+
+    @Test
+    default void MutableCollection_toStringWithSelfReference()
+    {
+        if (!this.allowsAdd() || !this.supportsNonComparableElements())
+        {
+            return;
+        }
+
+        MutableCollection<Object> collection = this.newWith();
+        collection.add(collection);
+        assertEquals("[(this Collection)]", collection.toString());
+    }
+
+    @Test
+    default void MutableCollection_makeStringWithSelfReference()
+    {
+        RichIterableTestCase.super.RichIterable_makeString_appendString();
+
+        if (!this.allowsAdd() || !this.supportsNonComparableElements())
+        {
+            return;
+        }
+
+        MutableCollection<Object> collection = this.newWith();
+        collection.add(collection);
+        String expected = "(this Collection)";
+
+        assertEquals("[" + expected + "]", collection.toString());
+        assertEquals(expected, collection.makeString());
+        assertEquals(expected, collection.makeString("/"));
+        assertEquals("[" + expected + "]", collection.makeString("[", "/", "]"));
+
+        StringBuilder builder1 = new StringBuilder();
+        collection.appendString(builder1);
+        assertEquals(expected, builder1.toString());
+
+        StringBuilder builder2 = new StringBuilder();
+        collection.appendString(builder2, "/");
+        assertEquals(expected, builder2.toString());
+
+        StringBuilder builder3 = new StringBuilder();
+        collection.appendString(builder3, "[", "/", "]");
+        assertEquals("[" + expected + "]", builder3.toString());
+    }
 }

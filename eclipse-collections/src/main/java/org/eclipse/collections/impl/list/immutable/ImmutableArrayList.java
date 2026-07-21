@@ -547,7 +547,7 @@ final class ImmutableArrayList<T>
             {
                 buf.append(", ");
             }
-            buf.append(item == this ? "(this ImmutableArrayList)" : String.valueOf(item));
+            buf.append(item == this ? "(this Collection)" : String.valueOf(item));
         }
 
         buf.append(']');

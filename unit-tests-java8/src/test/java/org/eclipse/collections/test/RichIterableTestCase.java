@@ -131,6 +131,11 @@ public interface RichIterableTestCase extends IterableTestCase
 
     <T> MutableCollection<T> newMutableForTransform(T... elements);
 
+    default boolean supportsNonComparableElements()
+    {
+        return true;
+    }
+
     @Test
     default void newMutable_sanity()
     {

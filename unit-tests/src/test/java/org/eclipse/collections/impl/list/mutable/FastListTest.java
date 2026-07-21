@@ -944,7 +944,7 @@ public class FastListTest extends AbstractListTestCase
     {
         MutableList<Object> list = FastList.newListWith(1, 2, 3);
         list.add(list);
-        assertEquals("[1, 2, 3, (this FastList)]", list.toString());
+        assertEquals("[1, 2, 3, (this Collection)]", list.toString());
     }
 
     @Test
@@ -952,7 +952,7 @@ public class FastListTest extends AbstractListTestCase
     {
         MutableList<Object> list = FastList.newListWith(1, 2, 3);
         list.add(list);
-        assertEquals("1, 2, 3, (this FastList)", list.makeString());
+        assertEquals("1, 2, 3, (this Collection)", list.makeString());
     }
 
     @Test
