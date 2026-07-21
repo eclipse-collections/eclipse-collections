@@ -132,4 +132,7 @@
     <!-- Replicated with violations from JUnit 4 project -->
     <suppress checks="[a-zA-Z0-0]*" files="AssertTest.java" />
 
+    <!-- Fluent builder API with anonymous inner classes results in deep nesting beyond checkstyle indentation limits -->
+    <suppress checks="Indentation" files="MapsTest.java" />
+
 </suppressions>
