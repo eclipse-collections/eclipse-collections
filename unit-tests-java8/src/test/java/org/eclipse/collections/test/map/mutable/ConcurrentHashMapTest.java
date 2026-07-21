@@ -197,7 +197,6 @@ public class ConcurrentHashMapTest implements MutableMapTestCase
 
     // TODO: Fix bug in ConcurrentHashMap: values().spliterator() reports NONNULL but the map supports null values.
     // When fixed, delete this override to inherit the correct assertion from MapTestCase.
-    @Override
     @Test
     public void Map_values()
     {

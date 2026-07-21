@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Goldman Sachs and others.
+ * Copyright (c) 2026 Goldman Sachs and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -8,8 +8,9 @@
  * http://www.eclipse.org/org/documents/edl-v10.php.
  */
 
-package org.eclipse.collections.impl.tuple.primitive;
+package org.eclipse.collections.api.factory.primitive;
 
+import org.eclipse.collections.api.factory.ServiceLoaderUtils;
 import org.eclipse.collections.api.tuple.primitive.BooleanBooleanPair;
 import org.eclipse.collections.api.tuple.primitive.BooleanBytePair;
 import org.eclipse.collections.api.tuple.primitive.BooleanCharPair;
@@ -92,413 +93,436 @@ import org.eclipse.collections.api.tuple.primitive.ShortObjectPair;
 import org.eclipse.collections.api.tuple.primitive.ShortShortPair;
 
 /**
- * This class should be used to create instances of object/primitive,
- * primitive/primitive and primitive/object pairs.
+ * Public factory for creating primitive/object and primitive/primitive pairs.
+ * <p>
+ * This class belongs in the API module and delegates creation to an implementation provider.
  */
 public final class PrimitiveTuples
 {
+    private static volatile PrimitiveTupleFactoryProvider provider;
+
     private PrimitiveTuples()
     {
         throw new AssertionError("Suppress default constructor for noninstantiability");
     }
 
+    public static void initialize(PrimitiveTupleFactoryProvider primitiveTupleFactoryProvider)
+    {
+        if (primitiveTupleFactoryProvider == null)
+        {
+            throw new NullPointerException("primitiveTupleFactoryProvider");
+        }
+        PrimitiveTuples.provider = primitiveTupleFactoryProvider;
+    }
+
+    private static PrimitiveTupleFactoryProvider provider()
+    {
+        PrimitiveTupleFactoryProvider result = PrimitiveTuples.provider;
+        if (result == null)
+        {
+            result = ServiceLoaderUtils.loadServiceClass(PrimitiveTupleFactoryProvider.class);
+            PrimitiveTuples.provider = result;
+        }
+        return result;
+    }
+
     public static <T> ObjectBooleanPair<T> pair(T one, boolean two)
     {
-        return new ObjectBooleanPairImpl<>(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static <T> ObjectBytePair<T> pair(T one, byte two)
     {
-        return new ObjectBytePairImpl<>(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static <T> ObjectCharPair<T> pair(T one, char two)
     {
-        return new ObjectCharPairImpl<>(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static <T> ObjectShortPair<T> pair(T one, short two)
     {
-        return new ObjectShortPairImpl<>(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static <T> ObjectIntPair<T> pair(T one, int two)
     {
-        return new ObjectIntPairImpl<>(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static <T> ObjectFloatPair<T> pair(T one, float two)
     {
-        return new ObjectFloatPairImpl<>(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static <T> ObjectLongPair<T> pair(T one, long two)
     {
-        return new ObjectLongPairImpl<>(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static <T> ObjectDoublePair<T> pair(T one, double two)
     {
-        return new ObjectDoublePairImpl<>(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static <T> BooleanObjectPair<T> pair(boolean one, T two)
     {
-        return new BooleanObjectPairImpl<>(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static <T> ByteObjectPair<T> pair(byte one, T two)
     {
-        return new ByteObjectPairImpl<>(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static <T> CharObjectPair<T> pair(char one, T two)
     {
-        return new CharObjectPairImpl<>(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static <T> ShortObjectPair<T> pair(short one, T two)
     {
-        return new ShortObjectPairImpl<>(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static <T> IntObjectPair<T> pair(int one, T two)
     {
-        return new IntObjectPairImpl<>(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static <T> FloatObjectPair<T> pair(float one, T two)
     {
-        return new FloatObjectPairImpl<>(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static <T> LongObjectPair<T> pair(long one, T two)
     {
-        return new LongObjectPairImpl<>(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static <T> DoubleObjectPair<T> pair(double one, T two)
     {
-        return new DoubleObjectPairImpl<>(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static IntIntPair pair(int one, int two)
     {
-        return new IntIntPairImpl(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static IntFloatPair pair(int one, float two)
     {
-        return new IntFloatPairImpl(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static IntDoublePair pair(int one, double two)
     {
-        return new IntDoublePairImpl(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static IntLongPair pair(int one, long two)
     {
-        return new IntLongPairImpl(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static IntShortPair pair(int one, short two)
     {
-        return new IntShortPairImpl(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static IntBytePair pair(int one, byte two)
     {
-        return new IntBytePairImpl(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static IntCharPair pair(int one, char two)
     {
-        return new IntCharPairImpl(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static IntBooleanPair pair(int one, boolean two)
     {
-        return new IntBooleanPairImpl(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static FloatIntPair pair(float one, int two)
     {
-        return new FloatIntPairImpl(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static FloatFloatPair pair(float one, float two)
     {
-        return new FloatFloatPairImpl(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static FloatDoublePair pair(float one, double two)
     {
-        return new FloatDoublePairImpl(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static FloatLongPair pair(float one, long two)
     {
-        return new FloatLongPairImpl(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static FloatShortPair pair(float one, short two)
     {
-        return new FloatShortPairImpl(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static FloatBytePair pair(float one, byte two)
     {
-        return new FloatBytePairImpl(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static FloatCharPair pair(float one, char two)
     {
-        return new FloatCharPairImpl(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static FloatBooleanPair pair(float one, boolean two)
     {
-        return new FloatBooleanPairImpl(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static DoubleIntPair pair(double one, int two)
     {
-        return new DoubleIntPairImpl(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static DoubleFloatPair pair(double one, float two)
     {
-        return new DoubleFloatPairImpl(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static DoubleDoublePair pair(double one, double two)
     {
-        return new DoubleDoublePairImpl(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static DoubleLongPair pair(double one, long two)
     {
-        return new DoubleLongPairImpl(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static DoubleShortPair pair(double one, short two)
     {
-        return new DoubleShortPairImpl(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static DoubleBytePair pair(double one, byte two)
     {
-        return new DoubleBytePairImpl(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static DoubleCharPair pair(double one, char two)
     {
-        return new DoubleCharPairImpl(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static DoubleBooleanPair pair(double one, boolean two)
     {
-        return new DoubleBooleanPairImpl(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static LongIntPair pair(long one, int two)
     {
-        return new LongIntPairImpl(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static LongFloatPair pair(long one, float two)
     {
-        return new LongFloatPairImpl(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static LongDoublePair pair(long one, double two)
     {
-        return new LongDoublePairImpl(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static LongLongPair pair(long one, long two)
     {
-        return new LongLongPairImpl(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static LongShortPair pair(long one, short two)
     {
-        return new LongShortPairImpl(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static LongBytePair pair(long one, byte two)
     {
-        return new LongBytePairImpl(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static LongCharPair pair(long one, char two)
     {
-        return new LongCharPairImpl(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static LongBooleanPair pair(long one, boolean two)
     {
-        return new LongBooleanPairImpl(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static ShortIntPair pair(short one, int two)
     {
-        return new ShortIntPairImpl(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static ShortFloatPair pair(short one, float two)
     {
-        return new ShortFloatPairImpl(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static ShortDoublePair pair(short one, double two)
     {
-        return new ShortDoublePairImpl(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static ShortLongPair pair(short one, long two)
     {
-        return new ShortLongPairImpl(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static ShortShortPair pair(short one, short two)
     {
-        return new ShortShortPairImpl(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static ShortBytePair pair(short one, byte two)
     {
-        return new ShortBytePairImpl(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static ShortCharPair pair(short one, char two)
     {
-        return new ShortCharPairImpl(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static ShortBooleanPair pair(short one, boolean two)
     {
-        return new ShortBooleanPairImpl(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static ByteIntPair pair(byte one, int two)
     {
-        return new ByteIntPairImpl(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static ByteFloatPair pair(byte one, float two)
     {
-        return new ByteFloatPairImpl(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static ByteDoublePair pair(byte one, double two)
     {
-        return new ByteDoublePairImpl(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static ByteLongPair pair(byte one, long two)
     {
-        return new ByteLongPairImpl(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static ByteShortPair pair(byte one, short two)
     {
-        return new ByteShortPairImpl(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static ByteBytePair pair(byte one, byte two)
     {
-        return new ByteBytePairImpl(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static ByteCharPair pair(byte one, char two)
     {
-        return new ByteCharPairImpl(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static ByteBooleanPair pair(byte one, boolean two)
     {
-        return new ByteBooleanPairImpl(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static CharIntPair pair(char one, int two)
     {
-        return new CharIntPairImpl(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static CharFloatPair pair(char one, float two)
     {
-        return new CharFloatPairImpl(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static CharDoublePair pair(char one, double two)
     {
-        return new CharDoublePairImpl(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static CharLongPair pair(char one, long two)
     {
-        return new CharLongPairImpl(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static CharShortPair pair(char one, short two)
     {
-        return new CharShortPairImpl(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static CharBytePair pair(char one, byte two)
     {
-        return new CharBytePairImpl(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static CharCharPair pair(char one, char two)
     {
-        return new CharCharPairImpl(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static CharBooleanPair pair(char one, boolean two)
     {
-        return new CharBooleanPairImpl(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static BooleanIntPair pair(boolean one, int two)
     {
-        return new BooleanIntPairImpl(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static BooleanFloatPair pair(boolean one, float two)
     {
-        return new BooleanFloatPairImpl(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static BooleanDoublePair pair(boolean one, double two)
     {
-        return new BooleanDoublePairImpl(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static BooleanLongPair pair(boolean one, long two)
     {
-        return new BooleanLongPairImpl(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static BooleanShortPair pair(boolean one, short two)
     {
-        return new BooleanShortPairImpl(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static BooleanBytePair pair(boolean one, byte two)
     {
-        return new BooleanBytePairImpl(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static BooleanCharPair pair(boolean one, char two)
     {
-        return new BooleanCharPairImpl(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 
     public static BooleanBooleanPair pair(boolean one, boolean two)
     {
-        return new BooleanBooleanPairImpl(one, two);
+        return PrimitiveTuples.provider().pair(one, two);
     }
 }
