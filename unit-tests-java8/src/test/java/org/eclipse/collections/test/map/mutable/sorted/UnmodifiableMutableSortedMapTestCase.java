@@ -41,6 +41,13 @@ public interface UnmodifiableMutableSortedMapTestCase extends UnmodifiableMutabl
 
     @Override
     @Test
+    default void Object_equalsAndHashCode()
+    {
+        MutableSortedMapIterableTestCase.super.Object_equalsAndHashCode();
+    }
+
+    @Override
+    @Test
     default void Iterable_remove()
     {
         UnmodifiableMutableMapIterableTestCase.super.Iterable_remove();

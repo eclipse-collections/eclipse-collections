@@ -551,6 +551,9 @@ public interface IterableTestCase
             return;
         }
 
+        Iterator<Integer> freshIterator = this.newWith(3, 2, 1).iterator();
+        assertThrows(IllegalStateException.class, freshIterator::remove);
+
         Iterable<Integer> iterable = this.newWith(3, 2, 1);
         Iterator<Integer> iterator = iterable.iterator();
         iterator.next();
