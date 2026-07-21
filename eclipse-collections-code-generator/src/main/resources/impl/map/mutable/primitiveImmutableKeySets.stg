@@ -11,6 +11,10 @@ package org.eclipse.collections.impl.map.mutable.primitive;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.NoSuchElementException;
+<if(primitive.specializedStream)>
+import java.util.Spliterator;
+import java.util.Spliterators;
+<endif>
 <if(!primitive.bytePrimitive)>import org.eclipse.collections.impl.SpreadFunctions;<endif>
 import org.eclipse.collections.api.block.function.primitive.<name>ToObjectFunction;
 import org.eclipse.collections.api.block.function.primitive.Object<name>ToObjectFunction;
@@ -396,6 +400,14 @@ class <className> extends AbstractImmutable<name>Set implements Serializable
             return result;
         }
     }
+<if(primitive.specializedStream)>
+
+    @Override
+    public Spliterator.Of<name> spliterator()
+    {
+        return Spliterators.spliterator(this.toArray(), Spliterator.DISTINCT | Spliterator.SIZED | Spliterator.IMMUTABLE);
+    }
+<endif>
 }
 
 >>
