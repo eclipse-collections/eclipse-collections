@@ -239,8 +239,13 @@ public abstract class AbstractRichIterableTestCase
     public void containsAllIterable()
     {
         RichIterable<Integer> collection = this.newWith(1, 2, 3, 4);
-        assertTrue(collection.containsAllIterable(Lists.mutable.with(1, 2)));
-        assertFalse(collection.containsAllIterable(Lists.mutable.with(1, 5)));
+        assertTrue(collection.containsAllIterable(Arrays.asList()));
+        assertTrue(collection.containsAllIterable(Arrays.asList(1, 2)));
+        assertFalse(collection.containsAllIterable(Arrays.asList(1, 5)));
+        assertTrue(Interval.oneTo(100).containsAllIterable(Interval.oneTo(50)));
+        assertFalse(Interval.fromTo(5, 100).containsAllIterable(Interval.oneTo(50)));
+        assertTrue(this.newWith(Interval.oneTo(100).toArray()).containsAllIterable(Interval.oneTo(50)));
+        assertFalse(this.newWith(Interval.fromTo(5, 100).toArray()).containsAllIterable(Interval.oneTo(50)));
     }
 
     @Test
@@ -315,8 +320,11 @@ public abstract class AbstractRichIterableTestCase
     public void containsAllCollection()
     {
         RichIterable<Integer> collection = this.newWith(1, 2, 3, 4);
-        assertTrue(collection.containsAll(Lists.mutable.with(1, 2)));
-        assertFalse(collection.containsAll(Lists.mutable.with(1, 5)));
+        assertTrue(collection.containsAll(Arrays.asList()));
+        assertTrue(collection.containsAll(Arrays.asList(1, 2)));
+        assertFalse(collection.containsAll(Arrays.asList(1, 5)));
+        assertTrue(this.newWith(Interval.oneTo(100).toArray()).containsAll(Interval.oneTo(50).toList()));
+        assertFalse(this.newWith(Interval.fromTo(5, 100).toArray()).containsAll(Interval.oneTo(50).toList()));
     }
 
     @Test

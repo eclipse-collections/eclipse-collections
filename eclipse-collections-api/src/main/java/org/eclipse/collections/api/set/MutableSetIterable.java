@@ -10,6 +10,7 @@
 
 package org.eclipse.collections.api.set;
 
+import java.util.Collection;
 import java.util.Set;
 
 import org.eclipse.collections.api.block.function.Function;
@@ -27,6 +28,12 @@ import org.eclipse.collections.api.tuple.Pair;
  */
 public interface MutableSetIterable<T> extends SetIterable<T>, MutableCollection<T>, Set<T>
 {
+    @Override
+    default boolean containsAll(Collection<?> source)
+    {
+        return MutableCollection.super.containsAll(source);
+    }
+
     @Override
     default Object[] toArray()
     {
