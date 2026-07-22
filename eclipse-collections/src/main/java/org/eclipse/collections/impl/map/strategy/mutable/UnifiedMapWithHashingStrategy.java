@@ -2733,6 +2733,10 @@ public class UnifiedMapWithHashingStrategy<K, V> extends AbstractMutableMap<K, V
         @Override
         public boolean equals(Object obj)
         {
+            if (obj == this)
+            {
+                return true;
+            }
             if (obj instanceof Set<?> other)
             {
                 if (other.size() == this.size())
@@ -3324,6 +3328,10 @@ public class UnifiedMapWithHashingStrategy<K, V> extends AbstractMutableMap<K, V
         @Override
         public boolean equals(Object obj)
         {
+            if (obj == this)
+            {
+                return true;
+            }
             if (obj instanceof Set<?> other)
             {
                 if (other.size() == this.size())

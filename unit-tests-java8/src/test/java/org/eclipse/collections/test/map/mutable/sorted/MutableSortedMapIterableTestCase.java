@@ -55,6 +55,14 @@ public interface MutableSortedMapIterableTestCase extends SortedMapIterableTestC
     }
 
     @Override
+    @Test
+    default void Object_equalsAndHashCode()
+    {
+        SortedMapIterableTestCase.super.Object_equalsAndHashCode();
+        SortedMapTestCase.super.Object_equalsAndHashCode();
+    }
+
+    @Override
     default void Iterable_remove()
     {
         SortedMapIterableTestCase.super.Iterable_remove();

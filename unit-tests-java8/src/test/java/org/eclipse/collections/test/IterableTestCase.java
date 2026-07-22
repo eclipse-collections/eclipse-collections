@@ -412,6 +412,11 @@ public interface IterableTestCase
     {
         Iterable<Integer> iterable = this.newWith(3, 2, 1);
 
+        if (!this.allowsIterator() && iterable instanceof Set<?>)
+        {
+            return;
+        }
+
         if (!this.allowsSerialization())
         {
             assertNotSerializable(iterable);
