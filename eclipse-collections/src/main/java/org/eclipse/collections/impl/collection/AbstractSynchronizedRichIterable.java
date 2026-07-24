@@ -10,6 +10,7 @@
 
 package org.eclipse.collections.impl.collection;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -77,6 +78,7 @@ import org.eclipse.collections.api.set.MutableSet;
 import org.eclipse.collections.api.set.sorted.ImmutableSortedSet;
 import org.eclipse.collections.api.set.sorted.MutableSortedSet;
 import org.eclipse.collections.api.tuple.Pair;
+import org.eclipse.collections.impl.block.procedure.AppendStringWithSelfProcedure;
 import org.eclipse.collections.impl.map.mutable.UnifiedMap;
 import org.eclipse.collections.impl.utility.LazyIterate;
 
@@ -132,10 +134,7 @@ public abstract class AbstractSynchronizedRichIterable<T> implements RichIterabl
     @Override
     public String toString()
     {
-        synchronized (this.lock)
-        {
-            return this.delegate.toString();
-        }
+        return this.makeString("[", ", ", "]");
     }
 
     /**
@@ -1218,33 +1217,6 @@ public abstract class AbstractSynchronizedRichIterable<T> implements RichIterabl
     }
 
     @Override
-    public String makeString()
-    {
-        synchronized (this.lock)
-        {
-            return this.delegate.makeString();
-        }
-    }
-
-    @Override
-    public String makeString(String separator)
-    {
-        synchronized (this.lock)
-        {
-            return this.delegate.makeString(separator);
-        }
-    }
-
-    @Override
-    public String makeString(String start, String separator, String end)
-    {
-        synchronized (this.lock)
-        {
-            return this.delegate.makeString(start, separator, end);
-        }
-    }
-
-    @Override
     public String makeString(Function<? super T, Object> function, String start, String separator, String end)
     {
         synchronized (this.lock)
@@ -1254,29 +1226,22 @@ public abstract class AbstractSynchronizedRichIterable<T> implements RichIterabl
     }
 
     @Override
-    public void appendString(Appendable appendable)
-    {
-        synchronized (this.lock)
-        {
-            this.delegate.appendString(appendable);
-        }
-    }
-
-    @Override
-    public void appendString(Appendable appendable, String separator)
-    {
-        synchronized (this.lock)
-        {
-            this.delegate.appendString(appendable, separator);
-        }
-    }
-
-    @Override
     public void appendString(Appendable appendable, String start, String separator, String end)
     {
         synchronized (this.lock)
         {
-            this.delegate.appendString(appendable, start, separator, end);
+            Procedure<T> procedure =
+                    new AppendStringWithSelfProcedure<>(appendable, separator, this, "(this Collection)");
+            try
+            {
+                appendable.append(start);
+                this.delegate.forEach(procedure);
+                appendable.append(end);
+            }
+            catch (IOException e)
+            {
+                throw new RuntimeException(e);
+            }
         }
     }
 

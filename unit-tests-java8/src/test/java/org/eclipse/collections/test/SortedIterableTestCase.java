@@ -21,6 +21,12 @@ public interface SortedIterableTestCase extends OrderedIterableTestCase, NoDetec
     <T> SortedIterable<T> newWith(T... elements);
 
     @Override
+    default boolean supportsNonComparableElements()
+    {
+        return false;
+    }
+
+    @Override
     @Test
     default void RichIterable_min_max_non_comparable()
     {

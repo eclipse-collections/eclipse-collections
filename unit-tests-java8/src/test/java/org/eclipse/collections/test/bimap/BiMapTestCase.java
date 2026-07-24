@@ -10,6 +10,8 @@
 
 package org.eclipse.collections.test.bimap;
 
+import java.util.Map;
+
 import org.eclipse.collections.api.bimap.BiMap;
 import org.eclipse.collections.api.bimap.MutableBiMap;
 import org.eclipse.collections.api.collection.MutableCollection;
@@ -34,6 +36,34 @@ public interface BiMapTestCase extends RichIterableUniqueTestCase, MapIterableTe
     default boolean allowsDuplicates()
     {
         return false;
+    }
+
+    @Override
+    default boolean supportsSelfReferentialValues()
+    {
+        // A BiMap indexes by value, so a self-referential value overflows hashCode() at put time.
+        return false;
+    }
+
+    @Override
+    @Test
+    default void RichIterable_makeString_appendString()
+    {
+        MapIterableTestCase.super.RichIterable_makeString_appendString();
+
+        if (this.allowsPut())
+        {
+            // The map-as-value scenario overflows for a BiMap, so exercise self-reference
+            // through the inverse view, which is keyed on the non-recursive value instead.
+            BiMap<Object, Object> selfValue = this.newWithKeysValues();
+            ((Map<Object, Object>) selfValue.inverse()).put(selfValue, "key");
+            MapIterableTestCase.assertMakeStringAndAppendStringWithSelfReference(selfValue);
+
+            BiMap<Object, Object> bimap = this.newWithKeysValues();
+            BiMap<Object, Object> inverse = bimap.inverse();
+            ((Map<Object, Object>) bimap).put(inverse, "value");
+            MapIterableTestCase.assertMakeStringAndAppendStringWithSelfReference(inverse);
+        }
     }
 
     @Override

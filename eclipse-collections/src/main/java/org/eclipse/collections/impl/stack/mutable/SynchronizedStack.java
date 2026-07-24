@@ -10,6 +10,7 @@
 
 package org.eclipse.collections.impl.stack.mutable;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
@@ -86,6 +87,7 @@ import org.eclipse.collections.api.stack.primitive.MutableLongStack;
 import org.eclipse.collections.api.stack.primitive.MutableShortStack;
 import org.eclipse.collections.api.tuple.Pair;
 import org.eclipse.collections.impl.UnmodifiableIteratorAdapter;
+import org.eclipse.collections.impl.block.procedure.AppendStringWithSelfProcedure;
 
 /**
  * A synchronized view of a {@link MutableStack}. It is imperative that the user manually synchronize on the collection when iterating over it using the
@@ -1255,46 +1257,33 @@ public final class SynchronizedStack<T> implements MutableStack<T>, Serializable
     @Override
     public String makeString()
     {
-        synchronized (this.lock)
-        {
-            return this.delegate.makeString();
-        }
+        return this.makeString(", ");
     }
 
     @Override
     public String makeString(String separator)
     {
-        synchronized (this.lock)
-        {
-            return this.delegate.makeString(separator);
-        }
+        return this.makeString("", separator, "");
     }
 
     @Override
     public String makeString(String start, String separator, String end)
     {
-        synchronized (this.lock)
-        {
-            return this.delegate.makeString(start, separator, end);
-        }
+        Appendable stringBuilder = new StringBuilder();
+        this.appendString(stringBuilder, start, separator, end);
+        return stringBuilder.toString();
     }
 
     @Override
     public void appendString(Appendable appendable)
     {
-        synchronized (this.lock)
-        {
-            this.delegate.appendString(appendable);
-        }
+        this.appendString(appendable, "", ", ", "");
     }
 
     @Override
     public void appendString(Appendable appendable, String separator)
     {
-        synchronized (this.lock)
-        {
-            this.delegate.appendString(appendable, separator);
-        }
+        this.appendString(appendable, "", separator, "");
     }
 
     @Override
@@ -1302,7 +1291,18 @@ public final class SynchronizedStack<T> implements MutableStack<T>, Serializable
     {
         synchronized (this.lock)
         {
-            this.delegate.appendString(appendable, start, separator, end);
+            Procedure<T> appendStringProcedure =
+                    new AppendStringWithSelfProcedure<>(appendable, separator, this, "(this Collection)");
+            try
+            {
+                appendable.append(start);
+                this.delegate.forEach(appendStringProcedure);
+                appendable.append(end);
+            }
+            catch (IOException e)
+            {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -1391,10 +1391,7 @@ public final class SynchronizedStack<T> implements MutableStack<T>, Serializable
     @Override
     public String toString()
     {
-        synchronized (this.lock)
-        {
-            return this.delegate.toString();
-        }
+        return this.makeString("[", ", ", "]");
     }
 
     @Override

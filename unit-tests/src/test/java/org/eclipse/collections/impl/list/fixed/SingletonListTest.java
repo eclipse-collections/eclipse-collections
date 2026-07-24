@@ -478,7 +478,7 @@ public class SingletonListTest extends AbstractMemoryEfficientMutableListTestCas
     {
         MutableList<MutableList<?>> list = Lists.fixedSize.of(Lists.fixedSize.of());
         list.set(0, list);
-        assertEquals("[(this SingletonList)]", list.toString());
+        assertEquals("[(this Collection)]", list.toString());
     }
 
     private MutableList<Integer> newList()

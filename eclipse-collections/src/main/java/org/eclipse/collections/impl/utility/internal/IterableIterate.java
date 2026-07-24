@@ -1121,7 +1121,7 @@ public final class IterableIterate
     public static <T> String stringValueOfItem(Iterable<T> iterable, T item)
     {
         return item == iterable
-                ? "(this " + iterable.getClass().getSimpleName() + ')'
+                ? "(this Collection)"
                 : String.valueOf(item);
     }
 

@@ -45,7 +45,7 @@ import org.eclipse.collections.api.set.MutableSet;
 import org.eclipse.collections.api.tuple.Pair;
 import org.eclipse.collections.impl.block.factory.Functions;
 import org.eclipse.collections.impl.block.factory.Predicates;
-import org.eclipse.collections.impl.block.procedure.AppendStringProcedure;
+import org.eclipse.collections.impl.block.procedure.AppendStringWithSelfProcedure;
 import org.eclipse.collections.impl.block.procedure.MapCollectProcedure;
 import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.parallel.BatchIterable;
@@ -2725,7 +2725,8 @@ public class UnifiedMap<K, V> extends AbstractMutableMap<K, V>
         {
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.append('[');
-            Procedure<K> appendStringProcedure = new AppendStringProcedure<>(stringBuilder, ", ");
+            Procedure<K> appendStringProcedure =
+                    new AppendStringWithSelfProcedure<>(stringBuilder, ", ", this, "(this Collection)");
             this.forEach(appendStringProcedure);
             stringBuilder.append(']');
             return stringBuilder.toString();
@@ -3282,7 +3283,8 @@ public class UnifiedMap<K, V> extends AbstractMutableMap<K, V>
         {
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.append('[');
-            Procedure<Entry<K, V>> appendStringProcedure = new AppendStringProcedure<>(stringBuilder, ", ");
+            Procedure<Entry<K, V>> appendStringProcedure =
+                    new AppendStringWithSelfProcedure<>(stringBuilder, ", ", this, "(this Collection)");
             this.forEach(appendStringProcedure);
             stringBuilder.append(']');
             return stringBuilder.toString();
@@ -3667,7 +3669,8 @@ public class UnifiedMap<K, V> extends AbstractMutableMap<K, V>
         {
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.append('[');
-            Procedure<V> appendStringProcedure = new AppendStringProcedure<>(stringBuilder, ", ");
+            Procedure<V> appendStringProcedure =
+                    new AppendStringWithSelfProcedure<>(stringBuilder, ", ", this, "(this Collection)");
             this.forEach(appendStringProcedure);
             stringBuilder.append(']');
             return stringBuilder.toString();

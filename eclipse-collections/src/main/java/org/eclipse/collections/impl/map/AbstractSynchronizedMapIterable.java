@@ -10,6 +10,7 @@
 
 package org.eclipse.collections.impl.map;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -35,6 +36,7 @@ import org.eclipse.collections.api.map.primitive.MutableObjectLongMap;
 import org.eclipse.collections.api.multimap.MutableMultimap;
 import org.eclipse.collections.api.partition.PartitionMutableCollection;
 import org.eclipse.collections.api.tuple.Pair;
+import org.eclipse.collections.impl.block.procedure.AppendStringWithSelfProcedure;
 import org.eclipse.collections.impl.block.procedure.MapIterableToStringProcedure;
 import org.eclipse.collections.impl.collection.AbstractSynchronizedRichIterable;
 import org.eclipse.collections.impl.tuple.AbstractImmutableEntry;
@@ -161,6 +163,25 @@ public abstract class AbstractSynchronizedMapIterable<K, V>
             MapIterableToStringProcedure<K, V> procedure = new MapIterableToStringProcedure<>(this);
             this.getDelegate().forEachKeyValue(procedure);
             return procedure.getString();
+        }
+    }
+
+    @Override
+    public void appendString(Appendable appendable, String start, String separator, String end)
+    {
+        synchronized (this.lock)
+        {
+            Procedure<V> procedure = new AppendStringWithSelfProcedure<>(appendable, separator, this, "(this Map)");
+            try
+            {
+                appendable.append(start);
+                this.getDelegate().forEachValue(procedure);
+                appendable.append(end);
+            }
+            catch (IOException e)
+            {
+                throw new RuntimeException(e);
+            }
         }
     }
 
