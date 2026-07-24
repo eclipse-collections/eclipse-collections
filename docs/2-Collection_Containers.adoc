@@ -930,6 +930,23 @@ Assert.assertEquals(2.0d, intList.summaryStatistics().getAverage(), 0.0);
 
 === Primitive lists
 
+==== Iteration patterns
+
+Primitive lists support rich iteration patterns like other Eclipse Collections types.
+Iteration follows insertion order, from front to back, and unlike primitive stacks, lists support direct access to any element by index.
+
+.Iterating over a primitive list
+====
+[source,java]
+----
+MutableIntList list = IntLists.mutable.with(1, 2, 3);
+// Filter elements (returns a new primitive list)
+MutableIntList evens = list.select(i -> i % 2 == 0);
+// Aggregate elements
+long sum = list.sum();
+----
+====
+
 The primitive list implementations are backed by an array like *FastList*, but with a primitive array instead of an *Object[]*.
 They are named *{IntArrayList}*, *{FloatArrayList}* etc.
 
