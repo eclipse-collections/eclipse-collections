@@ -10,6 +10,7 @@
 
 package org.eclipse.collections.api.list;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -60,6 +61,12 @@ import org.eclipse.collections.api.tuple.Pair;
 public interface MutableList<T>
         extends MutableCollection<T>, List<T>, Cloneable, ListIterable<T>
 {
+    @Override
+    default boolean containsAll(Collection<?> source)
+    {
+        return MutableCollection.super.containsAll(source);
+    }
+
     @Override
     default Object[] toArray()
     {

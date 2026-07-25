@@ -543,13 +543,13 @@ public abstract class AbstractCollectionAdapter<T>
     @Override
     public boolean containsAll(Collection<?> collection)
     {
-        return this.getDelegate().containsAll(collection);
+        return MutableCollection.super.containsAll(collection);
     }
 
     @Override
     public boolean containsAllIterable(Iterable<?> source)
     {
-        return Iterate.allSatisfyWith(source, Predicates2.in(), this.getDelegate());
+        return MutableCollection.super.containsAllIterable(source);
     }
 
     @Override

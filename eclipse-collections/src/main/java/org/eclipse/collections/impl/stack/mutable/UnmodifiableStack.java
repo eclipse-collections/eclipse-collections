@@ -431,7 +431,7 @@ public final class UnmodifiableStack<T> implements MutableStack<T>, Serializable
     @Override
     public boolean containsAll(Collection<?> source)
     {
-        return this.mutableStack.containsAll(source);
+        return this.mutableStack.containsAllIterable(source);
     }
 
     @Override

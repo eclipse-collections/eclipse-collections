@@ -730,7 +730,7 @@ public class UnmodifiableTreeMap<K, V>
     @Override
     public boolean containsAll(Collection<?> source)
     {
-        return this.getMutableSortedMap().containsAll(source);
+        return this.getMutableSortedMap().containsAllIterable(source);
     }
 
     @Override

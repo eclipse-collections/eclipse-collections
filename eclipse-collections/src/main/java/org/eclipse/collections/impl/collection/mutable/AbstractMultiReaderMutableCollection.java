@@ -115,7 +115,7 @@ public abstract class AbstractMultiReaderMutableCollection<T> implements Mutable
     {
         try (LockWrapper wrapper = this.lockWrapper.acquireReadLock())
         {
-            return this.getDelegate().containsAll(collection);
+            return this.getDelegate().containsAllIterable(collection);
         }
     }
 
@@ -2130,7 +2130,7 @@ public abstract class AbstractMultiReaderMutableCollection<T> implements Mutable
         @Override
         public boolean containsAll(Collection<?> collection)
         {
-            return this.delegate.containsAll(collection);
+            return this.delegate.containsAllIterable(collection);
         }
 
         @Override
