@@ -33,6 +33,7 @@ import org.eclipse.collections.api.block.predicate.Predicate;
 import org.eclipse.collections.api.block.predicate.Predicate2;
 import org.eclipse.collections.api.block.predicate.primitive.IntPredicate;
 import org.eclipse.collections.api.block.procedure.Procedure;
+import org.eclipse.collections.api.factory.Bags;
 import org.eclipse.collections.api.factory.Sets;
 import org.eclipse.collections.api.list.ImmutableList;
 import org.eclipse.collections.api.multimap.bag.ImmutableBagMultimap;
@@ -167,7 +168,8 @@ public interface ImmutableBag<T> extends UnsortedBag<T>, ImmutableBagIterable<T>
     @Override
     default <V> ImmutableBag<V> countBy(Function<? super T, ? extends V> function)
     {
-        return this.collect(function);
+        MutableBag<V> bag = this.collectEachOccurrences(function, Bags.mutable.empty());
+        return bag.toImmutable();
     }
 
     /**
@@ -176,7 +178,8 @@ public interface ImmutableBag<T> extends UnsortedBag<T>, ImmutableBagIterable<T>
     @Override
     default <V, P> ImmutableBag<V> countByWith(Function2<? super T, ? super P, ? extends V> function, P parameter)
     {
-        return this.collectWith(function, parameter);
+        MutableBag<V> bag = this.collectWithEachOccurrences(function, parameter, Bags.mutable.empty());
+        return bag.toImmutable();
     }
 
     /**

@@ -128,7 +128,7 @@ public abstract class AbstractMutableBag<T>
     @Override
     public <V> MutableBag<V> countBy(Function<? super T, ? extends V> function)
     {
-        return this.collect(function);
+        return this.collectEachOccurrences(function, Bags.mutable.empty());
     }
 
     /**
@@ -137,7 +137,7 @@ public abstract class AbstractMutableBag<T>
     @Override
     public <V, P> MutableBag<V> countByWith(Function2<? super T, ? super P, ? extends V> function, P parameter)
     {
-        return this.collectWith(function, parameter);
+        return this.collectWithEachOccurrences(function, parameter, Bags.mutable.empty());
     }
 
     /**
