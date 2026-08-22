@@ -144,4 +144,9 @@ public interface ImmutableListFactory
         MutableList<T> list = (MutableList<T>) items.toSortedList(comparator);
         return list.toImmutable();
     }
+
+    /**
+     * @since 12.0
+     */
+    <T> ImmutableList<T> ofNCopiesOf(int copies, T item);
 }
