@@ -1110,6 +1110,75 @@ Primitive stack implementations are similar to JCF *ArrayStack* but optimized fo
 
 Primitive bag implementations are similar to JCF *HashBag*, but both _item_ and _count_ are primitives.
 
+Primitive bags can be created using factory classes, *IntBags*, *LongBags*, *FloatBags*, *DoubleBags*, *CharBags*, *ByteBags*, *BooleanBags* and *ShortBags* are primitive factory classes which provides mutable & immutable ways of creating bags. factory classes provide different set of methods for creating sets like *with*, *withAll*, *empty* and *ofAll* with different set of arguments. Provided examples are with *IntBags* but all are valid for other factory classes as well.
+
+[source, java]
+----
+// mutable intBag creation using with
+MutableIntBag bag = IntBags.mutable.with(1, 2, 2, 3, 3, 3);
+
+// addOccurrences & removeOccurrences
+this.bag.addOccurrences(4, 4);
+Assertions.assertEquals(4, this.bag.occurrencesOf(4));
+this.bag.removeOccurrences(4, 4);
+Assertions.assertEquals(0, this.bag.occurrencesOf(4));
+
+// with, withAll, without & withoutAll operations on bag
+MutableIntBag bagWith = this.bag.with(4).with(5);
+Assertions.assertEquals(IntBags.immutable.with(1, 2, 2, 3, 3, 3, 4, 5), bagWith);
+Assertions.assertSame(this.bag, bagWith);
+
+// Add three values to the bag
+MutableIntBag bagWithAll = this.bag.withAll(IntLists.immutable.with(6, 7, 8));
+Assertions.assertEquals(IntBags.immutable.with(1, 2, 2, 3, 3, 3, 4, 5, 6, 7, 8), bagWithAll);
+Assertions.assertSame(this.bag, bagWithAll);
+
+// Remove two values from the bag
+MutableIntBag bagWithout = this.bag.without(7).without(8);
+Assertions.assertEquals(IntBags.immutable.with(1, 2, 2, 3, 3, 3, 4, 5, 6), bagWithout);
+Assertions.assertSame(this.bag, bagWithout);
+
+// Remove three values from the bag
+MutableIntBag bagWithoutAll = this.bag.withoutAll(IntLists.immutable.with(4, 5, 6));
+Assertions.assertEquals(IntBags.immutable.with(1, 2, 2, 3, 3, 3), bagWithoutAll);
+Assertions.assertSame(this.bag, bagWithoutAll);
+
+// We can use allSatisfy/anySatisfy method which take predicate to compare with all value of primitive sets
+Assertions.assertTrue(this.bag.anySatisfy(each -> 0 == each % 2));
+Assertions.assertFalse(this.bag.allSatisfy(each -> 0 == each % 2));
+Assertions.assertFalse(this.bag.noneSatisfy(each -> 0 == each % 2));
+
+// Convert to ImmutableIntBags
+ImmutableIntBag immutableIntBag = this.bag.toImmutable();
+Assertions.assertEquals(this.bag, immutableIntBag);
+
+// Convert your bag to MutableIntList
+MutableIntList list = this.bag.toList();
+Assertions.assertEquals(IntLists.mutable.with(1, 2, 2, 3, 3, 3), list.sortThis());
+
+// get sum of values from bag
+long sum = this.bag.sum();
+Assertions.assertEquals(14L, sum);
+
+// there are many mathematical operation you can perform which are listed below
+double average = this.bag.averageIfEmpty(0.0);
+Assertions.assertEquals(2.3, average, 0.1);
+
+double median = this.bag.medianIfEmpty(0.0);
+Assertions.assertEquals(2.5, median, 0.0);
+
+int min = this.bag.minIfEmpty(0);
+Assertions.assertEquals(1, min);
+
+int max = this.bag.maxIfEmpty(0);
+Assertions.assertEquals(3, max);
+
+IntSummaryStatistics stats = this.bag.summaryStatistics();
+Assertions.assertEquals(14L, stats.getSum());
+Assertions.assertEquals(1, stats.getMin());
+Assertions.assertEquals(3, stats.getMax());
+----
+
 === Primitive Maps
 
 There are three types of primitive maps:
