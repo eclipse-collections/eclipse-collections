@@ -9,6 +9,7 @@
 ## Documentation Changes
 * Improved Javadoc for 'Sets' factory class ([#782](https://github.com/eclipse-collections/eclipse-collections/issues/782))
 * Rewritten the category index for `RichIterable` to match the new categories and order
+* Added iteration pattern examples for primitive bags to the reference guide ([#1387](https://github.com/eclipse-collections/eclipse-collections/issues/1387))
 
 ## API Changes
 * Added category annotations package
