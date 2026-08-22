@@ -15,6 +15,11 @@ body(type, name) ::= <<
 package org.eclipse.collections.api.set.primitive;
 
 import java.util.Set;
+<if(primitive.specializedStream)>
+import java.util.Spliterator;
+import java.util.stream.StreamSupport;
+import java.util.stream.<name>Stream;
+<endif>
 
 import org.eclipse.collections.api.<name>Iterable;
 import org.eclipse.collections.api.LazyIterable;
@@ -127,6 +132,29 @@ public interface <name>Set extends <name>Iterable
      * Returns an immutable copy of this set. If the set is immutable, it returns itself.
      */
     Immutable<name>Set toImmutable();
+<if(primitive.specializedStream)>
+
+    /**
+     * @since 14.0
+     */
+    Spliterator.Of<name> spliterator();
+
+    /**
+     * @since 14.0
+     */
+    default <name>Stream primitiveStream()
+    {
+        return StreamSupport.<type>Stream(this.spliterator(), false);
+    }
+
+    /**
+     * @since 14.0
+     */
+    default <name>Stream primitiveParallelStream()
+    {
+        return StreamSupport.<type>Stream(this.spliterator(), true);
+    }
+<endif>
 }
 
 >>

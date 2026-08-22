@@ -22,6 +22,10 @@ import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.io.Serializable;
 import java.util.Arrays;
+<if(primitive.specializedStream)>
+import java.util.Spliterator;
+import java.util.Spliterators;
+<endif>
 import java.util.Collection;
 import java.util.NoSuchElementException;
 
@@ -1636,6 +1640,14 @@ public class <name>HashSet extends Abstract<name>Set implements Mutable<name>Set
                 return result;
             }
         }
+<if(primitive.specializedStream)>
+
+        @Override
+        public Spliterator.Of<name> spliterator()
+        {
+            return Spliterators.spliterator(this.toArray(), Spliterator.DISTINCT | Spliterator.SIZED | Spliterator.IMMUTABLE);
+        }
+<endif>
     }
 
     private class Internal<name>Iterator implements Mutable<name>Iterator
@@ -1722,6 +1734,14 @@ public class <name>HashSet extends Abstract<name>Set implements Mutable<name>Set
             this.count--;
         }
     }
+<if(primitive.specializedStream)>
+
+    @Override
+    public Spliterator.Of<name> spliterator()
+    {
+        return Spliterators.spliterator(this.toArray(), Spliterator.DISTINCT | Spliterator.SIZED);
+    }
+<endif>
 }
 
 >>

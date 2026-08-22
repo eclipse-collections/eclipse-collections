@@ -25,6 +25,10 @@ import java.io.ObjectStreamException;
 import java.io.ObjectOutput;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
+<if(primitive.specializedStream)>
+import java.util.Spliterator;
+import java.util.Spliterators;
+<endif>
 
 import org.eclipse.collections.api.RichIterable;
 import org.eclipse.collections.api.<name>Iterable;
@@ -933,6 +937,14 @@ public abstract class AbstractMutable<name>KeySet implements Mutable<name>Set, E
             return this.deserialized;
         }
     }
+<if(primitive.specializedStream)>
+
+    @Override
+    public Spliterator.Of<name> spliterator()
+    {
+        return Spliterators.spliterator(this.toArray(), Spliterator.DISTINCT | Spliterator.SIZED);
+    }
+<endif>
 }
 
 >>
