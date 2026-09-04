@@ -33,6 +33,10 @@ All rights reserved.
 :ImmutableCollection:   {api-url}/api/collection/ImmutableCollection.html[ImmutableCollection]
 :IntFunction:           {api-url}/api/block/function/primitive/IntFunction.html[IntFunction]
 :IntIterable:           {api-url}/api/IntIterable.html[IntIterable]
+:IntList:               {api-url}/api/list/primitive/IntList.html[IntList]
+:IntPredicate:          {api-url}/api/block/predicate/primitive/IntPredicate.html[IntPredicate]
+:IntProcedure:          {api-url}/api/block/procedure/primitive/IntProcedure.html[IntProcedure]
+:MutableIntList:        {api-url}/api/list/primitive/MutableIntList.html[MutableIntList]
 :LazyIterable:          {api-url}/api/LazyIterable.html[LazyIterable]
 :ListIterable:          {api-url}/api/list/ListIterable.html[ListIterable]
 :ListMultimap:          {api-url}/api/multimap/list/ListMultimap.html[ListMultimap]
@@ -2179,6 +2183,472 @@ Since the values in the *MapIterable* are not necessarily unique, *flip()* retur
 
 Similar to *MapIterable*.*flip()* but asserts that the values in the *MapIterable* are unique and thus returns *MapIterable* instead of *Multimap*.
 Throws *IllegalArgumentException* if the *MapIterable* contains duplicate values.
+
+[#primitive-list-iteration]
+== Primitive List iteration patterns
+____
+Iteration patterns on *{IntList}* and *{MutableIntList}* — the primitive-specialized equivalents of *ListIterable* and *MutableList*.
+____
+
+Eclipse Collections provides primitive list types (such as *{MutableIntList}* backed by *IntArrayList*) that avoid boxing overhead.
+They implement the same core iteration patterns available on object collections, but use primitive-friendly functional interfaces — *{IntPredicate}*, *{IntProcedure}*, and *{IntFunction}* — instead of their generic counterparts.
+Create an *IntList* using the *IntLists* factory:
+
+.Creating an IntList
+====
+[source,java,linenums]
+----
+MutableIntList list = IntLists.mutable.with(1, 2, 3, 4, 5);
+ImmutableIntList immutableList = IntLists.immutable.with(1, 2, 3, 4, 5);
+----
+====
+
+[#intlist-foreach]
+=== ForEach on IntList
+____
+Execute a code block on every element of the *IntList* without returning a value.
+____
+
+The *forEach* (and its alias *each*) method accepts an *{IntProcedure}* and calls it once for every element, in list order.
+There is no return value — use this when you need side-effects such as printing or aggregating into an external structure.
+
+.ForEach pseudocode
+====
+----
+for each <int> of <intList>
+    evaluate(<int>)
+----
+====
+
+.ForEach on IntList using a lambda
+====
+[source,java,linenums]
+----
+MutableIntList list = IntLists.mutable.with(1, 2, 3, 4, 5);
+
+// each() and forEach() are aliases
+list.each(each -> System.out.println(each));
+
+// or with a method reference
+list.forEach(System.out::println);
+----
+====
+
+.ForEach on IntList in imperative Java
+====
+[source,java,linenums]
+----
+int[] array = {1, 2, 3, 4, 5};
+for (int each : array)
+{
+    System.out.println(each);
+}
+----
+====
+
+****
+##`*each(IntProcedure): void*`##
+****
+
+For each element, the *{IntProcedure}* is evaluated with the primitive int element as the argument.
+
+****
+##`*forEach(IntProcedure): void*`##
+****
+
+Alias for *each*; for each element, the *{IntProcedure}* is evaluated with the primitive int element.
+
+[#intlist-select-reject]
+=== Select and Reject on IntList
+____
+Filter an *IntList* to create a new *IntList*: includes *select* and *reject*.
+____
+
+The *select* method returns a new *{MutableIntList}* containing only those elements that satisfy an *{IntPredicate}*.
+*reject* is the inverse, returning elements for which the *IntPredicate* returns _false_.
+
+.Select pseudocode
+====
+----
+create <newIntList>
+ for each <int> of <intList>
+     if condition(<int>)
+         add <int> to <newIntList>
+----
+====
+
+.Select on IntList using a lambda
+====
+[source,java,linenums]
+----
+MutableIntList list = IntLists.mutable.with(1, 2, 3, 4, 5);
+
+// Keep only elements greater than 2
+MutableIntList greaterThanTwo = list.select(each -> each > 2); // [3, 4, 5]
+
+// Keep only even numbers
+MutableIntList evens = list.select(each -> each % 2 == 0);     // [2, 4]
+----
+====
+
+.Reject on IntList using a lambda
+====
+[source,java,linenums]
+----
+MutableIntList list = IntLists.mutable.with(1, 2, 3, 4, 5);
+
+// Exclude elements greater than 2
+MutableIntList notGreaterThanTwo = list.reject(each -> each > 2); // [1, 2]
+----
+====
+
+.Select and Reject on IntList in imperative Java
+====
+[source,java,linenums]
+----
+int[] source = {1, 2, 3, 4, 5};
+IntArrayList greaterThanTwo = new IntArrayList();
+for (int each : source)
+{
+    if (each > 2)
+    {
+        greaterThanTwo.add(each);
+    }
+}
+----
+====
+
+****
+##`*select(IntPredicate): MutableIntList*`##
+****
+
+Returns a new *{MutableIntList}* containing each element for which the *{IntPredicate}* returns _true_.
+
+****
+##`*reject(IntPredicate): MutableIntList*`##
+****
+
+Returns a new *{MutableIntList}* containing each element for which the *{IntPredicate}* returns _false_.
+
+[#intlist-collect]
+=== Collect on IntList
+____
+Transform every element of an *IntList*, producing a new collection.
+____
+
+The *collect* method maps each primitive int to an object, returning a *MutableList* of the resulting type.
+The *collectInt* method maps each int to another int (or other primitive), returning a new primitive list.
+
+.Collect pseudocode
+====
+----
+create <newCollection>
+ for each <int> of <intList>
+     <result> = transform(<int>)
+     add <result> to <newCollection>
+----
+====
+
+.Collect on IntList — boxing to objects using a lambda
+====
+[source,java,linenums]
+----
+MutableIntList list = IntLists.mutable.with(1, 2, 3, 4, 5);
+
+// Box each int to String
+MutableList<String> strings = list.collect(each -> "value:" + each);
+// ["value:1", "value:2", "value:3", "value:4", "value:5"]
+----
+====
+
+.CollectInt on IntList — primitive-to-primitive transform using a lambda
+====
+[source,java,linenums]
+----
+MutableIntList list = IntLists.mutable.with(1, 2, 3, 4, 5);
+
+// Double each element, remaining as a primitive list
+MutableIntList doubled = list.collectInt(each -> each * 2); // [2, 4, 6, 8, 10]
+----
+====
+
+.Collect on IntList in imperative Java
+====
+[source,java,linenums]
+----
+int[] source = {1, 2, 3, 4, 5};
+List<String> strings = new ArrayList<>();
+for (int each : source)
+{
+    strings.add("value:" + each);
+}
+----
+====
+
+****
+##`*collect(IntToObjectFunction): MutableList*`##
+****
+
+For each int element, the function is evaluated and the result is added to a new *MutableList* of the returned object type.
+
+****
+##`*collectInt(IntToIntFunction): MutableIntList*`##
+****
+
+For each int element, the function is evaluated and the resulting int is added to a new *{MutableIntList}*.
+Variants exist for all eight primitives: *collectLong*, *collectFloat*, *collectDouble*, etc.
+
+[#intlist-detect]
+=== Detect on IntList
+____
+Find the _first_ element in an *IntList* that satisfies a given *{IntPredicate}*.
+____
+
+*detect* returns the first element for which the *{IntPredicate}* returns _true_.
+If no element satisfies the predicate, *detect* throws *NoSuchElementException*.
+Use *detectIfNone* to supply a fallback value instead.
+
+.Detect pseudocode
+====
+----
+for each <int> of <intList>
+  if condition(<int>)
+    return <int>  // and end process
+----
+====
+
+.Detect on IntList using a lambda
+====
+[source,java,linenums]
+----
+MutableIntList list = IntLists.mutable.with(1, 2, 3, 4, 5);
+
+// Returns first element greater than 2 (i.e. 3)
+int result = list.detect(each -> each > 2);
+
+// Returns fallback value (-1) if nothing matches
+int resultOrDefault = list.detectIfNone(each -> each > 10, -1);
+----
+====
+
+.Detect on IntList in imperative Java
+====
+[source,java,linenums]
+----
+int[] array = {1, 2, 3, 4, 5};
+for (int each : array)
+{
+    if (each > 2)
+    {
+        return each;
+    }
+}
+return -1; // fallback
+----
+====
+
+****
+##`*detect(IntPredicate): int*`##
+****
+
+Returns the first element for which the *{IntPredicate}* returns _true_.
+Throws *NoSuchElementException* if no element satisfies the predicate.
+
+****
+##`*detectIfNone(IntPredicate, int): int*`##
+****
+
+Same as *detect*, but returns the specified default int value instead of throwing when no element satisfies the predicate.
+
+[#intlist-short-circuit]
+=== AnySatisfy, AllSatisfy, and NoneSatisfy on IntList
+____
+Short-circuit patterns that test whether *any*, *all*, or *no* elements of an *IntList* satisfy a condition.
+____
+
+These methods accept an *{IntPredicate}* and halt iteration as soon as the answer is known.
+
+.AnySatisfy pseudocode
+====
+----
+for each <int> of <intList>
+     if condition(<int>)
+         return true  // and end process
+ otherwise return false
+----
+====
+
+.AnySatisfy, AllSatisfy, NoneSatisfy on IntList using lambdas
+====
+[source,java,linenums]
+----
+MutableIntList list = IntLists.mutable.with(1, 2, 3, 4, 5);
+
+// Is any element greater than 4?
+boolean anyGtFour  = list.anySatisfy(each -> each > 4);  // true  (5 > 4)
+
+// Are all elements positive?
+boolean allPositive = list.allSatisfy(each -> each > 0); // true
+
+// Are no elements negative?
+boolean noneNeg    = list.noneSatisfy(each -> each < 0); // true
+----
+====
+
+.AnySatisfy on IntList in imperative Java
+====
+[source,java,linenums]
+----
+int[] array = {1, 2, 3, 4, 5};
+for (int each : array)
+{
+    if (each > 4)
+    {
+        return true;
+    }
+}
+return false;
+----
+====
+
+****
+##`*anySatisfy(IntPredicate): boolean*`##
+****
+
+Returns _true_ if the *{IntPredicate}* is satisfied by at least one element; returns _false_ if the list is empty or no element satisfies the predicate.
+
+****
+##`*allSatisfy(IntPredicate): boolean*`##
+****
+
+Returns _true_ if the *{IntPredicate}* is satisfied by every element; returns _false_ as soon as one element does not satisfy it.
+
+****
+##`*noneSatisfy(IntPredicate): boolean*`##
+****
+
+Returns _true_ if no element satisfies the *{IntPredicate}*, or if the list is empty.
+
+[#intlist-injectinto]
+=== InjectInto on IntList
+____
+Calculate a cumulative result by carrying an _injected value_ from one iteration to the next.
+____
+
+The *injectInto* method is the primitive-list equivalent of a fold/reduce.
+The initial value is passed in as the first argument and is carried forward through each iteration.
+This avoids boxing overhead compared to using the object-collection variant.
+
+.InjectInto pseudocode
+====
+----
+set <result> to <initialValue>
+ for each <int> of <intList>
+     <result> = apply(<result>, <int>)
+ return <result>
+----
+====
+
+.InjectInto on IntList using a lambda
+====
+[source,java,linenums]
+----
+MutableIntList list = IntLists.mutable.with(1, 2, 3, 4, 5);
+
+// Sum all elements starting from 0 — avoids boxing
+int sum = list.injectInto(0, (result, each) -> result + each); // 15
+
+// Compute product
+int product = list.injectInto(1, (result, each) -> result * each); // 120
+----
+====
+
+.InjectInto on IntList in imperative Java
+====
+[source,java,linenums]
+----
+int[] array = {1, 2, 3, 4, 5};
+int sum = 0;
+for (int each : array)
+{
+    sum = sum + each;
+}
+// sum == 15
+----
+====
+
+****
+##`*injectInto(int, IntIntToIntFunction): int*`##
+****
+
+Returns the final accumulated result after applying the two-argument function to each element and the previous result.
+The initial value and the result are both primitive *int*s.
+
+[#intlist-math]
+=== Mathematical operations on IntList
+____
+Convenience methods for common numeric aggregations unique to primitive collections.
+____
+
+Because *{IntList}* elements are stored as primitives, Eclipse Collections provides built-in arithmetic aggregations without needing a code block.
+These are not available on object collections.
+
+.Mathematical operations on IntList
+====
+[source,java,linenums]
+----
+MutableIntList list = IntLists.mutable.with(1, 2, 3, 4, 5);
+
+long   sum     = list.sum();                         // 15
+int    min     = list.min();                         // 1
+int    max     = list.max();                         // 5
+double average = list.average();                     // 3.0
+double median  = list.median();                      // 3.0
+
+// summaryStatistics() integrates with java.util.IntSummaryStatistics
+IntSummaryStatistics stats = list.summaryStatistics();
+assertEquals(15L,  stats.getSum());
+assertEquals(1,    stats.getMin());
+assertEquals(5,    stats.getMax());
+assertEquals(3.0d, stats.getAverage(), 0.0);
+----
+====
+
+****
+##`*sum(): long*`##
+****
+
+Returns the sum of all elements as a *long* to prevent overflow.
+
+****
+##`*min(): int*`##
+****
+
+Returns the minimum element. Throws *NoSuchElementException* on an empty list.
+
+****
+##`*max(): int*`##
+****
+
+Returns the maximum element. Throws *NoSuchElementException* on an empty list.
+
+****
+##`*average(): double*`##
+****
+
+Returns the arithmetic mean of all elements as a *double*.
+
+****
+##`*median(): double*`##
+****
+
+Returns the median value of all elements as a *double*. The list is sorted internally to compute this; the original list is not modified.
+
+****
+##`*summaryStatistics(): IntSummaryStatistics*`##
+****
+
+Returns a *java.util.IntSummaryStatistics* object containing *count*, *sum*, *min*, *max*, and *average* in a single pass.
 
 [cols="3,^1,>3",]
 |===
