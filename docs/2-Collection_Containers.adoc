@@ -1110,6 +1110,55 @@ Primitive stack implementations are similar to JCF *ArrayStack* but optimized fo
 
 Primitive bag implementations are similar to JCF *HashBag*, but both _item_ and _count_ are primitives.
 
+Operations you can perform on primitive bags.
+[source,java]
+----
+// Initialize IntHashBag using newBagWith method, which is taking int varargs.
+MutableIntBag intHashBag = IntHashBag.newBagWith(1, 2, 2, 3, 3, 3);
+
+// occurrencesOf returns how many times an item occurs, and 0 if it is absent
+int occurrencesOfThree = intHashBag.occurrencesOf(3);
+int occurrencesOfNine = intHashBag.occurrencesOf(9);
+
+// size counts every occurrence, sizeDistinct counts only the distinct items
+int size = intHashBag.size();
+int sizeDistinct = intHashBag.sizeDistinct();
+
+// forEachWithOccurrences visits each distinct item once, together with its count
+intHashBag.forEachWithOccurrences((each, occurrences) -> System.out.println(each + " occurs " + occurrences + " times"));
+
+// addOccurrences and removeOccurrences change a count by more than one at a time
+intHashBag.addOccurrences(4, 2);
+boolean removed = intHashBag.removeOccurrences(2, 1);
+
+// selectByOccurrences filters on the count instead of on the item
+MutableIntBag atLeastTwice = intHashBag.selectByOccurrences(occurrences -> occurrences >= 2);
+
+// selectDuplicates and selectUnique are shorthands for the two common counts
+MutableIntBag duplicates = intHashBag.selectDuplicates();
+MutableIntSet unique = intHashBag.selectUnique();
+
+// topOccurrences and bottomOccurrences return item/count pairs, including ties
+MutableList<IntIntPair> top = intHashBag.topOccurrences(1);
+MutableList<IntIntPair> bottom = intHashBag.bottomOccurrences(1);
+
+// select and reject filter on the item and carry the counts over
+MutableIntBag evens = intHashBag.select(x -> 0 == x % 2);
+MutableIntBag odds = intHashBag.reject(x -> 0 == x % 2);
+
+// collect maps every occurrence, so the resulting Bag has the same size
+MutableBag<String> strings = intHashBag.collect(Integer::toString);
+
+// math operations count every occurrence, not just the distinct items
+long sum = intHashBag.sum();
+int max = intHashBag.max();
+
+// Conversion operations work the same as on primitive sets and lists
+ImmutableIntBag immutableIntBag = intHashBag.toImmutable();
+MutableIntSet toSet = intHashBag.toSet();
+MutableIntList toSortedList = intHashBag.toSortedList();
+----
+
 === Primitive Maps
 
 There are three types of primitive maps:
