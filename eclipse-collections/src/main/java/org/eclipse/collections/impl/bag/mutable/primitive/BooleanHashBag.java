@@ -804,11 +804,17 @@ public final class BooleanHashBag implements MutableBooleanBag, Externalizable
         MutableBag<V> result = HashBag.newBag();
         if (this.containsFalse())
         {
-            result.addOccurrences(function.valueOf(false), this.falseCount);
+            for (int i = 0; i < this.falseCount; i++)
+            {
+                result.add(function.valueOf(false));
+            }
         }
         if (this.containsTrue())
         {
-            result.addOccurrences(function.valueOf(true), this.trueCount);
+            for (int i = 0; i < this.trueCount; i++)
+            {
+                result.add(function.valueOf(true));
+            }
         }
         return result;
     }
