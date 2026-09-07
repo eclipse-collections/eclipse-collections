@@ -75,12 +75,12 @@ public class SynchronizedMutableList<T>
 {
     private static final long serialVersionUID = 2L;
 
-    SynchronizedMutableList(MutableList<T> newCollection)
+    protected SynchronizedMutableList(MutableList<T> newCollection)
     {
         super(newCollection);
     }
 
-    SynchronizedMutableList(MutableList<T> newCollection, Object newLock)
+    protected SynchronizedMutableList(MutableList<T> newCollection, Object newLock)
     {
         super(newCollection, newLock);
     }

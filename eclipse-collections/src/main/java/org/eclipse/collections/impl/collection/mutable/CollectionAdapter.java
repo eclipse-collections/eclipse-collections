@@ -44,7 +44,7 @@ import org.eclipse.collections.impl.utility.Iterate;
  * {@link #wrapList(Iterable)} factory method. To wrap a collection with the MutableCollection interface alone, use
  * the {@link #adapt(Collection)} factory method.
  */
-public final class CollectionAdapter<T>
+public class CollectionAdapter<T>
         extends AbstractCollectionAdapter<T>
         implements Serializable
 {
