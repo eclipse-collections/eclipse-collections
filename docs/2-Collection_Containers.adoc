@@ -18,7 +18,7 @@ All rights reserved.
 // Javadoc links
 :api-url:               https://www.eclipse.org/collections/javadoc/11.1.0/org/eclipse/collections
 //
-:ArrayStack:            {api-url}/impl/stack/mutable/ArrayStack.html[ArrayStack]
+:ArrayStack:           {api-url}/impl/stack/mutable/ArrayStack.html[ArrayStack]
 :Bag:                  {api-url}/api/bag/Bag.html[Bag]
 :Bags:                 {api-url}/impl/factory/Bags.html[Bags]
 :BiMap:                {api-url}/api/bimap/BiMap.html[BiMap]
@@ -41,7 +41,7 @@ All rights reserved.
 :IntArrayList:         {api-url}/impl/list/mutable/primitive/IntArrayList.html[IntArrayList]
 :IntHashSet:           {api-url}/impl/set/mutable/primitive/IntHashSet.html[IntHashSet]
 :IntLists:             {api-url}/impl/factory/primitive/IntLists.html[IntLists]
-:IntIntHashMap:         {api-url}/impl/map/mutable/primitive/IntIntHashMap.html[IntIntHashMap]
+:IntIntHashMap:        {api-url}/impl/map/mutable/primitive/IntIntHashMap.html[IntIntHashMap]
 :IntObjectHashMap:     {api-url}/impl/map/mutable/primitive/IntObjectHashMap.html[IntObjectHashMap]
 :ListIterable:         {api-url}/api/list/ListIterable.html[ListIterable]
 :Lists:                {api-url}/impl/factory/Lists.html[Lists]
@@ -50,6 +50,7 @@ All rights reserved.
 :Multimaps:            {api-url}/impl/factory/Multimaps.html[Multimaps]
 :MutableBag:           {api-url}/api/bag/MutableBag.html[MutableBag]
 :MutableBiMap:         {api-url}/api/bimap/MutableBiMap.html[MutableBiMap]
+:MutableIntList:       {api-url}/api/list/primitive/MutableIntList.html[MutableIntList]
 :MutableList:          {api-url}/api/list/MutableList.html[MutableList]
 :MutableListMultimap:  {api-url}/api/multimap/list/MutableListMultimap.html[MutableListMultimap]
 :MutableMap:           {api-url}/api/map/MutableMap.html[MutableMap]
@@ -929,6 +930,33 @@ Assert.assertEquals(2.0d, intList.summaryStatistics().getAverage(), 0.0);
 ====
 
 === Primitive lists
+
+==== Iteration patterns
+
+Primitive lists support rich iteration patterns like other Eclipse Collections types.
+Iteration follows insertion order, from front to back, and unlike primitive stacks, lists support direct access to any element by index.
+
+.Iterating over a primitive list
+====
+[source,java]
+----
+MutableIntList list = IntLists.mutable.with(1, 2, 3);
+
+// Transform to an object list
+MutableList<String> strings = list.collect(i -> String.valueOf(i));
+
+// Filter elements (returns a new primitive list)
+MutableIntList evens = list.select(i -> i % 2 == 0);
+MutableIntList odds = list.reject(i -> i % 2 == 0);
+
+// Aggregate elements
+long sum = list.sum();
+int min = list.min();
+int max = list.max();
+double average = list.average();
+IntSummaryStatistics stats = list.summaryStatistics();
+----
+====
 
 The primitive list implementations are backed by an array like *FastList*, but with a primitive array instead of an *Object[]*.
 They are named *{IntArrayList}*, *{FloatArrayList}* etc.
