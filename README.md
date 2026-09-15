@@ -64,7 +64,7 @@ The current GA release of Eclipse Collections (11.1.0) is compatible with Java 8
 * [Eclipse Collections Katas](https://github.com/eclipse/eclipse-collections-kata), a fun way to help you learn idiomatic Eclipse Collections usage.
     * Start Here - [Pet Kata](https://eclipse-collections.github.io/eclipse-collections-kata/pet-kata/#/)
     * Continue Here - [Company Kata](https://github.com/eclipse-collections/eclipse-collections-kata/tree/master/company-kata)
-* [Eclipse Collections Reference Guide](https://github.com/eclipse/eclipse-collections/blob/master/docs/0-RefGuide.adoc) and [Javadoc](https://eclipse.dev/collections/javadoc/11.1.0/index.html)
+* [Eclipse Collections Reference Guide](https://github.com/eclipse-collections/eclipse-collections/blob/master/docs/0-RefGuide.adoc) and [Javadoc](https://eclipse.dev/collections/javadoc/11.1.0/index.html)
 * [Serializing Eclipse Collections with Jackson](./docs/jackson.md)
 * [Articles](https://github.com/eclipse/eclipse-collections/wiki/Articles) and [Blogs](https://medium.com/tag/eclipse-collections/latest)
 * Some OSS projects that use Eclipse Collections
