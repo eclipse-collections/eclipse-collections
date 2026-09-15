@@ -10,7 +10,8 @@
 
 package org.eclipse.collections.api.set.sorted;
 
-import java.util.SortedSet;
+import java.util.Collections;
+import java.util.NavigableSet;
 
 import org.eclipse.collections.api.block.function.Function;
 import org.eclipse.collections.api.block.function.Function2;
@@ -26,6 +27,7 @@ import org.eclipse.collections.api.block.function.primitive.ShortFunction;
 import org.eclipse.collections.api.block.predicate.Predicate;
 import org.eclipse.collections.api.block.predicate.Predicate2;
 import org.eclipse.collections.api.block.procedure.Procedure;
+import org.eclipse.collections.api.factory.SortedSets;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.list.primitive.MutableBooleanList;
 import org.eclipse.collections.api.list.primitive.MutableByteList;
@@ -48,7 +50,7 @@ import org.eclipse.collections.api.tuple.Pair;
  * @since 1.0
  */
 public interface MutableSortedSet<T>
-        extends MutableSetIterable<T>, SortedSetIterable<T>, SortedSet<T>, Cloneable
+        extends MutableSetIterable<T>, SortedSetIterable<T>, NavigableSet<T>, Cloneable
 {
     /**
      * This default override exists because java.util.SortedSet added a default getFirst() method in Java 21.
@@ -229,7 +231,10 @@ public interface MutableSortedSet<T>
     MutableSortedSet<Pair<T, Integer>> zipWithIndex();
 
     @Override
-    MutableSortedSet<T> toReversed();
+    default MutableSortedSet<T> toReversed()
+    {
+        return SortedSets.mutable.ofAll(Collections.reverseOrder(this.comparator()), this);
+    }
 
     @Override
     MutableSortedSet<T> take(int count);
@@ -251,6 +256,18 @@ public interface MutableSortedSet<T>
 
     @Override
     MutableSortedSet<SortedSetIterable<T>> powerSet();
+
+    @Override
+    MutableSortedSet<T> descendingSet();
+
+    @Override
+    MutableSortedSet<T> subSet(T fromElement, boolean fromInclusive, T toElement, boolean toInclusive);
+
+    @Override
+    MutableSortedSet<T> headSet(T toElement, boolean inclusive);
+
+    @Override
+    MutableSortedSet<T> tailSet(T fromElement, boolean inclusive);
 
     @Override
     MutableSortedSet<T> subSet(T fromElement, T toElement);

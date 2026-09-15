@@ -25,7 +25,6 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.eclipse.collections.api.map.MapIterable;
 import org.eclipse.collections.api.map.MutableMap;
 import org.eclipse.collections.api.set.Pool;
-import org.eclipse.collections.impl.jmh.runner.AbstractJMHTestRunner;
 import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.parallel.ParallelIterate;
 import org.eclipse.collections.impl.set.mutable.UnifiedSet;

@@ -30,6 +30,12 @@ public interface MutableSortedBagNoComparatorTestCase extends SortedBagTestCase,
     <T> MutableSortedBag<T> newWith(T... elements);
 
     @Override
+    default OrderingType getOrderingType()
+    {
+        return OrderingType.SORTED_NATURAL;
+    }
+
+    @Override
     default <T> SortedBag<T> getExpectedFiltered(T... elements)
     {
         return this.newMutableForFilter(elements);
@@ -94,12 +100,5 @@ public interface MutableSortedBagNoComparatorTestCase extends SortedBagTestCase,
             result.add(argument2);
         }, 0);
         assertIterablesEqual(Lists.immutable.with(1, 0, 2, 0, 2, 0, 3, 0, 3, 0, 3, 0), result);
-    }
-
-    @Override
-    @Test
-    default void SortedIterable_comparator()
-    {
-        MutableSortedNaturalOrderTestCase.super.SortedIterable_comparator();
     }
 }

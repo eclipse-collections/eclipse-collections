@@ -65,12 +65,21 @@ public interface StackIterableTestCase extends OrderedIterableWithDuplicatesTest
     @Test
     default void RichIterable_tap()
     {
-        RichIterable<Integer> iterable = this.newWith(3, 3, 3, 2, 2, 1);
+        RichIterable<Integer> iterable = this.newWith(3, 2, 1);
         MutableStack<Integer> result = Stacks.mutable.with();
         iterable.tap(result::push).forEach(Procedures.noop());
-        assertIterablesEqual(this.newWith(1, 2, 2, 3, 3, 3), result);
-
+        assertIterablesEqual(this.newWith(1, 2, 3), result);
         this.newWith().tap(Procedures.cast(each -> fail()));
+
+        if (!this.allowsDuplicates())
+        {
+            return;
+        }
+
+        RichIterable<Integer> iterable2 = this.newWith(3, 3, 3, 2, 2, 1);
+        MutableStack<Integer> result2 = Stacks.mutable.with();
+        iterable2.tap(result2::push).forEach(Procedures.noop());
+        assertIterablesEqual(this.newWith(1, 2, 2, 3, 3, 3), result2);
     }
 
     @Override
@@ -125,5 +134,16 @@ public interface StackIterableTestCase extends OrderedIterableWithDuplicatesTest
         StackIterable<Integer> stackIterable = this.newWith(5, 1, 4, 2, 3);
         assertThrows(IllegalArgumentException.class, () -> stackIterable.peekAt(-1));
         assertThrows(IllegalArgumentException.class, () -> stackIterable.peekAt(5));
+    }
+
+    @Override
+    @Test
+    default void OrderedIterable_forEach_from_to()
+    {
+        // TODO Support indexed traversal for stacks.
+        assertThrows(UnsupportedOperationException.class, () -> this.newWith(9, 8, 7, 6, 5, 4, 3, 2, 1, 0).forEach(5, 7, each -> { }));
+
+        // TODO Support reverse indexed traversal for stacks.
+        assertThrows(UnsupportedOperationException.class, () -> this.newWith(9, 8, 7, 6, 5, 4, 3, 2, 1, 0).forEach(7, 5, each -> { }));
     }
 }

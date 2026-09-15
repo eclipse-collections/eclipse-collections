@@ -24,6 +24,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import org.eclipse.collections.api.bag.MutableBag;
 import org.eclipse.collections.api.map.primitive.Mutable<name>ObjectMap;
 import org.eclipse.collections.api.set.MutableSet;
 import org.eclipse.collections.impl.bag.mutable.HashBag;
@@ -252,7 +253,7 @@ public class <name>ObjectHashMapValuesTest
     public void valuesToArray()
     {
         <name>ObjectHashMap\<Integer> map = this.newMapWithKeysValues(<(literal.(type))("1")>, 1, <(literal.(type))("2")>, 2, <(literal.(type))("3")>, null);
-        HashBag\<Integer> expected = HashBag.newBagWith(1, 2, null);
+        MutableBag\<Integer> expected = HashBag.newBagWith(1, 2, null);
         Collection\<Integer> values = map.values();
         assertEquals(expected, HashBag.newBagWith(values.toArray()));
         assertEquals(expected, HashBag.newBagWith(values.toArray(new Integer[values.size()])));

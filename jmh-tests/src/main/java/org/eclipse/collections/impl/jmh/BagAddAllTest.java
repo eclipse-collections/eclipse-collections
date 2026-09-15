@@ -16,7 +16,6 @@ import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
 import org.eclipse.collections.api.bag.MutableBag;
 import org.eclipse.collections.impl.bag.mutable.HashBag;
-import org.eclipse.collections.impl.jmh.runner.AbstractJMHTestRunner;
 import org.eclipse.collections.impl.list.Interval;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;

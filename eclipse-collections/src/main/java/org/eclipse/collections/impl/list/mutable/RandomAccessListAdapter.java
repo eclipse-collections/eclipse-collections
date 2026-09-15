@@ -100,6 +100,12 @@ public final class RandomAccessListAdapter<T>
     }
 
     @Override
+    public MutableList<T> reversed()
+    {
+        return new ReversedRandomAccessMutableList<>(this);
+    }
+
+    @Override
     public MutableList<T> clone()
     {
         return Lists.mutable.withAll(this.delegate);

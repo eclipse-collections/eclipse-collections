@@ -59,11 +59,13 @@ public class UnifiedMapWithHashingStrategyTest extends UnifiedMapTestCase
     //Not using the static factor method in order to have concrete types for test cases
     private static final HashingStrategy<Integer> INTEGER_HASHING_STRATEGY = HashingStrategies.nullSafeHashingStrategy(new HashingStrategy<Integer>()
     {
+        @Override
         public int computeHashCode(Integer object)
         {
             return object.hashCode();
         }
 
+        @Override
         public boolean equals(Integer object1, Integer object2)
         {
             return object1.equals(object2);
@@ -71,11 +73,13 @@ public class UnifiedMapWithHashingStrategyTest extends UnifiedMapTestCase
     });
     private static final HashingStrategy<String> STRING_HASHING_STRATEGY = HashingStrategies.nullSafeHashingStrategy(new HashingStrategy<String>()
     {
+        @Override
         public int computeHashCode(String object)
         {
             return object.hashCode();
         }
 
+        @Override
         public boolean equals(String object1, String object2)
         {
             return object1.equals(object2);
@@ -877,11 +881,13 @@ public class UnifiedMapWithHashingStrategyTest extends UnifiedMapTestCase
         //Testing for casting exceptions
         HashingStrategy<Person> lastName = new HashingStrategy<Person>()
         {
+            @Override
             public int computeHashCode(Person object)
             {
                 return object.getLastName().hashCode();
             }
 
+            @Override
             public boolean equals(Person object1, Person object2)
             {
                 return object1.equals(object2);

@@ -19,6 +19,7 @@ public class MapEntrySerializationTest
     {
         private static final long serialVersionUID = 1L;
 
+        @Override
         public boolean accept(Object argument1, Object argument2)
         {
             return false;

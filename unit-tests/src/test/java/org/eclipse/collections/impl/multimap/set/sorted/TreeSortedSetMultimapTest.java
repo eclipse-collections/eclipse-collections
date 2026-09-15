@@ -32,6 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 public class TreeSortedSetMultimapTest extends AbstractMutableSortedSetMultimapTestCase
 {
+    @Override
     public <K, V> MutableSortedSetMultimap<K, V> newMultimap(Comparator<? super V> comparator)
     {
         return TreeSortedSetMultimap.newMultimap(comparator);

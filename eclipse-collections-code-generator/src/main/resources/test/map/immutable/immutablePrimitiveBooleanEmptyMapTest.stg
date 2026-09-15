@@ -240,4 +240,3 @@ public class Immutable<name>BooleanEmptyMapTest extends AbstractImmutable<name>B
 }
 
 >>
-

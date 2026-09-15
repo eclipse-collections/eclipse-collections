@@ -157,6 +157,12 @@ public abstract class AbstractCollectionAdapter<T>
     }
 
     @Override
+    public boolean removeIf(java.util.function.Predicate<? super T> filter)
+    {
+        return Iterate.removeIf(this.getDelegate(), filter);
+    }
+
+    @Override
     public <P> boolean removeIfWith(Predicate2<? super T, ? super P> predicate, P parameter)
     {
         return Iterate.removeIfWith(this.getDelegate(), predicate, parameter);

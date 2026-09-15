@@ -10,6 +10,7 @@
 
 package org.eclipse.collections.test.lazy;
 
+import java.util.Iterator;
 import java.util.Objects;
 
 import org.eclipse.collections.api.LazyIterable;
@@ -18,6 +19,7 @@ import org.eclipse.collections.impl.lazy.FlatCollectIterable;
 import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.test.LazyNoIteratorTestCase;
 import org.eclipse.collections.test.list.mutable.FastListNoIterator;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -26,10 +28,18 @@ public class FlatCollectIterableTestNoIteratorTest implements LazyNoIteratorTest
     @Override
     public <T> LazyIterable<T> newWith(T... elements)
     {
-        return new FlatCollectIterable<>(new FastListNoIterator<T>().with(elements), FastList::newListWith);
+        return new FlatCollectIterable<>(new FastListNoIterator<T>().with(elements), FastList::newListWith)
+        {
+            @Override
+            public Iterator<T> iterator()
+            {
+                throw new AssertionError("No iteration patterns should delegate to iterator()");
+            }
+        };
     }
 
     @Override
+    @Test
     public void RichIterable_detectOptionalNull()
     {
         RichIterable<Integer> iterable1 = this.newWith(1, null, 3);

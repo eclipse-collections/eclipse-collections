@@ -70,7 +70,7 @@ public final class Comparators
     /**
      * This method exists in order to guarantee serialization compatibility in tests.
      * @since 11.1
-     * @deprecated
+     * @deprecated use {@link #naturalOrder()} instead
      */
     @Deprecated
     public static <T> SerializableComparator<T> originalNaturalOrder()
@@ -89,7 +89,7 @@ public final class Comparators
     /**
      * This method exists in order to guarantee serialization compatibility in tests.
      * @since 11.1
-     * @deprecated
+     * @deprecated use {@link #reverseNaturalOrder()} instead
      */
     @Deprecated
     public static <T> SerializableComparator<T> originalReverseNaturalOrder()
@@ -369,7 +369,7 @@ public final class Comparators
     /**
      * This signature is kept for serialization backwards compatibility.
      * @since 11.1
-     * @deprecated
+     * @deprecated use {@link #byFunction(Function)} instead
      */
     @Deprecated
     public static <T, V extends Comparable<? super V>> SerializableComparator<T> originalByFunction(Function<? super T, ? extends V> function)
@@ -489,7 +489,7 @@ public final class Comparators
     /**
      * Original signature accepted a Comparator which may not be Serializable. This signature is kept for
      * backwards compatibility.
-     * @deprecated
+     * @deprecated use {@link #byFunction(Function, Comparator)} instead
      */
     @Deprecated
     public static <T, V> SerializableComparator<T> originalByFunction(Function<? super T, ? extends V> function, Comparator<V> comparator)

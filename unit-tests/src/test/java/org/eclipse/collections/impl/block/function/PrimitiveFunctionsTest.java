@@ -16,6 +16,7 @@ import org.eclipse.collections.impl.set.mutable.primitive.DoubleHashSet;
 import org.eclipse.collections.impl.set.mutable.primitive.FloatHashSet;
 import org.eclipse.collections.impl.set.mutable.primitive.IntHashSet;
 import org.eclipse.collections.impl.set.mutable.primitive.LongHashSet;
+import org.eclipse.collections.impl.test.Verify;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -75,5 +76,11 @@ public class PrimitiveFunctionsTest
         assertEquals(
                 FloatHashSet.newSetWith(1.0f, 2.0f, 3.0f),
                 UnifiedSet.newSetWith(Float.valueOf(1.0f), Float.valueOf(2.0f), Float.valueOf(3.0f)).collectFloat(PrimitiveFunctions.unboxFloatToFloat()));
+    }
+
+    @Test
+    public void classIsNonInstantiable()
+    {
+        Verify.assertClassNonInstantiable(PrimitiveFunctions.class);
     }
 }

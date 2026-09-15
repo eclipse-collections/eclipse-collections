@@ -18,7 +18,6 @@ import java.util.concurrent.TimeUnit;
 
 import org.eclipse.collections.impl.block.factory.Procedures;
 import org.eclipse.collections.impl.block.procedure.CountProcedure;
-import org.eclipse.collections.impl.jmh.runner.AbstractJMHTestRunner;
 import org.eclipse.collections.impl.list.Interval;
 import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.parallel.ParallelIterate;

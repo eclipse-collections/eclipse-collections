@@ -92,12 +92,14 @@ public class ObjectIntProcedureFJTaskRunnerTest
         }
 
         @Override
+        @Test
         public void countDown()
         {
             throw new CountDownCalledException();
         }
 
         @Override
+        @Test
         public void await()
         {
             throw new AwaitDownCalledException();

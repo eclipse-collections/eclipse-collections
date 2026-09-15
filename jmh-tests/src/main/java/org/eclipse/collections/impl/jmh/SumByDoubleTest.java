@@ -19,7 +19,6 @@ import org.eclipse.collections.impl.jmh.domain.Account;
 import org.eclipse.collections.impl.jmh.domain.Position;
 import org.eclipse.collections.impl.jmh.domain.Positions;
 import org.eclipse.collections.impl.jmh.domain.Product;
-import org.eclipse.collections.impl.jmh.runner.AbstractJMHTestRunner;
 import org.eclipse.collections.impl.parallel.ParallelIterate;
 import org.junit.Assert;
 import org.junit.Test;

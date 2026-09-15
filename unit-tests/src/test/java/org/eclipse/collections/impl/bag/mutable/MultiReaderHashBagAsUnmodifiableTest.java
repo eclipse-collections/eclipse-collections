@@ -36,6 +36,7 @@ public class MultiReaderHashBagAsUnmodifiableTest extends UnmodifiableMutableCol
         assertEquals(expected, actual);
     }
 
+    @Override
     @Test
     public void iteratorRemove()
     {

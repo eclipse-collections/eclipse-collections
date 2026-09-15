@@ -336,7 +336,7 @@ public final class Interval
     @Override
     public boolean contains(Object object)
     {
-        return object instanceof Integer && this.contains(((Integer) object).intValue());
+        return object instanceof Integer integer && this.contains(integer.intValue());
     }
 
     /**
@@ -774,6 +774,12 @@ public final class Interval
         Integer[] result = new Integer[this.size()];
         this.forEachWithIndex((ObjectIntProcedure<Integer>) (each, index) -> result[index] = each);
         return result;
+    }
+
+    @Override
+    public <E> E[] toArray(E[] array)
+    {
+        return super.toArray(array);
     }
 
     /**

@@ -178,6 +178,7 @@ public class ImmutableEmptyListTest extends AbstractImmutableListTestCase
     }
 
     @Override
+    @Test
     public void allSatisfyWith()
     {
         ImmutableList<Integer> integers = this.classUnderTest();
@@ -185,6 +186,7 @@ public class ImmutableEmptyListTest extends AbstractImmutableListTestCase
     }
 
     @Override
+    @Test
     public void noneSatisfy()
     {
         ImmutableList<Integer> integers = this.classUnderTest();
@@ -192,6 +194,7 @@ public class ImmutableEmptyListTest extends AbstractImmutableListTestCase
     }
 
     @Override
+    @Test
     public void noneSatisfyWith()
     {
         ImmutableList<Integer> integers = this.classUnderTest();
@@ -207,6 +210,7 @@ public class ImmutableEmptyListTest extends AbstractImmutableListTestCase
     }
 
     @Override
+    @Test
     public void anySatisfyWith()
     {
         ImmutableList<Integer> integers = this.classUnderTest();

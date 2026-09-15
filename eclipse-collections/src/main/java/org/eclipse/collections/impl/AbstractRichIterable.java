@@ -11,7 +11,6 @@
 package org.eclipse.collections.impl;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Optional;
@@ -60,7 +59,7 @@ import org.eclipse.collections.impl.block.factory.Predicates;
 import org.eclipse.collections.impl.block.factory.Predicates2;
 import org.eclipse.collections.impl.block.factory.Procedures;
 import org.eclipse.collections.impl.block.factory.Procedures2;
-import org.eclipse.collections.impl.block.procedure.AppendStringProcedure;
+import org.eclipse.collections.impl.block.procedure.AppendStringWithSelfProcedure;
 import org.eclipse.collections.impl.block.procedure.BiMapCollectProcedure;
 import org.eclipse.collections.impl.block.procedure.CollectIfProcedure;
 import org.eclipse.collections.impl.block.procedure.CollectProcedure;
@@ -111,30 +110,6 @@ public abstract class AbstractRichIterable<T> implements RichIterable<T>
     public boolean containsAllArguments(Object... elements)
     {
         return ArrayIterate.allSatisfyWith(elements, Predicates2.in(), this);
-    }
-
-    @Override
-    public Object[] toArray()
-    {
-        Object[] result = new Object[this.size()];
-        this.forEachWithIndex((each, index) -> result[index] = each);
-        return result;
-    }
-
-    @Override
-    public <E> E[] toArray(E[] array)
-    {
-        int size = this.size();
-        E[] result = array.length < size
-                ? (E[]) Array.newInstance(array.getClass().getComponentType(), size)
-                : array;
-
-        this.forEachWithIndex((each, index) -> result[index] = (E) each);
-        if (result.length > size)
-        {
-            result[size] = null;
-        }
-        return result;
     }
 
     @Override
@@ -602,14 +577,14 @@ public abstract class AbstractRichIterable<T> implements RichIterable<T>
     @Override
     public void appendString(Appendable appendable, String separator)
     {
-        Procedure<T> appendStringProcedure = new AppendStringProcedure<>(appendable, separator);
-        this.forEach(appendStringProcedure);
+        this.appendString(appendable, "", separator, "");
     }
 
     @Override
     public void appendString(Appendable appendable, String start, String separator, String end)
     {
-        Procedure<T> appendStringProcedure = new AppendStringProcedure<>(appendable, separator);
+        Procedure<T> appendStringProcedure =
+                new AppendStringWithSelfProcedure<>(appendable, separator, this, "(this Collection)");
         try
         {
             appendable.append(start);

@@ -19,6 +19,7 @@ public final class DoubleFunctionImplSerializationTest
     {
         private static final long serialVersionUID = 1L;
 
+        @Override
         public double doubleValueOf(Object anObject)
         {
             return 0;

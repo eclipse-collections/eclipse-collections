@@ -20,7 +20,11 @@ import org.eclipse.collections.api.bimap.MutableBiMap;
 import org.eclipse.collections.impl.bimap.mutable.HashBiMap;
 import org.eclipse.collections.impl.tuple.ImmutableEntry;
 import org.eclipse.collections.test.NoIteratorTestCase;
+import org.eclipse.collections.test.bimap.BiMapTestCase;
+import org.eclipse.collections.test.map.NoIteratorBiMapValuesCollectionTestCase;
+import org.eclipse.collections.test.map.NoIteratorMapKeySetTestCase;
 import org.eclipse.collections.test.map.mutable.MapTestCase;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -67,27 +71,10 @@ public class HashBiMapNoIteratorTest implements MutableBiMapTestCase, NoIterator
     }
 
     @Override
-    public void Iterable_next()
-    {
-        NoIteratorTestCase.super.Iterable_next();
-    }
-
-    @Override
+    @Test
     public void Iterable_remove()
     {
         NoIteratorTestCase.super.Iterable_remove();
-    }
-
-    @Override
-    public void RichIterable_getFirst()
-    {
-        NoIteratorTestCase.super.RichIterable_getFirst();
-    }
-
-    @Override
-    public void RichIterable_getLast()
-    {
-        NoIteratorTestCase.super.RichIterable_getLast();
     }
 
     @Override
@@ -167,6 +154,36 @@ public class HashBiMapNoIteratorTest implements MutableBiMapTestCase, NoIterator
             {
                 throw new AssertionError("No iteration patterns should delegate to iterator()");
             }
+        }
+    }
+
+    @Nested
+    public class KeySetView implements NoIteratorMapKeySetTestCase
+    {
+        @SafeVarargs
+        @Override
+        public final <T> Set<T> newWith(T... elements)
+        {
+            MutableBiMap<T, T> result = new HashBiMapNoIterator<>();
+            BiMapTestCase.populateBiMapWithSameKeyAndValue(result, elements);
+            return result.keySet();
+        }
+    }
+
+    @Nested
+    public class ValuesCollectionView implements NoIteratorBiMapValuesCollectionTestCase
+    {
+        @Override
+        public boolean allowsSerialization()
+        {
+            return false;
+        }
+
+        @SafeVarargs
+        @Override
+        public final <T> Collection<T> newWith(T... elements)
+        {
+            return HashBiMapNoIteratorTest.this.newWith(elements).values();
         }
     }
 }

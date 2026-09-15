@@ -20,6 +20,9 @@ import org.eclipse.collections.api.map.MutableMap;
 import org.eclipse.collections.impl.map.mutable.UnifiedMap;
 import org.eclipse.collections.impl.tuple.ImmutableEntry;
 import org.eclipse.collections.test.NoIteratorTestCase;
+import org.eclipse.collections.test.map.NoIteratorMapKeySetTestCase;
+import org.eclipse.collections.test.map.NoIteratorMapValuesCollectionTestCase;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -60,45 +63,18 @@ public class UnifiedMapNoIteratorTest implements MutableMapTestCase, NoIteratorT
     }
 
     @Override
-    public void Iterable_next()
-    {
-        NoIteratorTestCase.super.Iterable_next();
-    }
-
-    @Override
+    @Test
     public void Iterable_remove()
     {
         NoIteratorTestCase.super.Iterable_remove();
     }
 
     @Override
-    public void RichIterable_getFirst()
+    @Test
+    public void RichIterable_getOnly()
     {
-        NoIteratorTestCase.super.RichIterable_getFirst();
-    }
-
-    @Override
-    public void RichIterable_getLast()
-    {
-        NoIteratorTestCase.super.RichIterable_getLast();
-    }
-
-    @Override
-    public void RichIterable_getFirst_and_getLast()
-    {
-        // Not applicable
-    }
-
-    @Override
-    public void RichIterable_getLast_empty_null()
-    {
-        // Not applicable
-    }
-
-    @Override
-    public void RichIterable_fused_collectMakeString()
-    {
-        // Not applicable
+        // TODO: Optimize getOnly() to avoid delegating to iterator().
+        assertThrows(AssertionError.class, () -> this.newWith(1).getOnly());
     }
 
     @Override
@@ -142,22 +118,15 @@ public class UnifiedMapNoIteratorTest implements MutableMapTestCase, NoIteratorT
     }
 
     @Override
+    @Test
     public void MutableMapIterable_updateValue()
     {
-        /**
+        /*
          * TODO: {@link UnifiedMap#KeySet#equals)} should be optimized to not use an iterator
          */
 
-        /**
+        /*
          * TODO: {@link org.eclipse.collections.impl.set.mutable.UnifiedSet#addAll(Collection)} should be optimized to not use an iterator when another UnifiedSet is passed in.
-         */
-    }
-
-    @Override
-    public void MutableMapIterable_removeIf()
-    {
-        /**
-         * TODO: {@link UnifiedMap#removeIf(org.eclipse.collections.api.block.predicate.Predicate2)} should be optimized to not use an iterator
          */
     }
 
@@ -212,6 +181,34 @@ public class UnifiedMapNoIteratorTest implements MutableMapTestCase, NoIteratorT
             {
                 throw new AssertionError("No iteration patterns should delegate to iterator()");
             }
+        }
+    }
+
+    @Nested
+    public class KeySetView implements NoIteratorMapKeySetTestCase
+    {
+        @SafeVarargs
+        @Override
+        public final <T> Set<T> newWith(T... elements)
+        {
+            Random random = new Random(CURRENT_TIME_MILLIS);
+            MutableMap<T, Object> result = new UnifiedMapNoIterator<>();
+            for (T element : elements)
+            {
+                assertNull(result.put(element, random.nextDouble()));
+            }
+            return result.keySet();
+        }
+    }
+
+    @Nested
+    public class ValuesCollectionView implements NoIteratorMapValuesCollectionTestCase
+    {
+        @SafeVarargs
+        @Override
+        public final <T> Collection<T> newWith(T... elements)
+        {
+            return UnifiedMapNoIteratorTest.this.newWith(elements).values();
         }
     }
 }

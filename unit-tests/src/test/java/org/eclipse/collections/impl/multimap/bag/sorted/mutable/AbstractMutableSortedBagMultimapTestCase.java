@@ -114,6 +114,7 @@ public abstract class AbstractMutableSortedBagMultimapTestCase extends AbstractM
     }
 
     @Override
+    @Test
     public void clear()
     {
         MutableMultimap<Integer, String> multimap = this.newMultimapWithKeysValues(1, "One", 2, "Two", 3, "Three");

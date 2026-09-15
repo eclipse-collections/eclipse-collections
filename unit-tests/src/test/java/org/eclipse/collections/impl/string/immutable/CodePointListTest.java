@@ -397,6 +397,7 @@ public class CodePointListTest extends AbstractImmutableIntListTestCase
     }
 
     @Override
+    @Test
     public void toReversed()
     {
         super.toReversed();

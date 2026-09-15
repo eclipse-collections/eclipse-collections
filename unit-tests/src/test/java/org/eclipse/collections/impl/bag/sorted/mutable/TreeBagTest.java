@@ -66,6 +66,7 @@ public class TreeBagTest extends AbstractMutableSortedBagTestCase
         Verify.assertSortedBagsEqual(sortedBagB, TreeBag.newBag(sortedBagB));
     }
 
+    @Override
     @Test
     public void selectDuplicates()
     {
@@ -74,6 +75,7 @@ public class TreeBagTest extends AbstractMutableSortedBagTestCase
         Verify.assertSortedBagsEqual(TreeBag.newBagWith(1, 1, 1, 1, 1), sortedBagB.selectDuplicates());
     }
 
+    @Override
     @Test
     public void collectWithIndex()
     {
@@ -93,6 +95,7 @@ public class TreeBagTest extends AbstractMutableSortedBagTestCase
                 PrimitiveTuples.pair((Integer) 1, 9)), sortedBagB.collectWithIndex(PrimitiveTuples::pair));
     }
 
+    @Override
     @Test
     public void flatCollectWith()
     {

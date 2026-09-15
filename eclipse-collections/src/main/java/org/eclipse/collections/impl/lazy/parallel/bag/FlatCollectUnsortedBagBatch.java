@@ -34,7 +34,7 @@ public class FlatCollectUnsortedBagBatch<T, V> extends AbstractBatch<V> implemen
     @Override
     public void forEach(Procedure<? super V> procedure)
     {
-        this.unsortedBagBatch.forEach(each -> Iterate.forEach(this.function.valueOf(each), procedure::value));
+        this.unsortedBagBatch.forEach(each -> Iterate.forEach(this.function.valueOf(each), procedure));
     }
 
     @Override

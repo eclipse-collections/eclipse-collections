@@ -34,7 +34,7 @@ import org.eclipse.collections.impl.map.AbstractSynchronizedMapIterable;
 import org.eclipse.collections.impl.map.MapIterableTestCase;
 import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import org.eclipse.collections.impl.test.Verify;
-import org.eclipse.collections.impl.test.domain.Key;
+import org.eclipse.collections.impl.test.domain.Holder;
 import org.eclipse.collections.impl.tuple.ImmutableEntry;
 import org.eclipse.collections.impl.tuple.Tuples;
 import org.eclipse.collections.impl.utility.Iterate;
@@ -149,12 +149,13 @@ public abstract class MutableMapIterableTestCase extends MapIterableTestCase
                 ImmutableEntry.of("Four", 4))));
         assertEquals(UnifiedMap.newWithKeysValues("One", 1, "Three", 3), map);
 
-        MutableMapIterable<Integer, Integer> integers = this.newMapWithKeysValues(1, 1, 2, 2, 3, 3);
-        Integer copy = new Integer(1);
-        assertTrue(integers.entrySet().retainAll(mList(ImmutableEntry.of(copy, copy))));
-        assertEquals(iMap(copy, copy), integers);
-        assertNotSame(copy, Iterate.getOnly(integers.entrySet()).getKey());
-        assertNotSame(copy, Iterate.getOnly(integers.entrySet()).getValue());
+        MutableMapIterable<Holder<Integer>, Holder<Integer>> holders =
+                this.newMapWithKeysValues(new Holder<>(1), new Holder<>(1), new Holder<>(2), new Holder<>(2), new Holder<>(3), new Holder<>(3));
+        Holder<Integer> copy = new Holder<>(1);
+        assertTrue(holders.entrySet().retainAll(mList(ImmutableEntry.of(copy, copy))));
+        assertEquals(iMap(copy, copy), holders);
+        assertNotSame(copy, Iterate.getOnly(holders.entrySet()).getKey());
+        assertNotSame(copy, Iterate.getOnly(holders.entrySet()).getValue());
     }
 
     @Test
@@ -387,6 +388,28 @@ public abstract class MutableMapIterableTestCase extends MapIterableTestCase
         assertEquals("4", map.getIfAbsentPut(4, new PassThruFunction0<>("4")));
         assertEquals("3", map.getIfAbsentPut(3, new PassThruFunction0<>("3")));
         Verify.assertContainsKeyValue(4, "4", map);
+
+        MutableMapIterable<Integer, String> map2 = this.newMapWithKeysValues(1, "1", 2, "2", 3, "3");
+        RuntimeException factoryException = new RuntimeException("Factory exception");
+        RuntimeException actualException = assertThrows(
+                RuntimeException.class,
+                () -> map2.getIfAbsentPut(5, () -> { throw factoryException; }));
+        assertSame(factoryException, actualException);
+        assertEquals(UnifiedMap.newWithKeysValues(1, "1", 2, "2", 3, "3"), map2);
+        assertFalse(map2.containsKey(5));
+        assertNull(map2.get(5));
+        assertEquals(3, map2.size());
+
+        MutableMapIterable<Integer, String> emptyMap = this.newMap();
+        RuntimeException emptyMapException = assertThrows(
+                RuntimeException.class,
+                () -> emptyMap.getIfAbsentPut(1, () -> { throw factoryException; }));
+        assertSame(factoryException, emptyMapException);
+        assertTrue(emptyMap.isEmpty());
+
+        String result = map2.getIfAbsentPut(1, () -> { throw new RuntimeException("Should not be called"); });
+        assertEquals("1", result);
+        assertEquals(3, map2.size());
     }
 
     @Test
@@ -410,6 +433,28 @@ public abstract class MutableMapIterableTestCase extends MapIterableTestCase
         assertEquals(Integer.valueOf(4), map.getIfAbsentPutWithKey(4, Functions.getIntegerPassThru()));
         assertEquals(Integer.valueOf(3), map.getIfAbsentPutWithKey(3, Functions.getIntegerPassThru()));
         Verify.assertContainsKeyValue(Integer.valueOf(4), Integer.valueOf(4), map);
+
+        MutableMapIterable<Integer, Integer> map2 = this.newMapWithKeysValues(1, 1, 2, 2, 3, 3);
+        RuntimeException functionException = new RuntimeException("Function exception");
+        RuntimeException actualException = assertThrows(
+                RuntimeException.class,
+                () -> map2.getIfAbsentPutWithKey(5, k -> { throw functionException; }));
+        assertSame(functionException, actualException);
+        assertEquals(UnifiedMap.newWithKeysValues(1, 1, 2, 2, 3, 3), map2);
+        assertFalse(map2.containsKey(5));
+        assertNull(map2.get(5));
+        assertEquals(3, map2.size());
+
+        MutableMapIterable<Integer, Integer> emptyMap = this.newMap();
+        RuntimeException emptyMapException = assertThrows(
+                RuntimeException.class,
+                () -> emptyMap.getIfAbsentPutWithKey(1, k -> { throw functionException; }));
+        assertSame(functionException, emptyMapException);
+        assertTrue(emptyMap.isEmpty());
+
+        Integer result = map2.getIfAbsentPutWithKey(1, k -> { throw new RuntimeException("Should not be called"); });
+        assertEquals(Integer.valueOf(1), result);
+        assertEquals(3, map2.size());
     }
 
     @Test
@@ -420,28 +465,28 @@ public abstract class MutableMapIterableTestCase extends MapIterableTestCase
         assertEquals("4", map.getIfAbsentPutWith(4, String::valueOf, 4));
         assertEquals("3", map.getIfAbsentPutWith(3, String::valueOf, 3));
         Verify.assertContainsKeyValue(4, "4", map);
-    }
 
-    @Test
-    public void getIfAbsentPut_block_throws()
-    {
-        MutableMapIterable<Integer, String> map = this.newMapWithKeysValues(1, "1", 2, "2", 3, "3");
-        assertThrows(RuntimeException.class, () -> map.getIfAbsentPut(4, () ->
-        {
-            throw new RuntimeException();
-        }));
-        assertEquals(UnifiedMap.newWithKeysValues(1, "1", 2, "2", 3, "3"), map);
-    }
+        MutableMapIterable<Integer, String> map2 = this.newMapWithKeysValues(1, "1", 2, "2", 3, "3");
+        RuntimeException functionException = new RuntimeException("Function exception");
+        RuntimeException actualException = assertThrows(
+                RuntimeException.class,
+                () -> map2.getIfAbsentPutWith(5, p -> { throw functionException; }, "param"));
+        assertSame(functionException, actualException);
+        assertEquals(UnifiedMap.newWithKeysValues(1, "1", 2, "2", 3, "3"), map2);
+        assertFalse(map2.containsKey(5));
+        assertNull(map2.get(5));
+        assertEquals(3, map2.size());
 
-    @Test
-    public void getIfAbsentPutWith_block_throws()
-    {
-        MutableMapIterable<Integer, String> map = this.newMapWithKeysValues(1, "1", 2, "2", 3, "3");
-        assertThrows(RuntimeException.class, () -> map.getIfAbsentPutWith(4, object ->
-        {
-            throw new RuntimeException();
-        }, null));
-        assertEquals(UnifiedMap.newWithKeysValues(1, "1", 2, "2", 3, "3"), map);
+        MutableMapIterable<Integer, String> emptyMap = this.newMap();
+        RuntimeException emptyMapException = assertThrows(
+                RuntimeException.class,
+                () -> emptyMap.getIfAbsentPutWith(1, p -> { throw functionException; }, "param"));
+        assertSame(functionException, emptyMapException);
+        assertTrue(emptyMap.isEmpty());
+
+        String result = map2.getIfAbsentPutWith(1, p -> { throw new RuntimeException("Should not be called"); }, "param");
+        assertEquals("1", result);
+        assertEquals(3, map2.size());
     }
 
     @Test
@@ -472,33 +517,33 @@ public abstract class MutableMapIterableTestCase extends MapIterableTestCase
     @Test
     public void keyPreservation()
     {
-        Key key = new Key("key");
+        Holder<String> key = new Holder<>("key");
 
-        Key duplicateKey1 = new Key("key");
-        MapIterable<Key, Integer> map1 = this.newMapWithKeysValues(key, 1, duplicateKey1, 2);
+        Holder<String> duplicateKey1 = new Holder<>("key");
+        MapIterable<Holder<String>, Integer> map1 = this.newMapWithKeysValues(key, 1, duplicateKey1, 2);
         Verify.assertSize(1, map1);
         Verify.assertContainsKeyValue(key, 2, map1);
         assertSame(key, map1.keysView().getFirst());
 
-        Key duplicateKey2 = new Key("key");
-        MapIterable<Key, Integer> map2 = this.newMapWithKeysValues(key, 1, duplicateKey1, 2, duplicateKey2, 3);
+        Holder<String> duplicateKey2 = new Holder<>("key");
+        MapIterable<Holder<String>, Integer> map2 = this.newMapWithKeysValues(key, 1, duplicateKey1, 2, duplicateKey2, 3);
         Verify.assertSize(1, map2);
         Verify.assertContainsKeyValue(key, 3, map2);
         assertSame(key, map1.keysView().getFirst());
 
-        Key duplicateKey3 = new Key("key");
-        MapIterable<Key, Integer> map3 = this.newMapWithKeysValues(key, 1, new Key("not a dupe"), 2, duplicateKey3, 3);
+        Holder<String> duplicateKey3 = new Holder<>("key");
+        MapIterable<Holder<String>, Integer> map3 = this.newMapWithKeysValues(key, 1, new Holder<>("not a dupe"), 2, duplicateKey3, 3);
         Verify.assertSize(2, map3);
-        Verify.assertContainsAllKeyValues(map3, key, 3, new Key("not a dupe"), 2);
+        Verify.assertContainsAllKeyValues(map3, key, 3, new Holder<>("not a dupe"), 2);
         assertSame(key, map3.keysView().detect(key::equals));
 
-        Key duplicateKey4 = new Key("key");
-        MapIterable<Key, Integer> map4 = this.newMapWithKeysValues(key, 1, new Key("still not a dupe"), 2, new Key("me neither"), 3, duplicateKey4, 4);
+        Holder<String> duplicateKey4 = new Holder<>("key");
+        MapIterable<Holder<String>, Integer> map4 = this.newMapWithKeysValues(key, 1, new Holder<>("still not a dupe"), 2, new Holder<>("me neither"), 3, duplicateKey4, 4);
         Verify.assertSize(3, map4);
-        Verify.assertContainsAllKeyValues(map4, key, 4, new Key("still not a dupe"), 2, new Key("me neither"), 3);
+        Verify.assertContainsAllKeyValues(map4, key, 4, new Holder<>("still not a dupe"), 2, new Holder<>("me neither"), 3);
         assertSame(key, map4.keysView().detect(key::equals));
 
-        MapIterable<Key, Integer> map5 = this.newMapWithKeysValues(key, 1, duplicateKey1, 2, duplicateKey3, 3, duplicateKey4, 4);
+        MapIterable<Holder<String>, Integer> map5 = this.newMapWithKeysValues(key, 1, duplicateKey1, 2, duplicateKey3, 3, duplicateKey4, 4);
         Verify.assertSize(1, map5);
         Verify.assertContainsKeyValue(key, 4, map5);
         assertSame(key, map5.keysView().getFirst());
@@ -760,6 +805,26 @@ public abstract class MutableMapIterableTestCase extends MapIterableTestCase
         Iterate.forEach(Interval.oneTo(1000), each -> map.updateValue(each % 10, () -> 0, integer -> integer + 1));
         assertEquals(Interval.zeroTo(9).toSet(), map.keySet());
         assertEquals(FastList.newList(Collections.nCopies(10, 100)), FastList.newList(map.values()));
+
+        MutableMapIterable<Integer, Integer> map2 = this.newMapWithKeysValues(1, 1, 2, 2, 3, 3);
+        RuntimeException factoryException = new RuntimeException("Factory exception");
+        RuntimeException functionException = new RuntimeException("Function exception");
+
+        RuntimeException actualException1 = assertThrows(
+                RuntimeException.class,
+                () -> map2.updateValue(4, () -> { throw factoryException; }, v -> v + 1));
+        assertSame(factoryException, actualException1);
+        assertEquals(this.newMapWithKeysValues(1, 1, 2, 2, 3, 3), map2);
+        assertFalse(map2.containsKey(4));
+        assertEquals(3, map2.size());
+
+        RuntimeException actualException2 = assertThrows(
+                RuntimeException.class,
+                () -> map2.updateValue(2, () -> 0, v -> { throw functionException; }));
+        assertSame(functionException, actualException2);
+        assertEquals(this.newMapWithKeysValues(1, 1, 2, 2, 3, 3), map2);
+        assertEquals(Integer.valueOf(2), map2.get(2));
+        assertEquals(3, map2.size());
     }
 
     @Test
@@ -786,6 +851,26 @@ public abstract class MutableMapIterableTestCase extends MapIterableTestCase
         }, "test"));
         assertEquals(Interval.zeroTo(9).toSet(), map.keySet());
         assertEquals(FastList.newList(Collections.nCopies(10, 100)), FastList.newList(map.values()));
+
+        MutableMapIterable<Integer, Integer> map2 = this.newMapWithKeysValues(1, 1, 2, 2, 3, 3);
+        RuntimeException factoryException = new RuntimeException("Factory exception");
+        RuntimeException functionException = new RuntimeException("Function exception");
+
+        RuntimeException actualException1 = assertThrows(
+                RuntimeException.class,
+                () -> map2.updateValueWith(4, () -> { throw factoryException; }, (v, p) -> v + 1, "param"));
+        assertSame(factoryException, actualException1);
+        assertEquals(this.newMapWithKeysValues(1, 1, 2, 2, 3, 3), map2);
+        assertFalse(map2.containsKey(4));
+        assertEquals(3, map2.size());
+
+        RuntimeException actualException2 = assertThrows(
+                RuntimeException.class,
+                () -> map2.updateValueWith(2, () -> 0, (v, p) -> { throw functionException; }, "param"));
+        assertSame(functionException, actualException2);
+        assertEquals(this.newMapWithKeysValues(1, 1, 2, 2, 3, 3), map2);
+        assertEquals(Integer.valueOf(2), map2.get(2));
+        assertEquals(3, map2.size());
     }
 
     @Test

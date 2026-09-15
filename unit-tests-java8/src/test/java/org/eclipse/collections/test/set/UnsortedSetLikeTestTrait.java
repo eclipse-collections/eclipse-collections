@@ -28,8 +28,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.isOneOf;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public interface UnsortedSetLikeTestTrait extends RichIterableUniqueTestCase, UnorderedIterableTestCase
 {
@@ -57,6 +57,11 @@ public interface UnsortedSetLikeTestTrait extends RichIterableUniqueTestCase, Un
     @Test
     default void Iterable_next()
     {
+        if (!this.allowsIterator())
+        {
+            assertThrows(AssertionError.class, () -> this.newWith(3, 2, 1).iterator().next());
+            return;
+        }
         Iterable<Integer> iterable = this.newWith(3, 2, 1);
 
         MutableCollection<Integer> mutableCollection = this.newMutableForFilter();
@@ -79,7 +84,14 @@ public interface UnsortedSetLikeTestTrait extends RichIterableUniqueTestCase, Un
         RichIterable<Integer> integers = this.newWith(3, 2, 1);
         Integer first = integers.getFirst();
         assertThat(first, isOneOf(3, 2, 1));
-        assertEquals(integers.iterator().next(), first);
+        if (this.allowsIterator())
+        {
+            assertThat(integers.iterator().next(), equalTo(first));
+        }
+        else
+        {
+            assertThrows(AssertionError.class, () -> integers.iterator().next());
+        }
     }
 
     @Override

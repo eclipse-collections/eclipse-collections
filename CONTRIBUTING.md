@@ -3,7 +3,7 @@ Contributor License
 
 If this is your first time contributing to an Eclipse Foundation project, you'll need to sign the [Eclipse Contributor Agreement][ECA].
 
-- [Create an account](https://dev.eclipse.org/site_login/createaccount.php) on dev.eclipse.org
+- [Create an account](https://accounts.eclipse.org/user/register?destination=/user/login) on accounts.eclipse.org
 - Open your [Account Settings tab](https://dev.eclipse.org/site_login/myaccount.php#open_tab_accountsettings), enter your GitHub ID and click Update Account
 - Read and [sign the ECA](https://dev.eclipse.org/site_login/myaccount.php#open_tab_cla)
 - Use the exact same email address for your Eclipse account and your commit author.
@@ -11,7 +11,7 @@ If this is your first time contributing to an Eclipse Foundation project, you'll
 Issues
 ------
 
-Search the [issue tracker](https://github.com/eclipse/eclipse-collections/issues) for a relevant issue or create a new one.
+Search the [issue tracker](https://github.com/eclipse-collections/eclipse-collections/issues) for a relevant issue or create a new one.
 
 Making changes
 --------------
@@ -22,7 +22,12 @@ Please add a description of your changes to the [draft release notes](RELEASE_NO
 
 Finally, submit a pull request.
 
-Details on [working with GitHub for Eclipse Collections](https://github.com/eclipse/eclipse-collections/wiki/Working-with-GitHub) is located at the Wiki.
+Details on [working with GitHub for Eclipse Collections](https://github.com/eclipse-collections/eclipse-collections/wiki/Working-with-GitHub) is located at the Wiki.
+
+AI Policy
+---------
+
+Please see the [AI Policy](AI_POLICY.md) for contributions that include AI generated output.
 
 Contact us
 ----------
@@ -33,8 +38,8 @@ Build
 -----
 The Eclipse Collections build requires below as dependencies.
 
-- Java 11+ 
-- Maven 3.1.0+
+- Java 17+
+- Maven 3.9.6+
 
 The Eclipse Collections build performs code generation to create primitive collections. Run the full build once before opening your IDE.
 
@@ -78,7 +83,7 @@ Commit messages
 
 - [Use the imperative mood][imperative-mood] as in "Fix bug" or "Add feature" rather than "Fixed bug" or "Added feature"
 - [Mention the GitHub issue][github-issue] when relevant
-- It's a good idea to follow the [advice in Pro Git](https://git-scm.com/book/ch5-2.html)
+- It's a good idea to follow the [advice in Pro Git](https://git-scm.com/book/en/v2/Distributed-Git-Contributing-to-a-Project)
 
 Pull requests
 -------------
@@ -102,8 +107,8 @@ That's it! Thanks for contributing to Eclipse Collections!
 [jmh]:             http://openjdk.java.net/projects/code-tools/jmh/
 [semver]:          http://semver.org/
 [style-guide]:     https://google.github.io/styleguide/javaguide.html
-[rebase]:          https://github.com/edx/edx-platform/wiki/How-to-Rebase-a-Pull-Request
-[github]:          https://github.com/eclipse/eclipse-collections/actions
+[rebase]:          https://github.com/edx/edx-solutions-edx-platform/wiki/How-to-Rebase-a-Pull-Request
+[github]:          https://github.com/eclipse-collections/eclipse-collections/actions
 [imperative-mood]: https://github.com/git/git/blob/master/Documentation/SubmittingPatches
-[github-issue]:    https://help.github.com/articles/closing-issues-via-commit-messages/
-[mailing-list]:    https://dev.eclipse.org/mailman/listinfo/collections-dev
+[github-issue]:    https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue
+[mailing-list]:    https://accounts.eclipse.org/mailing-list/collections-dev

@@ -16,7 +16,7 @@
     <parent>
         <artifactId>eclipse-collections-parent</artifactId>
         <groupId>org.eclipse.collections</groupId>
-        <version>12.0.0-SNAPSHOT</version>
+        <version>14.0.0-SNAPSHOT</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -67,10 +67,18 @@
             <build>
                 <plugins>
                     <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
                         <configuration>
+                            <source>17</source>
+                            <doctitle>Eclipse Collections - ${project.version}</doctitle>
+                            <windowtitle>Eclipse Collections - ${project.version}</windowtitle>
+                            <show>public</show>
+                            <links>
+                                <link>https://docs.oracle.com/en/java/javase/17/docs/api</link>
+                            </links>
+                            <destDir>${project.version}</destDir>
                             <doclint>none</doclint>
+                            <legacyMode>true</legacyMode>
                         </configuration>
                     </plugin>
                 </plugins>

@@ -12,6 +12,8 @@ package org.eclipse.collections.api;
 
 import java.util.Collection;
 
+import org.eclipse.collections.api.bag.ImmutableBag;
+import org.eclipse.collections.api.bag.MutableBag;
 import org.eclipse.collections.api.block.function.Function;
 import org.eclipse.collections.api.block.function.Function2;
 import org.eclipse.collections.api.block.function.primitive.BooleanFunction;
@@ -25,7 +27,14 @@ import org.eclipse.collections.api.block.function.primitive.ShortFunction;
 import org.eclipse.collections.api.block.predicate.Predicate;
 import org.eclipse.collections.api.block.predicate.Predicate2;
 import org.eclipse.collections.api.block.procedure.Procedure;
+import org.eclipse.collections.api.factory.Bags;
+import org.eclipse.collections.api.factory.Lists;
+import org.eclipse.collections.api.factory.Sets;
+import org.eclipse.collections.api.list.ImmutableList;
+import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.ordered.OrderedIterable;
+import org.eclipse.collections.api.set.ImmutableSet;
+import org.eclipse.collections.api.set.MutableSet;
 import org.eclipse.collections.api.tuple.Pair;
 
 /**
@@ -39,6 +48,46 @@ public interface LazyIterable<T>
 {
     @Override
     T getFirst();
+
+    @Override
+    default ImmutableList<T> toImmutableList()
+    {
+        MutableList<T> mutableList = Lists.mutable.empty();
+        this.forEach(mutableList::add);
+        return mutableList.toImmutable();
+    }
+
+    @Override
+    default ImmutableSet<T> toImmutableSet()
+    {
+        MutableSet<T> mutableSet = Sets.mutable.empty();
+        this.forEach(mutableSet::add);
+        return mutableSet.toImmutable();
+    }
+
+    @Override
+    default ImmutableBag<T> toImmutableBag()
+    {
+        MutableBag<T> mutableBag = Bags.mutable.empty();
+        this.forEach(mutableBag::add);
+        return mutableBag.toImmutable();
+    }
+
+    @Override
+    default Object[] toArray()
+    {
+        MutableList<T> mutableList = Lists.mutable.empty();
+        this.forEach(mutableList::add);
+        return mutableList.toArray();
+    }
+
+    @Override
+    default <E> E[] toArray(E[] array)
+    {
+        MutableList<T> mutableList = Lists.mutable.empty();
+        this.forEach(mutableList::add);
+        return mutableList.toArray(array);
+    }
 
     /**
      * Creates a deferred iterable for selecting elements from the current iterable.

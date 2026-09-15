@@ -16,12 +16,16 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import org.eclipse.collections.api.bag.MutableBag;
 import org.eclipse.collections.api.collection.MutableCollection;
+import org.eclipse.collections.api.factory.Bags;
 import org.eclipse.collections.api.factory.Maps;
 import org.eclipse.collections.api.factory.Sets;
 import org.eclipse.collections.api.map.MapIterable;
 import org.eclipse.collections.api.map.MutableMap;
+import org.eclipse.collections.api.multimap.Multimap;
 import org.eclipse.collections.api.set.MutableSet;
+import org.eclipse.collections.api.tuple.Pair;
 import org.eclipse.collections.impl.block.procedure.CollectionAddProcedure;
 import org.eclipse.collections.impl.list.Interval;
 import org.eclipse.collections.impl.map.mutable.UnifiedMap;
@@ -71,12 +75,63 @@ public interface MapIterableTestCase extends RichIterableWithDuplicatesTestCase
         return true;
     }
 
+    default boolean allowsPut()
+    {
+        return true;
+    }
+
+    default boolean supportsNonComparableKeys()
+    {
+        return true;
+    }
+
+    default boolean supportsSelfReferentialValues()
+    {
+        return true;
+    }
+
     @Test
     default void serialization()
     {
         MapIterable<Object, String> original = this.newWith("Three", "Two", "One");
         MapIterable<Object, String> copy = SerializeTestHelper.serializeDeserialize(original);
         assertIterablesEqual(copy, original);
+    }
+
+    @Override
+    @Test
+    default void RichIterable_makeString_appendString()
+    {
+        RichIterableWithDuplicatesTestCase.super.RichIterable_makeString_appendString();
+
+        // A map holding itself as a value must render "(this Map)" instead of recursing.
+        // BiMap indexes by value, so a self-referential value overflows hashCode() at put time;
+        // it disables this via supportsSelfReferentialValues() and covers the case with its inverse.
+        if (this.allowsPut() && this.supportsSelfReferentialValues())
+        {
+            MapIterable<Object, Object> selfValue = this.newWithKeysValues();
+            ((Map<Object, Object>) selfValue).put("key", selfValue);
+            MapIterableTestCase.assertMakeStringAndAppendStringWithSelfReference(selfValue);
+        }
+    }
+
+    static void assertMakeStringAndAppendStringWithSelfReference(MapIterable<Object, Object> selfValue)
+    {
+        assertEquals("(this Map)", selfValue.makeString());
+        assertEquals("(this Map)", selfValue.makeString("/"));
+        assertEquals("[(this Map)]", selfValue.makeString("[", "/", "]"));
+
+        StringBuilder builder1 = new StringBuilder();
+        selfValue.appendString(builder1);
+        assertEquals("(this Map)", builder1.toString());
+
+        StringBuilder builder2 = new StringBuilder();
+        selfValue.appendString(builder2, "/");
+        assertEquals("(this Map)", builder2.toString());
+
+        StringBuilder builder3 = new StringBuilder();
+        selfValue.appendString(builder3, "[", "/", "]");
+        assertEquals("[(this Map)]", builder3.toString());
     }
 
     @Override
@@ -102,6 +157,34 @@ public interface MapIterableTestCase extends RichIterableWithDuplicatesTestCase
         assertEquals(
                 "[10:4, 9:4, 8:4, 7:4, 6:3, 5:3, 4:3, 3:2, 2:2, 1:1]",
                 this.newWith(4, 4, 4, 4, 3, 3, 3, 2, 2, 1).keyValuesView().toString());
+
+        if (this.allowsPut() && this.supportsNonComparableKeys())
+        {
+            MapIterable<Object, Object> selfKey = this.newWithKeysValues();
+            ((Map<Object, Object>) selfKey).put(selfKey, "value");
+            assertEquals("{(this Map)=value}", selfKey.toString());
+
+            MapIterable<Object, Object> selfValue = this.newWithKeysValues();
+            ((Map<Object, Object>) selfValue).put("key", selfValue);
+            assertEquals("{key=(this Map)}", selfValue.toString());
+        }
+        else if (!this.allowsPut())
+        {
+            MapIterable<Object, Object> selfKey = this.newWithKeysValues();
+            assertThrows(UnsupportedOperationException.class, () -> ((Map<Object, Object>) selfKey).put(selfKey, "value"));
+
+            MapIterable<Object, Object> selfValue = this.newWithKeysValues();
+            assertThrows(UnsupportedOperationException.class, () -> ((Map<Object, Object>) selfValue).put("key", selfValue));
+        }
+        else
+        {
+            MapIterable<Object, Object> selfKey = this.newWithKeysValues();
+            assertThrows(ClassCastException.class, () -> ((Map<Object, Object>) selfKey).put(selfKey, "value"));
+
+            MapIterable<Object, Object> selfValue = this.newWithKeysValues();
+            ((Map<Object, Object>) selfValue).put("key", selfValue);
+            assertEquals("{key=(this Map)}", selfValue.toString());
+        }
     }
 
     @Override
@@ -230,6 +313,19 @@ public interface MapIterableTestCase extends RichIterableWithDuplicatesTestCase
         MutableMap<Integer, String> result = map1.injectIntoKeyValue(Maps.mutable.empty(),
                 (map, key, value) -> map.withKeyValue(key, value.toString()));
         assertIterablesEqual(Maps.mutable.with(3, "3", 2, "2", 1, "1"), result);
+    }
+
+    @Test
+    default void MapIterable_flip()
+    {
+        MapIterable<String, Integer> map = this.newWithKeysValues("Three", 3, "Two", 2, "One", 1);
+        Multimap<Integer, String> result = map.flip();
+
+        MutableBag<Pair<Integer, String>> expected = Bags.mutable.with(
+                Tuples.pair(3, "Three"),
+                Tuples.pair(2, "Two"),
+                Tuples.pair(1, "One"));
+        assertEquals(expected, result.keyValuePairsView().toBag());
     }
 
     @Test

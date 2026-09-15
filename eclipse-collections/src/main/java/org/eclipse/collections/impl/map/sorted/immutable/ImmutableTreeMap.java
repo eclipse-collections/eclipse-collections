@@ -24,17 +24,21 @@ import java.util.Set;
 import java.util.SortedMap;
 
 import org.eclipse.collections.api.RichIterable;
+import org.eclipse.collections.api.block.predicate.Predicate;
 import org.eclipse.collections.api.block.procedure.Procedure2;
 import org.eclipse.collections.api.factory.SortedMaps;
 import org.eclipse.collections.api.factory.SortedSets;
 import org.eclipse.collections.api.map.ImmutableMap;
 import org.eclipse.collections.api.map.sorted.ImmutableSortedMap;
 import org.eclipse.collections.api.map.sorted.MutableSortedMap;
+import org.eclipse.collections.api.partition.list.PartitionImmutableList;
+import org.eclipse.collections.api.partition.list.PartitionMutableList;
 import org.eclipse.collections.api.set.sorted.MutableSortedSet;
 import org.eclipse.collections.api.tuple.Pair;
 import org.eclipse.collections.impl.block.factory.Comparators;
 import org.eclipse.collections.impl.block.factory.Predicates2;
 import org.eclipse.collections.impl.list.mutable.FastList;
+import org.eclipse.collections.impl.partition.list.PartitionFastList;
 import org.eclipse.collections.impl.set.sorted.mutable.TreeSortedSet;
 import org.eclipse.collections.impl.tuple.ImmutableEntry;
 import org.eclipse.collections.impl.utility.ArrayIterate;
@@ -310,6 +314,63 @@ public class ImmutableTreeMap<K, V>
         }
 
         return output.toImmutable();
+    }
+
+    @Override
+    public ImmutableSortedMap<K, V> takeWhile(Predicate<? super V> predicate)
+    {
+        MutableSortedMap<K, V> output = SortedMaps.mutable.of(this.comparator());
+        for (int i = 0; i < this.size(); i++)
+        {
+            if (predicate.accept(this.values[i]))
+            {
+                output.put(this.keys[i], this.values[i]);
+            }
+            else
+            {
+                break;
+            }
+        }
+        return output.toImmutable();
+    }
+
+    @Override
+    public ImmutableSortedMap<K, V> dropWhile(Predicate<? super V> predicate)
+    {
+        MutableSortedMap<K, V> output = SortedMaps.mutable.of(this.comparator());
+        int start = 0;
+        for (; start < this.size(); start++)
+        {
+            if (!predicate.accept(this.values[start]))
+            {
+                break;
+            }
+        }
+        for (int i = start; i < this.size(); i++)
+        {
+            output.put(this.keys[i], this.values[i]);
+        }
+        return output.toImmutable();
+    }
+
+    @Override
+    public PartitionImmutableList<V> partitionWhile(Predicate<? super V> predicate)
+    {
+        PartitionMutableList<V> result = new PartitionFastList<>();
+        int i = 0;
+        for (; i < this.size(); i++)
+        {
+            if (!predicate.accept(this.values[i]))
+            {
+                break;
+            }
+            result.getSelected().add(this.values[i]);
+        }
+        for (; i < this.size(); i++)
+        {
+            result.getRejected().add(this.values[i]);
+        }
+        return result.toImmutable();
     }
 
     private static final class EntryComparator<K, V> implements Comparator<Entry<K, V>>

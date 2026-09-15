@@ -138,6 +138,7 @@ public final class CollectionAdapter<T>
     }
 
     @Override
+    @SuppressWarnings("UndefinedEquals")
     public boolean equals(Object o)
     {
         if (this == o)

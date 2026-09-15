@@ -82,6 +82,12 @@ abstract class AbstractMemoryEfficientMutableSet<T>
     }
 
     @Override
+    public boolean removeIf(java.util.function.Predicate<? super T> filter)
+    {
+        throw new UnsupportedOperationException("Cannot remove from a fixed size set: " + this.getClass());
+    }
+
+    @Override
     public <P> boolean removeIfWith(Predicate2<? super T, ? super P> predicate, P parameter)
     {
         throw new UnsupportedOperationException("Cannot removeIfWith from a fixed size set: " + this.getClass());

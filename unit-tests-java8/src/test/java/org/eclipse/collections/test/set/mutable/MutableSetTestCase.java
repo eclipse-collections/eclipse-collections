@@ -24,30 +24,23 @@ public interface MutableSetTestCase extends SetTestCase, UnsortedSetIterableTest
     <T> MutableSet<T> newWith(T... elements);
 
     @Override
+    @Test
+    default void RichIterable_makeString_appendString()
+    {
+        UnsortedSetIterableTestCase.super.RichIterable_makeString_appendString();
+        MutableCollectionUniqueTestCase.super.RichIterable_makeString_appendString();
+    }
+
+    @Override
     default boolean allowsDuplicates()
     {
         return false;
     }
 
     @Override
-    @Test
-    default void Object_PostSerializedEqualsAndHashCode()
+    default OrderingType getOrderingType()
     {
-        UnsortedSetIterableTestCase.super.Object_PostSerializedEqualsAndHashCode();
-    }
-
-    @Override
-    @Test
-    default void Object_equalsAndHashCode()
-    {
-        UnsortedSetIterableTestCase.super.Object_equalsAndHashCode();
-    }
-
-    @Override
-    @Test
-    default void Iterable_toString()
-    {
-        SetTestCase.super.Iterable_toString();
+        return SetTestCase.super.getOrderingType();
     }
 
     @Override

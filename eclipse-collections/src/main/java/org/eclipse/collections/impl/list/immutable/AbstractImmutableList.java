@@ -676,7 +676,7 @@ abstract class AbstractImmutableList<T>
     }
 
     @Override
-    public ImmutableSubList<T> subList(int fromIndex, int toIndex)
+    public AbstractImmutableList<T> subList(int fromIndex, int toIndex)
     {
         return new ImmutableSubList<>(this, fromIndex, toIndex);
     }
@@ -832,6 +832,16 @@ abstract class AbstractImmutableList<T>
     protected MutableCollection<T> newMutable(int size)
     {
         return Lists.mutable.withInitialCapacity(size);
+    }
+
+    @Override
+    public AbstractImmutableList<T> reversed()
+    {
+        if (this.isEmpty())
+        {
+            return this;
+        }
+        return new ReversedImmutableList<>(this);
     }
 
     @Override

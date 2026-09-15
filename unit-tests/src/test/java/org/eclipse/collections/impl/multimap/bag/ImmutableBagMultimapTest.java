@@ -41,6 +41,7 @@ public class ImmutableBagMultimapTest extends AbstractImmutableMultimapTestCase
     }
 
     @Override
+    @Test
     public void noDuplicates()
     {
         // Bags allow duplicates

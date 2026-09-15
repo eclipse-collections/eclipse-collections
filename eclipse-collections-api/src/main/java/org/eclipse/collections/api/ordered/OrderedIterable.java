@@ -19,6 +19,7 @@ import java.util.Optional;
 import org.eclipse.collections.api.RichIterable;
 import org.eclipse.collections.api.block.function.Function;
 import org.eclipse.collections.api.block.function.Function2;
+import org.eclipse.collections.api.block.function.Function3;
 import org.eclipse.collections.api.block.function.primitive.BooleanFunction;
 import org.eclipse.collections.api.block.function.primitive.ByteFunction;
 import org.eclipse.collections.api.block.function.primitive.CharFunction;
@@ -293,6 +294,19 @@ public interface OrderedIterable<T> extends RichIterable<T>
     {
         int[] index = {0};
         return this.reject(each -> predicate.accept(each, index[0]++), target);
+    }
+
+    /**
+     * Returns the final result of evaluating the specified function using the accumulated value from the previous
+     * evaluation, each element, and its relative index. The initialValue is used as the accumulated value for the
+     * first evaluation.
+     *
+     * @since 14.0
+     */
+    default <IV> IV injectIntoWithIndex(IV initialValue, Function3<? super IV, ? super T, Integer, ? extends IV> function)
+    {
+        int[] index = {0};
+        return this.injectInto(initialValue, (prev, each) -> function.value(prev, each, index[0]++));
     }
 
     @Override

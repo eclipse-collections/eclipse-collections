@@ -37,7 +37,7 @@ public interface Mutable<name>SetFactory
      */
     Mutable<name>Set with();
     <(capacityMethods.(type))()>
-    
+
     /**
      * Same as {@link #with(<type>[])}.
      */

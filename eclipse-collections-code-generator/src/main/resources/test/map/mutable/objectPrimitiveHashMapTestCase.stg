@@ -35,6 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 public abstract class Object<name>HashMapTestCase extends AbstractMutableObject<name>MapTestCase
 {
@@ -553,6 +554,42 @@ public abstract class Object<name>HashMapTestCase extends AbstractMutableObject<
             assertEquals(each + 1, hashMap.updateValue(String.valueOf(each), each, incrementFunction)<delta.(type)>);
             assertEquals(each + 1, hashMap.get(String.valueOf(each))<delta.(type)>);
         }
+
+        MutableObject<name>Map\<String> map5 = this.newWithKeysValues("1", <(literal.(type))("1")>, "2", <(literal.(type))("2")>, "3", <(literal.(type))("3")>);
+        RuntimeException functionException = new RuntimeException("Function exception");
+
+        // existing key
+        RuntimeException actualException1 = assertThrows(
+                RuntimeException.class,
+                () -> map5.updateValue("2", <(literal.(type))("99")>, v -> { throw functionException; }));
+        assertSame(functionException, actualException1);
+        assertEquals(this.newWithKeysValues("1", <(literal.(type))("1")>, "2", <(literal.(type))("2")>, "3", <(literal.(type))("3")>), map5);
+        assertEquals(<(literal.(type))("1")>, map5.get("1")<delta.(type)>);
+        assertEquals(<(literal.(type))("2")>, map5.get("2")<delta.(type)>);
+        assertEquals(<(literal.(type))("3")>, map5.get("3")<delta.(type)>);
+        assertEquals(3, map5.size());
+
+        // new key
+        RuntimeException actualException2 = assertThrows(
+                RuntimeException.class,
+                () -> map5.updateValue("4", <(literal.(type))("5")>, v -> { throw functionException; }));
+        assertSame(functionException, actualException2);
+        assertEquals(this.newWithKeysValues("1", <(literal.(type))("1")>, "2", <(literal.(type))("2")>, "3", <(literal.(type))("3")>), map5);
+        assertEquals(<(literal.(type))("1")>, map5.get("1")<delta.(type)>);
+        assertEquals(<(literal.(type))("2")>, map5.get("2")<delta.(type)>);
+        assertEquals(<(literal.(type))("3")>, map5.get("3")<delta.(type)>);
+        assertFalse(map5.containsKey("4"));
+        assertEquals(3, map5.size());
+
+        <name>To<name>Function incrementBy10 = (<type> value) -> <(castIntToNarrowTypeWithParens.(type))("value + 10")>;
+        MutableObject<name>Map\<String> map6 = this.newWithKeysValues("1", <(literal.(type))("1")>, "2", <(literal.(type))("2")>);
+
+        assertEquals(<(literal.(type))("12")>, map6.updateValue("2", <(literal.(type))("99")>, incrementBy10)<delta.(type)>);
+        assertEquals(<(literal.(type))("12")>, map6.get("2")<delta.(type)>);
+
+        assertEquals(<(literal.(type))("109")>, map6.updateValue("3", <(literal.(type))("99")>, incrementBy10)<delta.(type)>);
+        assertEquals(<(literal.(type))("109")>, map6.get("3")<delta.(type)>);
+        assertEquals(3, map6.size());
     }
 
     @Test

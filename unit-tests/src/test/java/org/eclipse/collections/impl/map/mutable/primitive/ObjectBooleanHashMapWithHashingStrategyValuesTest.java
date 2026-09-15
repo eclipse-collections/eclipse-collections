@@ -20,11 +20,13 @@ public class ObjectBooleanHashMapWithHashingStrategyValuesTest extends ObjectBoo
 {
     private static final HashingStrategy<Integer> INT_MOD_10_STRATEGY = HashingStrategies.nullSafeHashingStrategy(new HashingStrategy<Integer>()
     {
+        @Override
         public int computeHashCode(Integer object)
         {
             return object.intValue() % 10;
         }
 
+        @Override
         public boolean equals(Integer object1, Integer object2)
         {
             return this.computeHashCode(object1) == this.computeHashCode(object2);

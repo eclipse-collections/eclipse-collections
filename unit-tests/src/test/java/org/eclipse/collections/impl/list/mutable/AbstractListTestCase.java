@@ -228,6 +228,7 @@ public abstract class AbstractListTestCase
     }
 
     @Override
+    @Test
     public void collectBoolean()
     {
         super.collectBoolean();
@@ -236,6 +237,7 @@ public abstract class AbstractListTestCase
     }
 
     @Override
+    @Test
     public void collectByte()
     {
         super.collectByte();
@@ -244,6 +246,7 @@ public abstract class AbstractListTestCase
     }
 
     @Override
+    @Test
     public void collectChar()
     {
         super.collectChar();
@@ -252,6 +255,7 @@ public abstract class AbstractListTestCase
     }
 
     @Override
+    @Test
     public void collectDouble()
     {
         super.collectDouble();
@@ -260,6 +264,7 @@ public abstract class AbstractListTestCase
     }
 
     @Override
+    @Test
     public void collectFloat()
     {
         super.collectFloat();
@@ -268,6 +273,7 @@ public abstract class AbstractListTestCase
     }
 
     @Override
+    @Test
     public void collectInt()
     {
         super.collectInt();
@@ -276,6 +282,7 @@ public abstract class AbstractListTestCase
     }
 
     @Override
+    @Test
     public void collectLong()
     {
         super.collectLong();
@@ -284,6 +291,7 @@ public abstract class AbstractListTestCase
     }
 
     @Override
+    @Test
     public void collectShort()
     {
         super.collectShort();
@@ -745,7 +753,7 @@ public abstract class AbstractListTestCase
     {
         MutableList<Object> list = this.newWith(1, 2, 3);
         list.add(list);
-        assertEquals("[1, 2, 3, (this " + list.getClass().getSimpleName() + ")]", list.toString());
+        assertEquals("[1, 2, 3, (this Collection)]", list.toString());
     }
 
     @Override
@@ -754,7 +762,7 @@ public abstract class AbstractListTestCase
     {
         MutableList<Object> list = this.newWith(1, 2, 3);
         list.add(list);
-        assertEquals("1, 2, 3, (this " + list.getClass().getSimpleName() + ')', list.makeString());
+        assertEquals("1, 2, 3, (this Collection)", list.makeString());
     }
 
     @Override
@@ -782,7 +790,7 @@ public abstract class AbstractListTestCase
 
         Appendable builder = new StringBuilder();
         list.appendString(builder);
-        assertEquals("1, 2, 3, (this " + list.getClass().getSimpleName() + ')', builder.toString());
+        assertEquals("1, 2, 3, (this Collection)", builder.toString());
     }
 
     @Override

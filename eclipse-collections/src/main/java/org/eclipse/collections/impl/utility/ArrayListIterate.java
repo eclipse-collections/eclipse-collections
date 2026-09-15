@@ -1488,6 +1488,14 @@ public final class ArrayListIterate
      */
     public static <T> boolean removeIf(ArrayList<T> list, Predicate<? super T> predicate)
     {
+        return ArrayListIterate.removeIf(list, (java.util.function.Predicate<? super T>) predicate);
+    }
+
+    /**
+     * @see Iterate#removeIf(Iterable, java.util.function.Predicate)
+     */
+    public static <T> boolean removeIf(ArrayList<T> list, java.util.function.Predicate<? super T> predicate)
+    {
         boolean changed;
         if (list.getClass() == ArrayList.class && ArrayListIterate.SIZE_FIELD != null)
         {
@@ -1496,7 +1504,7 @@ public final class ArrayListIterate
             T[] elements = ArrayListIterate.getInternalArray(list);
             for (int i = 0; i < size; i++)
             {
-                if (!predicate.accept(elements[i]))
+                if (!predicate.test(elements[i]))
                 {
                     // keep it
                     if (currentFilledIndex != i)

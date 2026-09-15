@@ -90,9 +90,9 @@ public class CodePointList extends AbstractIntIterable implements CharSequence, 
 
     public static CodePointList from(IntIterable iterable)
     {
-        if (iterable instanceof ImmutableIntList)
+        if (iterable instanceof ImmutableIntList immutableIntList)
         {
-            return new CodePointList((ImmutableIntList) iterable);
+            return new CodePointList(immutableIntList);
         }
         return new CodePointList(iterable.toArray());
     }
@@ -430,13 +430,13 @@ public class CodePointList extends AbstractIntIterable implements CharSequence, 
                     appendable.append(separator);
                 }
                 int codePoint = this.get(i);
-                if (appendable instanceof StringBuilder)
+                if (appendable instanceof StringBuilder stringBuilder)
                 {
-                    ((StringBuilder) appendable).appendCodePoint(codePoint);
+                    stringBuilder.appendCodePoint(codePoint);
                 }
-                else if (appendable instanceof StringBuffer)
+                else if (appendable instanceof StringBuffer stringBuffer)
                 {
-                    ((StringBuffer) appendable).appendCodePoint(codePoint);
+                    stringBuffer.appendCodePoint(codePoint);
                 }
                 else
                 {

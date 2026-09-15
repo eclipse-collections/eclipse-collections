@@ -428,6 +428,12 @@ public class SynchronizedSortedMap<K, V>
     }
 
     @Override
+    public <P, R> MutableList<R> flatCollectWith(Function2<? super V, ? super P, ? extends Iterable<R>> function, P parameter)
+    {
+        return (MutableList<R>) super.flatCollectWith(function, parameter);
+    }
+
+    @Override
     public <KK> MutableListMultimap<KK, V> groupBy(Function<? super V, ? extends KK> function)
     {
         return (MutableListMultimap<KK, V>) super.<KK>groupBy(function);

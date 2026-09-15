@@ -28,6 +28,12 @@ public interface UnmodifiableMutableMapIterableTestCase
         extends MutableMapIterableTestCase, FixedSizeIterableTestCase
 {
     @Override
+    default boolean allowsPut()
+    {
+        return false;
+    }
+
+    @Override
     @Test
     default void MutableMapIterable_removeKey()
     {
@@ -49,6 +55,7 @@ public interface UnmodifiableMutableMapIterableTestCase
     {
         MutableMapIterable<Object, Object> map1 = this.newWith();
         assertThrows(UnsupportedOperationException.class, () -> map1.removeIf(null));
+        assertThrows(UnsupportedOperationException.class, () -> map1.removeIf(Predicates2.alwaysFalse()));
 
         MutableMapIterable<Object, String> map2 = this.newWith("Three", "Two", "One");
         assertThrows(UnsupportedOperationException.class, () -> map2.removeIf(Predicates2.alwaysFalse()));
@@ -205,5 +212,127 @@ public interface UnmodifiableMutableMapIterableTestCase
     default void MutableMapIterable_entrySet_setValue()
     {
         this.Map_entrySet_setValue();
+    }
+
+    @Override
+    @Test
+    default void Map_compute()
+    {
+        Map<Integer, String> map = this.newWithKeysValues(1, "1", 2, "2", 3, "3");
+
+        assertThrows(UnsupportedOperationException.class, () -> map.compute(1, null));
+
+        assertThrows(UnsupportedOperationException.class, () -> map.compute(1, (k, v) -> {
+            fail("Expected lambda not to be called for existing key");
+            return "Should not be returned";
+        }));
+        assertEquals(this.newWithKeysValues(1, "1", 2, "2", 3, "3"), map);
+
+        assertThrows(UnsupportedOperationException.class, () -> map.compute(4, (k, v) -> {
+            fail("Expected lambda not to be called for non-existing key");
+            return "Should not be returned";
+        }));
+        assertEquals(this.newWithKeysValues(1, "1", 2, "2", 3, "3"), map);
+    }
+
+    @Override
+    @Test
+    default void Map_computeIfAbsent()
+    {
+        Map<Integer, String> map = this.newWithKeysValues(1, "1", 2, "2", 3, "3");
+
+        assertThrows(UnsupportedOperationException.class, () -> map.computeIfAbsent(1, null));
+
+        assertThrows(UnsupportedOperationException.class, () -> map.computeIfAbsent(1, k -> {
+            fail("Expected lambda not to be called for existing key");
+            return "Should not be returned";
+        }));
+        assertEquals(this.newWithKeysValues(1, "1", 2, "2", 3, "3"), map);
+
+        assertThrows(UnsupportedOperationException.class, () -> map.computeIfAbsent(4, k -> {
+            fail("Expected lambda not to be called for non-existing key");
+            return "Should not be returned";
+        }));
+        assertEquals(this.newWithKeysValues(1, "1", 2, "2", 3, "3"), map);
+    }
+
+    @Override
+    @Test
+    default void Map_computeIfPresent()
+    {
+        Map<Integer, String> map = this.newWithKeysValues(1, "1", 2, "2", 3, "3");
+
+        assertThrows(UnsupportedOperationException.class, () -> map.computeIfPresent(1, null));
+
+        assertThrows(UnsupportedOperationException.class, () -> map.computeIfPresent(1, (k, v) -> {
+            fail("Expected lambda not to be called for existing key");
+            return "Should not be returned";
+        }));
+        assertEquals(this.newWithKeysValues(1, "1", 2, "2", 3, "3"), map);
+
+        assertThrows(UnsupportedOperationException.class, () -> map.computeIfPresent(4, (k, v) -> {
+            fail("Expected lambda not to be called for non-existing key");
+            return "Should not be returned";
+        }));
+        assertEquals(this.newWithKeysValues(1, "1", 2, "2", 3, "3"), map);
+    }
+
+    @Override
+    @Test
+    default void Map_replaceAll()
+    {
+        Map<Integer, String> map = this.newWithKeysValues(1, "1", 2, "2", 3, "3");
+
+        assertThrows(UnsupportedOperationException.class, () -> map.replaceAll(null));
+
+        assertThrows(UnsupportedOperationException.class, () -> map.replaceAll((k, v) -> {
+            fail("Expected lambda not to be called for existing key");
+            return "Should not be returned";
+        }));
+        assertEquals(this.newWithKeysValues(1, "1", 2, "2", 3, "3"), map);
+
+        Map<Integer, String> emptyMap = this.newWithKeysValues();
+        assertThrows(UnsupportedOperationException.class, () -> emptyMap.replaceAll((k, v) -> {
+            fail("Expected lambda not to be called for empty map");
+            return "Should not be returned";
+        }));
+        assertEquals(this.newWithKeysValues(), emptyMap);
+    }
+
+    @Override
+    @Test
+    default void Map_replace()
+    {
+        Map<Integer, String> map = this.newWithKeysValues(1, "1", 2, "2", 3, "3");
+
+        assertThrows(UnsupportedOperationException.class, () -> map.replace(1, "One"));
+        assertThrows(UnsupportedOperationException.class, () -> map.replace(4, "Four"));
+        assertThrows(UnsupportedOperationException.class, () -> map.replace(2, "2", "Two"));
+        assertThrows(UnsupportedOperationException.class, () -> map.replace(3, "wrong", "Three"));
+        assertThrows(UnsupportedOperationException.class, () -> map.replace(4, "4", "Four"));
+        assertEquals(this.newWithKeysValues(1, "1", 2, "2", 3, "3"), map);
+    }
+
+    @Override
+    @Test
+    default void Map_putIfAbsent()
+    {
+        Map<Integer, String> map = this.newWithKeysValues(1, "1", 2, "2", 3, "3");
+
+        assertThrows(UnsupportedOperationException.class, () -> map.putIfAbsent(1, "One"));
+        assertThrows(UnsupportedOperationException.class, () -> map.putIfAbsent(4, "4"));
+        assertEquals(this.newWithKeysValues(1, "1", 2, "2", 3, "3"), map);
+    }
+
+    @Override
+    @Test
+    default void Map_remove_key_value()
+    {
+        Map<Integer, String> map = this.newWithKeysValues(1, "1", 2, "2", 3, "3");
+
+        assertThrows(UnsupportedOperationException.class, () -> map.remove(1, "1"));
+        assertThrows(UnsupportedOperationException.class, () -> map.remove(2, "wrong"));
+        assertThrows(UnsupportedOperationException.class, () -> map.remove(4, "4"));
+        assertEquals(this.newWithKeysValues(1, "1", 2, "2", 3, "3"), map);
     }
 }

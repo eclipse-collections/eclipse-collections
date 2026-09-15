@@ -10,6 +10,7 @@
 
 package org.eclipse.collections.test.lazy;
 
+import java.util.Iterator;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -29,7 +30,16 @@ public class SelectInstancesOfIterableTestNoIteratorTest implements LazyNoIterat
     @Override
     public <T> LazyIterable<T> newWith(T... elements)
     {
-        return (LazyIterable<T>) new SelectInstancesOfIterable<>(new FastListNoIterator<T>().with(elements), Object.class);
+        return (LazyIterable<T>) new SelectInstancesOfIterable<>(
+                new FastListNoIterator<T>().with(elements),
+                Object.class)
+        {
+            @Override
+            public Iterator<Object> iterator()
+            {
+                throw new AssertionError("No iteration patterns should delegate to iterator()");
+            }
+        };
     }
 
     @Override
@@ -68,5 +78,14 @@ public class SelectInstancesOfIterableTestNoIteratorTest implements LazyNoIterat
         assertEquals(Optional.of("dz"), this.newWith("ew", "dz", "cz", "bx", "ay").maxByOptional(string -> string.charAt(string.length() - 1)));
         assertSame(Optional.empty(), this.<String>newWith().maxByOptional(string -> string.charAt(string.length() - 1)));
         assertSame(Optional.empty(), this.newWith(new Object[]{null}).maxByOptional(Objects::isNull));
+    }
+
+    @Override
+    @Test
+    public void RichIterable_detectOptionalNull()
+    {
+        // selectInstancesOf(Object.class) silently filters out null (null is not an instance of any class),
+        // so detectOptional never sees null and returns Optional.empty().
+        assertSame(Optional.empty(), this.newWith(1, null, 3).detectOptional(Objects::isNull));
     }
 }

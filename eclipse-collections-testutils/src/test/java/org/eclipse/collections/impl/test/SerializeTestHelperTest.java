@@ -10,6 +10,8 @@
 
 package org.eclipse.collections.impl.test;
 
+import java.nio.charset.StandardCharsets;
+
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -48,7 +50,7 @@ public class SerializeTestHelperTest
     {
         try
         {
-            byte[] nonsenseByteArray = "Why is the man who invests all your money called a broker?".getBytes();
+            byte[] nonsenseByteArray = "Why is the man who invests all your money called a broker?".getBytes(StandardCharsets.UTF_8);
             SerializeTestHelper.deserialize(nonsenseByteArray);
         }
         catch (AssertionError ignored)

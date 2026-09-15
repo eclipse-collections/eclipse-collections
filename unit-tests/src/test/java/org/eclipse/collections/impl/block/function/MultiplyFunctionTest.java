@@ -26,7 +26,7 @@ public class MultiplyFunctionTest
     @Test
     public void doubleBlock()
     {
-        assertEquals(new Double(20), MultiplyFunction.DOUBLE.value(2.0, 10.0));
+        assertEquals(Double.valueOf(20.0), MultiplyFunction.DOUBLE.value(2.0, 10.0));
     }
 
     @Test

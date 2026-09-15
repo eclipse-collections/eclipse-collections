@@ -55,6 +55,7 @@ public class CharAdapterTest extends AbstractImmutableCharListTestCase
     }
 
     @Override
+    @Test
     public void toBag()
     {
         super.toBag();

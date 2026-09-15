@@ -19,7 +19,6 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * JUnit test for {@link SynchronizedSortedSet}.
@@ -39,6 +38,7 @@ public class SynchronizedSortedSet2Test extends AbstractSortedSetTestCase
     }
 
     @Override
+    @Test
     public void asSynchronized()
     {
         MutableSortedSet<Object> synchronizedSet = this.newWith();
@@ -46,6 +46,7 @@ public class SynchronizedSortedSet2Test extends AbstractSortedSetTestCase
     }
 
     @Override
+    @Test
     public void asUnmodifiable()
     {
         Verify.assertInstanceOf(UnmodifiableSortedSet.class, this.newWith().asUnmodifiable());
@@ -61,33 +62,5 @@ public class SynchronizedSortedSet2Test extends AbstractSortedSetTestCase
     public void max_empty_throws_without_comparator()
     {
         assertThrows(NoSuchElementException.class, () -> this.newWith().max());
-    }
-
-    @Override
-    @Test
-    public void detectLastIndex()
-    {
-        assertThrows(UnsupportedOperationException.class, () -> this.newWith(1, 2, 3).detectLastIndex(each -> each % 2 == 0));
-    }
-
-    @Override
-    @Test
-    public void reverseForEach()
-    {
-        assertThrows(UnsupportedOperationException.class, () -> this.newWith(1, 2, 3).reverseForEach(each -> fail("Should not be evaluated")));
-    }
-
-    @Override
-    @Test
-    public void reverseForEachWithIndex()
-    {
-        assertThrows(UnsupportedOperationException.class, () -> this.newWith(1, 2, 3).reverseForEachWithIndex((each, index) -> fail("Should not be evaluated")));
-    }
-
-    @Override
-    @Test
-    public void toReversed()
-    {
-        assertThrows(UnsupportedOperationException.class, () -> this.newWith(1, 2, 3).toReversed());
     }
 }

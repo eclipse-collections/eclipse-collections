@@ -91,6 +91,12 @@ public final class ArrayListAdapter<T>
     }
 
     @Override
+    public MutableList<T> reversed()
+    {
+        return new ReversedRandomAccessMutableList<>(this);
+    }
+
+    @Override
     public ArrayListAdapter<T> clone()
     {
         return new ArrayListAdapter<>((ArrayList<T>) this.delegate.clone());

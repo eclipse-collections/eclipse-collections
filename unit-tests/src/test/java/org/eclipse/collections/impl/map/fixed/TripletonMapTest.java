@@ -54,6 +54,7 @@ public class TripletonMapTest extends AbstractMemoryEfficientMutableMapTest
     }
 
     @Override
+    @Test
     public void flip()
     {
         super.flip();
@@ -137,6 +138,7 @@ public class TripletonMapTest extends AbstractMemoryEfficientMutableMapTest
     }
 
     @Override
+    @Test
     public void withKeyValue()
     {
         MutableMap<Integer, String> map1 = new TripletonMap<>(1, "A", 2, "B", 3, "C").withKeyValue(4, "D");
@@ -150,6 +152,7 @@ public class TripletonMapTest extends AbstractMemoryEfficientMutableMapTest
     }
 
     @Override
+    @Test
     public void withAllKeyValueArguments()
     {
         MutableMap<Integer, String> map1 = new TripletonMap<>(1, "A", 2, "B", 3, "C").withAllKeyValueArguments(
@@ -164,6 +167,7 @@ public class TripletonMapTest extends AbstractMemoryEfficientMutableMapTest
     }
 
     @Override
+    @Test
     public void withoutKey()
     {
         MutableMap<Integer, String> map = new TripletonMap<>(1, "A", 2, "B", 3, "C");
@@ -175,6 +179,7 @@ public class TripletonMapTest extends AbstractMemoryEfficientMutableMapTest
     }
 
     @Override
+    @Test
     public void withoutAllKeys()
     {
         MutableMap<Integer, String> map = new TripletonMap<>(1, "A", 2, "B", 3, "C");

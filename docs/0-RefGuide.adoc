@@ -1,17 +1,17 @@
 ////
-  Copyright (c) 2022 Goldman Sachs and others. All rights reserved. 
-  This program and the accompanying materials   are made available 
-  under the terms of the Eclipse Public License v1.0 and 
+  Copyright (c) 2022 Goldman Sachs and others. All rights reserved.
+  This program and the accompanying materials   are made available
+  under the terms of the Eclipse Public License v1.0 and
   Eclipse Distribution License v. 1.0 which accompany this distribution.
-  The Eclipse Public License is available at 
+  The Eclipse Public License is available at
   http://www.eclipse.org/legal/epl-v10.html.
-  The Eclipse Distribution License is available at 
+  The Eclipse Distribution License is available at
   http://www.eclipse.org/org/documents/edl-v10.php.
 ////
-= Eclipse&nbsp;Collections Reference&nbsp;Guide 
+= Eclipse&nbsp;Collections Reference&nbsp;Guide
 :sectanchors:
 :toc: left
-:toc-title: 
+:toc-title:
 :toclevels: 2
 
 // cross-topic links (test)
@@ -21,11 +21,11 @@
 :Testing:       xref:4-Testing_Utilities.adoc[Testing Utilities]
 :QuickRef:		xref:5-Quick_Reference.adoc[Quick Reference]
 //
-:EC_Kata: https://github.com/eclipse/eclipse-collections-kata[Eclipse Collections Kata]
+:EC_Kata: https://github.com/eclipse-collections/eclipse-collections-kata[Eclipse Collections Kata]
 //
 
 ++++
-<img align="right" src="https://raw.githubusercontent.com/eclipse/eclipse-collections/master/artwork/eclipse-collections-logo.svg" height="40%" width="40%"></a>
+<img align="right" src="https://raw.githubusercontent.com/eclipse-collections/eclipse-collections/master/artwork/eclipse-collections-logo.svg" height="40%" width="40%"></a>
 ++++
 
 

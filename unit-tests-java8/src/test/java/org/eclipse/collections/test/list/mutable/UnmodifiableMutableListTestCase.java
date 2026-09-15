@@ -22,6 +22,12 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public interface UnmodifiableMutableListTestCase extends UnmodifiableMutableCollectionTestCase, UnmodifiableListTestCase, MutableListTestCase
 {
     @Override
+    default OrderingType getOrderingType()
+    {
+        return MutableListTestCase.super.getOrderingType();
+    }
+
+    @Override
     @Test
     default void MutableList_sortThis()
     {

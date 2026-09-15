@@ -92,6 +92,7 @@ public class ImmutableEmptySortedMapTest extends ImmutableSortedMapTestCase
     }
 
     @Override
+    @Test
     public void flipUniqueValues()
     {
         Verify.assertEmpty(this.classUnderTest().flipUniqueValues());
@@ -454,6 +455,7 @@ public class ImmutableEmptySortedMapTest extends ImmutableSortedMapTestCase
         assertEquals(this.classUnderTest(), this.classUnderTest().drop(2));
     }
 
+    @Override
     @Test
     public void getOnly()
     {

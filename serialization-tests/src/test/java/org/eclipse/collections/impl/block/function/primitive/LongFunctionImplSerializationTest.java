@@ -19,6 +19,7 @@ public final class LongFunctionImplSerializationTest
     {
         private static final long serialVersionUID = 1L;
 
+        @Override
         public long longValueOf(Object anObject)
         {
             return 0;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Goldman Sachs and others.
+ * Copyright (c) 2026 Goldman Sachs and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -64,6 +64,8 @@ import org.eclipse.collections.api.collection.primitive.MutableFloatCollection;
 import org.eclipse.collections.api.collection.primitive.MutableIntCollection;
 import org.eclipse.collections.api.collection.primitive.MutableLongCollection;
 import org.eclipse.collections.api.collection.primitive.MutableShortCollection;
+import org.eclipse.collections.api.factory.Lists;
+import org.eclipse.collections.api.factory.Stacks;
 import org.eclipse.collections.api.factory.primitive.BooleanStacks;
 import org.eclipse.collections.api.factory.primitive.ByteStacks;
 import org.eclipse.collections.api.factory.primitive.CharStacks;
@@ -106,9 +108,11 @@ import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.map.mutable.UnifiedMap;
 import org.eclipse.collections.impl.multimap.list.FastListMultimap;
 import org.eclipse.collections.impl.partition.stack.PartitionArrayStack;
+import org.eclipse.collections.impl.partition.stack.PartitionArrayStack.PartitionWhileProcedure;
 import org.eclipse.collections.impl.tuple.Tuples;
 import org.eclipse.collections.impl.utility.Iterate;
 import org.eclipse.collections.impl.utility.LazyIterate;
+import org.eclipse.collections.impl.utility.internal.IteratorIterate;
 
 /**
  * The immutable equivalent of ArrayStack. Wraps a FastList.
@@ -381,7 +385,7 @@ final class ImmutableArrayStack<T> implements ImmutableStack<T>, Serializable
     @Override
     public <S> ImmutableStack<S> selectInstancesOf(Class<S> clazz)
     {
-        return ImmutableArrayStack.newStackFromTopToBottom(this.delegate.asReversed().selectInstancesOf(clazz).toList());
+        return Stacks.immutable.withAllReversed(this.delegate.asReversed().selectInstancesOf(clazz).toList());
     }
 
     @Override
@@ -797,7 +801,7 @@ final class ImmutableArrayStack<T> implements ImmutableStack<T>, Serializable
     @Override
     public LazyIterable<T> asLazy()
     {
-        return LazyIterate.adapt(this);
+        return LazyIterate.adaptOrEmpty(this);
     }
 
     @Override
@@ -807,7 +811,7 @@ final class ImmutableArrayStack<T> implements ImmutableStack<T>, Serializable
     }
 
     @Override
-    public <T> T[] toArray(T[] a)
+    public <T2> T2[] toArray(T2[] a)
     {
         return this.delegate.asReversed().toArray(a);
     }
@@ -1057,19 +1061,25 @@ final class ImmutableArrayStack<T> implements ImmutableStack<T>, Serializable
     @Override
     public ImmutableStack<T> takeWhile(Predicate<? super T> predicate)
     {
-        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".takeWhile() not implemented yet");
+        MutableList<T> result = Lists.mutable.empty();
+        IteratorIterate.takeWhile(this.delegate.asReversed().iterator(), predicate, result);
+        return Stacks.immutable.withAllReversed(result);
     }
 
     @Override
     public ImmutableStack<T> dropWhile(Predicate<? super T> predicate)
     {
-        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".dropWhile() not implemented yet");
+        MutableList<T> result = Lists.mutable.empty();
+        IteratorIterate.dropWhile(this.delegate.asReversed().iterator(), predicate, result);
+        return Stacks.immutable.withAllReversed(result);
     }
 
     @Override
     public PartitionImmutableStack<T> partitionWhile(Predicate<? super T> predicate)
     {
-        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".partitionWhile() not implemented yet");
+        PartitionArrayStack<T> result = new PartitionArrayStack<>();
+        this.delegate.asReversed().forEach(new PartitionWhileProcedure<>(predicate, result));
+        return result.toImmutable();
     }
 
     @Override
@@ -1127,9 +1137,9 @@ final class ImmutableArrayStack<T> implements ImmutableStack<T>, Serializable
 
         StackIterable<?> that = (StackIterable<?>) o;
 
-        if (that instanceof ImmutableArrayStack<?>)
+        if (that instanceof ImmutableArrayStack<?> immutableArrayStack)
         {
-            return this.delegate.equals(((ImmutableArrayStack<?>) that).delegate);
+            return this.delegate.equals(immutableArrayStack.delegate);
         }
         Iterator<T> thisIterator = this.iterator();
         Iterator<?> thatIterator = that.iterator();

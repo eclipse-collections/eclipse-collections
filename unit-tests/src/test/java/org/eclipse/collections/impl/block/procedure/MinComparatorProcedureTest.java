@@ -11,6 +11,7 @@
 package org.eclipse.collections.impl.block.procedure;
 
 import org.eclipse.collections.impl.block.factory.Comparators;
+import org.eclipse.collections.impl.test.domain.Holder;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -20,11 +21,11 @@ public class MinComparatorProcedureTest
     @Test
     public void value()
     {
-        MinComparatorProcedure<Integer> procedure = new MinComparatorProcedure<>(Comparators.naturalOrder());
-        Integer first = new Integer(1);
-        Integer second = new Integer(1);
-        Integer third = new Integer(3);
-        Integer fourth = new Integer(0);
+        MinComparatorProcedure<Holder<Integer>> procedure = new MinComparatorProcedure<>(Comparators.naturalOrder());
+        Holder<Integer> first = new Holder<>(1);
+        Holder<Integer> second = new Holder<>(1);
+        Holder<Integer> third = new Holder<>(3);
+        Holder<Integer> fourth = new Holder<>(0);
 
         procedure.value(first);
         assertSame(first, procedure.getResult());

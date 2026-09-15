@@ -16,7 +16,7 @@
     <parent>
         <artifactId>eclipse-collections-parent</artifactId>
         <groupId>org.eclipse.collections</groupId>
-        <version>12.0.0-SNAPSHOT</version>
+        <version>14.0.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -82,9 +82,6 @@
                 <artifactId>maven-checkstyle-plugin</artifactId>
             </plugin>
 
-            <plugin>
-                <artifactId>maven-enforcer-plugin</artifactId>
-            </plugin>
         </plugins>
     </build>
 </project>

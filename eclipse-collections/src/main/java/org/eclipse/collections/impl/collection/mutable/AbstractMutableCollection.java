@@ -64,6 +64,12 @@ public abstract class AbstractMutableCollection<T>
     }
 
     @Override
+    public boolean removeIf(java.util.function.Predicate<? super T> filter)
+    {
+        return IterableIterate.removeIf(this, filter);
+    }
+
+    @Override
     public <P> boolean removeIfWith(Predicate2<? super T, ? super P> predicate, P parameter)
     {
         return IterableIterate.removeIfWith(this, predicate, parameter);

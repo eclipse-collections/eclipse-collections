@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
 
 import com.google.common.collect.Multimaps;
 import org.eclipse.collections.api.list.MutableList;
-import org.eclipse.collections.impl.jmh.runner.AbstractJMHTestRunner;
 import org.eclipse.collections.impl.list.Interval;
 import org.eclipse.collections.impl.test.Verify;
 import org.junit.Assert;

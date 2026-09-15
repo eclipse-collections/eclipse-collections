@@ -42,6 +42,12 @@ public interface MutableSortedNaturalOrderTestCase extends SortedNaturalOrderTes
     @Test
     default void MutableCollection_removeIf()
     {
+        if (!this.allowsRemove())
+        {
+            MutableCollectionTestCase.super.MutableCollection_removeIf();
+            return;
+        }
+
         MutableCollection<Integer> collection1 = this.newWith(1, 1, 2, 2, 3, 3, 4, 4, 5, 5);
         assertTrue(collection1.removeIf(Predicates.cast(each -> each % 2 == 0)));
         assertIterablesEqual(this.getExpectedFiltered(1, 1, 3, 3, 5, 5), collection1);
@@ -60,6 +66,12 @@ public interface MutableSortedNaturalOrderTestCase extends SortedNaturalOrderTes
     @Test
     default void MutableCollection_removeIfWith()
     {
+        if (!this.allowsRemove())
+        {
+            MutableCollectionTestCase.super.MutableCollection_removeIfWith();
+            return;
+        }
+
         MutableCollection<Integer> collection = this.newWith(1, 1, 2, 2, 3, 3, 4, 4, 5, 5);
         assertTrue(collection.removeIfWith(Predicates2.in(), Lists.immutable.with(5, 3, 1)));
         assertIterablesEqual(this.getExpectedFiltered(2, 2, 4, 4), collection);

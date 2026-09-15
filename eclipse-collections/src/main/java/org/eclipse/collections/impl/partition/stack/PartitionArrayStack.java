@@ -10,6 +10,8 @@
 
 package org.eclipse.collections.impl.partition.stack;
 
+import java.util.Objects;
+
 import org.eclipse.collections.api.block.predicate.Predicate;
 import org.eclipse.collections.api.block.predicate.Predicate2;
 import org.eclipse.collections.api.block.procedure.Procedure;
@@ -69,6 +71,35 @@ public class PartitionArrayStack<T> implements PartitionMutableStack<T>
                     ? this.partitionMutableStack.selected
                     : this.partitionMutableStack.rejected;
             bucket.add(each);
+        }
+    }
+
+    public static final class PartitionWhileProcedure<T> implements Procedure<T>
+    {
+        private static final long serialVersionUID = 1L;
+
+        private final Predicate<? super T> predicate;
+        private final PartitionArrayStack<T> partitionMutableStack;
+        private boolean stillSelecting = true;
+
+        public PartitionWhileProcedure(Predicate<? super T> predicate, PartitionArrayStack<T> partitionMutableStack)
+        {
+            this.predicate = Objects.requireNonNull(predicate);
+            this.partitionMutableStack = Objects.requireNonNull(partitionMutableStack);
+        }
+
+        @Override
+        public void value(T each)
+        {
+            if (this.stillSelecting && this.predicate.accept(each))
+            {
+                this.partitionMutableStack.selected.add(each);
+            }
+            else
+            {
+                this.stillSelecting = false;
+                this.partitionMutableStack.rejected.add(each);
+            }
         }
     }
 

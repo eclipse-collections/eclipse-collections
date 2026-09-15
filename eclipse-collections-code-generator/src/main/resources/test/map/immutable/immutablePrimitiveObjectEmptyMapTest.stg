@@ -22,6 +22,7 @@ package org.eclipse.collections.impl.map.immutable.primitive;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -32,8 +33,10 @@ import org.eclipse.collections.api.block.function.Function0;
 import org.eclipse.collections.api.block.function.Function2;
 import org.eclipse.collections.api.block.predicate.Predicate;
 import org.eclipse.collections.api.block.predicate.Predicate2;
+import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.map.primitive.Immutable<name>ObjectMap;
 import org.eclipse.collections.api.partition.PartitionIterable;
+import org.eclipse.collections.api.set.MutableSet;
 import org.eclipse.collections.impl.bag.sorted.mutable.TreeBag;
 import org.eclipse.collections.impl.block.factory.Comparators;
 import org.eclipse.collections.impl.block.factory.Functions;
@@ -320,7 +323,7 @@ public class Immutable<name>ObjectEmptyMapTest extends AbstractImmutable<name>Ob
         Verify.assertIterableEmpty(this.classUnderTest().select(Predicates.alwaysTrue()));
         Verify.assertIterableEmpty(this.classUnderTest().select((<primitive.type> value, String object) -> true));
 
-        FastList\<String> target = FastList.newList();
+        MutableList\<String> target = FastList.newList();
         assertSame(target, this.classUnderTest().select(Predicates.alwaysTrue(), target));
         Verify.assertEmpty(target);
     }
@@ -336,7 +339,7 @@ public class Immutable<name>ObjectEmptyMapTest extends AbstractImmutable<name>Ob
     @Test
     public void selectWith_withTarget()
     {
-        FastList\<String> target = FastList.newList();
+        MutableList\<String> target = FastList.newList();
         assertSame(target, this.classUnderTest().selectWith(Predicates2.alwaysTrue(), "", target));
         Verify.assertEmpty(target);
     }
@@ -355,7 +358,7 @@ public class Immutable<name>ObjectEmptyMapTest extends AbstractImmutable<name>Ob
         Verify.assertIterableEmpty(this.classUnderTest().reject(Predicates.alwaysFalse()));
         Verify.assertIterableEmpty(this.classUnderTest().reject((<primitive.type> value, String object) -> false));
 
-        FastList\<String> target = FastList.newList();
+        MutableList\<String> target = FastList.newList();
         assertSame(target, this.classUnderTest().reject(Predicates.alwaysFalse(), target));
         Verify.assertEmpty(target);
     }
@@ -371,7 +374,7 @@ public class Immutable<name>ObjectEmptyMapTest extends AbstractImmutable<name>Ob
     @Test
     public void rejectWith_withTarget()
     {
-        FastList\<String> target = FastList.newList();
+        MutableList\<String> target = FastList.newList();
         assertSame(target, this.classUnderTest().rejectWith(Predicates2.alwaysFalse(), "", target));
         Verify.assertEmpty(target);
     }
@@ -573,7 +576,7 @@ public class Immutable<name>ObjectEmptyMapTest extends AbstractImmutable<name>Ob
     public void flatCollect()
     {
         Verify.assertIterableEmpty(this.classUnderTest().flatCollect(StringIterate::toSet));
-        UnifiedSet\<Character> target = UnifiedSet.newSet();
+        MutableSet\<Character> target = UnifiedSet.newSet();
         assertSame(target, this.classUnderTest().flatCollect(StringIterate::toSet, target));
         Verify.assertIterableEmpty(target);
     }
@@ -584,7 +587,7 @@ public class Immutable<name>ObjectEmptyMapTest extends AbstractImmutable<name>Ob
     {
         Verify.assertIterableEmpty(this.classUnderTest().collect(StringFunctions.toUpperCase()));
 
-        FastList\<String> target = FastList.newList();
+        MutableList\<String> target = FastList.newList();
         assertSame(target, this.classUnderTest().collect(StringFunctions.toUpperCase(), target));
         Verify.assertEmpty(target);
     }
@@ -593,10 +596,10 @@ public class Immutable<name>ObjectEmptyMapTest extends AbstractImmutable<name>Ob
     @Test
     public void collectWith()
     {
-        Function2\<String, String, String> function = (String each, String param) -> each.toUpperCase() + param;
+        Function2\<String, String, String> function = (String each, String param) -> each.toUpperCase(Locale.ROOT) + param;
         Verify.assertIterableEmpty(this.classUnderTest().collectWith(function, "!"));
 
-        FastList\<String> target = FastList.newList();
+        MutableList\<String> target = FastList.newList();
         assertSame(target, this.classUnderTest().collectWith(function, "!", target));
         Verify.assertEmpty(target);
     }
@@ -773,6 +776,7 @@ public class Immutable<name>ObjectEmptyMapTest extends AbstractImmutable<name>Ob
         Verify.assertSortedBagsEqual(TreeBag.newBagWith(Comparators.byFunction(function), 10, 10, 1, 1, 1), sortedBag);
     }
 
+    @Override
     @Test
     public void toMapTarget()
     {
@@ -799,6 +803,7 @@ public class Immutable<name>ObjectEmptyMapTest extends AbstractImmutable<name>Ob
         assertTrue(map.toMap(keyLongFunction, valueFunction, new HashMap\<Long, String>()) instanceof HashMap);
     }
 
+    @Override
     @Test
     public void sumByInt()
     {
@@ -806,6 +811,7 @@ public class Immutable<name>ObjectEmptyMapTest extends AbstractImmutable<name>Ob
         assertEquals(ObjectLongMaps.immutable.empty(), map.sumByInt(Object::toString, Integer::valueOf));
     }
 
+    @Override
     @Test
     public void sumByFloat()
     {
@@ -813,6 +819,7 @@ public class Immutable<name>ObjectEmptyMapTest extends AbstractImmutable<name>Ob
         assertEquals(ObjectDoubleMaps.immutable.empty(), map.sumByFloat(Object::toString, Float::valueOf));
     }
 
+    @Override
     @Test
     public void sumByLong()
     {
@@ -820,6 +827,7 @@ public class Immutable<name>ObjectEmptyMapTest extends AbstractImmutable<name>Ob
         assertEquals(ObjectLongMaps.immutable.empty(), map.sumByLong(Object::toString, Long::valueOf));
     }
 
+    @Override
     @Test
     public void sumByDouble()
     {

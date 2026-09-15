@@ -225,7 +225,7 @@ public abstract class Abstract<name>ObjectMapKeyValuesViewTestCase
     @Test
     public void selectWith_target()
     {
-        HashBag\<<name>ObjectPair\<Integer>\> result = this.newWith(<(literal.(type))("1")>, 2, <(literal.(type))("2")>, 3, <(literal.(type))("3")>, 4).selectWith(Predicates2.notEqual(), PrimitiveTuples.pair(<(literal.(type))("2")>, Integer.valueOf(3)), HashBag.\<<name>ObjectPair\<Integer>\>newBag());
+        MutableBag\<<name>ObjectPair\<Integer>\> result = this.newWith(<(literal.(type))("1")>, 2, <(literal.(type))("2")>, 3, <(literal.(type))("3")>, 4).selectWith(Predicates2.notEqual(), PrimitiveTuples.pair(<(literal.(type))("2")>, Integer.valueOf(3)), HashBag.\<<name>ObjectPair\<Integer>\>newBag());
         assertEquals(Bags.immutable.of(PrimitiveTuples.pair(<(literal.(type))("1")>, Integer.valueOf(2)), PrimitiveTuples.pair(<(literal.(type))("3")>, Integer.valueOf(4))), result);
     }
 
@@ -250,7 +250,7 @@ public abstract class Abstract<name>ObjectMapKeyValuesViewTestCase
     @Test
     public void rejectWith_target()
     {
-        HashBag\<<name>ObjectPair\<Integer>\> result = this.newWith(<(literal.(type))("1")>, 2, <(literal.(type))("2")>, 3, <(literal.(type))("3")>, 4).rejectWith(Object::equals, PrimitiveTuples.pair(<(literal.(type))("2")>, Integer.valueOf(3)), HashBag.\<<name>ObjectPair\<Integer>\>newBag());
+        MutableBag\<<name>ObjectPair\<Integer>\> result = this.newWith(<(literal.(type))("1")>, 2, <(literal.(type))("2")>, 3, <(literal.(type))("3")>, 4).rejectWith(Object::equals, PrimitiveTuples.pair(<(literal.(type))("2")>, Integer.valueOf(3)), HashBag.\<<name>ObjectPair\<Integer>\>newBag());
         assertEquals(Bags.immutable.of(PrimitiveTuples.pair(<(literal.(type))("1")>, Integer.valueOf(2)), PrimitiveTuples.pair(<(literal.(type))("3")>, Integer.valueOf(4))), result);
     }
 

@@ -12,7 +12,7 @@ package org.eclipse.collections.impl.bimap.mutable;
 
 import org.eclipse.collections.api.bimap.MutableBiMap;
 import org.eclipse.collections.impl.map.mutable.UnifiedMap;
-import org.eclipse.collections.impl.test.domain.Key;
+import org.eclipse.collections.impl.test.domain.Holder;
 import org.eclipse.collections.impl.utility.Iterate;
 import org.junit.jupiter.api.Test;
 
@@ -110,10 +110,10 @@ public class HashBiMapTest extends AbstractMutableBiMapTestCase
     @Test
     public void inverseKeyPreservation()
     {
-        Key key = new Key("key");
-        Key duplicateKey = new Key("key");
+        Holder<String> key = new Holder<>("key");
+        Holder<String> duplicateKey = new Holder<>("key");
 
-        MutableBiMap<Key, Integer> biMap = this.newMapWithKeysValues(key, 1, duplicateKey, 2);
+        MutableBiMap<Holder<String>, Integer> biMap = this.newMapWithKeysValues(key, 1, duplicateKey, 2);
         assertSame(key, Iterate.getFirst(biMap.entrySet()).getKey());
         assertSame(key, Iterate.getFirst(biMap.inverse().entrySet()).getValue());
     }
@@ -121,10 +121,10 @@ public class HashBiMapTest extends AbstractMutableBiMapTestCase
     @Test
     public void valuePreservation()
     {
-        Key value = new Key("value");
-        Key duplicateValue = new Key("value");
+        Holder<String> value = new Holder<>("value");
+        Holder<String> duplicateValue = new Holder<>("value");
 
-        MutableBiMap<Integer, Key> biMap = this.newMapWithKeyValue(1, value);
+        MutableBiMap<Integer, Holder<String>> biMap = this.newMapWithKeyValue(1, value);
         biMap.forcePut(2, duplicateValue);
         assertSame(value, Iterate.getFirst(biMap.entrySet()).getValue());
         assertSame(value, Iterate.getFirst(biMap.inverse().entrySet()).getKey());
@@ -133,13 +133,13 @@ public class HashBiMapTest extends AbstractMutableBiMapTestCase
     @Test
     public void forcePut_inverseKeyAndValuePreservation()
     {
-        Key key1 = new Key("1");
-        Key value2 = new Key("xyz");
+        Holder<String> key1 = new Holder<>("1");
+        Holder<String> value2 = new Holder<>("xyz");
 
-        HashBiMap<Key, Key> biMap = this.newMapWithKeysValues(key1, new Key("abc"), new Key("2"), value2);
+        HashBiMap<Holder<String>, Holder<String>> biMap = this.newMapWithKeysValues(key1, new Holder<>("abc"), new Holder<>("2"), value2);
 
-        Key duplicateOfKey1 = new Key("1");
-        Key duplicateOfValue2 = new Key("xyz");
+        Holder<String> duplicateOfKey1 = new Holder<>("1");
+        Holder<String> duplicateOfValue2 = new Holder<>("xyz");
 
         biMap.forcePut(duplicateOfKey1, duplicateOfValue2);
 

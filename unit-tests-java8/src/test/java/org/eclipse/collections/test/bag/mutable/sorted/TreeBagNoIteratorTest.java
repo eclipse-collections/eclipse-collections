@@ -17,8 +17,10 @@ import org.eclipse.collections.api.bag.sorted.MutableSortedBag;
 import org.eclipse.collections.impl.bag.sorted.mutable.TreeBag;
 import org.eclipse.collections.impl.block.factory.Comparators;
 import org.eclipse.collections.test.IterableTestCase;
+import org.eclipse.collections.test.OrderedIterableNoIteratorTestCase;
+import org.junit.jupiter.api.Test;
 
-public class TreeBagNoIteratorTest implements MutableSortedBagTestCase, OrderedIterableNoIteratorTest
+public class TreeBagNoIteratorTest implements MutableSortedBagTestCase, OrderedIterableNoIteratorTestCase
 {
     @SafeVarargs
     @Override
@@ -30,15 +32,10 @@ public class TreeBagNoIteratorTest implements MutableSortedBagTestCase, OrderedI
     }
 
     @Override
+    @Test
     public void Iterable_remove()
     {
-        OrderedIterableNoIteratorTest.super.Iterable_remove();
-    }
-
-    @Override
-    public void RichIterable_iterator_iterationOrder()
-    {
-        OrderedIterableNoIteratorTest.super.RichIterable_iterator_iterationOrder();
+        OrderedIterableNoIteratorTestCase.super.Iterable_remove();
     }
 
     public static class TreeBagNoIterator<T> extends TreeBag<T>

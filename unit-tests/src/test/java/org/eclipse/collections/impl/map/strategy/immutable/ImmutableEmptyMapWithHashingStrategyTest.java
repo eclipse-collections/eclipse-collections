@@ -35,11 +35,13 @@ public class ImmutableEmptyMapWithHashingStrategyTest extends ImmutableMemoryEff
     //Not using the static factor method in order to have concrete types for test cases
     private static final HashingStrategy<Integer> HASHING_STRATEGY = HashingStrategies.nullSafeHashingStrategy(new HashingStrategy<Integer>()
     {
+        @Override
         public int computeHashCode(Integer object)
         {
             return object.hashCode();
         }
 
+        @Override
         public boolean equals(Integer object1, Integer object2)
         {
             return object1.equals(object2);
@@ -242,6 +244,7 @@ public class ImmutableEmptyMapWithHashingStrategyTest extends ImmutableMemoryEff
     }
 
     @Override
+    @Test
     public void select()
     {
         ImmutableMap<Integer, String> map = this.classUnderTest();
@@ -250,6 +253,7 @@ public class ImmutableEmptyMapWithHashingStrategyTest extends ImmutableMemoryEff
     }
 
     @Override
+    @Test
     public void reject()
     {
         ImmutableMap<Integer, String> map = this.classUnderTest();
@@ -258,6 +262,7 @@ public class ImmutableEmptyMapWithHashingStrategyTest extends ImmutableMemoryEff
     }
 
     @Override
+    @Test
     public void detect()
     {
         ImmutableMap<Integer, String> map = this.classUnderTest();

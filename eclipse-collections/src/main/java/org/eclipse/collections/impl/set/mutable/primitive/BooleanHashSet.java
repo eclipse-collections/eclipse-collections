@@ -220,9 +220,9 @@ public class BooleanHashSet implements MutableBooleanSet, Externalizable
 
     public static BooleanHashSet newSet(BooleanIterable source)
     {
-        if (source instanceof BooleanHashSet)
+        if (source instanceof BooleanHashSet booleanHashSet)
         {
-            return new BooleanHashSet((BooleanHashSet) source);
+            return new BooleanHashSet(booleanHashSet);
         }
 
         return BooleanHashSet.newSetWith(source.toArray());

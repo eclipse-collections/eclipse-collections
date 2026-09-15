@@ -26,8 +26,8 @@ SPDX-License-Identifier: EPL-1.0 OR BSD-3-Clause
 
 The project maintains the following source code repositories:
 
-* https://github.com/eclipse/eclipse-collections.git
-* https://github.com/eclipse/eclipse-collections-kata.git
+* https://github.com/eclipse-collections/eclipse-collections.git
+* https://github.com/eclipse-collections/eclipse-collections-kata.git
 * https://github.com/eclipse/gsc-ec-converter.git
 * https://github.com/eclipse/www.eclipse.org-collections.git
 * https://github.com/eclipse/collections-website.git

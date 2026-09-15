@@ -10,6 +10,7 @@
 
 package org.eclipse.collections.impl.map;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -35,6 +36,8 @@ import org.eclipse.collections.api.map.primitive.MutableObjectLongMap;
 import org.eclipse.collections.api.multimap.MutableMultimap;
 import org.eclipse.collections.api.partition.PartitionMutableCollection;
 import org.eclipse.collections.api.tuple.Pair;
+import org.eclipse.collections.impl.block.procedure.AppendStringWithSelfProcedure;
+import org.eclipse.collections.impl.block.procedure.MapIterableToStringProcedure;
 import org.eclipse.collections.impl.collection.AbstractSynchronizedRichIterable;
 import org.eclipse.collections.impl.tuple.AbstractImmutableEntry;
 import org.eclipse.collections.impl.utility.LazyIterate;
@@ -149,6 +152,36 @@ public abstract class AbstractSynchronizedMapIterable<K, V>
         synchronized (this.lock)
         {
             this.getDelegate().forEachKeyValue(procedure2);
+        }
+    }
+
+    @Override
+    public String toString()
+    {
+        synchronized (this.lock)
+        {
+            MapIterableToStringProcedure<K, V> procedure = new MapIterableToStringProcedure<>(this);
+            this.getDelegate().forEachKeyValue(procedure);
+            return procedure.getString();
+        }
+    }
+
+    @Override
+    public void appendString(Appendable appendable, String start, String separator, String end)
+    {
+        synchronized (this.lock)
+        {
+            Procedure<V> procedure = new AppendStringWithSelfProcedure<>(appendable, separator, this, "(this Map)");
+            try
+            {
+                appendable.append(start);
+                this.getDelegate().forEachValue(procedure);
+                appendable.append(end);
+            }
+            catch (IOException e)
+            {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -315,6 +348,51 @@ public abstract class AbstractSynchronizedMapIterable<K, V>
         synchronized (this.lock)
         {
             return this.getDelegate().merge(key, value, remappingFunction);
+        }
+    }
+
+    @Override
+    public V computeIfAbsent(K key, java.util.function.Function<? super K, ? extends V> mappingFunction)
+    {
+        synchronized (this.lock)
+        {
+            return this.getDelegate().computeIfAbsent(key, mappingFunction);
+        }
+    }
+
+    @Override
+    public V computeIfPresent(K key, BiFunction<? super K, ? super V, ? extends V> remappingFunction)
+    {
+        synchronized (this.lock)
+        {
+            return this.getDelegate().computeIfPresent(key, remappingFunction);
+        }
+    }
+
+    @Override
+    public V compute(K key, BiFunction<? super K, ? super V, ? extends V> remappingFunction)
+    {
+        synchronized (this.lock)
+        {
+            return this.getDelegate().compute(key, remappingFunction);
+        }
+    }
+
+    @Override
+    public void replaceAll(BiFunction<? super K, ? super V, ? extends V> function)
+    {
+        synchronized (this.lock)
+        {
+            this.getDelegate().replaceAll(function);
+        }
+    }
+
+    @Override
+    public V putIfAbsent(K key, V value)
+    {
+        synchronized (this.lock)
+        {
+            return this.getDelegate().putIfAbsent(key, value);
         }
     }
 
@@ -547,5 +625,59 @@ public abstract class AbstractSynchronizedMapIterable<K, V>
     public MutableMapIterable<K, V> tap(Procedure<? super V> procedure)
     {
         return (MutableMapIterable<K, V>) super.tap(procedure);
+    }
+
+    @Override
+    public <V1> MutableCollection<V1> flatCollect(Function<? super V, ? extends Iterable<V1>> function)
+    {
+        synchronized (this.lock)
+        {
+            return this.getDelegate().flatCollect(function);
+        }
+    }
+
+    @Override
+    public <P, V1> MutableCollection<V1> flatCollectWith(Function2<? super V, ? super P, ? extends Iterable<V1>> function, P parameter)
+    {
+        synchronized (this.lock)
+        {
+            return this.getDelegate().flatCollectWith(function, parameter);
+        }
+    }
+
+    @Override
+    public <V1> MutableCollection<V1> collectIf(Predicate<? super V> predicate, Function<? super V, ? extends V1> function)
+    {
+        synchronized (this.lock)
+        {
+            return this.getDelegate().collectIf(predicate, function);
+        }
+    }
+
+    @Override
+    public <P, V1> MutableCollection<V1> collectWith(Function2<? super V, ? super P, ? extends V1> function, P parameter)
+    {
+        synchronized (this.lock)
+        {
+            return this.getDelegate().collectWith(function, parameter);
+        }
+    }
+
+    @Override
+    public <V1> MutableCollection<V1> collect(Function<? super V, ? extends V1> function)
+    {
+        synchronized (this.lock)
+        {
+            return this.getDelegate().collect(function);
+        }
+    }
+
+    @Override
+    public <P> PartitionMutableCollection<V> partitionWith(Predicate2<? super V, ? super P> predicate, P parameter)
+    {
+        synchronized (this.lock)
+        {
+            return this.getDelegate().partitionWith(predicate, parameter);
+        }
     }
 }

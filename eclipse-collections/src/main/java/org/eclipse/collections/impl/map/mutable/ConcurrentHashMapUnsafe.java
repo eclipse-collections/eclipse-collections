@@ -28,6 +28,8 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Set;
+import java.util.Spliterator;
+import java.util.Spliterators;
 import java.util.concurrent.Executor;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -54,7 +56,7 @@ import org.eclipse.collections.impl.utility.MapIterate;
 import org.eclipse.collections.impl.utility.internal.IterableIterate;
 import sun.misc.Unsafe;
 
-@SuppressWarnings("UseOfSunClasses")
+@SuppressWarnings({"UseOfSunClasses", "ReferenceEquality"})
 public class ConcurrentHashMapUnsafe<K, V>
         extends AbstractMutableMap<K, V>
         implements ConcurrentMutableMap<K, V>, Externalizable
@@ -1490,33 +1492,6 @@ public class ConcurrentHashMapUnsafe<K, V>
     }
 
     @Override
-    public String toString()
-    {
-        if (this.isEmpty())
-        {
-            return "{}";
-        }
-        Iterator<Map.Entry<K, V>> iterator = this.entrySet().iterator();
-
-        StringBuilder sb = new StringBuilder();
-        sb.append('{');
-        while (true)
-        {
-            Map.Entry<K, V> e = iterator.next();
-            K key = e.getKey();
-            V value = e.getValue();
-            sb.append(key == this ? "(this Map)" : key);
-            sb.append('=');
-            sb.append(value == this ? "(this Map)" : value);
-            if (!iterator.hasNext())
-            {
-                return sb.append('}').toString();
-            }
-            sb.append(", ");
-        }
-    }
-
-    @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException
     {
         int size = in.readInt();
@@ -1666,17 +1641,6 @@ public class ConcurrentHashMapUnsafe<K, V>
             return e;
         }
 
-        protected void removeByKey()
-        {
-            if (this.current == null)
-            {
-                throw new IllegalStateException();
-            }
-            K key = this.current.key;
-            this.current = null;
-            ConcurrentHashMapUnsafe.this.remove(key);
-        }
-
         protected boolean removeByKeyValue()
         {
             if (this.current == null)
@@ -1725,7 +1689,7 @@ public class ConcurrentHashMapUnsafe<K, V>
         @Override
         public Map.Entry<K, V> next()
         {
-            return this.nextEntry();
+            return new WritableEntry(this.nextEntry());
         }
 
         @Override
@@ -1735,12 +1699,86 @@ public class ConcurrentHashMapUnsafe<K, V>
         }
     }
 
+    private final class WritableEntry implements Map.Entry<K, V>
+    {
+        private final K key;
+        private V val;
+
+        private WritableEntry(Entry<K, V> delegate)
+        {
+            this.key = delegate.getKey();
+            this.val = delegate.getValue();
+        }
+
+        @Override
+        public K getKey()
+        {
+            return this.key;
+        }
+
+        @Override
+        public V getValue()
+        {
+            return this.val;
+        }
+
+        @Override
+        public V setValue(V value)
+        {
+            V oldValue = this.val;
+            this.val = value;
+            ConcurrentHashMapUnsafe.this.put(this.key, value);
+            return oldValue;
+        }
+
+        @Override
+        public boolean equals(Object o)
+        {
+            if (!(o instanceof Map.Entry<?, ?>))
+            {
+                return false;
+            }
+            Map.Entry<?, ?> e = (Map.Entry<?, ?>) o;
+            Object k1 = this.key;
+            Object k2 = e.getKey();
+            if (k1 == k2 || (k1 != null && k1.equals(k2)))
+            {
+                Object v1 = this.val;
+                Object v2 = e.getValue();
+                if (v1 == v2 || (v1 != null && v1.equals(v2)))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        @Override
+        public int hashCode()
+        {
+            return (this.key == null ? 0 : this.key.hashCode()) ^ (this.val == null ? 0 : this.val.hashCode());
+        }
+
+        @Override
+        public String toString()
+        {
+            return this.key + "=" + this.val;
+        }
+    }
+
     private final class KeySet extends AbstractSet<K>
     {
         @Override
         public Iterator<K> iterator()
         {
             return new KeyIterator();
+        }
+
+        @Override
+        public Spliterator<K> spliterator()
+        {
+            return Spliterators.spliteratorUnknownSize(this.iterator(),
+                    Spliterator.CONCURRENT | Spliterator.DISTINCT | Spliterator.NONNULL);
         }
 
         @Override
@@ -1774,6 +1812,13 @@ public class ConcurrentHashMapUnsafe<K, V>
         public Iterator<V> iterator()
         {
             return new ValueIterator();
+        }
+
+        @Override
+        public Spliterator<V> spliterator()
+        {
+            return Spliterators.spliteratorUnknownSize(this.iterator(),
+                    Spliterator.CONCURRENT | Spliterator.NONNULL);
         }
 
         @Override
@@ -1833,6 +1878,13 @@ public class ConcurrentHashMapUnsafe<K, V>
         public Iterator<Map.Entry<K, V>> iterator()
         {
             return new EntryIterator();
+        }
+
+        @Override
+        public Spliterator<Map.Entry<K, V>> spliterator()
+        {
+            return Spliterators.spliteratorUnknownSize(this.iterator(),
+                    Spliterator.CONCURRENT | Spliterator.DISTINCT | Spliterator.NONNULL);
         }
 
         @Override
@@ -1945,10 +1997,15 @@ public class ConcurrentHashMapUnsafe<K, V>
             return this.value;
         }
 
+        /**
+         * Entry is a static class (the hash table bucket node), so it has no reference to the
+         * enclosing ConcurrentHashMapUnsafe and cannot call put(). The WritableEntry wrapper returned
+         * by the EntryIterator is non-static and delegates setValue() to ConcurrentHashMapUnsafe.this.put().
+         */
         @Override
         public V setValue(V value)
         {
-            throw new RuntimeException("not implemented");
+            throw new UnsupportedOperationException("ConcurrentHashMapUnsafe.Entry.setValue() not implemented. Use put() instead.");
         }
 
         public Entry<K, V> getNext()
@@ -2122,7 +2179,7 @@ public class ConcurrentHashMapUnsafe<K, V>
     }
 
     @Override
-    public <K, V> MutableMap<K, V> newEmpty(int capacity)
+    public <K2, V2> MutableMap<K2, V2> newEmpty(int capacity)
     {
         return ConcurrentHashMapUnsafe.newMap();
     }
@@ -2285,6 +2342,7 @@ public class ConcurrentHashMapUnsafe<K, V>
             {
                 return AccessController.doPrivileged(new PrivilegedExceptionAction<Unsafe>()
                 {
+                    @Override
                     public Unsafe run() throws Exception
                     {
                         Field f = Unsafe.class.getDeclaredField("theUnsafe");
@@ -2487,7 +2545,7 @@ public class ConcurrentHashMapUnsafe<K, V>
                     if (candidate.equals(key))
                     {
                         V oldValue = e.getValue();
-                        V newValue = remappingFunction.apply(oldValue, value);
+                        V newValue = oldValue == null ? value : remappingFunction.apply(oldValue, value);
                         Entry<K, V> replacementChainForRemoval = this.createReplacementChainForRemoval((Entry<K, V>) o, e);
                         Entry<K, V> newEntry = newValue == null
                                 ? replacementChainForRemoval
@@ -2511,6 +2569,170 @@ public class ConcurrentHashMapUnsafe<K, V>
                 {
                     this.incrementSizeAndPossiblyResize(currentArray, length, o);
                     return value;
+                }
+            }
+        }
+    }
+
+    @Override
+    public V computeIfAbsent(K key, java.util.function.Function<? super K, ? extends V> mappingFunction)
+    {
+        Objects.requireNonNull(mappingFunction);
+        int hash = this.hash(key);
+        Object[] currentArray = this.table;
+        V newValue = null;
+        boolean createdValue = false;
+        while (true)
+        {
+            int length = currentArray.length;
+            int index = ConcurrentHashMapUnsafe.indexFor(hash, length);
+            Object o = ConcurrentHashMapUnsafe.arrayAt(currentArray, index);
+            if (o == RESIZED || o == RESIZING)
+            {
+                currentArray = this.helpWithResizeWhileCurrentIndex(currentArray, index);
+            }
+            else
+            {
+                Entry<K, V> e = (Entry<K, V>) o;
+                while (e != null)
+                {
+                    K candidate = e.getKey();
+                    if (candidate.equals(key))
+                    {
+                        return e.getValue();
+                    }
+                    e = e.getNext();
+                }
+                if (!createdValue)
+                {
+                    createdValue = true;
+                    newValue = mappingFunction.apply(key);
+                    if (newValue == null)
+                    {
+                        return null;
+                    }
+                }
+                Entry<K, V> newEntry = new Entry<>(key, newValue, (Entry<K, V>) o);
+                if (ConcurrentHashMapUnsafe.casArrayAt(currentArray, index, o, newEntry))
+                {
+                    this.incrementSizeAndPossiblyResize(currentArray, length, o);
+                    return newValue;
+                }
+            }
+        }
+    }
+
+    @Override
+    public V computeIfPresent(K key, BiFunction<? super K, ? super V, ? extends V> remappingFunction)
+    {
+        Objects.requireNonNull(remappingFunction);
+        int hash = this.hash(key);
+        Object[] currentArray = this.table;
+        //noinspection LabeledStatement
+        outer:
+        while (true)
+        {
+            int length = currentArray.length;
+            int index = ConcurrentHashMapUnsafe.indexFor(hash, length);
+            Object o = ConcurrentHashMapUnsafe.arrayAt(currentArray, index);
+            if (o == RESIZED || o == RESIZING)
+            {
+                currentArray = this.helpWithResizeWhileCurrentIndex(currentArray, index);
+            }
+            else
+            {
+                Entry<K, V> e = (Entry<K, V>) o;
+                while (e != null)
+                {
+                    K candidate = e.getKey();
+                    if (candidate.equals(key))
+                    {
+                        V oldValue = e.getValue();
+                        V newValue = remappingFunction.apply(key, oldValue);
+                        Entry<K, V> replacement = this.createReplacementChainForRemoval((Entry<K, V>) o, e);
+                        if (newValue == null)
+                        {
+                            if (!ConcurrentHashMapUnsafe.casArrayAt(currentArray, index, o, replacement))
+                            {
+                                //noinspection ContinueStatementWithLabel
+                                continue outer;
+                            }
+                            this.addToSize(-1);
+                            return null;
+                        }
+                        Entry<K, V> newEntry = new Entry<>(e.getKey(), newValue, replacement);
+                        if (!ConcurrentHashMapUnsafe.casArrayAt(currentArray, index, o, newEntry))
+                        {
+                            //noinspection ContinueStatementWithLabel
+                            continue outer;
+                        }
+                        return newValue;
+                    }
+                    e = e.getNext();
+                }
+                return null;
+            }
+        }
+    }
+
+    @Override
+    public V compute(K key, BiFunction<? super K, ? super V, ? extends V> remappingFunction)
+    {
+        Objects.requireNonNull(remappingFunction);
+        int hash = this.hash(key);
+        Object[] currentArray = this.table;
+        //noinspection LabeledStatement
+        outer:
+        while (true)
+        {
+            int length = currentArray.length;
+            int index = ConcurrentHashMapUnsafe.indexFor(hash, length);
+            Object o = ConcurrentHashMapUnsafe.arrayAt(currentArray, index);
+            if (o == RESIZED || o == RESIZING)
+            {
+                currentArray = this.helpWithResizeWhileCurrentIndex(currentArray, index);
+            }
+            else
+            {
+                Entry<K, V> e = (Entry<K, V>) o;
+                while (e != null)
+                {
+                    K candidate = e.getKey();
+                    if (candidate.equals(key))
+                    {
+                        V oldValue = e.getValue();
+                        V newValue = remappingFunction.apply(key, oldValue);
+                        Entry<K, V> replacement = this.createReplacementChainForRemoval((Entry<K, V>) o, e);
+                        if (newValue == null)
+                        {
+                            if (!ConcurrentHashMapUnsafe.casArrayAt(currentArray, index, o, replacement))
+                            {
+                                //noinspection ContinueStatementWithLabel
+                                continue outer;
+                            }
+                            this.addToSize(-1);
+                            return null;
+                        }
+                        Entry<K, V> newEntry = new Entry<>(e.getKey(), newValue, replacement);
+                        if (!ConcurrentHashMapUnsafe.casArrayAt(currentArray, index, o, newEntry))
+                        {
+                            //noinspection ContinueStatementWithLabel
+                            continue outer;
+                        }
+                        return newValue;
+                    }
+                    e = e.getNext();
+                }
+                V newValue = remappingFunction.apply(key, null);
+                if (newValue == null)
+                {
+                    return null;
+                }
+                Entry<K, V> newEntry = new Entry<>(key, newValue, (Entry<K, V>) o);
+                if (ConcurrentHashMapUnsafe.casArrayAt(currentArray, index, o, newEntry))
+                {
+                    this.incrementSizeAndPossiblyResize(currentArray, length, o);
+                    return newValue;
                 }
             }
         }

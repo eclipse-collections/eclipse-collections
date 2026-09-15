@@ -28,12 +28,14 @@ public class MultiReaderHashBagAsWriteUntouchableTest extends AbstractCollection
     }
 
     @Override
+    @Test
     public void asSynchronized()
     {
         assertThrows(UnsupportedOperationException.class, () -> this.newWith().asSynchronized());
     }
 
     @Override
+    @Test
     public void asUnmodifiable()
     {
         assertThrows(UnsupportedOperationException.class, () -> this.newWith().asUnmodifiable());

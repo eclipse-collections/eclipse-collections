@@ -634,6 +634,10 @@ public final class MultiReaderHashBag<T>
     @Override
     public boolean equals(Object o)
     {
+        if (o == this)
+        {
+            return true;
+        }
         try (LockWrapper wrapper = this.lockWrapper.acquireReadLock())
         {
             return this.delegate.equals(o);

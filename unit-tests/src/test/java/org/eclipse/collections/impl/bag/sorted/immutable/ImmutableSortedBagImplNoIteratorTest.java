@@ -64,18 +64,21 @@ public class ImmutableSortedBagImplNoIteratorTest extends ImmutableSortedBagImpl
     }
 
     @Override
+    @Test
     public void iteratorRemove()
     {
         //not applicable
     }
 
     @Override
+    @Test
     public void stream()
     {
         //not applicable
     }
 
     @Override
+    @Test
     public void parallelStream()
     {
         //not applicable

@@ -293,6 +293,7 @@ public abstract class ObjectBooleanHashMapValuesTestCase extends AbstractMutable
     }
 
     @Override
+    @Test
     public void containsAllArray()
     {
         MutableBooleanCollection emptyCollection = this.newWith();
@@ -308,6 +309,7 @@ public abstract class ObjectBooleanHashMapValuesTestCase extends AbstractMutable
     }
 
     @Override
+    @Test
     public void containsAllIterable()
     {
         MutableBooleanCollection emptyCollection1 = this.newWith();
@@ -392,6 +394,7 @@ public abstract class ObjectBooleanHashMapValuesTestCase extends AbstractMutable
     }
 
     @Override
+    @Test
     public void chunk()
     {
         BooleanIterable iterable1 = this.newWith(true);
@@ -439,6 +442,7 @@ public abstract class ObjectBooleanHashMapValuesTestCase extends AbstractMutable
     }
 
     @Override
+    @Test
     public void newCollection()
     {
     }

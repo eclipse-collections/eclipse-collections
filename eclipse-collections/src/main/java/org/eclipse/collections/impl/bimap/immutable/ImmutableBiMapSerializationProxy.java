@@ -45,6 +45,7 @@ class ImmutableBiMapSerializationProxy<K, V> implements Externalizable
         {
             this.biMap.forEachKeyValue(new CheckedProcedure2<K, V>()
             {
+                @Override
                 public void safeValue(K key, V value) throws IOException
                 {
                     out.writeObject(key);

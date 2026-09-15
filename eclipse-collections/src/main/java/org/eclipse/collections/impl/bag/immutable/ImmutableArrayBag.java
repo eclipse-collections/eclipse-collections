@@ -82,6 +82,7 @@ public class ImmutableArrayBag<T>
         {
             private int index;
 
+            @Override
             public void value(T each, int count)
             {
                 newKeys[this.index] = each;
@@ -255,7 +256,7 @@ public class ImmutableArrayBag<T>
                 result.addOccurrences((S) each, index);
             }
         });
-        return ImmutableArrayBag.copyFrom(result);
+        return result.toImmutable();
     }
 
     @Override
@@ -314,7 +315,7 @@ public class ImmutableArrayBag<T>
     public <V> ImmutableBag<V> collect(Function<? super T, ? extends V> function)
     {
         MutableBag<V> result = this.collect(function, HashBag.newBag());
-        return ImmutableArrayBag.copyFrom(result);
+        return result.toImmutable();
     }
 
     @Override
@@ -323,7 +324,7 @@ public class ImmutableArrayBag<T>
             Function<? super T, ? extends V> function)
     {
         MutableBag<V> result = this.collectIf(predicate, function, HashBag.newBag());
-        return ImmutableArrayBag.copyFrom(result);
+        return result.toImmutable();
     }
 
     @Override

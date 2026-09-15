@@ -10,11 +10,17 @@
 
 package org.eclipse.collections.test.map.mutable;
 
+import java.util.Collection;
 import java.util.Random;
+import java.util.Set;
 
 import org.eclipse.collections.api.map.MutableMap;
 import org.eclipse.collections.impl.map.mutable.UnifiedMap;
 import org.eclipse.collections.impl.map.mutable.UnmodifiableMutableMap;
+import org.eclipse.collections.test.map.UnmodifiableMapKeySetTestCase;
+import org.eclipse.collections.test.map.UnmodifiableMapValuesCollectionTestCase;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -53,8 +59,37 @@ public class UnmodifiableMutableMapTest
     }
 
     @Override
+    @Test
     public void Iterable_remove()
     {
         UnmodifiableMutableMapIterableTestCase.super.Iterable_remove();
+    }
+
+    @Nested
+    public class KeySetView implements UnmodifiableMapKeySetTestCase
+    {
+        @SafeVarargs
+        @Override
+        public final <T> Set<T> newWith(T... elements)
+        {
+            Random random = new Random(CURRENT_TIME_MILLIS);
+            MutableMap<T, Object> result = new UnifiedMap<>();
+            for (T element : elements)
+            {
+                assertNull(result.put(element, random.nextDouble()));
+            }
+            return UnmodifiableMutableMap.of(result).keySet();
+        }
+    }
+
+    @Nested
+    public class ValuesCollectionView implements UnmodifiableMapValuesCollectionTestCase
+    {
+        @SafeVarargs
+        @Override
+        public final <T> Collection<T> newWith(T... elements)
+        {
+            return UnmodifiableMutableMapTest.this.newWith(elements).values();
+        }
     }
 }

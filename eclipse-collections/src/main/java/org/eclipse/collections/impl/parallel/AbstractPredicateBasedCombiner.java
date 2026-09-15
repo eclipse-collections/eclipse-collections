@@ -73,9 +73,9 @@ public abstract class AbstractPredicateBasedCombiner<T, BT extends Procedure<T>>
 
     private Collection<T> createResultForCollection(Iterable<?> sourceCollection, int initialCapacity)
     {
-        if (sourceCollection instanceof Collection)
+        if (sourceCollection instanceof Collection<?> collection)
         {
-            return DefaultSpeciesNewStrategy.INSTANCE.speciesNew((Collection<?>) sourceCollection, initialCapacity);
+            return DefaultSpeciesNewStrategy.INSTANCE.speciesNew(collection, initialCapacity);
         }
         return Lists.mutable.withInitialCapacity(initialCapacity);
     }

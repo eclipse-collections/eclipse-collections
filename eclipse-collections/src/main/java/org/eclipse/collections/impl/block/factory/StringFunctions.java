@@ -10,6 +10,8 @@
 
 package org.eclipse.collections.impl.block.factory;
 
+import java.util.Locale;
+
 import org.eclipse.collections.api.block.function.Function;
 import org.eclipse.collections.api.block.function.primitive.BooleanFunction;
 import org.eclipse.collections.api.block.function.primitive.ByteFunction;
@@ -151,7 +153,7 @@ public final class StringFunctions
         @Override
         public String valueOf(String object)
         {
-            return object.toUpperCase();
+            return object.toUpperCase(Locale.ROOT);
         }
 
         @Override
@@ -168,7 +170,7 @@ public final class StringFunctions
         @Override
         public String valueOf(String object)
         {
-            return object.toLowerCase();
+            return object.toLowerCase(Locale.ROOT);
         }
 
         @Override

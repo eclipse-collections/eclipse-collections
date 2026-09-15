@@ -46,6 +46,7 @@ import org.eclipse.collections.impl.factory.primitive.ByteSets;
 import org.eclipse.collections.impl.lazy.primitive.LazyByteIterableAdapter;
 import org.eclipse.collections.impl.set.immutable.primitive.ImmutableByteSetSerializationProxy;
 
+@SuppressWarnings("NarrowingCompoundAssignment")
 public final class ByteHashSet implements MutableByteSet, Externalizable
 {
     private static final long serialVersionUID = 1L;
@@ -99,9 +100,9 @@ public final class ByteHashSet implements MutableByteSet, Externalizable
 
     public static ByteHashSet newSet(ByteIterable source)
     {
-        if (source instanceof ByteHashSet)
+        if (source instanceof ByteHashSet byteHashSet)
         {
-            return new ByteHashSet((ByteHashSet) source);
+            return new ByteHashSet(byteHashSet);
         }
 
         return ByteHashSet.newSetWith(source.toArray());
@@ -368,21 +369,19 @@ public final class ByteHashSet implements MutableByteSet, Externalizable
         }
         int oldSize = this.size();
 
-        if (source instanceof ByteHashSet)
+        if (source instanceof ByteHashSet byteHashSet)
         {
-            ByteHashSet hashSet = (ByteHashSet) source;
-
             this.size = 0;
-            this.bitGroup3 |= hashSet.bitGroup3;
+            this.bitGroup3 |= byteHashSet.bitGroup3;
             this.size += Long.bitCount(this.bitGroup3);
 
-            this.bitGroup4 |= hashSet.bitGroup4;
+            this.bitGroup4 |= byteHashSet.bitGroup4;
             this.size += Long.bitCount(this.bitGroup4);
 
-            this.bitGroup2 |= hashSet.bitGroup2;
+            this.bitGroup2 |= byteHashSet.bitGroup2;
             this.size += Long.bitCount(this.bitGroup2);
 
-            this.bitGroup1 |= hashSet.bitGroup1;
+            this.bitGroup1 |= byteHashSet.bitGroup1;
             this.size += Long.bitCount(this.bitGroup1);
         }
         else
@@ -405,20 +404,19 @@ public final class ByteHashSet implements MutableByteSet, Externalizable
             return false;
         }
         int oldSize = this.size();
-        if (source instanceof ByteHashSet)
+        if (source instanceof ByteHashSet byteHashSet)
         {
             this.size = 0;
-            ByteHashSet hashSet = (ByteHashSet) source;
-            this.bitGroup3 &= ~hashSet.bitGroup3;
+            this.bitGroup3 &= ~byteHashSet.bitGroup3;
             this.size += Long.bitCount(this.bitGroup3);
 
-            this.bitGroup4 &= ~hashSet.bitGroup4;
+            this.bitGroup4 &= ~byteHashSet.bitGroup4;
             this.size += Long.bitCount(this.bitGroup4);
 
-            this.bitGroup2 &= ~hashSet.bitGroup2;
+            this.bitGroup2 &= ~byteHashSet.bitGroup2;
             this.size += Long.bitCount(this.bitGroup2);
 
-            this.bitGroup1 &= ~hashSet.bitGroup1;
+            this.bitGroup1 &= ~byteHashSet.bitGroup1;
             this.size += Long.bitCount(this.bitGroup1);
         }
         else
@@ -452,7 +450,7 @@ public final class ByteHashSet implements MutableByteSet, Externalizable
     public boolean retainAll(ByteIterable source)
     {
         int oldSize = this.size();
-        ByteSet sourceSet = source instanceof ByteSet ? (ByteSet) source : source.toSet();
+        ByteSet sourceSet = source instanceof ByteSet bs ? bs : source.toSet();
 
         ByteHashSet retained = this.select(sourceSet::contains);
         if (retained.size() != oldSize)
@@ -974,6 +972,7 @@ public final class ByteHashSet implements MutableByteSet, Externalizable
 
         this.forEach(new CheckedByteProcedure()
         {
+            @Override
             public void safeValue(byte each) throws IOException
             {
                 out.writeByte(each);

@@ -16,7 +16,7 @@
         Arrays, Maps or Strings. The iteration protocol was inspired by the Smalltalk collection framework.
     </description>
 
-    <url>https://github.com/eclipse/eclipse-collections</url>
+    <url>https://github.com/eclipse-collections/eclipse-collections</url>
 
     <inceptionYear>2004</inceptionYear>
 
@@ -34,9 +34,9 @@
     </licenses>
 
     <scm>
-        <url>https://github.com/eclipse/eclipse-collections</url>
-        <connection>scm:git:https://github.com/eclipse/eclipse-collections.git</connection>
-        <developerConnection>scm:git:https://github.com/eclipse/eclipse-collections.git</developerConnection>
+        <url>https://github.com/eclipse-collections/eclipse-collections</url>
+        <connection>scm:git:https://github.com/eclipse-collections/eclipse-collections.git</connection>
+        <developerConnection>scm:git:https://github.com/eclipse-collections/eclipse-collections.git</developerConnection>
     </scm>
 
     <developers>

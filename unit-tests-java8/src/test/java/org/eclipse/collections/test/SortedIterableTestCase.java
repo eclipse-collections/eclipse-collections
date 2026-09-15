@@ -11,10 +11,8 @@
 package org.eclipse.collections.test;
 
 import org.eclipse.collections.api.ordered.SortedIterable;
-import org.eclipse.collections.impl.block.factory.Comparators;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public interface SortedIterableTestCase extends OrderedIterableTestCase, NoDetectOptionalNullTestCase
@@ -22,10 +20,10 @@ public interface SortedIterableTestCase extends OrderedIterableTestCase, NoDetec
     @Override
     <T> SortedIterable<T> newWith(T... elements);
 
-    @Test
-    default void SortedIterable_comparator()
+    @Override
+    default boolean supportsNonComparableElements()
     {
-        assertSame(Comparators.reverseNaturalOrder(), this.newWith().comparator());
+        return false;
     }
 
     @Override

@@ -1,11 +1,11 @@
 ////
-  Copyright (c) 2022 Goldman Sachs and others. All rights reserved. 
-  This program and the accompanying materials   are made available 
-  under the terms of the Eclipse Public License v1.0 and 
+  Copyright (c) 2022 Goldman Sachs and others. All rights reserved.
+  This program and the accompanying materials   are made available
+  under the terms of the Eclipse Public License v1.0 and
   Eclipse Distribution License v. 1.0 which accompany this distribution.
-  The Eclipse Public License is available at 
+  The Eclipse Public License is available at
   http://www.eclipse.org/legal/epl-v10.html.
-  The Eclipse Distribution License is available at 
+  The Eclipse Distribution License is available at
   http://www.eclipse.org/org/documents/edl-v10.php.
 ////
 == Eclipse Collections Quick Reference
@@ -75,7 +75,7 @@
 :asSynchronized: {api-url}/api/collection/MutableCollection.html#asSynchronized()[asSynchronized]
 :asUnmodifiable: {api-url}/api/collection/MutableCollection.html#asUnmodifiable()[asUnmodifiable]
 :sortThis:       {api-url}/api/list/MutableList.html#sortThis()[sortThis]
-:sortThisBy:     {api-url}/api/list/MutableList.html#sortThisBy(org.eclipse.collections.api.block.function.Function)[sortThisBy]            
+:sortThisBy:     {api-url}/api/list/MutableList.html#sortThisBy(org.eclipse.collections.api.block.function.Function)[sortThisBy]
 :toImmutable:    {api-url}/api/collection/MutableCollection.html#toImmutable()[toImmutable]
 //
 

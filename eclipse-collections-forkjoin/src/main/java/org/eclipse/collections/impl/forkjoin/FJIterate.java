@@ -536,9 +536,9 @@ public final class FJIterate
 
     private static <T> int calculateTaskCount(Iterable<T> iterable, int batchSize)
     {
-        if (iterable instanceof BatchIterable<?>)
+        if (iterable instanceof BatchIterable<?> batchIterable)
         {
-            return FJIterate.calculateTaskCount((BatchIterable<?>) iterable, batchSize);
+            return FJIterate.calculateTaskCount(batchIterable, batchSize);
         }
         return FJIterate.calculateTaskCount(Iterate.sizeOf(iterable), batchSize);
     }

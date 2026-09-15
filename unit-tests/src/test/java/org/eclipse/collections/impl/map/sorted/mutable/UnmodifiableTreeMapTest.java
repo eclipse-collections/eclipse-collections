@@ -14,6 +14,7 @@ import java.util.Comparator;
 
 import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.factory.Maps;
+import org.eclipse.collections.api.map.MutableMapIterable;
 import org.eclipse.collections.api.map.sorted.MutableSortedMap;
 import org.eclipse.collections.impl.block.factory.Functions;
 import org.eclipse.collections.impl.block.function.PassThruFunction0;
@@ -25,6 +26,7 @@ import org.eclipse.collections.impl.utility.Iterate;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -579,20 +581,6 @@ public class UnmodifiableTreeMapTest extends MutableSortedMapTestCase
         assertThrows(UnsupportedOperationException.class, () -> map.with(Tuples.pair(1, "1")));
     }
 
-    @Override
-    @Test
-    public void getIfAbsentPut_block_throws()
-    {
-        // Not applicable for unmodifiable adapter
-    }
-
-    @Override
-    @Test
-    public void getIfAbsentPutWith_block_throws()
-    {
-        // Not applicable for unmodifiable adapter
-    }
-
     @Test
     @Override
     public void updateValue()
@@ -601,6 +589,17 @@ public class UnmodifiableTreeMapTest extends MutableSortedMapTestCase
         assertThrows(
                 UnsupportedOperationException.class,
                 () -> map.updateValue(0, () -> 0, Functions.identity()));
+
+        MutableMapIterable<Integer, Integer> map2 = this.newMapWithKeysValues(1, 1, 2, 2, 3, 3);
+        assertThrows(UnsupportedOperationException.class, () -> map2.updateValue(4, () -> 4, v -> v + 1));
+        assertEquals(this.newMapWithKeysValues(1, 1, 2, 2, 3, 3), map2);
+        assertFalse(map2.containsKey(4));
+        assertEquals(3, map2.size());
+
+        assertThrows(UnsupportedOperationException.class, () -> map2.updateValue(2, () -> 0, v -> v + 1));
+        assertEquals(this.newMapWithKeysValues(1, 1, 2, 2, 3, 3), map2);
+        assertEquals(Integer.valueOf(2), map2.get(2));
+        assertEquals(3, map2.size());
     }
 
     @Test
@@ -621,6 +620,17 @@ public class UnmodifiableTreeMapTest extends MutableSortedMapTestCase
         assertThrows(
                 UnsupportedOperationException.class,
                 () -> map.updateValueWith(0, () -> 0, (integer, parameter) -> 0, "test"));
+
+        MutableMapIterable<Integer, Integer> map2 = this.newMapWithKeysValues(1, 1, 2, 2, 3, 3);
+        assertThrows(UnsupportedOperationException.class, () -> map2.updateValueWith(4, () -> 4, (v, p) -> v + 1, "param"));
+        assertEquals(this.newMapWithKeysValues(1, 1, 2, 2, 3, 3), map2);
+        assertFalse(map2.containsKey(4));
+        assertEquals(3, map2.size());
+
+        assertThrows(UnsupportedOperationException.class, () -> map2.updateValueWith(2, () -> 0, (v, p) -> v + 1, "param"));
+        assertEquals(this.newMapWithKeysValues(1, 1, 2, 2, 3, 3), map2);
+        assertEquals(Integer.valueOf(2), map2.get(2));
+        assertEquals(3, map2.size());
     }
 
     @Test

@@ -212,6 +212,7 @@ public class ImmutableQuadrupletonMapTest extends ImmutableMemoryEfficientMapTes
     }
 
     @Override
+    @Test
     public void select()
     {
         ImmutableMap<Integer, String> map = this.classUnderTest();
@@ -281,6 +282,7 @@ public class ImmutableQuadrupletonMapTest extends ImmutableMemoryEfficientMapTes
     }
 
     @Override
+    @Test
     public void reject()
     {
         ImmutableMap<Integer, String> map = this.classUnderTest();
@@ -350,6 +352,7 @@ public class ImmutableQuadrupletonMapTest extends ImmutableMemoryEfficientMapTes
     }
 
     @Override
+    @Test
     public void detect()
     {
         ImmutableMap<Integer, String> map = this.classUnderTest();

@@ -47,14 +47,13 @@ import org.eclipse.collections.api.set.MutableSet;
 import org.eclipse.collections.api.tuple.Pair;
 import org.eclipse.collections.impl.block.factory.Functions;
 import org.eclipse.collections.impl.block.factory.Predicates;
-import org.eclipse.collections.impl.block.procedure.AppendStringProcedure;
+import org.eclipse.collections.impl.block.procedure.AppendStringWithSelfProcedure;
 import org.eclipse.collections.impl.block.procedure.MapCollectProcedure;
 import org.eclipse.collections.impl.factory.HashingStrategyMaps;
 import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.map.mutable.AbstractMutableMap;
 import org.eclipse.collections.impl.parallel.BatchIterable;
 import org.eclipse.collections.impl.set.strategy.mutable.UnifiedSetWithHashingStrategy;
-import org.eclipse.collections.impl.tuple.ImmutableEntry;
 import org.eclipse.collections.impl.tuple.Tuples;
 import org.eclipse.collections.impl.utility.ArrayIterate;
 import org.eclipse.collections.impl.utility.Iterate;
@@ -473,8 +472,8 @@ public class UnifiedMapWithHashingStrategy<K, V> extends AbstractMutableMap<K, V
         Object cur = this.table[index];
         if (cur == null)
         {
-            this.table[index] = UnifiedMapWithHashingStrategy.toSentinelIfNull(key);
             V result = function.valueOf(factory.value());
+            this.table[index] = UnifiedMapWithHashingStrategy.toSentinelIfNull(key);
             this.table[index + 1] = result;
             ++this.occupied;
             return result;
@@ -498,8 +497,8 @@ public class UnifiedMapWithHashingStrategy<K, V> extends AbstractMutableMap<K, V
             {
                 if (chain[i] == null)
                 {
-                    chain[i] = UnifiedMapWithHashingStrategy.toSentinelIfNull(key);
                     V result = function.valueOf(factory.value());
+                    chain[i] = UnifiedMapWithHashingStrategy.toSentinelIfNull(key);
                     chain[i + 1] = result;
                     if (++this.occupied > this.maxSize)
                     {
@@ -517,9 +516,9 @@ public class UnifiedMapWithHashingStrategy<K, V> extends AbstractMutableMap<K, V
             }
             Object[] newChain = new Object[chain.length + 4];
             System.arraycopy(chain, 0, newChain, 0, chain.length);
+            V result = function.valueOf(factory.value());
             this.table[index + 1] = newChain;
             newChain[chain.length] = UnifiedMapWithHashingStrategy.toSentinelIfNull(key);
-            V result = function.valueOf(factory.value());
             newChain[chain.length + 1] = result;
             if (++this.occupied > this.maxSize)
             {
@@ -530,8 +529,8 @@ public class UnifiedMapWithHashingStrategy<K, V> extends AbstractMutableMap<K, V
         Object[] newChain = new Object[4];
         newChain[0] = this.table[index];
         newChain[1] = this.table[index + 1];
-        newChain[2] = UnifiedMapWithHashingStrategy.toSentinelIfNull(key);
         V result = function.valueOf(factory.value());
+        newChain[2] = UnifiedMapWithHashingStrategy.toSentinelIfNull(key);
         newChain[3] = result;
         this.table[index] = CHAINED_KEY;
         this.table[index + 1] = newChain;
@@ -549,8 +548,8 @@ public class UnifiedMapWithHashingStrategy<K, V> extends AbstractMutableMap<K, V
         Object cur = this.table[index];
         if (cur == null)
         {
-            this.table[index] = UnifiedMapWithHashingStrategy.toSentinelIfNull(key);
             V result = function.value(factory.value(), parameter);
+            this.table[index] = UnifiedMapWithHashingStrategy.toSentinelIfNull(key);
             this.table[index + 1] = result;
             ++this.occupied;
             return result;
@@ -579,8 +578,8 @@ public class UnifiedMapWithHashingStrategy<K, V> extends AbstractMutableMap<K, V
             {
                 if (chain[i] == null)
                 {
-                    chain[i] = UnifiedMapWithHashingStrategy.toSentinelIfNull(key);
                     V result = function.value(factory.value(), parameter);
+                    chain[i] = UnifiedMapWithHashingStrategy.toSentinelIfNull(key);
                     chain[i + 1] = result;
                     if (++this.occupied > this.maxSize)
                     {
@@ -598,9 +597,9 @@ public class UnifiedMapWithHashingStrategy<K, V> extends AbstractMutableMap<K, V
             }
             Object[] newChain = new Object[chain.length + 4];
             System.arraycopy(chain, 0, newChain, 0, chain.length);
+            V result = function.value(factory.value(), parameter);
             this.table[index + 1] = newChain;
             newChain[chain.length] = UnifiedMapWithHashingStrategy.toSentinelIfNull(key);
-            V result = function.value(factory.value(), parameter);
             newChain[chain.length + 1] = result;
             if (++this.occupied > this.maxSize)
             {
@@ -611,8 +610,8 @@ public class UnifiedMapWithHashingStrategy<K, V> extends AbstractMutableMap<K, V
         Object[] newChain = new Object[4];
         newChain[0] = this.table[index];
         newChain[1] = this.table[index + 1];
-        newChain[2] = UnifiedMapWithHashingStrategy.toSentinelIfNull(key);
         V result = function.value(factory.value(), parameter);
+        newChain[2] = UnifiedMapWithHashingStrategy.toSentinelIfNull(key);
         newChain[3] = result;
         this.table[index] = CHAINED_KEY;
         this.table[index + 1] = newChain;
@@ -641,7 +640,7 @@ public class UnifiedMapWithHashingStrategy<K, V> extends AbstractMutableMap<K, V
         if (cur != CHAINED_KEY && this.nonNullTableObjectEquals(cur, key))
         {
             V oldValue = (V) this.table[index + 1];
-            V newValue = remappingFunction.apply(oldValue, value);
+            V newValue = oldValue == null ? value : remappingFunction.apply(oldValue, value);
             this.table[index + 1] = newValue;
             if (newValue == null)
             {
@@ -673,7 +672,7 @@ public class UnifiedMapWithHashingStrategy<K, V> extends AbstractMutableMap<K, V
                 if (this.nonNullTableObjectEquals(chain[i], key))
                 {
                     V oldValue = (V) chain[i + 1];
-                    V newValue = remappingFunction.apply(oldValue, value);
+                    V newValue = oldValue == null ? value : remappingFunction.apply(oldValue, value);
                     if (newValue == null)
                     {
                         this.overwriteWithLastElementFromChain(chain, index, i);
@@ -708,6 +707,285 @@ public class UnifiedMapWithHashingStrategy<K, V> extends AbstractMutableMap<K, V
             this.rehash(this.table.length);
         }
         return value;
+    }
+
+    @Override
+    public V computeIfAbsent(K key, java.util.function.Function<? super K, ? extends V> mappingFunction)
+    {
+        Objects.requireNonNull(mappingFunction, "mappingFunction cannot be null");
+        int index = this.index(key);
+        Object cur = this.table[index];
+        if (cur == null)
+        {
+            V newValue = mappingFunction.apply(key);
+            if (newValue != null)
+            {
+                this.table[index] = UnifiedMapWithHashingStrategy.toSentinelIfNull(key);
+                this.table[index + 1] = newValue;
+                if (++this.occupied > this.maxSize)
+                {
+                    this.rehash(this.table.length);
+                }
+            }
+            return newValue;
+        }
+        if (cur != CHAINED_KEY && this.nonNullTableObjectEquals(cur, key))
+        {
+            V oldValue = (V) this.table[index + 1];
+            if (oldValue != null)
+            {
+                return oldValue;
+            }
+            V newValue = mappingFunction.apply(key);
+            if (newValue != null)
+            {
+                this.table[index + 1] = newValue;
+            }
+            return newValue;
+        }
+        return this.chainedComputeIfAbsent(key, index, mappingFunction);
+    }
+
+    private V chainedComputeIfAbsent(K key, int index, java.util.function.Function<? super K, ? extends V> mappingFunction)
+    {
+        if (this.table[index] == CHAINED_KEY)
+        {
+            Object[] chain = (Object[]) this.table[index + 1];
+            for (int i = 0; i < chain.length; i += 2)
+            {
+                if (chain[i] == null)
+                {
+                    V newValue = mappingFunction.apply(key);
+                    if (newValue != null)
+                    {
+                        chain[i] = UnifiedMapWithHashingStrategy.toSentinelIfNull(key);
+                        chain[i + 1] = newValue;
+                        if (++this.occupied > this.maxSize)
+                        {
+                            this.rehash(this.table.length);
+                        }
+                    }
+                    return newValue;
+                }
+                if (this.nonNullTableObjectEquals(chain[i], key))
+                {
+                    V oldValue = (V) chain[i + 1];
+                    if (oldValue != null)
+                    {
+                        return oldValue;
+                    }
+                    V newValue = mappingFunction.apply(key);
+                    if (newValue != null)
+                    {
+                        chain[i + 1] = newValue;
+                    }
+                    return newValue;
+                }
+            }
+            V newValue = mappingFunction.apply(key);
+            if (newValue != null)
+            {
+                Object[] newChain = new Object[chain.length + 4];
+                System.arraycopy(chain, 0, newChain, 0, chain.length);
+                this.table[index + 1] = newChain;
+                newChain[chain.length] = UnifiedMapWithHashingStrategy.toSentinelIfNull(key);
+                newChain[chain.length + 1] = newValue;
+                if (++this.occupied > this.maxSize)
+                {
+                    this.rehash(this.table.length);
+                }
+            }
+            return newValue;
+        }
+        V newValue = mappingFunction.apply(key);
+        if (newValue != null)
+        {
+            Object[] newChain = new Object[4];
+            newChain[0] = this.table[index];
+            newChain[1] = this.table[index + 1];
+            newChain[2] = UnifiedMapWithHashingStrategy.toSentinelIfNull(key);
+            newChain[3] = newValue;
+            this.table[index] = CHAINED_KEY;
+            this.table[index + 1] = newChain;
+            if (++this.occupied > this.maxSize)
+            {
+                this.rehash(this.table.length);
+            }
+        }
+        return newValue;
+    }
+
+    @Override
+    public V computeIfPresent(K key, BiFunction<? super K, ? super V, ? extends V> remappingFunction)
+    {
+        Objects.requireNonNull(remappingFunction, "remappingFunction cannot be null");
+        int index = this.index(key);
+        Object cur = this.table[index];
+        if (cur == null)
+        {
+            return null;
+        }
+        if (cur != CHAINED_KEY && this.nonNullTableObjectEquals(cur, key))
+        {
+            V oldValue = (V) this.table[index + 1];
+            if (oldValue == null)
+            {
+                return null;
+            }
+            V newValue = remappingFunction.apply(key, oldValue);
+            if (newValue == null)
+            {
+                this.table[index] = null;
+                --this.occupied;
+            }
+            else
+            {
+                this.table[index + 1] = newValue;
+            }
+            return newValue;
+        }
+        return this.chainedComputeIfPresent(key, index, remappingFunction);
+    }
+
+    private V chainedComputeIfPresent(K key, int index, BiFunction<? super K, ? super V, ? extends V> remappingFunction)
+    {
+        if (this.table[index] == CHAINED_KEY)
+        {
+            Object[] chain = (Object[]) this.table[index + 1];
+            for (int i = 0; i < chain.length; i += 2)
+            {
+                if (chain[i] == null)
+                {
+                    return null;
+                }
+                if (this.nonNullTableObjectEquals(chain[i], key))
+                {
+                    V oldValue = (V) chain[i + 1];
+                    if (oldValue == null)
+                    {
+                        return null;
+                    }
+                    V newValue = remappingFunction.apply(key, oldValue);
+                    if (newValue == null)
+                    {
+                        this.overwriteWithLastElementFromChain(chain, index, i);
+                    }
+                    else
+                    {
+                        chain[i + 1] = newValue;
+                    }
+                    return newValue;
+                }
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public V compute(K key, BiFunction<? super K, ? super V, ? extends V> remappingFunction)
+    {
+        Objects.requireNonNull(remappingFunction, "remappingFunction cannot be null");
+        int index = this.index(key);
+        Object cur = this.table[index];
+        if (cur == null)
+        {
+            V newValue = remappingFunction.apply(key, null);
+            if (newValue != null)
+            {
+                this.table[index] = UnifiedMapWithHashingStrategy.toSentinelIfNull(key);
+                this.table[index + 1] = newValue;
+                if (++this.occupied > this.maxSize)
+                {
+                    this.rehash(this.table.length);
+                }
+            }
+            return newValue;
+        }
+        if (cur != CHAINED_KEY && this.nonNullTableObjectEquals(cur, key))
+        {
+            V oldValue = (V) this.table[index + 1];
+            V newValue = remappingFunction.apply(key, oldValue);
+            if (newValue == null)
+            {
+                this.table[index] = null;
+                --this.occupied;
+            }
+            else
+            {
+                this.table[index + 1] = newValue;
+            }
+            return newValue;
+        }
+        return this.chainedCompute(key, index, remappingFunction);
+    }
+
+    private V chainedCompute(K key, int index, BiFunction<? super K, ? super V, ? extends V> remappingFunction)
+    {
+        if (this.table[index] == CHAINED_KEY)
+        {
+            Object[] chain = (Object[]) this.table[index + 1];
+            for (int i = 0; i < chain.length; i += 2)
+            {
+                if (chain[i] == null)
+                {
+                    V newValue = remappingFunction.apply(key, null);
+                    if (newValue != null)
+                    {
+                        chain[i] = UnifiedMapWithHashingStrategy.toSentinelIfNull(key);
+                        chain[i + 1] = newValue;
+                        if (++this.occupied > this.maxSize)
+                        {
+                            this.rehash(this.table.length);
+                        }
+                    }
+                    return newValue;
+                }
+                if (this.nonNullTableObjectEquals(chain[i], key))
+                {
+                    V oldValue = (V) chain[i + 1];
+                    V newValue = remappingFunction.apply(key, oldValue);
+                    if (newValue == null)
+                    {
+                        this.overwriteWithLastElementFromChain(chain, index, i);
+                    }
+                    else
+                    {
+                        chain[i + 1] = newValue;
+                    }
+                    return newValue;
+                }
+            }
+            V newValue = remappingFunction.apply(key, null);
+            if (newValue != null)
+            {
+                Object[] newChain = new Object[chain.length + 4];
+                System.arraycopy(chain, 0, newChain, 0, chain.length);
+                this.table[index + 1] = newChain;
+                newChain[chain.length] = UnifiedMapWithHashingStrategy.toSentinelIfNull(key);
+                newChain[chain.length + 1] = newValue;
+                if (++this.occupied > this.maxSize)
+                {
+                    this.rehash(this.table.length);
+                }
+            }
+            return newValue;
+        }
+        V newValue = remappingFunction.apply(key, null);
+        if (newValue != null)
+        {
+            Object[] newChain = new Object[4];
+            newChain[0] = this.table[index];
+            newChain[1] = this.table[index + 1];
+            newChain[2] = UnifiedMapWithHashingStrategy.toSentinelIfNull(key);
+            newChain[3] = newValue;
+            this.table[index] = CHAINED_KEY;
+            this.table[index + 1] = newChain;
+            if (++this.occupied > this.maxSize)
+            {
+                this.rehash(this.table.length);
+            }
+        }
+        return newValue;
     }
 
     @Override
@@ -1160,6 +1438,39 @@ public class UnifiedMapWithHashingStrategy<K, V> extends AbstractMutableMap<K, V
     }
 
     @Override
+    public V getLast()
+    {
+        for (int i = this.table.length - 2; i >= 0; i -= 2)
+        {
+            Object cur = this.table[i];
+            if (cur == CHAINED_KEY)
+            {
+                Object[] chain = (Object[]) this.table[i + 1];
+                return this.lastValueFromChain(chain);
+            }
+            if (cur != null)
+            {
+                return (V) this.table[i + 1];
+            }
+        }
+        return null;
+    }
+
+    private V lastValueFromChain(Object[] chain)
+    {
+        V lastValue = null;
+        for (int i = 0; i < chain.length; i += 2)
+        {
+            if (chain[i] == null)
+            {
+                break;
+            }
+            lastValue = (V) chain[i + 1];
+        }
+        return lastValue;
+    }
+
+    @Override
     public <E> MutableMap<K, V> collectKeysAndValues(
             Iterable<E> iterable,
             Function<? super E, ? extends K> keyFunction,
@@ -1254,9 +1565,9 @@ public class UnifiedMapWithHashingStrategy<K, V> extends AbstractMutableMap<K, V
         for (int i = start; i < end; i += 2)
         {
             Object value = this.table[i];
-            if (value instanceof Object[])
+            if (value instanceof Object[] objects)
             {
-                this.chainedForEachValue((Object[]) value, procedure);
+                this.chainedForEachValue(objects, procedure);
             }
             else if (value == null && this.table[i - 1] != null || value != null)
             {
@@ -1587,37 +1898,6 @@ public class UnifiedMapWithHashingStrategy<K, V> extends AbstractMutableMap<K, V
                     : value.hashCode());
         }
         return hashCode;
-    }
-
-    @Override
-    public String toString()
-    {
-        StringBuilder builder = new StringBuilder();
-        builder.append('{');
-
-        this.forEachKeyValue(new Procedure2<K, V>()
-        {
-            private boolean first = true;
-
-            public void value(K key, V value)
-            {
-                if (this.first)
-                {
-                    this.first = false;
-                }
-                else
-                {
-                    builder.append(", ");
-                }
-
-                builder.append(key == UnifiedMapWithHashingStrategy.this ? "(this Map)" : key);
-                builder.append('=');
-                builder.append(value == UnifiedMapWithHashingStrategy.this ? "(this Map)" : value);
-            }
-        });
-
-        builder.append('}');
-        return builder.toString();
     }
 
     public boolean trimToSize()
@@ -2453,9 +2733,12 @@ public class UnifiedMapWithHashingStrategy<K, V> extends AbstractMutableMap<K, V
         @Override
         public boolean equals(Object obj)
         {
-            if (obj instanceof Set)
+            if (obj == this)
             {
-                Set<?> other = (Set<?>) obj;
+                return true;
+            }
+            if (obj instanceof Set<?> other)
+            {
                 if (other.size() == this.size())
                 {
                     return this.containsAll(other);
@@ -2501,7 +2784,8 @@ public class UnifiedMapWithHashingStrategy<K, V> extends AbstractMutableMap<K, V
         {
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.append('[');
-            Procedure<K> appendStringProcedure = new AppendStringProcedure<>(stringBuilder, ", ");
+            Procedure<K> appendStringProcedure =
+                    new AppendStringWithSelfProcedure<>(stringBuilder, ", ", this, "(this Collection)");
             this.forEach(appendStringProcedure);
             stringBuilder.append(']');
             return stringBuilder.toString();
@@ -2753,7 +3037,7 @@ public class UnifiedMapWithHashingStrategy<K, V> extends AbstractMutableMap<K, V
             {
                 if (UnifiedMapWithHashingStrategy.nullSafeEquals(value, curValue))
                 {
-                    return ImmutableEntry.of(UnifiedMapWithHashingStrategy.this.nonSentinel(cur), (V) curValue);
+                    return new WeakBoundEntry<>(UnifiedMapWithHashingStrategy.this.nonSentinel(cur), (V) curValue, this.holder, UnifiedMapWithHashingStrategy.this.hashingStrategy);
                 }
             }
             return null;
@@ -2773,7 +3057,7 @@ public class UnifiedMapWithHashingStrategy<K, V> extends AbstractMutableMap<K, V
                     Object curValue = chain[i + 1];
                     if (UnifiedMapWithHashingStrategy.nullSafeEquals(value, curValue))
                     {
-                        return ImmutableEntry.of(UnifiedMapWithHashingStrategy.this.nonSentinel(cur), (V) curValue);
+                        return new WeakBoundEntry<>(UnifiedMapWithHashingStrategy.this.nonSentinel(cur), (V) curValue, this.holder, UnifiedMapWithHashingStrategy.this.hashingStrategy);
                     }
                 }
             }
@@ -2783,7 +3067,7 @@ public class UnifiedMapWithHashingStrategy<K, V> extends AbstractMutableMap<K, V
         @Override
         public boolean contains(Object o)
         {
-            return o instanceof Entry && this.containsEntry((Entry<?, ?>) o);
+            return o instanceof Entry<?, ?> entry && this.containsEntry(entry);
         }
 
         @Override
@@ -2887,9 +3171,8 @@ public class UnifiedMapWithHashingStrategy<K, V> extends AbstractMutableMap<K, V
                     UnifiedMapWithHashingStrategy.this.newEmpty(retainedSize);
             for (Object obj : collection)
             {
-                if (obj instanceof Entry)
+                if (obj instanceof Entry<?, ?> otherEntry)
                 {
-                    Entry<?, ?> otherEntry = (Entry<?, ?>) obj;
                     Entry<K, V> thisEntry = this.getEntry(otherEntry);
                     if (thisEntry != null)
                     {
@@ -2969,7 +3252,11 @@ public class UnifiedMapWithHashingStrategy<K, V> extends AbstractMutableMap<K, V
                 }
                 else if (cur != null)
                 {
-                    procedure.value(ImmutableEntry.of(UnifiedMapWithHashingStrategy.this.nonSentinel(cur), (V) map[i + 1]));
+                    procedure.value(new WeakBoundEntry<>(
+                            UnifiedMapWithHashingStrategy.this.nonSentinel(cur),
+                            (V) map[i + 1],
+                            this.holder,
+                            UnifiedMapWithHashingStrategy.this.hashingStrategy));
                 }
             }
         }
@@ -3041,9 +3328,12 @@ public class UnifiedMapWithHashingStrategy<K, V> extends AbstractMutableMap<K, V
         @Override
         public boolean equals(Object obj)
         {
-            if (obj instanceof Set)
+            if (obj == this)
             {
-                Set<?> other = (Set<?>) obj;
+                return true;
+            }
+            if (obj instanceof Set<?> other)
+            {
                 if (other.size() == this.size())
                 {
                     return this.containsAll(other);
@@ -3063,7 +3353,8 @@ public class UnifiedMapWithHashingStrategy<K, V> extends AbstractMutableMap<K, V
         {
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.append('[');
-            Procedure<Entry<K, V>> appendStringProcedure = new AppendStringProcedure<>(stringBuilder, ", ");
+            Procedure<Entry<K, V>> appendStringProcedure =
+                    new AppendStringWithSelfProcedure<>(stringBuilder, ", ", this, "(this Collection)");
             this.forEach(appendStringProcedure);
             stringBuilder.append(']');
             return stringBuilder.toString();
@@ -3172,9 +3463,8 @@ public class UnifiedMapWithHashingStrategy<K, V> extends AbstractMutableMap<K, V
         @Override
         public boolean equals(Object obj)
         {
-            if (obj instanceof Entry)
+            if (obj instanceof Entry<?, ?> other)
             {
-                Entry<?, ?> other = (Entry<?, ?>) obj;
                 K otherKey = (K) other.getKey();
                 V otherValue = (V) other.getValue();
                 return this.hashingStrategy.equals(this.key, otherKey)
@@ -3266,31 +3556,79 @@ public class UnifiedMapWithHashingStrategy<K, V> extends AbstractMutableMap<K, V
         @Override
         public boolean removeAll(Collection<?> collection)
         {
-            // todo: this is N^2. if c is large, we should copy the values to a set.
-            boolean changed = false;
-
-            for (Object obj : collection)
-            {
-                if (this.remove(obj))
-                {
-                    changed = true;
-                }
-            }
-            return changed;
+            return this.removeByValueCondition(collection, true);
         }
 
         @Override
         public boolean retainAll(Collection<?> collection)
         {
+            return this.removeByValueCondition(collection, false);
+        }
+
+        private boolean removeByValueCondition(Collection<?> collection, boolean removeIfContained)
+        {
+            // todo: this is N^2. if c is large, we should copy the values to a set.
             boolean modified = false;
-            Iterator<V> e = this.iterator();
-            while (e.hasNext())
+            Object[] table = UnifiedMapWithHashingStrategy.this.table;
+            for (int i = 0; i < table.length; i += 2)
             {
-                if (!collection.contains(e.next()))
+                Object cur = table[i];
+                if (cur == CHAINED_KEY)
                 {
-                    e.remove();
+                    modified |= this.removeFromChainByValue((Object[]) table[i + 1], i, collection, removeIfContained);
+                }
+                else if (cur != null)
+                {
+                    if (collection.contains(table[i + 1]) == removeIfContained)
+                    {
+                        table[i] = null;
+                        table[i + 1] = null;
+                        UnifiedMapWithHashingStrategy.this.occupied--;
+                        modified = true;
+                    }
+                }
+            }
+            return modified;
+        }
+
+        private boolean removeFromChainByValue(
+                Object[] chain,
+                int tableIndex,
+                Collection<?> collection,
+                boolean removeIfContained)
+        {
+            boolean modified = false;
+            int writeIndex = 0;
+            for (int readIndex = 0; readIndex < chain.length; readIndex += 2)
+            {
+                if (chain[readIndex] == null)
+                {
+                    break;
+                }
+                if (collection.contains(chain[readIndex + 1]) == removeIfContained)
+                {
+                    UnifiedMapWithHashingStrategy.this.occupied--;
                     modified = true;
                 }
+                else
+                {
+                    if (writeIndex != readIndex)
+                    {
+                        chain[writeIndex] = chain[readIndex];
+                        chain[writeIndex + 1] = chain[readIndex + 1];
+                    }
+                    writeIndex += 2;
+                }
+            }
+            for (int i = writeIndex; i < chain.length && chain[i] != null; i += 2)
+            {
+                chain[i] = null;
+                chain[i + 1] = null;
+            }
+            if (writeIndex == 0)
+            {
+                UnifiedMapWithHashingStrategy.this.table[tableIndex] = null;
+                UnifiedMapWithHashingStrategy.this.table[tableIndex + 1] = null;
             }
             return modified;
         }
@@ -3409,7 +3747,8 @@ public class UnifiedMapWithHashingStrategy<K, V> extends AbstractMutableMap<K, V
         {
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.append('[');
-            Procedure<V> appendStringProcedure = new AppendStringProcedure<>(stringBuilder, ", ");
+            Procedure<V> appendStringProcedure =
+                    new AppendStringWithSelfProcedure<>(stringBuilder, ", ", this, "(this Collection)");
             this.forEach(appendStringProcedure);
             stringBuilder.append(']');
             return stringBuilder.toString();

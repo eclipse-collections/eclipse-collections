@@ -82,10 +82,13 @@ public class RandomAccessListIterateTest
     @Test
     public void removeIf()
     {
-        assertTrue(RandomAccessListIterate.removeIf(FastList.newListWith(1, 2, 3), Predicates.greaterThan(1)));
-        assertTrue(RandomAccessListIterate.removeIf(FastList.newListWith(1, 2, 3), Predicates.greaterThan(0)));
-        assertFalse(RandomAccessListIterate.removeIf(FastList.newListWith(1, 2, 3), Predicates.greaterThan(4)));
-        assertFalse(RandomAccessListIterate.removeIf(FastList.newList(), Predicates.greaterThan(4)));
+        java.util.function.Predicate<Integer> greaterThan1 = each -> each > 1;
+        java.util.function.Predicate<Integer> greaterThan0 = each -> each > 0;
+        java.util.function.Predicate<Integer> greaterThan4 = each -> each > 4;
+        assertTrue(RandomAccessListIterate.removeIf(FastList.newListWith(1, 2, 3), greaterThan1));
+        assertTrue(RandomAccessListIterate.removeIf(FastList.newListWith(1, 2, 3), greaterThan0));
+        assertFalse(RandomAccessListIterate.removeIf(FastList.newListWith(1, 2, 3), greaterThan4));
+        assertFalse(RandomAccessListIterate.removeIf(FastList.newList(), greaterThan4));
     }
 
     @Test

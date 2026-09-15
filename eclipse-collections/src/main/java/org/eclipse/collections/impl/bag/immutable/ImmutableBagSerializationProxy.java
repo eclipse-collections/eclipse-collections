@@ -45,6 +45,7 @@ class ImmutableBagSerializationProxy<T> implements Externalizable
         {
             this.bag.forEachWithOccurrences(new CheckedObjectIntProcedure<T>()
             {
+                @Override
                 public void safeValue(T object, int index) throws IOException
                 {
                     out.writeObject(object);

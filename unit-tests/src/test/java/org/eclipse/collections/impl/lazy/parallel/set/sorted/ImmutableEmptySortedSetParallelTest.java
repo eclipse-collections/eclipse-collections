@@ -68,6 +68,7 @@ public class ImmutableEmptySortedSetParallelTest extends NonParallelSortedSetIte
     }
 
     @Override
+    @Test
     public void allSatisfy()
     {
         assertTrue(this.classUnderTest().allSatisfy(Predicates.lessThan(0)));
@@ -75,6 +76,7 @@ public class ImmutableEmptySortedSetParallelTest extends NonParallelSortedSetIte
     }
 
     @Override
+    @Test
     public void allSatisfyWith()
     {
         assertTrue(this.classUnderTest().allSatisfyWith(Predicates2.lessThan(), 0));
@@ -82,6 +84,7 @@ public class ImmutableEmptySortedSetParallelTest extends NonParallelSortedSetIte
     }
 
     @Override
+    @Test
     public void anySatisfy()
     {
         assertFalse(this.classUnderTest().anySatisfy(Predicates.lessThan(0)));
@@ -89,6 +92,7 @@ public class ImmutableEmptySortedSetParallelTest extends NonParallelSortedSetIte
     }
 
     @Override
+    @Test
     public void anySatisfyWith()
     {
         assertFalse(this.classUnderTest().anySatisfyWith(Predicates2.lessThan(), 0));
@@ -96,6 +100,7 @@ public class ImmutableEmptySortedSetParallelTest extends NonParallelSortedSetIte
     }
 
     @Override
+    @Test
     public void noneSatisfy()
     {
         assertTrue(this.classUnderTest().noneSatisfy(Predicates.lessThan(0)));
@@ -103,6 +108,7 @@ public class ImmutableEmptySortedSetParallelTest extends NonParallelSortedSetIte
     }
 
     @Override
+    @Test
     public void noneSatisfyWith()
     {
         assertTrue(this.classUnderTest().noneSatisfyWith(Predicates2.lessThan(), 0));
@@ -110,30 +116,35 @@ public class ImmutableEmptySortedSetParallelTest extends NonParallelSortedSetIte
     }
 
     @Override
+    @Test
     public void appendString_throws()
     {
         // Not applicable for empty collections
     }
 
     @Override
+    @Test
     public void detect()
     {
         assertNull(this.classUnderTest().detect(Integer.valueOf(0)::equals));
     }
 
     @Override
+    @Test
     public void detectIfNone()
     {
         assertEquals(Integer.valueOf(10), this.classUnderTest().detectIfNone(Integer.valueOf(0)::equals, () -> 10));
     }
 
     @Override
+    @Test
     public void detectWith()
     {
         assertNull(this.classUnderTest().detectWith(Object::equals, Integer.valueOf(0)));
     }
 
     @Override
+    @Test
     public void detectWithIfNone()
     {
         Function0<Integer> function = new PassThruFunction0<>(Integer.valueOf(1000));

@@ -11,7 +11,7 @@
 package org.eclipse.collections.test.set.immutable.sorted;
 
 import org.eclipse.collections.api.set.sorted.ImmutableSortedSet;
-import org.eclipse.collections.test.collection.immutable.ImmutableCollectionTestCase;
+import org.eclipse.collections.test.collection.immutable.ImmutableCollectionUniqueTestCase;
 import org.eclipse.collections.test.set.sorted.SortedSetIterableTestCase;
 import org.junit.jupiter.api.Test;
 
@@ -21,7 +21,7 @@ import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
-public interface ImmutableSortedSetIterableTestCase extends SortedSetIterableTestCase, ImmutableCollectionTestCase
+public interface ImmutableSortedSetIterableTestCase extends SortedSetIterableTestCase, ImmutableCollectionUniqueTestCase
 {
     @Override
     <T> ImmutableSortedSet<T> newWith(T... elements);

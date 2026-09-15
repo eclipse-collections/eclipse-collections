@@ -18,7 +18,6 @@ import java.util.stream.Collectors;
 
 import org.eclipse.collections.impl.jmh.domain.Position;
 import org.eclipse.collections.impl.jmh.domain.Positions;
-import org.eclipse.collections.impl.jmh.runner.AbstractJMHTestRunner;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;

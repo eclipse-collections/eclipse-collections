@@ -53,8 +53,8 @@
     <suppress checks="ConstantName" files="Multimaps.java" />
 
     <suppress checks="MethodName" files="EclipseCollectionsCodeGenerator.java" />
-    <suppress files="[\\/]annotations[\\/]" checks="[a-zA-Z0-9]*"/>
-    <suppress files="[\\/]plugin[\\/]" checks="[a-zA-Z0-9]*"/>
+    <suppress files="[\\/]annotations[\\/]" checks="[a-zA-Z0-9]*" />
+    <suppress files="[\\/]plugin[\\/]" checks="[a-zA-Z0-9]*" />
 
     <suppress checks="MethodName" files="[\\/]unit-tests-java8[\\/]" />
 
@@ -126,7 +126,10 @@
     <suppress checks="RedundantModifier" files="AbstractMutableShortKeySet.java" />
     <suppress checks="RedundantModifier" files="AbstractMutableLongKeySet.java" />
 
-	<!-- Runs outside of a plugin Mojo and has no logging API on classpath -->
-	<suppress checks="RegexpSinglelineJava" files="JavadocUtil.java" />
+    <!-- Runs outside of a plugin Mojo and has no logging API on classpath -->
+    <suppress checks="RegexpSinglelineJava" files="JavadocUtil.java" />
+
+    <!-- Replicated with violations from JUnit 4 project -->
+    <suppress checks="[a-zA-Z0-0]*" files="AssertTest.java" />
 
 </suppressions>

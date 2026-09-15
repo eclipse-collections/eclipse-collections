@@ -45,6 +45,7 @@ public class ImmutableSetMultimapTest extends AbstractImmutableMultimapTestCase
     }
 
     @Override
+    @Test
     public void allowDuplicates()
     {
         // Sets do not allow duplicates

@@ -64,7 +64,7 @@ public class MultiReaderFastListTest implements MutableListTestCase, MultiReader
 
     @Override
     @Test
-    public void OrderedIterable_next()
+    public void Iterable_next()
     {
         // Does not support iterator outside withReadLockAndDelegate
 

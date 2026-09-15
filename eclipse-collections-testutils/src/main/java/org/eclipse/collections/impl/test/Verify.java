@@ -86,6 +86,7 @@ import static org.junit.Assert.fail;
  *     Verify.assertBefore("fred", "jim", orderedNamesList);  // from new extensions
  * </pre>
  */
+@SuppressWarnings("ExtendingJUnitAssert")
 public final class Verify extends Assert
 {
     private static final int MAX_DIFFERENCES = 5;
@@ -1151,12 +1152,12 @@ public final class Verify extends Assert
 
         Verify.assertObjectNotNull(iterableName, actualIterable);
 
-        if (expectedIterable instanceof InternalIterable<?> && actualIterable instanceof InternalIterable<?>)
+        if (expectedIterable instanceof InternalIterable<?> expectedInternalIterable && actualIterable instanceof InternalIterable<?> actualInternalIterable)
         {
             MutableList<Object> expectedList = FastList.newList();
             MutableList<Object> actualList = FastList.newList();
-            ((InternalIterable<?>) expectedIterable).forEach(CollectionAddProcedure.on(expectedList));
-            ((InternalIterable<?>) actualIterable).forEach(CollectionAddProcedure.on(actualList));
+            expectedInternalIterable.forEach(CollectionAddProcedure.on(expectedList));
+            actualInternalIterable.forEach(CollectionAddProcedure.on(actualList));
             Verify.assertListsEqual(iterableName, expectedList, actualList);
         }
         else
@@ -2247,8 +2248,8 @@ public final class Verify extends Assert
 
         assertFalse("Neither item should equal null", objectA.equals(null));
         assertFalse("Neither item should equal null", objectB.equals(null));
-        assertNotEquals("Neither item should equal new Object()", objectA.equals(new Object()));
-        assertNotEquals("Neither item should equal new Object()", objectB.equals(new Object()));
+        assertFalse("Neither item should equal new Object()", objectA.equals(new Object()));
+        assertFalse("Neither item should equal new Object()", objectB.equals(new Object()));
         assertEquals("Expected " + itemNames + " to be equal.", objectA, objectA);
         assertEquals("Expected " + itemNames + " to be equal.", objectB, objectB);
         assertEquals("Expected " + itemNames + " to be equal.", objectA, objectB);
@@ -2293,10 +2294,12 @@ public final class Verify extends Assert
     {
         try
         {
-            aClass.newInstance();
+            Constructor<T> declaredConstructor = aClass.getDeclaredConstructor();
+            declaredConstructor.setAccessible(true);
+            declaredConstructor.newInstance();
             fail("Expected class '" + aClass + "' to be non-instantiable");
         }
-        catch (InstantiationException e)
+        catch (InstantiationException | NoSuchMethodException e)
         {
             // pass
         }
@@ -2306,6 +2309,10 @@ public final class Verify extends Assert
             {
                 fail("Expected constructor of non-instantiable class '" + aClass + "' to throw an exception, but didn't");
             }
+        }
+        catch (InvocationTargetException e)
+        {
+            // pass - constructor threw an exception, which is expected for non-instantiable classes
         }
     }
 

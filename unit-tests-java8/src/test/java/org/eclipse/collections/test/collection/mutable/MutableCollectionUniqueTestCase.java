@@ -33,6 +33,12 @@ public interface MutableCollectionUniqueTestCase extends MutableCollectionTestCa
     @Test
     default void MutableCollection_removeIf()
     {
+        if (!this.allowsRemove())
+        {
+            MutableCollectionTestCase.super.MutableCollection_removeIf();
+            return;
+        }
+
         MutableCollection<Integer> collection1 = this.newWith(5, 4, 3, 2, 1);
         assertTrue(collection1.removeIf(Predicates.cast(each -> each % 2 == 0)));
         assertIterablesEqual(this.getExpectedFiltered(5, 3, 1), collection1);
@@ -53,6 +59,12 @@ public interface MutableCollectionUniqueTestCase extends MutableCollectionTestCa
     @Test
     default void MutableCollection_removeIfWith()
     {
+        if (!this.allowsRemove())
+        {
+            MutableCollectionTestCase.super.MutableCollection_removeIfWith();
+            return;
+        }
+
         MutableCollection<Integer> collection = this.newWith(5, 4, 3, 2, 1);
         collection.removeIfWith(Predicates2.in(), Lists.immutable.with(5, 3, 1));
         assertIterablesEqual(this.getExpectedFiltered(4, 2), collection);

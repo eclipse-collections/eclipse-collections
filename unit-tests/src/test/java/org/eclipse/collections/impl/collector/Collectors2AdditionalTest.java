@@ -60,7 +60,7 @@ Do not merge this test with Collectors2Test. Doing so will fail the build. This 
 Refer to links below for additional details:
 1) JaCoCo issue: https://github.com/jacoco/jacoco/issues/462
 2) ASM bug: http://forge.ow2.org/tracker/?func=detail&aid=317748&group_id=23&atid=100023
-3) JaCoCo integration pull request: https://github.com/eclipse/eclipse-collections/pull/166
+3) JaCoCo integration pull request: https://github.com/eclipse-collections/eclipse-collections/pull/166
  */
 public class Collectors2AdditionalTest
 {

@@ -76,6 +76,7 @@ import org.eclipse.collections.impl.multimap.bag.sorted.mutable.TreeBagMultimap;
 import org.eclipse.collections.impl.set.sorted.mutable.TreeSortedSet;
 import org.eclipse.collections.impl.stack.mutable.ArrayStack;
 import org.eclipse.collections.impl.test.Verify;
+import org.eclipse.collections.impl.test.domain.Holder;
 import org.eclipse.collections.impl.tuple.Tuples;
 import org.eclipse.collections.impl.tuple.primitive.PrimitiveTuples;
 import org.junit.jupiter.api.Test;
@@ -679,13 +680,13 @@ public abstract class AbstractImmutableSortedBagTestCase extends AbstractImmutab
         assertEquals(immutableBag.zip(nulls), immutableBag.zip(nulls, FastList.newList()));
         assertEquals(immutableBag.zip(nulls).toBag(), immutableBag.zip(nulls, new HashBag<>()));
 
-        FastList<Holder> holders = FastList.newListWith(new Holder(1), new Holder(2), new Holder(3));
-        ImmutableList<Pair<Integer, Holder>> zipped = immutableBag.zip(holders);
+        FastList<Holder<Integer>> holders = FastList.newListWith(new Holder<>(1), new Holder<>(2), new Holder<>(3));
+        ImmutableList<Pair<Integer, Holder<Integer>>> zipped = immutableBag.zip(holders);
         Verify.assertSize(3, zipped.castToList());
-        AbstractImmutableSortedBagTestCase.Holder two = new Holder(-1);
-        AbstractImmutableSortedBagTestCase.Holder two1 = new Holder(-1);
+        Holder<Integer> two = new Holder<>(-1);
+        Holder<Integer> two1 = new Holder<>(-1);
         assertEquals(Tuples.pair(10, two1), zipped.newWith(Tuples.pair(10, two)).getLast());
-        assertEquals(Tuples.pair(1, new Holder(3)), this.classUnderTest().zip(holders.reverseThis()).getFirst());
+        assertEquals(Tuples.pair(1, new Holder<>(3)), this.classUnderTest().zip(holders.reverseThis()).getFirst());
     }
 
     @Test
@@ -1560,44 +1561,5 @@ public abstract class AbstractImmutableSortedBagTestCase extends AbstractImmutab
         assertEquals(expected, actual);
         // test sorting
         Verify.assertIterablesEqual(expected, actual);
-    }
-
-    private static final class Holder
-    {
-        private final int number;
-
-        private Holder(int i)
-        {
-            this.number = i;
-        }
-
-        @Override
-        public boolean equals(Object o)
-        {
-            if (this == o)
-            {
-                return true;
-            }
-            if (o == null || this.getClass() != o.getClass())
-            {
-                return false;
-            }
-
-            Holder holder = (Holder) o;
-
-            return this.number == holder.number;
-        }
-
-        @Override
-        public int hashCode()
-        {
-            return this.number;
-        }
-
-        @Override
-        public String toString()
-        {
-            return String.valueOf(this.number);
-        }
     }
 }

@@ -16,7 +16,6 @@ import java.util.concurrent.TimeUnit;
 import com.carrotsearch.hppc.ObjectObjectHashMap;
 import com.carrotsearch.hppc.ObjectObjectMap;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.eclipse.collections.impl.jmh.runner.AbstractJMHTestRunner;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;

@@ -56,4 +56,3 @@ public class Synchronized<name>BagTest extends AbstractMutable<name>BagTestCase
 }
 
 >>
-

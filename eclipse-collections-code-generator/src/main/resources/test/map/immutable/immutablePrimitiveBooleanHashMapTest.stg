@@ -75,4 +75,3 @@ public class Immutable<name>BooleanHashMapTest extends AbstractImmutable<name>Bo
 }
 
 >>
-

@@ -21,6 +21,12 @@ public interface ImmutableUnsortedBiMapTestCase extends UnsortedBiMapTestCase, I
     <T> ImmutableBiMap<Object, T> newWith(T... elements);
 
     @Override
+    default boolean allowsPut()
+    {
+        return false;
+    }
+
+    @Override
     @Test
     default void Iterable_remove()
     {

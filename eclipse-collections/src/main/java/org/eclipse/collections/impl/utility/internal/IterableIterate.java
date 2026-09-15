@@ -731,6 +731,14 @@ public final class IterableIterate
      */
     public static <T> boolean removeIf(Iterable<T> iterable, Predicate<? super T> predicate)
     {
+        return IterableIterate.removeIf(iterable, (java.util.function.Predicate<? super T>) predicate);
+    }
+
+    /**
+     * @see Iterate#removeIf(Iterable, java.util.function.Predicate)
+     */
+    public static <T> boolean removeIf(Iterable<T> iterable, java.util.function.Predicate<? super T> predicate)
+    {
         return IteratorIterate.removeIf(iterable.iterator(), predicate);
     }
 
@@ -1113,7 +1121,7 @@ public final class IterableIterate
     public static <T> String stringValueOfItem(Iterable<T> iterable, T item)
     {
         return item == iterable
-                ? "(this " + iterable.getClass().getSimpleName() + ')'
+                ? "(this Collection)"
                 : String.valueOf(item);
     }
 

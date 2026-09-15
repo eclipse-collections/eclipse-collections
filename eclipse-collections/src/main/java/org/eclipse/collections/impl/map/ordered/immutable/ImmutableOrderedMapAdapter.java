@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 
 import org.eclipse.collections.api.RichIterable;
 import org.eclipse.collections.api.bag.ImmutableBag;
@@ -55,9 +56,11 @@ import org.eclipse.collections.api.map.primitive.ImmutableObjectLongMap;
 import org.eclipse.collections.api.multimap.list.ImmutableListMultimap;
 import org.eclipse.collections.api.ordered.OrderedIterable;
 import org.eclipse.collections.api.partition.list.PartitionImmutableList;
+import org.eclipse.collections.api.stack.MutableStack;
 import org.eclipse.collections.api.tuple.Pair;
 import org.eclipse.collections.impl.map.AbstractMapIterable;
 import org.eclipse.collections.impl.map.ordered.mutable.OrderedMapAdapter;
+import org.eclipse.collections.impl.stack.mutable.ArrayStack;
 
 public class ImmutableOrderedMapAdapter<K, V>
         extends AbstractMapIterable<K, V>
@@ -69,7 +72,7 @@ public class ImmutableOrderedMapAdapter<K, V>
 
     public ImmutableOrderedMapAdapter(Map<K, V> delegate)
     {
-        this.delegate = OrderedMapAdapter.adapt(new LinkedHashMap<>(delegate));
+        this.delegate = OrderedMapAdapter.adapt(Collections.unmodifiableMap(new LinkedHashMap<>(delegate)));
     }
 
     @Override
@@ -148,6 +151,12 @@ public class ImmutableOrderedMapAdapter<K, V>
     public RichIterable<V> valuesView()
     {
         return this.delegate.valuesView();
+    }
+
+    @Override
+    public MutableStack<V> toStack()
+    {
+        return ArrayStack.newStackFromTopToBottom(this);
     }
 
     @Override
@@ -292,6 +301,36 @@ public class ImmutableOrderedMapAdapter<K, V>
 
     @Override
     public V remove(Object key)
+    {
+        throw new UnsupportedOperationException("Cannot call remove() on " + this.getClass().getSimpleName());
+    }
+
+    @Override
+    public V merge(K key, V value, BiFunction<? super V, ? super V, ? extends V> remappingFunction)
+    {
+        throw new UnsupportedOperationException("Cannot call merge() on " + this.getClass().getSimpleName());
+    }
+
+    @Override
+    public V replace(K key, V value)
+    {
+        throw new UnsupportedOperationException("Cannot call replace() on " + this.getClass().getSimpleName());
+    }
+
+    @Override
+    public boolean replace(K key, V oldValue, V newValue)
+    {
+        throw new UnsupportedOperationException("Cannot call replace() on " + this.getClass().getSimpleName());
+    }
+
+    @Override
+    public V putIfAbsent(K key, V value)
+    {
+        throw new UnsupportedOperationException("Cannot call putIfAbsent() on " + this.getClass().getSimpleName());
+    }
+
+    @Override
+    public boolean remove(Object key, Object value)
     {
         throw new UnsupportedOperationException("Cannot call remove() on " + this.getClass().getSimpleName());
     }

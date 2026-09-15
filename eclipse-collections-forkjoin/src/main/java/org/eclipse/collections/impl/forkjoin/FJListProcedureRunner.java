@@ -20,6 +20,7 @@ import java.util.concurrent.ForkJoinTask;
 
 import org.eclipse.collections.api.block.function.Function;
 import org.eclipse.collections.api.block.procedure.Procedure;
+import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.parallel.Combiner;
 import org.eclipse.collections.impl.parallel.ProcedureFactory;
@@ -40,9 +41,9 @@ public class FJListProcedureRunner<T, PT extends Procedure<? super T>> implement
         this.outputQueue = this.combiner.useCombineOne() ? new ArrayBlockingQueue<>(taskCount) : null;
     }
 
-    private FastList<ForkJoinTask<PT>> createAndExecuteTasks(ForkJoinPool executor, ProcedureFactory<PT> procedureFactory, List<T> list)
+    private MutableList<ForkJoinTask<PT>> createAndExecuteTasks(ForkJoinPool executor, ProcedureFactory<PT> procedureFactory, List<T> list)
     {
-        FastList<ForkJoinTask<PT>> tasks = FastList.newList(this.taskCount);
+        MutableList<ForkJoinTask<PT>> tasks = FastList.newList(this.taskCount);
         int sectionSize = list.size() / this.taskCount;
         int taskCountMinusOne = this.taskCount - 1;
         for (int index = 0; index < this.taskCount; index++)
@@ -74,7 +75,7 @@ public class FJListProcedureRunner<T, PT extends Procedure<? super T>> implement
 
     public void executeAndCombine(ForkJoinPool executor, ProcedureFactory<PT> procedureFactory, List<T> list)
     {
-        FastList<ForkJoinTask<PT>> tasks = this.createAndExecuteTasks(executor, procedureFactory, list);
+        MutableList<ForkJoinTask<PT>> tasks = this.createAndExecuteTasks(executor, procedureFactory, list);
         if (this.combiner.useCombineOne())
         {
             this.join();

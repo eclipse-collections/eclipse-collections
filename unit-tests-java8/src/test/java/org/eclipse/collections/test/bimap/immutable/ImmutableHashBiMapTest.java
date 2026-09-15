@@ -10,11 +10,17 @@
 
 package org.eclipse.collections.test.bimap.immutable;
 
+import java.util.Collection;
 import java.util.Random;
+import java.util.Set;
 
 import org.eclipse.collections.api.bimap.ImmutableBiMap;
 import org.eclipse.collections.api.bimap.MutableBiMap;
 import org.eclipse.collections.impl.bimap.mutable.HashBiMap;
+import org.eclipse.collections.test.bimap.BiMapTestCase;
+import org.eclipse.collections.test.map.UnmodifiableBiMapValuesCollectionTestCase;
+import org.eclipse.collections.test.map.UnmodifiableMapKeySetTestCase;
+import org.junit.jupiter.api.Nested;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -56,5 +62,29 @@ public class ImmutableHashBiMapTest implements ImmutableBiMapTestCase
             assertNull(result.put((K) elements[i], (V) elements[i + 1]));
         }
         return result.toImmutable();
+    }
+
+    @Nested
+    public class KeySetView implements UnmodifiableMapKeySetTestCase
+    {
+        @SafeVarargs
+        @Override
+        public final <T> Set<T> newWith(T... elements)
+        {
+            MutableBiMap<T, T> result = new HashBiMap<>();
+            BiMapTestCase.populateBiMapWithSameKeyAndValue(result, elements);
+            return result.toImmutable().castToMap().keySet();
+        }
+    }
+
+    @Nested
+    public class ValuesCollectionView implements UnmodifiableBiMapValuesCollectionTestCase
+    {
+        @SafeVarargs
+        @Override
+        public final <T> Collection<T> newWith(T... elements)
+        {
+            return ImmutableHashBiMapTest.this.newWith(elements).castToMap().values();
+        }
     }
 }

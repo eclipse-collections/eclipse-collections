@@ -14,6 +14,7 @@ import org.eclipse.collections.api.map.primitive.ImmutableObjectDoubleMap;
 import org.eclipse.collections.api.map.primitive.ImmutableObjectLongMap;
 import org.eclipse.collections.api.stack.ImmutableStack;
 import org.eclipse.collections.impl.stack.StackIterableTestCase;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -31,6 +32,8 @@ public abstract class ImmutableStackTestCase extends StackIterableTestCase
     @Override
     protected abstract <T> ImmutableStack<T> newStack(Iterable<T> elements);
 
+    @Override
+    @Test
     public void sumByInt()
     {
         ImmutableStack<Integer> values = this.newStackFromTopToBottom(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
@@ -39,6 +42,8 @@ public abstract class ImmutableStackTestCase extends StackIterableTestCase
         assertEquals(30, result.get(0));
     }
 
+    @Override
+    @Test
     public void sumByFloat()
     {
         ImmutableStack<Integer> values = this.newStackFromTopToBottom(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
@@ -47,6 +52,8 @@ public abstract class ImmutableStackTestCase extends StackIterableTestCase
         assertEquals(30.0f, result.get(0), 0.0);
     }
 
+    @Override
+    @Test
     public void sumByDouble()
     {
         ImmutableStack<Integer> values = this.newStackFromTopToBottom(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
@@ -55,6 +62,8 @@ public abstract class ImmutableStackTestCase extends StackIterableTestCase
         assertEquals(30.0d, result.get(0), 0.0);
     }
 
+    @Override
+    @Test
     public void sumByLong()
     {
         ImmutableStack<Integer> values = this.newStackFromTopToBottom(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);

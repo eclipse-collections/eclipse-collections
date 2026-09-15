@@ -14,6 +14,7 @@ import org.eclipse.collections.api.stack.MutableStack;
 import org.eclipse.collections.impl.factory.Stacks;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
@@ -48,22 +49,27 @@ public class ArrayStackTest extends MutableStackTestCase
     @Test
     public void takeWhile()
     {
-        ArrayStack<Object> arrayStack = new ArrayStack<>();
-        assertThrows(UnsupportedOperationException.class, () -> arrayStack.takeWhile(null));
+        MutableStack<Integer> stack = Stacks.mutable.ofReversed(5, 4, 3, 2, 1);
+        assertEquals(Stacks.mutable.ofReversed(5, 4, 3), stack.takeWhile(each -> each > 2));
+        assertEquals(Stacks.mutable.empty(), stack.takeWhile(each -> false));
+        assertEquals(stack, stack.takeWhile(each -> true));
     }
 
     @Test
     public void dropWhile()
     {
-        ArrayStack<Object> arrayStack = new ArrayStack<>();
-        assertThrows(UnsupportedOperationException.class, () -> arrayStack.dropWhile(null));
+        MutableStack<Integer> stack = Stacks.mutable.ofReversed(5, 4, 3, 2, 1);
+        assertEquals(Stacks.mutable.ofReversed(2, 1), stack.dropWhile(each -> each > 2));
+        assertEquals(stack, stack.dropWhile(each -> false));
+        assertEquals(Stacks.mutable.empty(), stack.dropWhile(each -> true));
     }
 
     @Test
     public void partitionWhile()
     {
-        ArrayStack<Object> arrayStack = new ArrayStack<>();
-        assertThrows(UnsupportedOperationException.class, () -> arrayStack.partitionWhile(null));
+        MutableStack<Integer> stack = Stacks.mutable.ofReversed(5, 4, 3, 2, 1);
+        assertEquals(Stacks.mutable.ofReversed(5, 4, 3), stack.partitionWhile(each -> each > 2).getSelected());
+        assertEquals(Stacks.mutable.ofReversed(2, 1), stack.partitionWhile(each -> each > 2).getRejected());
     }
 
     @Test

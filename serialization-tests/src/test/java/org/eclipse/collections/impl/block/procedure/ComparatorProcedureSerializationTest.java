@@ -19,6 +19,7 @@ public class ComparatorProcedureSerializationTest
     {
         private static final long serialVersionUID = 1L;
 
+        @Override
         public void value(Object each)
         {
         }

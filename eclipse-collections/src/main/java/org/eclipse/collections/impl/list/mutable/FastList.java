@@ -703,11 +703,17 @@ public class FastList<T>
     @Override
     public boolean removeIf(Predicate<? super T> predicate)
     {
+        return this.removeIf((java.util.function.Predicate<? super T>) predicate);
+    }
+
+    @Override
+    public boolean removeIf(java.util.function.Predicate<? super T> predicate)
+    {
         int currentFilledIndex = 0;
         for (int i = 0; i < this.size; i++)
         {
             T item = this.items[i];
-            if (!predicate.accept(item))
+            if (!predicate.test(item))
             {
                 // keep it
                 if (currentFilledIndex != i)
@@ -1573,9 +1579,9 @@ public class FastList<T>
         {
             return false;
         }
-        if (that instanceof FastList)
+        if (that instanceof FastList<?> fastList)
         {
-            return this.fastListEquals((FastList<?>) that);
+            return this.fastListEquals(fastList);
         }
         return InternalArrayIterate.arrayEqualsList(this.items, this.size, (List<?>) that);
     }

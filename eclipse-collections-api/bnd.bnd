@@ -4,3 +4,5 @@ package-version=${versionmask;===;${Bundle-Version}}
 Bundle-SymbolicName: org.eclipse.collections.api
 Export-Package: \
   org.eclipse.collections.api.*;version="${package-version}"
+Import-Package: \
+  *

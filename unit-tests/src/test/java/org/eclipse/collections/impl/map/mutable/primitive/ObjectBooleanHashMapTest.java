@@ -12,8 +12,6 @@ package org.eclipse.collections.impl.map.mutable.primitive;
 
 public class ObjectBooleanHashMapTest extends ObjectBooleanHashMapTestCase
 {
-    private final ObjectBooleanHashMap<String> map = this.classUnderTest();
-
     @Override
     protected ObjectBooleanHashMap<String> classUnderTest()
     {

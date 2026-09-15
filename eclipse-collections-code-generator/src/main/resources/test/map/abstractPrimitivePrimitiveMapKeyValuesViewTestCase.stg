@@ -227,7 +227,7 @@ public abstract class Abstract<name1><name2>MapKeyValuesViewTestCase
     @Test
     public void selectWith_target()
     {
-        HashBag\<<name1><name2>Pair> result = this.newWith(<(literal.(type1))("1")>, <(literal.(type2))("2")>, <(literal.(type1))("2")>, <(literal.(type2))("3")>, <(literal.(type1))("3")>, <(literal.(type2))("4")>).selectWith(Predicates2.notEqual(), PrimitiveTuples.pair(<(literal.(type1))("2")>, <(literal.(type2))("3")>), HashBag.\<<name1><name2>Pair>newBag());
+        MutableBag\<<name1><name2>Pair> result = this.newWith(<(literal.(type1))("1")>, <(literal.(type2))("2")>, <(literal.(type1))("2")>, <(literal.(type2))("3")>, <(literal.(type1))("3")>, <(literal.(type2))("4")>).selectWith(Predicates2.notEqual(), PrimitiveTuples.pair(<(literal.(type1))("2")>, <(literal.(type2))("3")>), HashBag.\<<name1><name2>Pair>newBag());
         assertEquals(Bags.immutable.of(PrimitiveTuples.pair(<(literal.(type1))("1")>, <(literal.(type2))("2")>), PrimitiveTuples.pair(<(literal.(type1))("3")>, <(literal.(type2))("4")>)), result);
     }
 
@@ -252,7 +252,7 @@ public abstract class Abstract<name1><name2>MapKeyValuesViewTestCase
     @Test
     public void rejectWith_target()
     {
-        HashBag\<<name1><name2>Pair> result = this.newWith(<(literal.(type1))("1")>, <(literal.(type2))("2")>, <(literal.(type1))("2")>, <(literal.(type2))("3")>, <(literal.(type1))("3")>, <(literal.(type2))("4")>).rejectWith(Object::equals, PrimitiveTuples.pair(<(literal.(type1))("2")>, <(literal.(type2))("3")>), HashBag.\<<name1><name2>Pair>newBag());
+        MutableBag\<<name1><name2>Pair> result = this.newWith(<(literal.(type1))("1")>, <(literal.(type2))("2")>, <(literal.(type1))("2")>, <(literal.(type2))("3")>, <(literal.(type1))("3")>, <(literal.(type2))("4")>).rejectWith(Object::equals, PrimitiveTuples.pair(<(literal.(type1))("2")>, <(literal.(type2))("3")>), HashBag.\<<name1><name2>Pair>newBag());
         assertEquals(Bags.immutable.of(PrimitiveTuples.pair(<(literal.(type1))("1")>, <(literal.(type2))("2")>), PrimitiveTuples.pair(<(literal.(type1))("3")>, <(literal.(type2))("4")>)), result);
     }
 

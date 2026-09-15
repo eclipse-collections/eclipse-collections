@@ -87,36 +87,6 @@ public class AbstractImmutableEntry<K, V> implements Map.Entry<K, V>, Serializab
         return this.key + "=" + this.value;
     }
 
-    /**
-     * @deprecated Since 6.2 - Kept for serialization compatibility only.
-     */
-    @Deprecated
-    private static class KeyFunction<K> implements Function<Map.Entry<K, ?>, K>
-    {
-        private static final long serialVersionUID = 1L;
-
-        @Override
-        public K valueOf(Map.Entry<K, ?> entry)
-        {
-            return entry.getKey();
-        }
-    }
-
-    /**
-     * @deprecated Since 6.2 - Kept for serialization compatibility only.
-     */
-    @Deprecated
-    private static class ValueFunction<V> implements Function<Map.Entry<?, V>, V>
-    {
-        private static final long serialVersionUID = 1L;
-
-        @Override
-        public V valueOf(Map.Entry<?, V> entry)
-        {
-            return entry.getValue();
-        }
-    }
-
     private static class PairFunction<K, V> implements Function<Map.Entry<K, V>, Pair<K, V>>
     {
         private static final long serialVersionUID = 1L;

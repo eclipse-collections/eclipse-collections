@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Goldman Sachs and others.
+ * Copyright (c) 2026 Goldman Sachs and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -13,14 +13,12 @@ package org.eclipse.collections.test.map.mutable.strategy;
 import java.util.Random;
 
 import org.eclipse.collections.api.map.MutableMap;
-import org.eclipse.collections.impl.block.factory.HashingStrategies;
 import org.eclipse.collections.impl.map.strategy.mutable.UnifiedMapWithHashingStrategy;
-import org.eclipse.collections.test.map.mutable.MutableMapTestCase;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class UnifiedMapWithHashingStrategyTest implements MutableMapTestCase
+public class UnifiedMapWithHashingStrategyTest implements HashingStrategyMapTestCase
 {
     private static final long CURRENT_TIME_MILLIS = System.currentTimeMillis();
 
@@ -28,7 +26,7 @@ public class UnifiedMapWithHashingStrategyTest implements MutableMapTestCase
     public <T> MutableMap<Object, T> newWith(T... elements)
     {
         Random random = new Random(CURRENT_TIME_MILLIS);
-        MutableMap<Object, T> result = new UnifiedMapWithHashingStrategy<>(HashingStrategies.defaultStrategy());
+        MutableMap<Object, T> result = new UnifiedMapWithHashingStrategy<>(new DefaultHashingStrategy<>());
         for (T each : elements)
         {
             assertNull(result.put(random.nextDouble(), each));
@@ -44,7 +42,7 @@ public class UnifiedMapWithHashingStrategyTest implements MutableMapTestCase
             fail(String.valueOf(elements.length));
         }
 
-        MutableMap<K, V> result = new UnifiedMapWithHashingStrategy<>(HashingStrategies.defaultStrategy());
+        MutableMap<K, V> result = new UnifiedMapWithHashingStrategy<>(new DefaultHashingStrategy<>());
         for (int i = 0; i < elements.length; i += 2)
         {
             assertNull(result.put((K) elements[i], (V) elements[i + 1]));
@@ -53,9 +51,8 @@ public class UnifiedMapWithHashingStrategyTest implements MutableMapTestCase
     }
 
     @Override
-    public boolean supportsNullKeys()
+    public MutableMap<Integer, Integer> newMapWithConstantStrategy()
     {
-        // TODO: UnifiedMapWithHashingStrategy does support null, but we're using a hashing strategy in this test which does not.
-        return false;
+        return new UnifiedMapWithHashingStrategy<>(new ConstantHashingStrategy());
     }
 }

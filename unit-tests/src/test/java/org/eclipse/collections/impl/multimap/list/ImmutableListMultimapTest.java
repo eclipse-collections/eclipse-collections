@@ -48,6 +48,7 @@ public class ImmutableListMultimapTest extends AbstractImmutableMultimapTestCase
     }
 
     @Override
+    @Test
     public void noDuplicates()
     {
         // Lists allow duplicates

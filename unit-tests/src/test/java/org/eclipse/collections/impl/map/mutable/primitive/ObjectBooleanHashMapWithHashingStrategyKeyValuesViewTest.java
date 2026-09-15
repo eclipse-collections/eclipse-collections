@@ -21,11 +21,13 @@ public class ObjectBooleanHashMapWithHashingStrategyKeyValuesViewTest extends Ab
 {
     private static final HashingStrategy<Integer> INTEGER_HASHING_STRATEGY = HashingStrategies.nullSafeHashingStrategy(new HashingStrategy<Integer>()
     {
+        @Override
         public int computeHashCode(Integer object)
         {
             return object.hashCode();
         }
 
+        @Override
         public boolean equals(Integer object1, Integer object2)
         {
             return object1.equals(object2);

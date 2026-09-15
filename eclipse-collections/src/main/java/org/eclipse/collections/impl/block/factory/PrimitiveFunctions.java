@@ -122,6 +122,7 @@ public final class PrimitiveFunctions
         {
             private static final long serialVersionUID = 1L;
 
+            @Override
             public MutableObjectLongMap<V> value(MutableObjectLongMap<V> map, T each)
             {
                 map.addToValue(groupBy.valueOf(each), function.intValueOf(each));
@@ -137,6 +138,7 @@ public final class PrimitiveFunctions
             private static final long serialVersionUID = 1L;
             private final MutableObjectDoubleMap<V> compensation = ObjectDoubleMaps.mutable.empty();
 
+            @Override
             public MutableObjectDoubleMap<V> value(MutableObjectDoubleMap<V> map, T each)
             {
                 V groupKey = groupBy.valueOf(each);
@@ -157,6 +159,7 @@ public final class PrimitiveFunctions
         {
             private static final long serialVersionUID = 1L;
 
+            @Override
             public MutableObjectLongMap<V> value(MutableObjectLongMap<V> map, T each)
             {
                 map.addToValue(groupBy.valueOf(each), function.longValueOf(each));
@@ -172,6 +175,7 @@ public final class PrimitiveFunctions
             private static final long serialVersionUID = 1L;
             private final MutableObjectDoubleMap<V> compensation = ObjectDoubleMaps.mutable.empty();
 
+            @Override
             public MutableObjectDoubleMap<V> value(MutableObjectDoubleMap<V> map, T each)
             {
                 V groupKey = groupBy.valueOf(each);

@@ -24,6 +24,7 @@ public class LongFunctionImplTest
     {
         LongFunctionImpl<Long> longFunction = new LongFunctionImpl<Long>()
         {
+            @Override
             public long longValueOf(Long each)
             {
                 return each.longValue();

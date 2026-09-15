@@ -119,6 +119,12 @@ public void sumConsistentRounding()
         assertEquals(<(literal.(type))("1")>, <name>IteratorIterate.min(this.iterable.<type>Iterator())<(wideDelta.(type))>);
         assertThrows(NoSuchElementException.class, () -> <name>IteratorIterate.max(new <name>ArrayList().<type>Iterator()));
     }
+
+    @Test
+    public void classIsNonInstantiable()
+    {
+        Verify.assertClassNonInstantiable(<name>IteratorIterate.class);
+    }
 }
 
 >>

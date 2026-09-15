@@ -40,4 +40,12 @@ public interface UnmodifiableMutableStackTestCase extends MutableStackTestCase, 
         MutableStack<Integer> mutableStack = this.newWith();
         assertThrows(UnsupportedOperationException.class, () -> mutableStack.pop());
     }
+
+    @Override
+    @Test
+    default void RichIterable_makeString_appendString()
+    {
+        MutableStack<Object> stack = this.newWith();
+        assertThrows(UnsupportedOperationException.class, () -> stack.push(stack));
+    }
 }

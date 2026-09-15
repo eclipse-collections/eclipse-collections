@@ -17,6 +17,7 @@ import org.apache.commons.lang3.RandomStringUtils
 import org.junit.Assert
 
 import scala.collection.mutable
+import scala.collection.parallel.CollectionConverters._
 import scala.collection.parallel.immutable.ParSet
 
 object AnagramSetScalaTest
@@ -42,7 +43,7 @@ object AnagramSetScalaTest
     def serial_eager_scala(): Unit =
     {
         WORDS
-                .groupBy(Alphagram.apply)
+                .groupBy(Alphagram.apply(_))
                 .values
                 .filter(_.size >= SIZE_THRESHOLD)
                 .toSeq.sortBy(_.size)
@@ -54,7 +55,7 @@ object AnagramSetScalaTest
     def serial_lazy_scala(): Unit =
     {
         WORDS.view
-                .groupBy(Alphagram.apply)
+                .groupBy(Alphagram.apply(_))
                 .values
                 .filter(_.size >= SIZE_THRESHOLD)
                 .toSeq.sortBy(_.size)
@@ -66,7 +67,7 @@ object AnagramSetScalaTest
     def parallel_lazy_scala(): Unit =
     {
         val toBuffer: mutable.Buffer[ParSet[String]] = WORDS.par
-                .groupBy(Alphagram.apply)
+                .groupBy(Alphagram.apply(_))
                 .values
                 .filter(_.size >= SIZE_THRESHOLD)
                 .toBuffer

@@ -15,6 +15,7 @@ import org.eclipse.collections.api.LazyBooleanIterable;
 import org.eclipse.collections.api.block.procedure.primitive.BooleanProcedure;
 import org.eclipse.collections.api.list.primitive.MutableBooleanList;
 import org.eclipse.collections.impl.factory.primitive.BooleanLists;
+import org.eclipse.collections.impl.test.Verify;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -49,5 +50,11 @@ public class LazyBooleanIterateTest
         LazyBooleanIterable booleanIterable = LazyBooleanIterate.tap(this.iterable, (BooleanProcedure) list::add);
         assertEquals(this.iterable, BooleanLists.mutable.ofAll(booleanIterable));
         assertEquals(this.iterable, list);
+    }
+
+    @Test
+    public void classIsNonInstantiable()
+    {
+        Verify.assertClassNonInstantiable(LazyBooleanIterate.class);
     }
 }

@@ -97,7 +97,7 @@ public class ArrayIterateTest
     {
         Double[] objectArray = {(double) 1, (double) 2, (double) 3};
         assertEquals(
-                new Double(1 + 1 + 2 + 3),
+                Double.valueOf(1 + 1 + 2 + 3),
                 ArrayIterate.injectInto((double) 1, objectArray, AddFunction.DOUBLE));
     }
 
@@ -1341,16 +1341,19 @@ public class ArrayIterateTest
     {
         assertThrows(RuntimeException.class, () -> ArrayIterate.appendString(new String[]{"1", "2", "3"}, new Appendable()
         {
+            @Override
             public Appendable append(CharSequence csq) throws IOException
             {
                 throw new IOException();
             }
 
+            @Override
             public Appendable append(CharSequence csq, int start, int end) throws IOException
             {
                 throw new IOException();
             }
 
+            @Override
             public Appendable append(char c) throws IOException
             {
                 throw new IOException();

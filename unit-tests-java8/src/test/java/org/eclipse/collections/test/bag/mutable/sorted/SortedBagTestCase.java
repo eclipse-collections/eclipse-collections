@@ -34,6 +34,12 @@ public interface SortedBagTestCase extends SortedIterableTestCase, BagTestCase, 
     <T> SortedBag<T> newWith(T... elements);
 
     @Override
+    default boolean supportsForEachFromToReverseIteration()
+    {
+        return false;
+    }
+
+    @Override
     default <T> SortedBag<T> getExpectedFiltered(T... elements)
     {
         return new TreeBag<>(Comparators.reverseNaturalOrder(), Lists.immutable.with(elements));

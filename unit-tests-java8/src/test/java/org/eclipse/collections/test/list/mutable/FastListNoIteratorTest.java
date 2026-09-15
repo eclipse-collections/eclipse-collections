@@ -13,6 +13,9 @@ package org.eclipse.collections.test.list.mutable;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.test.IterableTestCase;
 import org.eclipse.collections.test.NoIteratorTestCase;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class FastListNoIteratorTest implements MutableListTestCase, NoIteratorTestCase
 {
@@ -26,20 +29,16 @@ public class FastListNoIteratorTest implements MutableListTestCase, NoIteratorTe
     }
 
     @Override
+    @Test
     public void Iterable_remove()
     {
         NoIteratorTestCase.super.Iterable_remove();
     }
 
     @Override
+    @Test
     public void List_subList_subList_iterator_add_remove()
     {
-        // Not applicable
-    }
-
-    @Override
-    public void OrderedIterable_next()
-    {
-        // Not applicable
+        assertThrows(AssertionError.class, () -> this.newWith("A", "B", "C", "D").subList(0, 3).subList(0, 2).listIterator());
     }
 }

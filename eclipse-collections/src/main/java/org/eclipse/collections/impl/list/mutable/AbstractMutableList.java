@@ -90,7 +90,7 @@ public abstract class AbstractMutableList<T>
     @Override
     public boolean equals(Object that)
     {
-        return this == that || (that instanceof List && ListIterate.equals(this, (List<?>) that));
+        return this == that || (that instanceof List<?> list && ListIterate.equals(this, list));
     }
 
     @Override
@@ -196,6 +196,12 @@ public abstract class AbstractMutableList<T>
     public boolean removeIf(Predicate<? super T> predicate)
     {
         return ListIterate.removeIf(this, predicate);
+    }
+
+    @Override
+    public boolean removeIf(java.util.function.Predicate<? super T> filter)
+    {
+        return ListIterate.removeIf(this, filter);
     }
 
     @Override
@@ -708,7 +714,10 @@ public abstract class AbstractMutableList<T>
         @Override
         public void add(int index, T element)
         {
-            this.checkIfOutOfBounds(index);
+            if (index > this.size || index < 0)
+            {
+                throw new IndexOutOfBoundsException("Index: " + index + " Size: " + this.size);
+            }
             this.original.add(index + this.offset, element);
             this.size++;
             this.updateSize(1);
@@ -784,11 +793,13 @@ public abstract class AbstractMutableList<T>
             {
                 private final ListIterator<T> listIterator = SubList.this.original.listIterator(index + SubList.this.offset);
 
+                @Override
                 public boolean hasNext()
                 {
                     return this.nextIndex() < SubList.this.size;
                 }
 
+                @Override
                 public T next()
                 {
                     if (this.hasNext())
@@ -798,11 +809,13 @@ public abstract class AbstractMutableList<T>
                     throw new NoSuchElementException();
                 }
 
+                @Override
                 public boolean hasPrevious()
                 {
                     return this.previousIndex() >= 0;
                 }
 
+                @Override
                 public T previous()
                 {
                     if (this.hasPrevious())
@@ -812,16 +825,19 @@ public abstract class AbstractMutableList<T>
                     throw new NoSuchElementException();
                 }
 
+                @Override
                 public int nextIndex()
                 {
                     return this.listIterator.nextIndex() - SubList.this.offset;
                 }
 
+                @Override
                 public int previousIndex()
                 {
                     return this.listIterator.previousIndex() - SubList.this.offset;
                 }
 
+                @Override
                 public void remove()
                 {
                     this.listIterator.remove();
@@ -829,11 +845,13 @@ public abstract class AbstractMutableList<T>
                     SubList.this.updateSize(-1);
                 }
 
+                @Override
                 public void set(T o)
                 {
                     this.listIterator.set(o);
                 }
 
+                @Override
                 public void add(T o)
                 {
                     this.listIterator.add(o);
@@ -958,6 +976,16 @@ public abstract class AbstractMutableList<T>
     public MutableList<Pair<T, Integer>> zipWithIndex()
     {
         return ListIterate.zipWithIndex(this);
+    }
+
+    @Override
+    public MutableList<T> reversed()
+    {
+        if (this instanceof RandomAccess)
+        {
+            return new ReversedRandomAccessMutableList<>(this);
+        }
+        return new ReversedMutableList<>(this);
     }
 
     @Override

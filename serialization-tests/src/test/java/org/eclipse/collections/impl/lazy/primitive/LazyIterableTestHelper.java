@@ -508,18 +508,6 @@ public class LazyIterableTestHelper<T> implements LazyIterable<T>
     }
 
     @Override
-    public Object[] toArray()
-    {
-        return new Object[0];
-    }
-
-    @Override
-    public <T1> T1[] toArray(T1[] target)
-    {
-        return null;
-    }
-
-    @Override
     public T min(Comparator<? super T> comparator)
     {
         return null;

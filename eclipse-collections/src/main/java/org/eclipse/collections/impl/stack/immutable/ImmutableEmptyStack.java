@@ -25,6 +25,7 @@ import org.eclipse.collections.api.CharIterable;
 import org.eclipse.collections.api.DoubleIterable;
 import org.eclipse.collections.api.FloatIterable;
 import org.eclipse.collections.api.IntIterable;
+import org.eclipse.collections.api.LazyIterable;
 import org.eclipse.collections.api.LongIterable;
 import org.eclipse.collections.api.RichIterable;
 import org.eclipse.collections.api.ShortIterable;
@@ -92,7 +93,9 @@ import org.eclipse.collections.api.tuple.Pair;
 import org.eclipse.collections.impl.AbstractRichIterable;
 import org.eclipse.collections.impl.EmptyIterator;
 import org.eclipse.collections.impl.factory.Multimaps;
+import org.eclipse.collections.impl.lazy.EmptyLazyIterable;
 import org.eclipse.collections.impl.partition.list.PartitionFastList;
+import org.eclipse.collections.impl.partition.stack.PartitionArrayStack;
 import org.eclipse.collections.impl.tuple.Tuples;
 
 final class ImmutableEmptyStack<T>
@@ -107,6 +110,12 @@ final class ImmutableEmptyStack<T>
     private Object readResolve()
     {
         return INSTANCE;
+    }
+
+    @Override
+    public LazyIterable<T> asLazy()
+    {
+        return EmptyLazyIterable.getInstance();
     }
 
     @Override
@@ -730,19 +739,19 @@ final class ImmutableEmptyStack<T>
     @Override
     public ImmutableStack<T> takeWhile(Predicate<? super T> predicate)
     {
-        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".takeWhile() not implemented yet");
+        return this;
     }
 
     @Override
     public ImmutableStack<T> dropWhile(Predicate<? super T> predicate)
     {
-        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".dropWhile() not implemented yet");
+        return this;
     }
 
     @Override
     public PartitionImmutableStack<T> partitionWhile(Predicate<? super T> predicate)
     {
-        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".partitionWhile() not implemented yet");
+        return new PartitionArrayStack<T>().toImmutable();
     }
 
     @Override

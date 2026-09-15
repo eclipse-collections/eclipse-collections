@@ -65,6 +65,7 @@ public class SynchronizedRichIterableTest extends AbstractRichIterableTestCase
     }
 
     @Override
+    @Test
     public void equalsAndHashCode()
     {
         assertNotEquals(this.newWith(), this.newWith());

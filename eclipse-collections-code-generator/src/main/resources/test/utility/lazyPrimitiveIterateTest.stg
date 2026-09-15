@@ -22,6 +22,7 @@ import org.eclipse.collections.api.block.procedure.primitive.<name>Procedure;
 import org.eclipse.collections.api.list.primitive.Mutable<name>List;
 import org.eclipse.collections.impl.factory.primitive.<name>Lists;
 
+import org.eclipse.collections.impl.test.Verify;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -50,6 +51,12 @@ public class Lazy<name>IterateTest
     public void empty()
     {
         assertTrue(Lazy<name>Iterate.empty().isEmpty());
+    }
+
+    @Test
+    public void classIsNonInstantiable()
+    {
+        Verify.assertClassNonInstantiable(Lazy<name>Iterate.class);
     }
 
     @Test

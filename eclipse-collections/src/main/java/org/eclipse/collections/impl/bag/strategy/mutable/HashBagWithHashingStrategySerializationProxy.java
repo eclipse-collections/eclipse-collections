@@ -44,6 +44,7 @@ class HashBagWithHashingStrategySerializationProxy<T> implements Externalizable
         {
             this.bagWithHashingStrategy.forEachWithOccurrences(new CheckedObjectIntProcedure<T>()
             {
+                @Override
                 public void safeValue(T object, int index) throws IOException
                 {
                     out.writeObject(object);

@@ -498,6 +498,7 @@ public abstract class AbstractMutableBiMapTestCase extends MutableMapIterableTes
     }
 
     @Override
+    @Test
     public void toImmutable()
     {
         ImmutableBiMap<Integer, Character> expectedImmutableBiMap = BiMaps.immutable.of(null, 'b', 1, null, 3, 'c');

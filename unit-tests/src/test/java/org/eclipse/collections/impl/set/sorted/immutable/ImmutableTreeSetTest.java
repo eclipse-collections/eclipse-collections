@@ -13,6 +13,7 @@ package org.eclipse.collections.impl.set.sorted.immutable;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.eclipse.collections.api.factory.Sets;
@@ -95,21 +96,24 @@ public class ImmutableTreeSetTest
     @Test
     public void subSet()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.classUnderTest().castToSortedSet().subSet(1, 4));
+        SortedSet<Integer> subSet = this.classUnderTest().castToSortedSet().subSet(1, 4);
+        Verify.assertSortedSetsEqual(TreeSortedSet.newSetWith(1, 2, 3), subSet);
     }
 
     @Override
     @Test
     public void headSet()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.classUnderTest().castToSortedSet().headSet(4));
+        SortedSet<Integer> headSet = this.classUnderTest().castToSortedSet().headSet(4);
+        Verify.assertSortedSetsEqual(TreeSortedSet.newSetWith(1, 2, 3), headSet);
     }
 
     @Override
     @Test
     public void tailSet()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.classUnderTest().castToSortedSet().tailSet(1));
+        SortedSet<Integer> tailSet = this.classUnderTest().castToSortedSet().tailSet(1);
+        Verify.assertSortedSetsEqual(TreeSortedSet.newSetWith(1, 2, 3, 4), tailSet);
     }
 
     @Override

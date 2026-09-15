@@ -67,6 +67,7 @@ public abstract class AbstractMutableObjectBooleanMapTestCase extends AbstractOb
     }
 
     @Override
+    @Test
     public void getIfAbsent()
     {
         super.getIfAbsent();
@@ -86,6 +87,7 @@ public abstract class AbstractMutableObjectBooleanMapTestCase extends AbstractOb
     }
 
     @Override
+    @Test
     public void getOrThrow()
     {
         super.getOrThrow();
@@ -114,6 +116,7 @@ public abstract class AbstractMutableObjectBooleanMapTestCase extends AbstractOb
     }
 
     @Override
+    @Test
     public void containsKey()
     {
         super.containsKey();
@@ -143,6 +146,7 @@ public abstract class AbstractMutableObjectBooleanMapTestCase extends AbstractOb
     }
 
     @Override
+    @Test
     public void containsValue()
     {
         super.containsValue();
@@ -168,6 +172,7 @@ public abstract class AbstractMutableObjectBooleanMapTestCase extends AbstractOb
     }
 
     @Override
+    @Test
     public void contains()
     {
         super.contains();
@@ -189,6 +194,7 @@ public abstract class AbstractMutableObjectBooleanMapTestCase extends AbstractOb
     }
 
     @Override
+    @Test
     public void containsAll()
     {
         super.containsAll();
@@ -214,6 +220,7 @@ public abstract class AbstractMutableObjectBooleanMapTestCase extends AbstractOb
     }
 
     @Override
+    @Test
     public void containsAllIterable()
     {
         super.containsAllIterable();

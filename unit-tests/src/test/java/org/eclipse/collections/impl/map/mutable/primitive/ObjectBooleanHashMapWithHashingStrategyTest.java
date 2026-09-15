@@ -31,11 +31,13 @@ public class ObjectBooleanHashMapWithHashingStrategyTest extends ObjectBooleanHa
 {
     private static final HashingStrategy<String> STRING_HASHING_STRATEGY = HashingStrategies.nullSafeHashingStrategy(new HashingStrategy<String>()
     {
+        @Override
         public int computeHashCode(String object)
         {
             return object.hashCode();
         }
 
+        @Override
         public boolean equals(String object1, String object2)
         {
             return object1.equals(object2);
@@ -44,11 +46,13 @@ public class ObjectBooleanHashMapWithHashingStrategyTest extends ObjectBooleanHa
 
     private static final HashingStrategy<Integer> INTEGER_HASHING_STRATEGY = HashingStrategies.nullSafeHashingStrategy(new HashingStrategy<Integer>()
     {
+        @Override
         public int computeHashCode(Integer object)
         {
             return object.hashCode();
         }
 
+        @Override
         public boolean equals(Integer object1, Integer object2)
         {
             return object1.equals(object2);

@@ -10,8 +10,11 @@
 
 package org.eclipse.collections.test.map.immutable.ordered;
 
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Random;
+import java.util.Set;
 
 import org.eclipse.collections.api.map.MutableOrderedMap;
 import org.eclipse.collections.impl.map.ordered.immutable.ImmutableOrderedMapAdapter;
@@ -19,7 +22,10 @@ import org.eclipse.collections.impl.map.ordered.mutable.OrderedMapAdapter;
 import org.eclipse.collections.impl.tuple.ImmutableEntry;
 import org.eclipse.collections.test.FixedSizeIterableTestCase;
 import org.eclipse.collections.test.map.OrderedMapIterableTestCase;
+import org.eclipse.collections.test.map.UnmodifiableMapKeySetTestCase;
+import org.eclipse.collections.test.map.UnmodifiableMapValuesCollectionTestCase;
 import org.eclipse.collections.test.map.mutable.MapTestCase;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import static org.eclipse.collections.test.IterableTestCase.assertIterablesEqual;
@@ -31,6 +37,8 @@ import static org.junit.jupiter.api.Assertions.fail;
 public class ImmutableOrderedMapTest
         implements OrderedMapIterableTestCase, FixedSizeIterableTestCase, MapTestCase
 {
+    private static final long CURRENT_TIME_MILLIS = System.currentTimeMillis();
+
     @Override
     public <T> ImmutableOrderedMapAdapter<Object, T> newWith(T... elements)
     {
@@ -62,6 +70,12 @@ public class ImmutableOrderedMapTest
     }
 
     @Override
+    public boolean allowsPut()
+    {
+        return false;
+    }
+
+    @Override
     public boolean supportsNullKeys()
     {
         return true;
@@ -74,6 +88,13 @@ public class ImmutableOrderedMapTest
     }
 
     @Override
+    public boolean supportsNonComparableKeys()
+    {
+        return true;
+    }
+
+    @Override
+    @Test
     public void Iterable_toString()
     {
         OrderedMapIterableTestCase.super.Iterable_toString();
@@ -81,12 +102,22 @@ public class ImmutableOrderedMapTest
     }
 
     @Override
-    public void Iterable_remove()
+    @Test
+    public void Object_equalsAndHashCode()
     {
-        OrderedMapIterableTestCase.super.Iterable_remove();
+        OrderedMapIterableTestCase.super.Object_equalsAndHashCode();
+        MapTestCase.super.Object_equalsAndHashCode();
     }
 
     @Override
+    @Test
+    public void Iterable_remove()
+    {
+        FixedSizeIterableTestCase.super.Iterable_remove();
+    }
+
+    @Override
+    @Test
     public void Map_remove()
     {
         Map<Object, Object> map = this.newWith();
@@ -94,6 +125,7 @@ public class ImmutableOrderedMapTest
     }
 
     @Override
+    @Test
     public void Map_entrySet_remove()
     {
         Map<Object, Object> map = this.newWithKeysValues();
@@ -101,10 +133,20 @@ public class ImmutableOrderedMapTest
     }
 
     @Override
+    @Test
     public void Map_clear()
     {
         Map<Object, String> map = this.newWith("Three", "Two", "One");
         assertThrows(UnsupportedOperationException.class, map::clear);
+    }
+
+    @Override
+    @Test
+    public void Map_entrySet_setValue()
+    {
+        Map<String, Integer> map = this.newWithKeysValues("3", 3, "2", 2, "1", 1);
+        map.entrySet().forEach(each -> assertThrows(UnsupportedOperationException.class, () -> each.setValue(each.getValue() + 1)));
+        assertIterablesEqual(this.newWithKeysValues("3", 3, "2", 2, "1", 1), map);
     }
 
     @Override
@@ -119,8 +161,8 @@ public class ImmutableOrderedMapTest
         assertIterablesEqual(this.newWithKeysValues(3, "Three", 2, "Two", 1, "One"), map);
     }
 
-    @Test
     @Override
+    @Test
     public void Map_putAll()
     {
         Map<Integer, String> map = this.newWithKeysValues(3, "Three", 2, "2");
@@ -136,6 +178,7 @@ public class ImmutableOrderedMapTest
     }
 
     @Override
+    @Test
     public void Map_merge()
     {
         Map<Integer, String> map = this.newWithKeysValues(1, "1", 2, "2", 3, "3");
@@ -148,5 +191,148 @@ public class ImmutableOrderedMapTest
             return null;
         }));
         assertEquals(this.newWithKeysValues(1, "1", 2, "2", 3, "3"), map);
+    }
+
+    @Override
+    @Test
+    public void Map_compute()
+    {
+        Map<Integer, String> map = this.newWithKeysValues(1, "1", 2, "2", 3, "3");
+        assertThrows(UnsupportedOperationException.class, () -> map.compute(1, (k, v) -> {
+            assertEquals(Integer.valueOf(1), k);
+            assertEquals("1", v);
+            return "modified";
+        }));
+        assertThrows(UnsupportedOperationException.class, () -> map.compute(4, (k, v) -> {
+            assertEquals(Integer.valueOf(4), k);
+            assertNull(v);
+            return "new";
+        }));
+        assertThrows(UnsupportedOperationException.class, () -> map.compute(2, (k, v) -> null));
+        assertEquals(this.newWithKeysValues(1, "1", 2, "2", 3, "3"), map);
+    }
+
+    @Override
+    @Test
+    public void Map_computeIfAbsent()
+    {
+        Map<Integer, String> map = this.newWithKeysValues(1, "1", 2, "2", 3, "3");
+        assertEquals("1", map.computeIfAbsent(1, k -> {
+            fail("Expected lambda not to be called for existing key");
+            return "modified";
+        }));
+        assertThrows(UnsupportedOperationException.class, () -> map.computeIfAbsent(4, k -> "new"));
+        assertEquals(this.newWithKeysValues(1, "1", 2, "2", 3, "3"), map);
+    }
+
+    @Override
+    @Test
+    public void Map_computeIfPresent()
+    {
+        Map<Integer, String> map = this.newWithKeysValues(1, "1", 2, "2", 3, "3");
+        assertThrows(UnsupportedOperationException.class, () -> map.computeIfPresent(1, (k, v) -> {
+            assertEquals(Integer.valueOf(1), k);
+            assertEquals("1", v);
+            return "modified";
+        }));
+        assertNull(map.computeIfPresent(4, (k, v) -> {
+            fail("Expected lambda not to be called for non-existing key");
+            return "new";
+        }));
+        assertThrows(UnsupportedOperationException.class, () -> map.computeIfPresent(2, (k, v) -> null));
+        assertEquals(this.newWithKeysValues(1, "1", 2, "2", 3, "3"), map);
+    }
+
+    @Override
+    @Test
+    public void Map_replaceAll()
+    {
+        Map<Integer, String> map = this.newWithKeysValues(1, "1", 2, "2", 3, "3");
+
+        assertThrows(UnsupportedOperationException.class, () -> map.replaceAll((k, v) -> v + "modified"));
+        assertEquals(this.newWithKeysValues(1, "1", 2, "2", 3, "3"), map);
+    }
+
+    @Override
+    @Test
+    public void Map_replace()
+    {
+        Map<Integer, String> map = this.newWithKeysValues(1, "1", 2, "2", 3, "3");
+
+        assertThrows(UnsupportedOperationException.class, () -> map.replace(1, "One"));
+        assertThrows(UnsupportedOperationException.class, () -> map.replace(4, "Four"));
+        assertThrows(UnsupportedOperationException.class, () -> map.replace(2, "2", "Two"));
+        assertThrows(UnsupportedOperationException.class, () -> map.replace(3, "wrong", "Three"));
+        assertThrows(UnsupportedOperationException.class, () -> map.replace(4, "4", "Four"));
+        assertEquals(this.newWithKeysValues(1, "1", 2, "2", 3, "3"), map);
+    }
+
+    @Override
+    @Test
+    public void Map_putIfAbsent()
+    {
+        Map<Integer, String> map = this.newWithKeysValues(1, "1", 2, "2", 3, "3");
+
+        assertThrows(UnsupportedOperationException.class, () -> map.putIfAbsent(1, "One"));
+        assertThrows(UnsupportedOperationException.class, () -> map.putIfAbsent(4, "4"));
+        assertEquals(this.newWithKeysValues(1, "1", 2, "2", 3, "3"), map);
+    }
+
+    @Override
+    @Test
+    public void Map_remove_key_value()
+    {
+        Map<Integer, String> map = this.newWithKeysValues(1, "1", 2, "2", 3, "3");
+
+        assertThrows(UnsupportedOperationException.class, () -> map.remove(1, "1"));
+        assertThrows(UnsupportedOperationException.class, () -> map.remove(2, "wrong"));
+        assertThrows(UnsupportedOperationException.class, () -> map.remove(4, "4"));
+        assertEquals(this.newWithKeysValues(1, "1", 2, "2", 3, "3"), map);
+    }
+
+    @Nested
+    public class KeySetView implements UnmodifiableMapKeySetTestCase
+    {
+        @Override
+        public boolean allowsSerialization()
+        {
+            return false;
+        }
+
+        @SafeVarargs
+        @Override
+        public final <T> Set<T> newWith(T... elements)
+        {
+            Random random = new Random(CURRENT_TIME_MILLIS);
+            MutableOrderedMap<T, Object> result = OrderedMapAdapter.adapt(new LinkedHashMap<>());
+            for (T element : elements)
+            {
+                assertNull(result.put(element, random.nextDouble()));
+            }
+            return ((ImmutableOrderedMapAdapter<T, Object>) result.toImmutable()).keySet();
+        }
+    }
+
+    @Nested
+    public class ValuesCollectionView implements UnmodifiableMapValuesCollectionTestCase
+    {
+        @Override
+        public OrderingType getOrderingType()
+        {
+            return OrderingType.INSERTION_ORDER;
+        }
+
+        @Override
+        public boolean allowsSerialization()
+        {
+            return false;
+        }
+
+        @SafeVarargs
+        @Override
+        public final <T> Collection<T> newWith(T... elements)
+        {
+            return ImmutableOrderedMapTest.this.newWith(elements).values();
+        }
     }
 }

@@ -28,6 +28,18 @@ import org.eclipse.collections.api.tuple.Pair;
 public interface MutableSetIterable<T> extends SetIterable<T>, MutableCollection<T>, Set<T>
 {
     @Override
+    default Object[] toArray()
+    {
+        return MutableCollection.super.toArray();
+    }
+
+    @Override
+    default <T1> T1[] toArray(T1[] a)
+    {
+        return MutableCollection.super.toArray(a);
+    }
+
+    @Override
     MutableSetIterable<T> tap(Procedure<? super T> procedure);
 
     @Override

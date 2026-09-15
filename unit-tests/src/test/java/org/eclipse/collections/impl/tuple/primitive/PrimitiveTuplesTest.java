@@ -74,6 +74,7 @@ import org.eclipse.collections.api.tuple.primitive.ShortFloatPair;
 import org.eclipse.collections.api.tuple.primitive.ShortIntPair;
 import org.eclipse.collections.api.tuple.primitive.ShortLongPair;
 import org.eclipse.collections.api.tuple.primitive.ShortObjectPair;
+import org.eclipse.collections.impl.test.Verify;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -720,5 +721,11 @@ public class PrimitiveTuplesTest
         ObjectDoublePair<String> pair = PrimitiveTuples.pair(valueOne, valueTwo);
         assertEquals(valueOne, pair.getOne());
         assertEquals(valueTwo, pair.getTwo(), DELTA);
+    }
+
+    @Test
+    public void classIsNonInstantiable()
+    {
+        Verify.assertClassNonInstantiable(PrimitiveTuples.class);
     }
 }

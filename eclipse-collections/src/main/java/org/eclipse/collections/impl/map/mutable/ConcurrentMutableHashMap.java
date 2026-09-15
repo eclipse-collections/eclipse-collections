@@ -111,19 +111,13 @@ public final class ConcurrentMutableHashMap<K, V>
     }
 
     @Override
-    public String toString()
-    {
-        return this.delegate.toString();
-    }
-
-    @Override
     public MutableMap<K, V> clone()
     {
         return ConcurrentMutableHashMap.newMap(this.delegate);
     }
 
     @Override
-    public <K, V> MutableMap<K, V> newEmpty(int capacity)
+    public <K2, V2> MutableMap<K2, V2> newEmpty(int capacity)
     {
         return ConcurrentMutableHashMap.newMap();
     }
@@ -354,6 +348,10 @@ public final class ConcurrentMutableHashMap<K, V>
     @Override
     public boolean equals(Object o)
     {
+        if (o == this)
+        {
+            return true;
+        }
         return this.delegate.equals(o);
     }
 
@@ -449,6 +447,24 @@ public final class ConcurrentMutableHashMap<K, V>
     public V merge(K key, V value, BiFunction<? super V, ? super V, ? extends V> remappingFunction)
     {
         return this.delegate.merge(key, value, remappingFunction);
+    }
+
+    @Override
+    public V computeIfAbsent(K key, java.util.function.Function<? super K, ? extends V> mappingFunction)
+    {
+        return this.delegate.computeIfAbsent(key, mappingFunction);
+    }
+
+    @Override
+    public V computeIfPresent(K key, BiFunction<? super K, ? super V, ? extends V> remappingFunction)
+    {
+        return this.delegate.computeIfPresent(key, remappingFunction);
+    }
+
+    @Override
+    public V compute(K key, BiFunction<? super K, ? super V, ? extends V> remappingFunction)
+    {
+        return this.delegate.compute(key, remappingFunction);
     }
 
     @Override

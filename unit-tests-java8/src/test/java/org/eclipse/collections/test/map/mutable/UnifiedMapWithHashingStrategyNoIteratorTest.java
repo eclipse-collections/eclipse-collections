@@ -21,6 +21,9 @@ import org.eclipse.collections.impl.block.factory.HashingStrategies;
 import org.eclipse.collections.impl.map.strategy.mutable.UnifiedMapWithHashingStrategy;
 import org.eclipse.collections.impl.tuple.ImmutableEntry;
 import org.eclipse.collections.test.NoIteratorTestCase;
+import org.eclipse.collections.test.map.NoIteratorMapKeySetTestCase;
+import org.eclipse.collections.test.map.NoIteratorMapValuesCollectionTestCase;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -61,71 +64,46 @@ public class UnifiedMapWithHashingStrategyNoIteratorTest implements MutableMapTe
     }
 
     @Override
-    public void Iterable_next()
-    {
-        NoIteratorTestCase.super.Iterable_next();
-    }
-
-    @Override
+    @Test
     public void Iterable_remove()
     {
         NoIteratorTestCase.super.Iterable_remove();
     }
 
     @Override
-    public void RichIterable_getFirst()
+    @Test
+    public void RichIterable_getOnly()
     {
-        NoIteratorTestCase.super.RichIterable_getFirst();
+        // TODO: Optimize getOnly() to avoid delegating to iterator().
+        assertThrows(AssertionError.class, () -> this.newWith(1).getOnly());
     }
 
     @Override
-    public void RichIterable_getLast()
-    {
-        NoIteratorTestCase.super.RichIterable_getLast();
-    }
-
-    @Override
-    public void RichIterable_getFirst_and_getLast()
-    {
-        // Not applicable
-    }
-
-    @Override
-    public void RichIterable_getLast_empty_null()
-    {
-        // Not applicable
-    }
-
-    @Override
-    public void RichIterable_fused_collectMakeString()
-    {
-        // Not applicable
-    }
-
-    @Override
+    @Test
     public void RichIterable_anySatisfy_allSatisfy_noneSatisfy()
     {
-        /**
+        /*
          * TODO: {@link UnifiedMapWithHashingStrategy#anySatisfy(Predicate)} should be optimized to not use an iterator
          */
 
-        /**
+        /*
          * TODO: {@link UnifiedMapWithHashingStrategy#allSatisfy(Predicate)} should be optimized to not use an iterator
          */
 
-        /**
+        /*
          * TODO: {@link UnifiedMapWithHashingStrategy#noneSatisfy(Predicate)} should be optimized to not use an iterator
          */
     }
 
     @Override
+    @Test
     public void MutableMapIterable_updateValue()
     {
-        /**
+        /*
          * TODO: {@link UnifiedMapWithHashingStrategy#KeySet#equals)} should be optimized to not use an iterator
          */
 
-        /**
+        /*
          * TODO: {@link org.eclipse.collections.impl.set.strategy.mutable.UnifiedSetWithHashingStrategy#addAll(Collection)} should be optimized to not use an iterator when another UnifiedSet is passed in.
          */
     }
@@ -226,6 +204,34 @@ public class UnifiedMapWithHashingStrategyNoIteratorTest implements MutableMapTe
             {
                 throw new AssertionError("No iteration patterns should delegate to iterator()");
             }
+        }
+    }
+
+    @Nested
+    public class KeySetView implements NoIteratorMapKeySetTestCase
+    {
+        @SafeVarargs
+        @Override
+        public final <T> Set<T> newWith(T... elements)
+        {
+            Random random = new Random(CURRENT_TIME_MILLIS);
+            MutableMap<T, Object> result = new UnifiedMapWithHashingStrategyNoIterator<>();
+            for (T element : elements)
+            {
+                assertNull(result.put(element, random.nextDouble()));
+            }
+            return result.keySet();
+        }
+    }
+
+    @Nested
+    public class ValuesCollectionView implements NoIteratorMapValuesCollectionTestCase
+    {
+        @SafeVarargs
+        @Override
+        public final <T> Collection<T> newWith(T... elements)
+        {
+            return UnifiedMapWithHashingStrategyNoIteratorTest.this.newWith(elements).values();
         }
     }
 }

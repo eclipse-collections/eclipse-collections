@@ -49,6 +49,7 @@ import org.eclipse.collections.api.factory.primitive.LongLists;
 import org.eclipse.collections.api.factory.primitive.ShortLists;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.map.MutableMap;
+import org.eclipse.collections.api.map.MutableMapIterable;
 import org.eclipse.collections.api.map.primitive.MutableObjectDoubleMap;
 import org.eclipse.collections.api.map.primitive.MutableObjectLongMap;
 import org.eclipse.collections.api.multimap.MutableMultimap;
@@ -69,6 +70,18 @@ import org.eclipse.collections.api.tuple.Twin;
 public interface MutableCollection<T>
         extends Collection<T>, RichIterable<T>
 {
+    @Override
+    default Object[] toArray()
+    {
+        return RichIterable.super.toArray();
+    }
+
+    @Override
+    default <T1> T1[] toArray(T1[] a)
+    {
+        return RichIterable.super.toArray(a);
+    }
+
     /**
      * This method allows mutable and fixed size collections the ability to add elements to their existing elements.
      * In order to support fixed size a new instance of a collection would have to be returned taking the elements of
@@ -622,5 +635,13 @@ public interface MutableCollection<T>
                 zeroValueFactory,
                 nonMutatingAggregator,
                 Maps.mutable.empty());
+    }
+
+    @Override
+    default <K> MutableMapIterable<K, T> reduceBy(
+            Function<? super T, ? extends K> groupBy,
+            Function2<? super T, ? super T, ? extends T> reduceFunction)
+    {
+        return this.reduceBy(groupBy, reduceFunction, Maps.mutable.empty());
     }
 }

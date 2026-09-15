@@ -242,6 +242,7 @@ public class UnmodifiableBooleanBagTest extends AbstractMutableBooleanBagTestCas
     }
 
     @Override
+    @Test
     public void selectUnique()
     {
         super.selectUnique();

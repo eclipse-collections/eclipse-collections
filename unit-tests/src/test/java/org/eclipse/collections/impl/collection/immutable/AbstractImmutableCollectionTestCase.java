@@ -79,6 +79,7 @@ public abstract class AbstractImmutableCollectionTestCase
 
     public static final Predicates2<Integer, Class<Integer>> ERROR_THROWING_PREDICATE_2 = new Predicates2<Integer, Class<Integer>>()
     {
+        @Override
         public boolean accept(Integer argument1, Class<Integer> argument2)
         {
             throw new AssertionError();

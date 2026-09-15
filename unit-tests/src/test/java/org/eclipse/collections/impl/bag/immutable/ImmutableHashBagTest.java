@@ -56,6 +56,7 @@ public class ImmutableHashBagTest extends ImmutableBagTestCase
     }
 
     @Override
+    @Test
     public void toStringOfItemToCount()
     {
         assertEquals("{}", ImmutableHashBag.newBag().toStringOfItemToCount());

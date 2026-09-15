@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright (c) 2024 Goldman Sachs and others.
+  ~ Copyright (c) 2026 Goldman Sachs and others.
   ~ All rights reserved. This program and the accompanying materials
   ~ are made available under the terms of the Eclipse Public License v1.0
   ~ and Eclipse Distribution License v. 1.0 which accompany this distribution.
@@ -18,7 +18,7 @@
 
     <groupId>org.eclipse.collections</groupId>
     <artifactId>eclipse-collections-parent</artifactId>
-    <version>12.0.0-SNAPSHOT</version>
+    <version>14.0.0-SNAPSHOT</version>
 
     <packaging>pom</packaging>
 
@@ -29,7 +29,7 @@ implementations with a rich API and set of utility classes that work with any JD
 Arrays, Maps or Strings. The iteration protocol was inspired by the Smalltalk collection framework.
     </description>
 
-    <url>https://github.com/eclipse/eclipse-collections</url>
+    <url>https://github.com/eclipse-collections/eclipse-collections</url>
 
     <inceptionYear>2004</inceptionYear>
 
@@ -47,19 +47,19 @@ Arrays, Maps or Strings. The iteration protocol was inspired by the Smalltalk co
     </licenses>
 
     <scm>
-        <url>https://github.com/eclipse/eclipse-collections</url>
-        <connection>scm:git:https://github.com/eclipse/eclipse-collections.git</connection>
-        <developerConnection>scm:git:https://github.com/eclipse/eclipse-collections.git</developerConnection>
+        <url>https://github.com/eclipse-collections/eclipse-collections</url>
+        <connection>scm:git:https://github.com/eclipse-collections/eclipse-collections.git</connection>
+        <developerConnection>scm:git:https://github.com/eclipse-collections/eclipse-collections.git</developerConnection>
     </scm>
 
     <issueManagement>
         <system>GitHub</system>
-        <url>https://github.com/eclipse/eclipse-collections/issues</url>
+        <url>https://github.com/eclipse-collections/eclipse-collections/issues</url>
     </issueManagement>
 
     <ciManagement>
         <system>GitHub Actions</system>
-        <url>https://github.com/eclipse/eclipse-collections/actions</url>
+        <url>https://github.com/eclipse-collections/eclipse-collections/actions</url>
     </ciManagement>
 
     <mailingLists>
@@ -96,6 +96,14 @@ Arrays, Maps or Strings. The iteration protocol was inspired by the Smalltalk co
         <developer>
             <name>Sirisha Pratha</name>
         </developer>
+
+        <developer>
+            <name>Vladimir Zakharov</name>
+        </developer>
+
+        <developer>
+            <name>Desislav Petrov</name>
+        </developer>
     </developers>
 
     <modules>
@@ -106,31 +114,33 @@ Arrays, Maps or Strings. The iteration protocol was inspired by the Smalltalk co
         <module>eclipse-collections-testutils</module>
         <module>eclipse-collections-forkjoin</module>
         <module>unit-tests</module>
+        <module>unit-tests-thread-safety</module>
         <module>serialization-tests</module>
         <module>jcstress-tests</module>
         <module>unit-tests-java8</module>
         <module>test-coverage</module>
+        <module>p2-site</module>
     </modules>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <slf4j.version>2.0.16</slf4j.version>
+        <slf4j.version>2.0.17</slf4j.version>
         <clover.version>4.4.1</clover.version>
         <scala.version>2.13.15</scala.version>
-        <guava.version>33.1.0-jre</guava.version>
+        <guava.version>33.5.0-jre</guava.version>
         <trove4j.version>3.1.0</trove4j.version>
         <koloboke.version>1.0.0</koloboke.version>
-        <hppc.version>0.9.1</hppc.version>
+        <hppc.version>0.10.0</hppc.version>
         <commons.lang.version>3.14.0</commons.lang.version>
         <checkstyle.version>10.18.2</checkstyle.version>
-        <checkstyle.plugin.version>3.5.0</checkstyle.plugin.version>
+        <checkstyle.plugin.version>3.6.0</checkstyle.plugin.version>
         <jacoco.plugin.version>0.8.12</jacoco.plugin.version>
         <junit.version>4.13.2</junit.version>
         <jmh.version>1.37</jmh.version>
+        <jol.version>0.17</jol.version>
 
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.release>17</maven.compiler.release>
         <maven.compiler.fork>true</maven.compiler.fork>
         <maven.compiler.meminitial>2048m</maven.compiler.meminitial>
         <maven.compiler.maxmem>2048m</maven.compiler.maxmem>
@@ -139,7 +149,7 @@ Arrays, Maps or Strings. The iteration protocol was inspired by the Smalltalk co
 
         <argLine></argLine>
 
-        <project.previous.version>11.0.0</project.previous.version>
+        <project.previous.version>12.0.0</project.previous.version>
     </properties>
 
     <pluginRepositories>
@@ -205,6 +215,13 @@ Arrays, Maps or Strings. The iteration protocol was inspired by the Smalltalk co
                 <version>${scala.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.assertj</groupId>
+                <artifactId>assertj-core</artifactId>
+                <version>3.27.7</version>
+                <scope>test</scope>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
@@ -226,8 +243,6 @@ Arrays, Maps or Strings. The iteration protocol was inspired by the Smalltalk co
                         <skippedModules>
                             <param>eclipse-collections-code-generator</param>
                             <param>eclipse-collections-code-generator-maven-plugin</param>
-                            <param>p2-feature</param>
-                            <param>p2-repository</param>
                         </skippedModules>
                         <avoidCallsTo>
                             <avoidCallsTo>java.util.logging</avoidCallsTo>
@@ -291,12 +306,12 @@ Arrays, Maps or Strings. The iteration protocol was inspired by the Smalltalk co
 
                 <plugin>
                     <artifactId>maven-assembly-plugin</artifactId>
-                    <version>3.7.1</version>
+                    <version>3.8.0</version>
                 </plugin>
 
                 <plugin>
                     <artifactId>maven-clean-plugin</artifactId>
-                    <version>3.2.0</version>
+                    <version>3.5.0</version>
                 </plugin>
 
                 <plugin>
@@ -306,7 +321,7 @@ Arrays, Maps or Strings. The iteration protocol was inspired by the Smalltalk co
 
                 <plugin>
                     <artifactId>maven-dependency-plugin</artifactId>
-                    <version>3.1.2</version>
+                    <version>3.8.1</version>
                 </plugin>
 
                 <plugin>
@@ -316,7 +331,7 @@ Arrays, Maps or Strings. The iteration protocol was inspired by the Smalltalk co
 
                 <plugin>
                     <artifactId>maven-install-plugin</artifactId>
-                    <version>3.1.3</version>
+                    <version>3.1.4</version>
                 </plugin>
 
                 <plugin>
@@ -326,7 +341,7 @@ Arrays, Maps or Strings. The iteration protocol was inspired by the Smalltalk co
 
                 <plugin>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>3.10.0</version>
+                    <version>3.11.2</version>
                 </plugin>
 
                 <plugin>
@@ -336,7 +351,7 @@ Arrays, Maps or Strings. The iteration protocol was inspired by the Smalltalk co
 
                 <plugin>
                     <artifactId>maven-release-plugin</artifactId>
-                    <version>3.1.1</version>
+                    <version>3.3.1</version>
                 </plugin>
 
                 <plugin>
@@ -351,7 +366,7 @@ Arrays, Maps or Strings. The iteration protocol was inspired by the Smalltalk co
 
                 <plugin>
                     <artifactId>maven-source-plugin</artifactId>
-                    <version>3.3.1</version>
+                    <version>3.4.0</version>
                 </plugin>
 
                 <plugin>
@@ -386,7 +401,7 @@ Arrays, Maps or Strings. The iteration protocol was inspired by the Smalltalk co
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>3.5.0</version>
+                    <version>3.5.5</version>
                     <configuration>
                         <includes>
                             <include>**/*Test.java</include>
@@ -447,7 +462,7 @@ Arrays, Maps or Strings. The iteration protocol was inspired by the Smalltalk co
                 <plugin>
                     <groupId>org.eclipse.cbi.maven.plugins</groupId>
                     <artifactId>eclipse-jarsigner-plugin</artifactId>
-                    <version>1.3.2</version>
+                    <version>1.5.3</version>
                 </plugin>
                 <!--This plugin's configuration is used to store Eclipse m2e
                     settings only. It has no influence on the Maven build itself. -->
@@ -531,14 +546,14 @@ Arrays, Maps or Strings. The iteration protocol was inspired by the Smalltalk co
             <plugin>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <configuration>
-                    <source>1.8</source>
+                    <source>17</source>
                     <doctitle>Eclipse Collections - ${project.version}</doctitle>
                     <windowtitle>Eclipse Collections - ${project.version}</windowtitle>
                     <show>public</show>
                     <detectJavaApiLink>true</detectJavaApiLink>
                     <links>
                         <link>https://junit.org/junit4/javadoc/latest</link>
-                        <link>https://docs.oracle.com/en/java/javase/11/docs/api</link>
+                        <link>https://docs.oracle.com/en/java/javase/17/docs/api</link>
                     </links>
                     <destDir>${project.version}</destDir>
                     <doclint>html,syntax,accessibility</doclint>
@@ -546,6 +561,7 @@ Arrays, Maps or Strings. The iteration protocol was inspired by the Smalltalk co
                         org.openjdk,org.eclipse.collections.impl.jmh,org.eclipse.collections.codegenerator.maven
                     </excludePackageNames>
                     <additionalOptions>-html5</additionalOptions>
+                    <legacyMode>true</legacyMode>
                 </configuration>
                 <reportSets>
                     <reportSet>
@@ -587,20 +603,6 @@ Arrays, Maps or Strings. The iteration protocol was inspired by the Smalltalk co
     <profiles>
 
         <profile>
-            <id>java-8</id>
-
-            <activation>
-                <jdk>1.8</jdk>
-            </activation>
-
-            <modules>
-                <module>scala-unit-tests</module>
-                <module>jmh-scala-tests</module>
-                <module>jmh-tests</module>
-            </modules>
-        </profile>
-
-        <profile>
             <id>all</id>
 
             <modules>
@@ -614,6 +616,8 @@ Arrays, Maps or Strings. The iteration protocol was inspired by the Smalltalk co
                 <module>serialization-tests</module>
                 <module>acceptance-tests</module>
                 <module>performance-tests</module>
+                <module>jmh-tests</module>
+                <module>jmh-scala-tests</module>
             </modules>
         </profile>
 
@@ -706,12 +710,13 @@ Arrays, Maps or Strings. The iteration protocol was inspired by the Smalltalk co
                     <value>true</value>
                 </property>
             </activation>
+
             <build>
                 <plugins>
                     <plugin>
                         <groupId>org.eclipse.cbi.maven.plugins</groupId>
                         <artifactId>eclipse-jarsigner-plugin</artifactId>
-                        <version>1.3.4</version>
+                        <version>1.5.3</version>
                         <executions>
                             <execution>
                                 <id>jarsign</id>
@@ -727,7 +732,7 @@ Arrays, Maps or Strings. The iteration protocol was inspired by the Smalltalk co
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>3.2.7</version>
+                        <version>3.2.8</version>
                         <executions>
                             <execution>
                                 <id>sign-artifacts</id>
@@ -750,14 +755,30 @@ Arrays, Maps or Strings. The iteration protocol was inspired by the Smalltalk co
 
                     <!--region Phase 17: package-->
                     <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-source-plugin</artifactId>
-                        <version>3.3.1</version>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <configuration>
+                            <source>17</source>
+                            <doctitle>Eclipse Collections - ${project.version}</doctitle>
+                            <windowtitle>Eclipse Collections - ${project.version}</windowtitle>
+                            <show>public</show>
+                            <detectJavaApiLink>true</detectJavaApiLink>
+                            <links>
+                                <link>https://junit.org/junit4/javadoc/latest</link>
+                                <link>https://docs.oracle.com/en/java/javase/17/docs/api</link>
+                            </links>
+                            <destDir>${project.version}</destDir>
+                            <doclint>html,syntax,accessibility</doclint>
+                            <excludePackageNames>
+                                org.openjdk,org.eclipse.collections.impl.jmh,org.eclipse.collections.codegenerator.maven
+                            </excludePackageNames>
+                            <legacyMode>true</legacyMode>
+                        </configuration>
                         <executions>
                             <execution>
-                                <id>create source jar</id>
+                                <id>aggregate</id>
+                                <inherited>false</inherited>
                                 <goals>
-                                    <goal>jar-no-fork</goal>
+                                    <goal>aggregate</goal>
                                 </goals>
                             </execution>
                         </executions>
@@ -802,7 +823,7 @@ Arrays, Maps or Strings. The iteration protocol was inspired by the Smalltalk co
                                     <rules>
                                         <dependencyConvergence />
                                         <requireJavaVersion>
-                                            <version>1.8.0</version>
+                                            <version>17</version>
                                         </requireJavaVersion>
                                         <requirePluginVersions>
                                             <banLatest>true</banLatest>
@@ -1068,11 +1089,13 @@ Arrays, Maps or Strings. The iteration protocol was inspired by the Smalltalk co
                     <plugin>
                         <groupId>biz.aQute.bnd</groupId>
                         <artifactId>bnd-maven-plugin</artifactId>
-                        <version>7.0.0</version>
+                        <version>7.1.0</version>
+                        <extensions>true</extensions>
                         <executions>
                             <execution>
+                                <id>jar</id>
                                 <goals>
-                                    <goal>bnd-process</goal>
+                                    <goal>jar</goal>
                                 </goals>
                             </execution>
                         </executions>
@@ -1123,22 +1146,23 @@ Arrays, Maps or Strings. The iteration protocol was inspired by the Smalltalk co
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>3.10.0</version>
+                        <version>3.11.2</version>
                         <configuration>
-                            <source>1.8</source>
+                            <source>17</source>
                             <doctitle>Eclipse Collections - ${project.version}</doctitle>
                             <windowtitle>Eclipse Collections - ${project.version}</windowtitle>
                             <show>public</show>
                             <detectJavaApiLink>true</detectJavaApiLink>
                             <links>
                                 <link>https://junit.org/junit4/javadoc/latest</link>
-                                <link>https://docs.oracle.com/en/java/javase/11/docs/api</link>
+                                <link>https://docs.oracle.com/en/java/javase/17/docs/api</link>
                             </links>
                             <destDir>${project.version}</destDir>
                             <doclint>html,syntax,accessibility</doclint>
                             <excludePackageNames>
                                 org.openjdk,org.eclipse.collections.impl.jmh,org.eclipse.collections.codegenerator.maven
                             </excludePackageNames>
+                            <legacyMode>true</legacyMode>
                         </configuration>
                         <executions>
                             <execution>
@@ -1155,6 +1179,87 @@ Arrays, Maps or Strings. The iteration protocol was inspired by the Smalltalk co
         </profile>
         <!--endregion Phase 17: package-->
 
+        <!--region Phase 7: compile-->
+        <profile>
+            <id>errorprone</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <configuration>
+                            <fork>true</fork>
+                            <compilerArgs combine.children="append">
+                                <arg>-XDcompilePolicy=simple</arg>
+                                <arg>--should-stop=ifError=FLOW</arg>
+                                <arg>
+                                    -Xplugin:ErrorProne \
+                                    -XepExcludedPaths:.*/generated-sources/.* \
+                                    -Xep:CanIgnoreReturnValueSuggester:OFF \
+                                    -Xep:InlineMeSuggester:OFF \
+                                    <!-- Thread.yield() in ConcurrentHashMap is intentional spin-wait optimization -->
+                                    -Xep:ThreadPriorityCheck:OFF \
+                                    <!-- ArrayList return types in FastList/ArrayListAdapter are intentional for performance guarantees -->
+                                    -Xep:NonApiType:OFF \
+                                    <!-- LinkedList and SortedSet/SortedMap usage are intentional API design choices -->
+                                    -Xep:JdkObsolete:OFF \
+                                    -Xep:NullableOnContainingClass:OFF \
+                                    -Xep:OperatorPrecedence:OFF \
+                                    <!-- Suppressing EqualsGetClass due to https://github.com/google/error-prone/issues/1144 -->
+                                    -Xep:EqualsGetClass:OFF \
+                                    <!-- Suppressing checks that have false positives in this codebase -->
+                                    -Xep:EqualsWrongThing:OFF \
+                                    -Xep:ComparisonOutOfRange:OFF \
+                                    <!-- Intentional test patterns in this codebase -->
+                                    -Xep:BoxedPrimitiveConstructor:OFF \
+                                    -Xep:SelfAssertion:OFF \
+                                    -Xep:SelfEquals:OFF \
+                                    -Xep:SelfComparison:OFF \
+                                    -Xep:IdentityBinaryExpression:OFF \
+                                    -Xep:IsInstanceIncompatibleType:OFF \
+                                    -Xep:CollectionIncompatibleType:OFF \
+                                    -Xep:ReturnValueIgnored:OFF \
+                                    -Xep:UnnecessaryTypeArgument:OFF \
+                                    <!-- IntegerWithCast.java intentionally uses unsafe cast for testing -->
+                                    -Xep:EqualsUnsafeCast:OFF \
+                                    <!-- Javadoc summaries not required -->
+                                    -Xep:MissingSummary:OFF \
+                                    -Xep:UnusedVariable:WARN \
+                                    <!-- Promoted to ERROR -->
+                                    -Xep:BadImport:ERROR \
+                                    -Xep:ClassCanBeStatic:ERROR \
+                                    -Xep:InvalidInlineTag:ERROR \
+                                    -Xep:JavaDurationGetSecondsToToSeconds:ERROR \
+                                    -Xep:MissingOverride:ERROR \
+                                    -Xep:ObjectToString:ERROR \
+                                    -Xep:StringCaseLocaleUsage:ERROR \
+                                    -Xep:TypeParameterShadowing:ERROR
+                                </arg>
+                                <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED</arg>
+                                <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED</arg>
+                                <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED</arg>
+                                <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.model=ALL-UNNAMED</arg>
+                                <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED</arg>
+                                <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED</arg>
+                                <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED</arg>
+                                <arg>-J--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED</arg>
+                                <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED</arg>
+                                <arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED</arg>
+                            </compilerArgs>
+                            <annotationProcessorPaths combine.self="override">
+                                <path>
+                                    <groupId>com.google.errorprone</groupId>
+                                    <artifactId>error_prone_core</artifactId>
+                                    <version>2.36.0</version>
+                                </path>
+                            </annotationProcessorPaths>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!--endregion Phase 7: compile-->
         <!--region Phase 21: verify-->
         <profile>
             <id>maven-dependency-plugin</id>
@@ -1164,7 +1269,7 @@ Arrays, Maps or Strings. The iteration protocol was inspired by the Smalltalk co
                     <plugins>
                         <plugin>
                             <artifactId>maven-dependency-plugin</artifactId>
-                            <version>3.1.2</version>
+                            <version>3.8.1</version>
                             <configuration>
                                 <failOnWarning>true</failOnWarning>
                                 <ignoredUnusedDeclaredDependencies>

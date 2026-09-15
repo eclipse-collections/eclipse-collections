@@ -88,6 +88,7 @@ public class SynchronizedMutableSet2Test extends AbstractMutableSetTestCase
     }
 
     @Override
+    @Test
     public void selectInstancesOf()
     {
         MutableSet<Number> numbers = new SynchronizedMutableSet<Number>(SetAdapter.adapt(new TreeSet<>((o1, o2) -> Double.compare(o1.doubleValue(), o2.doubleValue())))).withAll(FastList.newListWith(1, 2.0, 3, 4.0, 5));

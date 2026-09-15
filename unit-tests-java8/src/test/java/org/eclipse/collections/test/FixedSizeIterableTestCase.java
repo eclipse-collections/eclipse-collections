@@ -19,6 +19,18 @@ import static org.eclipse.collections.impl.test.Verify.assertThrows;
 public interface FixedSizeIterableTestCase extends IterableTestCase
 {
     @Override
+    default boolean allowsAdd()
+    {
+        return false;
+    }
+
+    @Override
+    default boolean allowsRemove()
+    {
+        return false;
+    }
+
+    @Override
     @Test
     default void Iterable_remove()
     {

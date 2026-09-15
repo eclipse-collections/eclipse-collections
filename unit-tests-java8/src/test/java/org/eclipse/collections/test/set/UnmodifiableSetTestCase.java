@@ -19,13 +19,6 @@ public interface UnmodifiableSetTestCase extends FixedSizeCollectionTestCase, Se
     @Test
     default void Iterable_remove()
     {
-        FixedSizeCollectionTestCase.super.Iterable_remove();
-    }
-
-    @Override
-    @Test
-    default void Collection_add()
-    {
-        FixedSizeCollectionTestCase.super.Collection_add();
+        SetTestCase.super.Iterable_remove();
     }
 }

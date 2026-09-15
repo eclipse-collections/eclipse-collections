@@ -1,7 +1,6 @@
 <component name="InspectionProjectProfileManager">
   <profile version="1.0" is_locked="false">
     <option name="myName" value="IDE" />
-    <option name="myName" value="IDE" />
     <inspection_tool class="AbstractBeanReferencesInspection" enabled="false" level="INSPECTION" enabled_by_default="false" />
     <inspection_tool class="AbstractClassExtendsConcreteClass" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="AbstractClassNeverImplemented" enabled="true" level="WARNING" enabled_by_default="true" />
@@ -705,63 +704,1120 @@
     <inspection_tool class="RuntimeExec" enabled="true" level="INSPECTION" enabled_by_default="true" />
     <inspection_tool class="RuntimeExecWithNonConstantString" enabled="true" level="INSPECTION" enabled_by_default="true" />
     <inspection_tool class="SSBasedInspection" enabled="true" level="WARNING" enabled_by_default="true">
-      <replaceConfiguration name="FastList.newList(int) to Lists.mutable.withInitialCapacity(int)" text="org.eclipse.collections.impl.list.mutable.FastList.newList($initialCapacity$)" recursive="false" caseInsensitive="true" type="JAVA" pattern_context="default" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.Lists.mutable.withInitialCapacity($initialCapacity$)">
-        <constraint name="__context__" within="" contains="" />
-        <constraint name="initialCapacity" nameOfExprType="int" within="" contains="" />
+      <replaceConfiguration name="!isEmpty() to notEmpty()" text="!$richIterable$.isEmpty()" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="$richIterable$.notEmpty()">
+        <constraint name="richIterable" script="&quot;&quot;" nameOfExprType="RichIterable" exprTypeWithinHierarchy="true" within="" contains="" />
       </replaceConfiguration>
-      <replaceConfiguration name="FastList.newList(iterable) to Lists.mutable.withAll(iterable)" uuid="0ffd225d-d287-38d3-952f-7997fa333d6b" text="org.eclipse.collections.impl.list.mutable.FastList.newList($iterable$)" recursive="false" caseInsensitive="true" type="JAVA" pattern_context="default" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.Lists.mutable.withAll($iterable$)">
-        <constraint name="__context__" within="" contains="" />
+      <replaceConfiguration name="!Iterate.isEmpty() to notEmpty()" text="!Iterate.isEmpty($iterable$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.utility.Iterate.notEmpty($iterable$)">
         <constraint name="iterable" nameOfExprType="Iterable" exprTypeWithinHierarchy="true" within="" contains="" />
       </replaceConfiguration>
-      <replaceConfiguration name="HashBag.newBag(iterable) to Bags.mutable.withAll(iterable)" uuid="e963b320-db3f-3373-a44b-65914d7b65d4" text="org.eclipse.collections.impl.bag.mutable.HashBag.newBag($iterable$)" recursive="false" caseInsensitive="false" type="JAVA" pattern_context="default" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.Bags.mutable.withAll($iterable$)">
-        <constraint name="__context__" within="" contains="" />
+      <replaceConfiguration name="!Map.isEmpty() to notEmpty()" text="!MapIterate.isEmpty($map$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.utility.MapIterate.notEmpty($map$)">
+        <constraint name="map" nameOfExprType="Map" exprTypeWithinHierarchy="true" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="!notEmpty() to isEmpty()" text="!$richIterable$.notEmpty()" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="$richIterable$.isEmpty()">
+        <constraint name="richIterable" script="&quot;&quot;" nameOfExprType="RichIterable" exprTypeWithinHierarchy="true" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="ArrayIterate.asList() to Lists.mutable.with()" text="ArrayIterate.asList(new Object[]{$expr$})" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.Lists.mutable.with($expr$)">
+        <constraint name="expr" minCount="0" maxCount="2147483647" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="ArrayIterate.notEmpty()" text="$array$ != null &amp;&amp; $array$.length &gt; 0" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.utility.ArrayIterate.notEmpty($array$)">
+        <constraint name="array" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="assertContains" text="Assert.assertTrue($string$, $collection$.contains($obj$))" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.test.Verify.assertContains($string$, $obj$, $collection$)">
+        <constraint name="string" nameOfExprType="String" minCount="0" within="" contains="" />
+        <constraint name="collection" within="" contains="" />
+        <constraint name="obj" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="assertContainsAll 1" text="Assert.assertContains($string$, $expr1$, $coll$);&#10;assertContains($string$, $expr2$, $coll$);" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.test.Verify.assertContainsAll($string$, $coll$, $expr1$, $expr2$);">
+        <constraint name="string" nameOfExprType="String" minCount="0" within="" contains="" />
+        <constraint name="expr1" within="" contains="" />
+        <constraint name="coll" nameOfExprType="Collection" exprTypeWithinHierarchy="true" within="" contains="" />
+        <constraint name="expr2" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="assertContainsAll 2" text="Assert.assertContainsAll($string$, $coll$, $expr$);&#10;assertContains($string$, $expr2$, $coll$);" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.test.Verify.assertContainsAll($string$, $coll$, $expr$, $expr2$);">
+        <constraint name="string" nameOfExprType="String" minCount="0" within="" contains="" />
+        <constraint name="coll" nameOfExprType="Collection" exprTypeWithinHierarchy="true" within="" contains="" />
+        <constraint name="expr" maxCount="2147483647" within="" contains="" />
+        <constraint name="expr2" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="assertEmpty 1" text="Assert.assertEquals($string$, new ArrayList(), $collection$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.test.Verify.assertEmpty($string$, $collection$)">
+        <constraint name="string" nameOfExprType="String" minCount="0" within="" contains="" />
+        <constraint name="collection" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="assertEmpty 2" text="Assert.assertEquals($string$, $collection$, new ArrayList())" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.test.Verify.assertEmpty($string$, $collection$)">
+        <constraint name="string" nameOfExprType="String" minCount="0" within="" contains="" />
+        <constraint name="collection" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="assertEmpty 3" text="Assert.assertEquals($string$, Lists.mutable.empty(), $collection$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.test.Verify.assertEmpty($string$, $collection$)">
+        <constraint name="string" nameOfExprType="String" minCount="0" within="" contains="" />
+        <constraint name="collection" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="assertEmpty 4" text="Assert.assertEquals($string$, $collection$, Lists.mutable.empty())" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.test.Verify.assertEmpty($string$, $collection$)">
+        <constraint name="string" nameOfExprType="String" minCount="0" within="" contains="" />
+        <constraint name="collection" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="assertEmpty 5" text="Assert.assertEquals($string$, Sets.mutable.empty(), $collection$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.test.Verify.assertEmpty($string$, $collection$)">
+        <constraint name="string" nameOfExprType="String" minCount="0" within="" contains="" />
+        <constraint name="collection" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="assertEmpty 6" text="Assert.assertEquals($string$, $collection$, Sets.mutable.empty())" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.test.Verify.assertEmpty($string$, $collection$)">
+        <constraint name="string" nameOfExprType="String" minCount="0" within="" contains="" />
+        <constraint name="collection" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="assertEmpty 7" text="Assert.assertEquals($string$, Maps.mutable.empty(), $collection$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.test.Verify.assertEmpty($string$, $collection$)">
+        <constraint name="string" nameOfExprType="String" minCount="0" within="" contains="" />
+        <constraint name="collection" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="assertEmpty 8" text="Assert.assertEquals($string$, $collection$, Maps.mutable.empty())" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.test.Verify.assertEmpty($string$, $collection$)">
+        <constraint name="string" nameOfExprType="String" minCount="0" within="" contains="" />
+        <constraint name="collection" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="assertEmpty 9" text="Assert.assertTrue($string$, $collection$.isEmpty())" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.test.Verify.assertEmpty($string$, $collection$)">
+        <constraint name="string" nameOfExprType="String" minCount="0" within="" contains="" />
+        <constraint name="collection" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="assertEmpty 10" text="Verify.assertSize($string$, 0, $collection$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.test.Verify.assertEmpty($string$, $collection$)">
+        <constraint name="string" nameOfExprType="String" minCount="0" within="" contains="" />
+        <constraint name="collection" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="assertInstanceOf" text="Assert.assertTrue($string$, $expr$ instanceof $class$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.test.Verify.assertInstanceOf($string$, $expr$, $class$.class)">
+        <constraint name="string" nameOfExprType="String" minCount="0" within="" contains="" />
+        <constraint name="expr" within="" contains="" />
+        <constraint name="class" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="assertInstanceOf 2" text="Assert.assertTrue($string$, $class$.class.isInstance($expr$))" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.test.Verify.assertInstanceOf($string$, $expr$, $class$.class)">
+        <constraint name="string" nameOfExprType="String" minCount="0" within="" contains="" />
+        <constraint name="expr" within="" contains="" />
+        <constraint name="class" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="assertItemAtIndex 1" text="Assert.assertEquals($string$, $item$, $list$.get($index$))" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.test.Verify.assertItemAtIndex($string$, $item$, $index$, $list$)">
+        <constraint name="string" nameOfExprType="String" minCount="0" within="" contains="" />
+        <constraint name="item" within="" contains="" />
+        <constraint name="list" nameOfExprType="List" exprTypeWithinHierarchy="true" within="" contains="" />
+        <constraint name="index" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="assertItemAtIndex 2" text="Assert.assertEquals($string$, $list$.get($index$), $item$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.test.Verify.assertItemAtIndex($string$, $item$, $index$, $list$)">
+        <constraint name="string" nameOfExprType="String" minCount="0" within="" contains="" />
+        <constraint name="list" nameOfExprType="List" exprTypeWithinHierarchy="true" within="" contains="" />
+        <constraint name="index" within="" contains="" />
+        <constraint name="item" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="assertItemAtIndex 3" text="Assert.assertEquals($string$, $item$, $array$[$index$])" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.test.Verify.assertItemAtIndex($string$, $item$, $index$, $array$)">
+        <constraint name="string" nameOfExprType="String" minCount="0" within="" contains="" />
+        <constraint name="item" within="" contains="" />
+        <constraint name="array" nameOfExprType="Object\[\]" within="" contains="" />
+        <constraint name="index" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="assertItemAtIndex 4" text="Assert.assertEquals($string$, $array$[$index$], $item$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.test.Verify.assertItemAtIndex($string$, $item$, $index$, $array$)">
+        <constraint name="string" nameOfExprType="String" minCount="0" within="" contains="" />
+        <constraint name="array" nameOfExprType="Object\[\]" within="" contains="" />
+        <constraint name="index" within="" contains="" />
+        <constraint name="item" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="assertNotContains" text="Assert.assertFalse($string$, $collection$.contains($obj$))" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.test.Verify.assertNotContains($string$, $obj$, $collection$)">
+        <constraint name="string" nameOfExprType="String" minCount="0" within="" contains="" />
+        <constraint name="collection" within="" contains="" />
+        <constraint name="obj" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="assertNotEquals" text="Assert.assertFalse($string$, $left$.equals($right$))" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.test.Verify.assertNotEquals($string$, $left$, $right$)">
+        <constraint name="string" nameOfExprType="String" minCount="0" within="" contains="" />
+        <constraint name="left" within="" contains="" />
+        <constraint name="right" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="assertNotEquals 2" text="Assert.assertTrue($string$, $left$ != $right$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.test.Verify.assertNotEquals($string$, $left$, $right$)">
+        <constraint name="string" nameOfExprType="String" minCount="0" within="" contains="" />
+        <constraint name="left" within="" contains="" />
+        <constraint name="right" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="assertTrue to assertFalse" text="Assert.assertTrue($string$, !$expr$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="junit.framework.Assert.assertFalse($string$, $expr$)">
+        <constraint name="string" nameOfExprType="String" minCount="0" within="" contains="" />
+        <constraint name="expr" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="CollectionAddBlock.on()" text="new CollectionAddBlock&lt;$type$&gt;($coll$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="CollectionAddBlock.on($coll$)">
+        <constraint name="type" within="" contains="" />
+        <constraint name="coll" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="CollectionRemoveBlock.on()" text="new CollectionRemoveBlock&lt;$type$&gt;($coll$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="CollectionRemoveBlock.on($coll$)">
+        <constraint name="type" within="" contains="" />
+        <constraint name="coll" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="Collections.emptyList() to Lists.fixedSize.empty()" text="Collections.emptyList()" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.Lists.fixedSize.empty()" />
+      <replaceConfiguration name="Collections.emptyMap() to Maps.fixedSize.empty()" text="Collections.emptyMap()" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.Maps.fixedSize.empty()" />
+      <replaceConfiguration name="Collections.emptySet() to Sets.fixedSize.empty()" text="Collections.emptySet()" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.Sets.fixedSize.empty()" />
+      <replaceConfiguration name="Collections.singleton() to Sets.fixedSize.of()" text="Collections.singleton($expr$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.Sets.fixedSize.of($expr$)">
+        <constraint name="expr" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="Collections.singletonList() to Lists.fixedSize.of()" text="Collections.singletonList($expr$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.Lists.fixedSize.of($expr$)">
+        <constraint name="expr" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="Collections.singletonMap() to Maps.fixedSize.of()" text="Collections.singletonMap($key$, $value$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.Maps.fixedSize.of($key$, $value$)">
+        <constraint name="key" within="" contains="" />
+        <constraint name="value" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="equals and hashCode 1" text="Assert.assertEquals($string$, $left$.hashCode(), $right$.hashCode())" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.test.Verify.assertEqualsAndHashCode($string$, $left$, $right$)">
+        <constraint name="string" nameOfExprType="String" minCount="0" within="" contains="" />
+        <constraint name="left" within="" contains="" />
+        <constraint name="right" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="equals and hashCode 2" text="Assert.assertTrue($string$, $left$.hashCode() == $right$.hashCode())" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.test.Verify.assertEqualsAndHashCode($string$, $left$, $right$)">
+        <constraint name="string" nameOfExprType="String" minCount="0" within="" contains="" />
+        <constraint name="left" within="" contains="" />
+        <constraint name="right" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="Iterate.getFirst() 1" text="$collection$.iterator().next()" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.utility.Iterate.getFirst($collection$)">
+        <constraint name="collection" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="Iterate.getFirst() 2" text="$collection$.listIterator().next()" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.utility.Iterate.getFirst($collection$)">
+        <constraint name="collection" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="Iterate.isEmpty()" text="$collection$ == null || $collection$.isEmpty()" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.utility.Iterate.isEmpty($collection$)">
+        <constraint name="collection" nameOfExprType="Collection" exprTypeWithinHierarchy="true" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="Iterate.notEmpty()" text="$collection$ != null &amp;&amp; !$collection$.isEmpty()" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.utility.Iterate.notEmpty($collection$)">
+        <constraint name="collection" nameOfExprType="Collection" exprTypeWithinHierarchy="true" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="Iterate to ArrayIterate" text="Iterate.$method$(Arrays.asList($array$), $expr$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.utility.ArrayIterate.$method$($array$, $expr$)">
+        <constraint name="array" within="" contains="" />
+        <constraint name="expr" minCount="0" maxCount="2147483647" within="" contains="" />
+        <constraint name="method" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="List to MutableList" text="java.util.List&lt;$type$&gt; $list$ = $mutableList$;" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.list.MutableList&lt;$type$&gt; $list$ = $mutableList$;">
+        <constraint name="type" within="" contains="" />
+        <constraint name="list" within="" contains="" />
+        <constraint name="mutableList" nameOfExprType="MutableList" exprTypeWithinHierarchy="true" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="List to MutableList 2" text="java.util.List $list$ = $mutableList$;" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.list.MutableList $list$ = $mutableList$;">
+        <constraint name="list" within="" contains="" />
+        <constraint name="mutableList" nameOfExprType="MutableList" exprTypeWithinHierarchy="true" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="Map to MutableMap" text="java.util.Map&lt;$key$, $value$&gt; $map$ = $mutableMap$;" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.map.MutableMap&lt;$key$, $value$&gt; $map$ = $mutableMap$;">
+        <constraint name="key" within="" contains="" />
+        <constraint name="value" within="" contains="" />
+        <constraint name="map" within="" contains="" />
+        <constraint name="mutableMap" nameOfExprType="MutableMap" exprTypeWithinHierarchy="true" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="Map to MutableMap 2" text="java.util.Map $map$ = $mutableMap$;" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.map.MutableMap $map$ = $mutableMap$;">
+        <constraint name="map" within="" contains="" />
+        <constraint name="mutableMap" nameOfExprType="MutableMap" exprTypeWithinHierarchy="true" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="new ArrayList() to Lists.mutable.empty()" text="new ArrayList()" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.Lists.mutable.empty()">
+      </replaceConfiguration>
+      <replaceConfiguration name="new ArrayList() to Lists.mutable.empty() (generified)" text="new ArrayList&lt;$type$&gt;()" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.Lists.&lt;$type$&gt;mutable.empty()">
+        <constraint name="type" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="new ArrayList(Collection) to Lists.mutable.withAll()" text="new ArrayList($collection$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.Lists.mutable.withAll($collection$)">
+        <constraint name="collection" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="new ArrayList(Collection) to Lists.mutable.withAll() (generified)" text="new ArrayList&lt;$type$&gt;($collection$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.Lists.&lt;$type$&gt;mutable.withAll($collection$)">
+        <constraint name="type" within="" contains="" />
+        <constraint name="collection" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="new FastList() to Lists.mutable.empty()" text="new FastList($expr$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.Lists.mutable.empty()">
+        <constraint name="expr" minCount="0" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="new FastList() to Lists.mutable.empty() (generified)" text="new FastList&lt;$type$&gt;($expr$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.Lists.&lt;$type$&gt;mutable.empty()">
+        <constraint name="type" within="" contains="" />
+        <constraint name="expr" minCount="0" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="new FastList 3" text="new FastList&lt;$type$&gt;($expr$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.Lists.&lt;$type$&gt;mutable.empty()">
+        <constraint name="type" within="" contains="" />
+        <constraint name="expr" minCount="0" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="new FastList 4" text="new FastList($expr$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.Lists.mutable.empty()">
+        <constraint name="expr" minCount="0" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="new HashMap() to Maps.mutable.empty()" text="new HashMap()" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.Maps.mutable.empty()">
+      </replaceConfiguration>
+      <replaceConfiguration name="new HashMap() to Maps.mutable.empty() (generified)" text="new HashMap&lt;$key$, $value$&gt;()" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.Maps.&lt;$key$, $value$&gt;mutable.empty()">
+        <constraint name="key" within="" contains="" />
+        <constraint name="value" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="new HashMap(Map) to Maps.mutable.withMapIterable()" text="new HashMap($map$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.Maps.mutable.withMapIterable($map$)">
+        <constraint name="map" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="new HashMap(Map) to Maps.mutable.withMapIterable() (generified)" text="new HashMap&lt;$key$, $value$&gt;($map$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.Maps.&lt;$key$, $value$&gt;mutable.withMapIterable($map$)">
+        <constraint name="key" within="" contains="" />
+        <constraint name="value" within="" contains="" />
+        <constraint name="map" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="new HashSet() to Sets.mutable.empty()" text="new HashSet()" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.Sets.mutable.empty()">
+      </replaceConfiguration>
+      <replaceConfiguration name="new HashSet() to Sets.mutable.empty() (generified)" text="new HashSet&lt;$type$&gt;()" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.Sets.&lt;$type$&gt;mutable.empty()">
+        <constraint name="type" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="new HashSet(Collection) to Sets.mutable.withAll()" text="new HashSet($collection$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.Sets.mutable.withAll($collection$)">
+        <constraint name="collection" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="new HashSet(Collection) to Sets.mutable.withAll() (generified)" text="new HashSet&lt;$type$&gt;($collection$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.Sets.&lt;$type$&gt;mutable.withAll($collection$)">
+        <constraint name="type" within="" contains="" />
+        <constraint name="collection" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="new TreeMap() to SortedMaps.mutable.empty()" text="new TreeMap($expr$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.SortedMaps.mutable.empty()">
+        <constraint name="expr" minCount="0" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="new TreeMap() to SortedMaps.mutable.empty() (generified)" text="new TreeMap&lt;$key$, $value$&gt;($expr$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.SortedMaps.&lt;$key$, $value$&gt;mutable.empty()">
+        <constraint name="key" within="" contains="" />
+        <constraint name="value" within="" contains="" />
+        <constraint name="expr" minCount="0" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="new TreeSet() to SortedSets.mutable.empty()" text="new TreeSet()" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.SortedSets.mutable.empty()">
+      </replaceConfiguration>
+      <replaceConfiguration name="new TreeSet() to SortedSets.mutable.empty() (generified)" text="new TreeSet&lt;$type$&gt;()" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.SortedSets.&lt;$type$&gt;mutable.empty()">
+        <constraint name="type" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="new TreeSet(Collection) to SortedSets.mutable.withAll()" text="new TreeSet($collection$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.SortedSets.mutable.withAll($collection$)">
+        <constraint name="collection" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="new TreeSet(Collection) to SortedSets.mutable.withAll() (generified)" text="new TreeSet&lt;$type$&gt;($collection$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.SortedSets.&lt;$type$&gt;mutable.withAll($collection$)">
+        <constraint name="type" within="" contains="" />
+        <constraint name="collection" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="new UnifiedMap() to Maps.mutable.empty()" text="new UnifiedMap()" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.Maps.mutable.empty()">
+      </replaceConfiguration>
+      <replaceConfiguration name="new UnifiedMap() to Maps.mutable.empty() (generified)" text="new UnifiedMap&lt;$key$, $value$&gt;()" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.Maps.&lt;$key$, $value$&gt;mutable.empty()">
+        <constraint name="key" within="" contains="" />
+        <constraint name="value" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="new UnifiedMap(Map) to Maps.mutable.withMapIterable()" text="new UnifiedMap($map$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.Maps.mutable.withMapIterable($map$)">
+        <constraint name="map" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="new UnifiedMap(Map) to Maps.mutable.withMapIterable() (generified)" text="new UnifiedMap&lt;$key$, $value$&gt;($map$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.Maps.&lt;$key$, $value$&gt;mutable.withMapIterable($map$)">
+        <constraint name="key" within="" contains="" />
+        <constraint name="value" within="" contains="" />
+        <constraint name="map" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="new UnifiedMap 3" text="new UnifiedMap&lt;$key$, $value$&gt;($expr$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.Maps.&lt;$key$, $value$&gt;mutable.empty()">
+        <constraint name="key" within="" contains="" />
+        <constraint name="value" within="" contains="" />
+        <constraint name="expr" minCount="0" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="new UnifiedMap 4" text="new UnifiedMap($expr$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.Maps.mutable.empty()">
+        <constraint name="expr" minCount="0" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="new UnifiedSet() to Sets.mutable.empty()" text="new UnifiedSet()" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.Sets.mutable.empty()">
+      </replaceConfiguration>
+      <replaceConfiguration name="new UnifiedSet() to Sets.mutable.empty() (generified)" text="new UnifiedSet&lt;$type$&gt;()" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.Sets.&lt;$type$&gt;mutable.empty()">
+        <constraint name="type" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="new UnifiedSet(Collection) to Sets.mutable.withAll()" text="new UnifiedSet($collection$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.Sets.mutable.withAll($collection$)">
+        <constraint name="collection" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="new UnifiedSet(Collection) to Sets.mutable.withAll() (generified)" text="new UnifiedSet&lt;$type$&gt;($collection$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.Sets.&lt;$type$&gt;mutable.withAll($collection$)">
+        <constraint name="type" within="" contains="" />
+        <constraint name="collection" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="new UnifiedSet 3" text="new UnifiedSet&lt;$type$&gt;($expr$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.Sets.&lt;$type$&gt;mutable.empty()">
+        <constraint name="type" within="" contains="" />
+        <constraint name="expr" minCount="0" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="new UnifiedSet 4" text="new UnifiedSet($expr$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.Sets.mutable.empty()">
+        <constraint name="expr" minCount="0" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="newBagWith 1" text="$Coll$&lt;$type$&gt; $coll$ = HashBag.&lt;$type$&gt;newBag();&#10;$coll$.add($expr$);&#10;" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="$Coll$&lt;$type$&gt; $coll$ = org.eclipse.collections.api.factory.Bags.&lt;$type$&gt;mutable.with($expr$);">
+        <constraint name="Coll" script="&quot;&quot;" regexp="Collection" withinHierarchy="true" within="" contains="" />
+        <constraint name="type" within="" contains="" />
+        <constraint name="coll" script="&quot;&quot;" within="" contains="" />
+        <constraint name="expr" script="&quot;&quot;" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="newBagWith 2" text="$Coll$&lt;$type$&gt; $coll$ = HashBag.&lt;$type$&gt;newBagWith($expr1$);&#10;$coll$.add($expr2$); &#10;" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="$Coll$&lt;$type$&gt; $coll$ = org.eclipse.collections.api.factory.Bags.&lt;$type$&gt;mutable.with($expr1$, $expr2$);">
+        <constraint name="Coll" script="&quot;&quot;" regexp="Collection" withinHierarchy="true" within="" contains="" />
+        <constraint name="type" script="&quot;&quot;" within="" contains="" />
+        <constraint name="coll" script="&quot;&quot;" within="" contains="" />
+        <constraint name="expr1" script="&quot;&quot;" maxCount="2147483647" within="" contains="" />
+        <constraint name="expr2" script="&quot;&quot;" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="newBagWith 3" text="$Coll$ $coll$ = HashBag.newBag();&#10;$coll$.add($expr$);" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="$Coll$ $coll$ = org.eclipse.collections.api.factory.Bags.mutable.with($expr$);">
+        <constraint name="Coll" script="&quot;&quot;" regexp="Collection" withinHierarchy="true" within="" contains="" />
+        <constraint name="coll" script="&quot;&quot;" within="" contains="" />
+        <constraint name="expr" script="&quot;&quot;" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="newBagWith 4" text="$Coll$ $coll$ = HashBag.newBagWith($expr1$);&#10;$coll$.add($expr2$);" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="$Coll$ $coll$ = org.eclipse.collections.api.factory.Bags.mutable.with($expr1$, $expr2$);">
+        <constraint name="Coll" regexp="Collection" withinHierarchy="true" within="" contains="" />
+        <constraint name="coll" within="" contains="" />
+        <constraint name="expr1" maxCount="2147483647" within="" contains="" />
+        <constraint name="expr2" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="newBagWith 6" text="HashBag.newBag(Arrays.asList($expr$))" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.Bags.mutable.with($expr$)">
+        <constraint name="expr" minCount="0" maxCount="2147483647" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="newBagWith 7" text="$coll$ = HashBag.newBag();&#10;$coll$.add($expr$);" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="$coll$ = org.eclipse.collections.api.factory.Bags.mutable.with($expr$);">
+        <constraint name="coll" within="" contains="" />
+        <constraint name="expr" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="newBagWith 8" text="$coll$ = HashBag.&lt;$type$&gt;newBagWith($expr1$);&#10;$coll$.add($expr2$);&#10;" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="$coll$ = org.eclipse.collections.api.factory.Bags.&lt;$type$&gt;mutable.with($expr1$, $expr2$);">
+        <constraint name="coll" script="&quot;&quot;" within="" contains="" />
+        <constraint name="type" script="&quot;&quot;" within="" contains="" />
+        <constraint name="expr1" script="&quot;&quot;" within="" contains="" />
+        <constraint name="expr2" script="&quot;&quot;" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="newBagWith 9" text="$coll$ = HashBag.newBagWith($expr1$);&#10;$coll$.add($expr2$);" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="$coll$ = org.eclipse.collections.api.factory.Bags.mutable.with($expr1$, $expr2$);">
+        <constraint name="coll" within="" contains="" />
+        <constraint name="expr1" script="&quot;&quot;" within="" contains="" />
+        <constraint name="expr2" script="&quot;&quot;" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="newListWith 1" text="$Coll$&lt;$type$&gt; $coll$ = FastList.&lt;$type$&gt;newList();&#10;$coll$.add($expr$);&#10;" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="$Coll$&lt;$type$&gt; $coll$ = org.eclipse.collections.api.factory.Lists.&lt;$type$&gt;mutable.with($expr$);">
+        <constraint name="Coll" regexp="Collection" withinHierarchy="true" within="" contains="" />
+        <constraint name="type" within="" contains="" />
+        <constraint name="coll" within="" contains="" />
+        <constraint name="expr" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="newListWith 2" text="$Coll$&lt;$type$&gt; $coll$ = FastList.&lt;$type$&gt;newListWith($expr1$);&#10;$coll$.add($expr2$); &#10;" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="$Coll$&lt;$type$&gt; $coll$ = org.eclipse.collections.api.factory.Lists.&lt;$type$&gt;mutable.with($expr1$, $expr2$);">
+        <constraint name="Coll" regexp="Collection" withinHierarchy="true" within="" contains="" />
+        <constraint name="type" within="" contains="" />
+        <constraint name="coll" within="" contains="" />
+        <constraint name="expr1" maxCount="2147483647" within="" contains="" />
+        <constraint name="expr2" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="newListWith 3" text="$Coll$ $coll$ = FastList.newList();&#10;$coll$.add($expr$);" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="$Coll$ $coll$ = org.eclipse.collections.api.factory.Lists.mutable.with($expr$);">
+        <constraint name="Coll" regexp="Collection" withinHierarchy="true" within="" contains="" />
+        <constraint name="coll" within="" contains="" />
+        <constraint name="expr" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="newListWith 4" text="$Coll$ $coll$ = FastList.newListWith($expr1$);&#10;$coll$.add($expr2$);" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="$Coll$ $coll$ = org.eclipse.collections.api.factory.Lists.mutable.with($expr1$, $expr2$);">
+        <constraint name="Coll" regexp="Collection" withinHierarchy="true" within="" contains="" />
+        <constraint name="coll" within="" contains="" />
+        <constraint name="expr1" maxCount="2147483647" within="" contains="" />
+        <constraint name="expr2" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="newListWith 6" text="FastList.newList(Arrays.asList($expr$))" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.Lists.mutable.with($expr$)">
+        <constraint name="expr" minCount="0" maxCount="2147483647" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="newListWith 7" text="$coll$ = FastList.newList();&#10;$coll$.add($expr$);" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="$coll$ = org.eclipse.collections.api.factory.Lists.mutable.with($expr$);">
+        <constraint name="coll" within="" contains="" />
+        <constraint name="expr" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="newListWith 8" text="$coll$ = FastList.&lt;$type$&gt;newListWith($expr1$);&#10;$coll$.add($expr2$);&#10;" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="$coll$ = org.eclipse.collections.api.factory.Lists.&lt;$type$&gt;mutable.with($expr1$, $expr2$);">
+        <constraint name="coll" within="" contains="" />
+        <constraint name="type" within="" contains="" />
+        <constraint name="expr1" within="" contains="" />
+        <constraint name="expr2" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="newListWith 9" text="$coll$ = FastList.newListWith($expr1$);&#10;$coll$.add($expr2$);" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="true" shortenFQN="true" replacement="$coll$ = org.eclipse.collections.api.factory.Lists.mutable.with($expr1$, $expr2$);">
+        <constraint name="coll" within="" contains="" />
+        <constraint name="expr1" within="" contains="" />
+        <constraint name="expr2" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="newSetWith 1" text="$Coll$&lt;$type$&gt; $coll$ = UnifiedSet.&lt;$type$&gt;newSet();&#10;$coll$.add($expr$);" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="$Coll$&lt;$type$&gt; $coll$ = org.eclipse.collections.api.factory.Sets.&lt;$type$&gt;mutable.with($expr$);">
+        <constraint name="Coll" regexp="Collection" withinHierarchy="true" within="" contains="" />
+        <constraint name="type" within="" contains="" />
+        <constraint name="coll" within="" contains="" />
+        <constraint name="expr" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="newSetWith 2" text="$Coll$&lt;$type$&gt; $coll$ = UnifiedSet.&lt;$type$&gt;newSetWith($expr1$);&#10;$coll$.add($expr2$);" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="$Coll$&lt;$type$&gt; $coll$ = org.eclipse.collections.api.factory.Sets.&lt;$type$&gt;mutable.with($expr1$, $expr2$);">
+        <constraint name="Coll" regexp="Collection" withinHierarchy="true" within="" contains="" />
+        <constraint name="type" within="" contains="" />
+        <constraint name="coll" within="" contains="" />
+        <constraint name="expr1" within="" contains="" />
+        <constraint name="expr2" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="newSetWith 3" text="$Coll$ $coll$ = UnifiedSet.newSet();&#10;$coll$.add($expr$);" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="$Coll$ $coll$ = org.eclipse.collections.api.factory.Sets.mutable.with($expr$);">
+        <constraint name="Coll" regexp="Collection" withinHierarchy="true" within="" contains="" />
+        <constraint name="coll" within="" contains="" />
+        <constraint name="expr" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="newSetWith 4" text="$Coll$ $coll$ = UnifiedSet.newSetWith($expr1$);&#10;$coll$.add($expr2$);" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="$Coll$ $coll$ = org.eclipse.collections.api.factory.Sets.mutable.with($expr1$, $expr2$);">
+        <constraint name="Coll" regexp="Collection" withinHierarchy="true" within="" contains="" />
+        <constraint name="coll" within="" contains="" />
+        <constraint name="expr1" within="" contains="" />
+        <constraint name="expr2" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="newSetWith 6" text="UnifiedSet.newSet(Arrays.asList($expr$))" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.Sets.mutable.with($expr$)">
+        <constraint name="expr" minCount="0" maxCount="2147483647" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="newSetWith 7" text="$coll$ = UnifiedSet.newSet();&#10;$coll$.add($expr$);" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="$coll$ = org.eclipse.collections.api.factory.Sets.mutable.with($expr$);">
+        <constraint name="coll" within="" contains="" />
+        <constraint name="expr" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="newSetWith 8" text="$coll$ = UnifiedSet.&lt;$type$&gt;newSetWith($expr1$);&#10;$coll$.add($expr2$);" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="$coll$ = org.eclipse.collections.api.factory.Sets.&lt;$type$&gt;mutable.with($expr1$, $expr2$);">
+        <constraint name="coll" within="" contains="" />
+        <constraint name="type" within="" contains="" />
+        <constraint name="expr1" within="" contains="" />
+        <constraint name="expr2" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="newSetWith 9" text="$coll$ = UnifiedSet.newSetWith($expr1$);&#10;$coll$.add($expr2$);" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="$coll$ = org.eclipse.collections.api.factory.Sets.mutable.with($expr1$, $expr2$);">
+        <constraint name="coll" within="" contains="" />
+        <constraint name="expr1" within="" contains="" />
+        <constraint name="expr2" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="FastList.newListWith() to Lists.mutable.with()" text="org.eclipse.collections.impl.list.mutable.FastList.newListWith($args$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.Lists.mutable.with($args$)">
+        <constraint name="args" minCount="1" maxCount="2147483647" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="FastList.newListWith() to Lists.mutable.empty()" text="org.eclipse.collections.impl.list.mutable.FastList.&lt;$type$&gt;newListWith()" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.Lists.mutable.&lt;$type$&gt;empty()">
+        <constraint name="type" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="FastList.newListWith() to Lists.mutable.empty()" text="org.eclipse.collections.impl.list.mutable.FastList.newListWith()" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.Lists.mutable.empty()">
+      </replaceConfiguration>
+      <replaceConfiguration name="FastList.newListWith() to Lists.mutable.with()" text="org.eclipse.collections.impl.list.mutable.FastList.&lt;$type$&gt;newListWith($args$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.Lists.mutable.&lt;$type$&gt;with($args$)">
+        <constraint name="type" within="" contains="" />
+        <constraint name="args" minCount="1" maxCount="2147483647" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="UnifiedSet.newSetWith() to Sets.mutable.with()" text="org.eclipse.collections.impl.set.mutable.UnifiedSet.newSetWith($args$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.Sets.mutable.with($args$)">
+        <constraint name="args" minCount="0" maxCount="2147483647" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="UnifiedSet.newSetWith() to Sets.mutable.with()" text="org.eclipse.collections.impl.set.mutable.UnifiedSet.&lt;$type$&gt;newSetWith($args$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.Sets.mutable.&lt;$type$&gt;with($args$)">
+        <constraint name="type" within="" contains="" />
+        <constraint name="args" minCount="0" maxCount="2147483647" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="UnifiedMap.newWithKeysValues() to Maps.mutable.with()" text="UnifiedMap.&lt;$K$, $V$&gt;newWithKeysValues($k1$, $v1$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="Maps.mutable.&lt;$K$, $V$&gt;with($k1$, $v1$)">
+        <constraint name="K" within="" contains="" />
+        <constraint name="V" within="" contains="" />
+        <constraint name="k1" within="" contains="" />
+        <constraint name="v1" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="UnifiedMap.newWithKeysValues() to Maps.mutable.with()" text="UnifiedMap.newWithKeysValues($k1$, $v1$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="Maps.mutable.with($k1$, $v1$)">
+        <constraint name="k1" within="" contains="" />
+        <constraint name="v1" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="UnifiedMap.newWithKeysValues() to Maps.mutable.with()" text="UnifiedMap.&lt;$K$, $V$&gt;newWithKeysValues($k1$, $v1$, $k2$, $v2$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="Maps.mutable.&lt;$K$, $V$&gt;with($k1$, $v1$, $k2$, $v2$)">
+        <constraint name="K" within="" contains="" />
+        <constraint name="V" within="" contains="" />
+        <constraint name="k1" within="" contains="" />
+        <constraint name="v1" within="" contains="" />
+        <constraint name="k2" within="" contains="" />
+        <constraint name="v2" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="UnifiedMap.newWithKeysValues() to Maps.mutable.with()" text="UnifiedMap.newWithKeysValues($k1$, $v1$, $k2$, $v2$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="Maps.mutable.with($k1$, $v1$, $k2$, $v2$)">
+        <constraint name="k1" within="" contains="" />
+        <constraint name="v1" within="" contains="" />
+        <constraint name="k2" within="" contains="" />
+        <constraint name="v2" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="UnifiedMap.newWithKeysValues() to Maps.mutable.with()" text="UnifiedMap.&lt;$K$, $V$&gt;newWithKeysValues($k1$, $v1$, $k2$, $v2$, $k3$, $v3$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="Maps.mutable.&lt;$K$, $V$&gt;with($k1$, $v1$, $k2$, $v2$, $k3$, $v3$)">
+        <constraint name="K" within="" contains="" />
+        <constraint name="V" within="" contains="" />
+        <constraint name="k1" within="" contains="" />
+        <constraint name="v1" within="" contains="" />
+        <constraint name="k2" within="" contains="" />
+        <constraint name="v2" within="" contains="" />
+        <constraint name="k3" within="" contains="" />
+        <constraint name="v3" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="UnifiedMap.newWithKeysValues() to Maps.mutable.with()" text="UnifiedMap.newWithKeysValues($k1$, $v1$, $k2$, $v2$, $k3$, $v3$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="Maps.mutable.with($k1$, $v1$, $k2$, $v2$, $k3$, $v3$)">
+        <constraint name="k1" within="" contains="" />
+        <constraint name="v1" within="" contains="" />
+        <constraint name="k2" within="" contains="" />
+        <constraint name="v2" within="" contains="" />
+        <constraint name="k3" within="" contains="" />
+        <constraint name="v3" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="UnifiedMap.newWithKeysValues() to Maps.mutable.with()" text="UnifiedMap.&lt;$K$, $V$&gt;newWithKeysValues($k1$, $v1$, $k2$, $v2$, $k3$, $v3$, $k4$, $v4$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="Maps.mutable.&lt;$K$, $V$&gt;with($k1$, $v1$, $k2$, $v2$, $k3$, $v3$, $k4$, $v4$)">
+        <constraint name="K" within="" contains="" />
+        <constraint name="V" within="" contains="" />
+        <constraint name="k1" within="" contains="" />
+        <constraint name="v1" within="" contains="" />
+        <constraint name="k2" within="" contains="" />
+        <constraint name="v2" within="" contains="" />
+        <constraint name="k3" within="" contains="" />
+        <constraint name="v3" within="" contains="" />
+        <constraint name="k4" within="" contains="" />
+        <constraint name="v4" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="UnifiedMap.newWithKeysValues() to Maps.mutable.with()" text="UnifiedMap.newWithKeysValues($k1$, $v1$, $k2$, $v2$, $k3$, $v3$, $k4$, $v4$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="Maps.mutable.with($k1$, $v1$, $k2$, $v2$, $k3$, $v3$, $k4$, $v4$)">
+        <constraint name="k1" within="" contains="" />
+        <constraint name="v1" within="" contains="" />
+        <constraint name="k2" within="" contains="" />
+        <constraint name="v2" within="" contains="" />
+        <constraint name="k3" within="" contains="" />
+        <constraint name="v3" within="" contains="" />
+        <constraint name="k4" within="" contains="" />
+        <constraint name="v4" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="UnifiedMap.newMap() to Maps.mutable.empty() (generified)" text="UnifiedMap.&lt;$K$, $V$&gt;newMap()" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="Maps.&lt;$K$, $V$&gt;mutable.empty()">
+        <constraint name="K" within="" contains="" />
+        <constraint name="V" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="UnifiedMap.newMap() to Maps.mutable.empty()" text="UnifiedMap.newMap()" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="Maps.mutable.empty()">
+      </replaceConfiguration>
+      <replaceConfiguration name="Lists.mutable.of() to Lists.mutable.empty()" text="org.eclipse.collections.api.factory.Lists.mutable.of()" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.Lists.mutable.empty()">
+      </replaceConfiguration>
+      <replaceConfiguration name="Lists.immutable.of() to Lists.immutable.empty()" text="org.eclipse.collections.api.factory.Lists.immutable.of()" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.Lists.immutable.empty()">
+      </replaceConfiguration>
+      <replaceConfiguration name="Sets.mutable.of() to Sets.mutable.empty()" text="org.eclipse.collections.api.factory.Sets.mutable.of()" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.Sets.mutable.empty()">
+      </replaceConfiguration>
+      <replaceConfiguration name="Sets.immutable.of() to Sets.immutable.empty()" text="org.eclipse.collections.api.factory.Sets.immutable.of()" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.Sets.immutable.empty()">
+      </replaceConfiguration>
+      <replaceConfiguration name="Maps.mutable.of() to Maps.mutable.empty()" text="org.eclipse.collections.api.factory.Maps.mutable.of()" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.Maps.mutable.empty()">
+      </replaceConfiguration>
+      <replaceConfiguration name="Maps.immutable.of() to Maps.immutable.empty()" text="org.eclipse.collections.api.factory.Maps.immutable.of()" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.Maps.immutable.empty()">
+      </replaceConfiguration>
+      <replaceConfiguration name="Bags.mutable.of() to Bags.mutable.empty()" text="org.eclipse.collections.api.factory.Bags.mutable.of()" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.Bags.mutable.empty()">
+      </replaceConfiguration>
+      <replaceConfiguration name="Bags.immutable.of() to Bags.immutable.empty()" text="org.eclipse.collections.api.factory.Bags.immutable.of()" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.Bags.immutable.empty()">
+      </replaceConfiguration>
+      <replaceConfiguration name="TreeSortedSet.newSetWith() to SortedSets.mutable.with()" text="org.eclipse.collections.impl.set.sorted.mutable.TreeSortedSet.newSetWith($args$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.SortedSets.mutable.with($args$)">
+        <constraint name="args" minCount="0" maxCount="2147483647" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="TreeSortedSet.newSetWith() to SortedSets.mutable.with() (generified)" text="org.eclipse.collections.impl.set.sorted.mutable.TreeSortedSet.&lt;$type$&gt;newSetWith($args$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.SortedSets.mutable.&lt;$type$&gt;with($args$)">
+        <constraint name="type" within="" contains="" />
+        <constraint name="args" minCount="0" maxCount="2147483647" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="Lists.mutable.with() to Lists.mutable.empty()" text="org.eclipse.collections.api.factory.Lists.mutable.with()" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.Lists.mutable.empty()">
+      </replaceConfiguration>
+      <replaceConfiguration name="Lists.immutable.with() to Lists.immutable.empty()" text="org.eclipse.collections.api.factory.Lists.immutable.with()" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.Lists.immutable.empty()">
+      </replaceConfiguration>
+      <replaceConfiguration name="Sets.mutable.with() to Sets.mutable.empty()" text="org.eclipse.collections.api.factory.Sets.mutable.with()" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.Sets.mutable.empty()">
+      </replaceConfiguration>
+      <replaceConfiguration name="Sets.immutable.with() to Sets.immutable.empty()" text="org.eclipse.collections.api.factory.Sets.immutable.with()" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.Sets.immutable.empty()">
+      </replaceConfiguration>
+      <replaceConfiguration name="Maps.mutable.with() to Maps.mutable.empty()" text="org.eclipse.collections.api.factory.Maps.mutable.with()" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.Maps.mutable.empty()">
+      </replaceConfiguration>
+      <replaceConfiguration name="Maps.immutable.with() to Maps.immutable.empty()" text="org.eclipse.collections.api.factory.Maps.immutable.with()" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.Maps.immutable.empty()">
+      </replaceConfiguration>
+      <replaceConfiguration name="Bags.mutable.with() to Bags.mutable.empty()" text="org.eclipse.collections.api.factory.Bags.mutable.with()" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.Bags.mutable.empty()">
+      </replaceConfiguration>
+      <replaceConfiguration name="Bags.immutable.with() to Bags.immutable.empty()" text="org.eclipse.collections.api.factory.Bags.immutable.with()" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.Bags.immutable.empty()">
+      </replaceConfiguration>
+      <replaceConfiguration name="SortedSets.mutable.with() to SortedSets.mutable.empty()" text="org.eclipse.collections.api.factory.SortedSets.mutable.with()" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.SortedSets.mutable.empty()">
+      </replaceConfiguration>
+      <replaceConfiguration name="SortedSets.immutable.with() to SortedSets.immutable.empty()" text="org.eclipse.collections.api.factory.SortedSets.immutable.with()" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.SortedSets.immutable.empty()">
+      </replaceConfiguration>
+      <replaceConfiguration name="FastListMultimap.newMultimap() to Multimaps.mutable.list.empty()" text="org.eclipse.collections.impl.multimap.list.FastListMultimap.newMultimap()" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.factory.Multimaps.mutable.list.empty()">
+      </replaceConfiguration>
+      <replaceConfiguration name="FastListMultimap.newMultimap() to Multimaps.mutable.list.empty()" text="org.eclipse.collections.impl.multimap.list.FastListMultimap.&lt;$K$, $V$&gt;newMultimap()" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.factory.Multimaps.mutable.list.&lt;$K$, $V$&gt;empty()">
+        <constraint name="K" within="" contains="" />
+        <constraint name="V" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="FastListMultimap.newMultimap(Tuples) to Multimaps.mutable.list.with()" text="org.eclipse.collections.impl.multimap.list.FastListMultimap.&lt;$K$, $V$&gt;newMultimap(Tuples.pair($k1$, $v1$))" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.factory.Multimaps.mutable.list.&lt;$K$, $V$&gt;with($k1$, $v1$)">
+        <constraint name="K" within="" contains="" />
+        <constraint name="V" within="" contains="" />
+        <constraint name="k1" within="" contains="" />
+        <constraint name="v1" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="FastListMultimap.newMultimap(Tuples) to Multimaps.mutable.list.with()" text="org.eclipse.collections.impl.multimap.list.FastListMultimap.newMultimap(Tuples.pair($k1$, $v1$))" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.factory.Multimaps.mutable.list.with($k1$, $v1$)">
+        <constraint name="k1" within="" contains="" />
+        <constraint name="v1" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="FastListMultimap.newMultimap(Tuples) to Multimaps.mutable.list.with()" text="org.eclipse.collections.impl.multimap.list.FastListMultimap.&lt;$K$, $V$&gt;newMultimap(Tuples.pair($k1$, $v1$), Tuples.pair($k2$, $v2$))" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.factory.Multimaps.mutable.list.&lt;$K$, $V$&gt;with($k1$, $v1$, $k2$, $v2$)">
+        <constraint name="K" within="" contains="" />
+        <constraint name="V" within="" contains="" />
+        <constraint name="k1" within="" contains="" />
+        <constraint name="v1" within="" contains="" />
+        <constraint name="k2" within="" contains="" />
+        <constraint name="v2" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="FastListMultimap.newMultimap(Tuples) to Multimaps.mutable.list.with()" text="org.eclipse.collections.impl.multimap.list.FastListMultimap.newMultimap(Tuples.pair($k1$, $v1$), Tuples.pair($k2$, $v2$))" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.factory.Multimaps.mutable.list.with($k1$, $v1$, $k2$, $v2$)">
+        <constraint name="k1" within="" contains="" />
+        <constraint name="v1" within="" contains="" />
+        <constraint name="k2" within="" contains="" />
+        <constraint name="v2" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="FastListMultimap.newMultimap(Tuples) to Multimaps.mutable.list.with()" text="org.eclipse.collections.impl.multimap.list.FastListMultimap.&lt;$K$, $V$&gt;newMultimap(Tuples.pair($k1$, $v1$), Tuples.pair($k2$, $v2$), Tuples.pair($k3$, $v3$))" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.factory.Multimaps.mutable.list.&lt;$K$, $V$&gt;with($k1$, $v1$, $k2$, $v2$, $k3$, $v3$)">
+        <constraint name="K" within="" contains="" />
+        <constraint name="V" within="" contains="" />
+        <constraint name="k1" within="" contains="" />
+        <constraint name="v1" within="" contains="" />
+        <constraint name="k2" within="" contains="" />
+        <constraint name="v2" within="" contains="" />
+        <constraint name="k3" within="" contains="" />
+        <constraint name="v3" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="FastListMultimap.newMultimap(Tuples) to Multimaps.mutable.list.with()" text="org.eclipse.collections.impl.multimap.list.FastListMultimap.newMultimap(Tuples.pair($k1$, $v1$), Tuples.pair($k2$, $v2$), Tuples.pair($k3$, $v3$))" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.factory.Multimaps.mutable.list.with($k1$, $v1$, $k2$, $v2$, $k3$, $v3$)">
+        <constraint name="k1" within="" contains="" />
+        <constraint name="v1" within="" contains="" />
+        <constraint name="k2" within="" contains="" />
+        <constraint name="v2" within="" contains="" />
+        <constraint name="k3" within="" contains="" />
+        <constraint name="v3" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="UnifiedSetMultimap.newMultimap() to Multimaps.mutable.set.empty()" text="org.eclipse.collections.impl.multimap.set.UnifiedSetMultimap.newMultimap()" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.factory.Multimaps.mutable.set.empty()">
+      </replaceConfiguration>
+      <replaceConfiguration name="UnifiedSetMultimap.newMultimap() to Multimaps.mutable.set.empty()" text="org.eclipse.collections.impl.multimap.set.UnifiedSetMultimap.&lt;$K$, $V$&gt;newMultimap()" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.factory.Multimaps.mutable.set.&lt;$K$, $V$&gt;empty()">
+        <constraint name="K" within="" contains="" />
+        <constraint name="V" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="UnifiedSetMultimap.newMultimap(Tuples) to Multimaps.mutable.set.with()" text="org.eclipse.collections.impl.multimap.set.UnifiedSetMultimap.&lt;$K$, $V$&gt;newMultimap(Tuples.pair($k1$, $v1$))" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.factory.Multimaps.mutable.set.&lt;$K$, $V$&gt;with($k1$, $v1$)">
+        <constraint name="K" within="" contains="" />
+        <constraint name="V" within="" contains="" />
+        <constraint name="k1" within="" contains="" />
+        <constraint name="v1" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="UnifiedSetMultimap.newMultimap(Tuples) to Multimaps.mutable.set.with()" text="org.eclipse.collections.impl.multimap.set.UnifiedSetMultimap.newMultimap(Tuples.pair($k1$, $v1$))" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.factory.Multimaps.mutable.set.with($k1$, $v1$)">
+        <constraint name="k1" within="" contains="" />
+        <constraint name="v1" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="UnifiedSetMultimap.newMultimap(Tuples) to Multimaps.mutable.set.with()" text="org.eclipse.collections.impl.multimap.set.UnifiedSetMultimap.&lt;$K$, $V$&gt;newMultimap(Tuples.pair($k1$, $v1$), Tuples.pair($k2$, $v2$))" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.factory.Multimaps.mutable.set.&lt;$K$, $V$&gt;with($k1$, $v1$, $k2$, $v2$)">
+        <constraint name="K" within="" contains="" />
+        <constraint name="V" within="" contains="" />
+        <constraint name="k1" within="" contains="" />
+        <constraint name="v1" within="" contains="" />
+        <constraint name="k2" within="" contains="" />
+        <constraint name="v2" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="UnifiedSetMultimap.newMultimap(Tuples) to Multimaps.mutable.set.with()" text="org.eclipse.collections.impl.multimap.set.UnifiedSetMultimap.newMultimap(Tuples.pair($k1$, $v1$), Tuples.pair($k2$, $v2$))" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.factory.Multimaps.mutable.set.with($k1$, $v1$, $k2$, $v2$)">
+        <constraint name="k1" within="" contains="" />
+        <constraint name="v1" within="" contains="" />
+        <constraint name="k2" within="" contains="" />
+        <constraint name="v2" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="UnifiedSetMultimap.newMultimap(Tuples) to Multimaps.mutable.set.with()" text="org.eclipse.collections.impl.multimap.set.UnifiedSetMultimap.&lt;$K$, $V$&gt;newMultimap(Tuples.pair($k1$, $v1$), Tuples.pair($k2$, $v2$), Tuples.pair($k3$, $v3$))" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.factory.Multimaps.mutable.set.&lt;$K$, $V$&gt;with($k1$, $v1$, $k2$, $v2$, $k3$, $v3$)">
+        <constraint name="K" within="" contains="" />
+        <constraint name="V" within="" contains="" />
+        <constraint name="k1" within="" contains="" />
+        <constraint name="v1" within="" contains="" />
+        <constraint name="k2" within="" contains="" />
+        <constraint name="v2" within="" contains="" />
+        <constraint name="k3" within="" contains="" />
+        <constraint name="v3" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="UnifiedSetMultimap.newMultimap(Tuples) to Multimaps.mutable.set.with()" text="org.eclipse.collections.impl.multimap.set.UnifiedSetMultimap.newMultimap(Tuples.pair($k1$, $v1$), Tuples.pair($k2$, $v2$), Tuples.pair($k3$, $v3$))" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.factory.Multimaps.mutable.set.with($k1$, $v1$, $k2$, $v2$, $k3$, $v3$)">
+        <constraint name="k1" within="" contains="" />
+        <constraint name="v1" within="" contains="" />
+        <constraint name="k2" within="" contains="" />
+        <constraint name="v2" within="" contains="" />
+        <constraint name="k3" within="" contains="" />
+        <constraint name="v3" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="TreeBagMultimap.newMultimap() to Multimaps.mutable.sortedBag.empty()" text="org.eclipse.collections.impl.multimap.bag.sorted.mutable.TreeBagMultimap.newMultimap()" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.factory.Multimaps.mutable.sortedBag.empty()">
+      </replaceConfiguration>
+      <replaceConfiguration name="TreeBagMultimap.newMultimap() to Multimaps.mutable.sortedBag.empty()" text="org.eclipse.collections.impl.multimap.bag.sorted.mutable.TreeBagMultimap.&lt;$K$, $V$&gt;newMultimap()" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.factory.Multimaps.mutable.sortedBag.&lt;$K$, $V$&gt;empty()">
+        <constraint name="K" within="" contains="" />
+        <constraint name="V" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="TreeBagMultimap.newMultimap(Comparator) to Multimaps.mutable.sortedBag.empty(Comparator)" text="org.eclipse.collections.impl.multimap.bag.sorted.mutable.TreeBagMultimap.newMultimap($comparator$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.factory.Multimaps.mutable.sortedBag.empty($comparator$)">
+        <constraint name="comparator" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="TreeBagMultimap.newMultimap(Comparator) to Multimaps.mutable.sortedBag.empty(Comparator)" text="org.eclipse.collections.impl.multimap.bag.sorted.mutable.TreeBagMultimap.&lt;$K$, $V$&gt;newMultimap($comparator$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.factory.Multimaps.mutable.sortedBag.&lt;$K$, $V$&gt;empty($comparator$)">
+        <constraint name="K" within="" contains="" />
+        <constraint name="V" within="" contains="" />
+        <constraint name="comparator" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="TreeBagMultimap.newMultimap(Tuples) to Multimaps.mutable.sortedBag.with()" text="org.eclipse.collections.impl.multimap.bag.sorted.mutable.TreeBagMultimap.&lt;$K$, $V$&gt;newMultimap(Tuples.pair($k1$, $v1$))" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.factory.Multimaps.mutable.sortedBag.&lt;$K$, $V$&gt;with($k1$, $v1$)">
+        <constraint name="K" within="" contains="" />
+        <constraint name="V" within="" contains="" />
+        <constraint name="k1" within="" contains="" />
+        <constraint name="v1" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="TreeBagMultimap.newMultimap(Tuples) to Multimaps.mutable.sortedBag.with()" text="org.eclipse.collections.impl.multimap.bag.sorted.mutable.TreeBagMultimap.newMultimap(Tuples.pair($k1$, $v1$))" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.factory.Multimaps.mutable.sortedBag.with($k1$, $v1$)">
+        <constraint name="k1" within="" contains="" />
+        <constraint name="v1" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="TreeBagMultimap.newMultimap(Tuples) to Multimaps.mutable.sortedBag.with()" text="org.eclipse.collections.impl.multimap.bag.sorted.mutable.TreeBagMultimap.&lt;$K$, $V$&gt;newMultimap(Tuples.pair($k1$, $v1$), Tuples.pair($k2$, $v2$))" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.factory.Multimaps.mutable.sortedBag.&lt;$K$, $V$&gt;with($k1$, $v1$, $k2$, $v2$)">
+        <constraint name="K" within="" contains="" />
+        <constraint name="V" within="" contains="" />
+        <constraint name="k1" within="" contains="" />
+        <constraint name="v1" within="" contains="" />
+        <constraint name="k2" within="" contains="" />
+        <constraint name="v2" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="TreeBagMultimap.newMultimap(Tuples) to Multimaps.mutable.sortedBag.with()" text="org.eclipse.collections.impl.multimap.bag.sorted.mutable.TreeBagMultimap.newMultimap(Tuples.pair($k1$, $v1$), Tuples.pair($k2$, $v2$))" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.factory.Multimaps.mutable.sortedBag.with($k1$, $v1$, $k2$, $v2$)">
+        <constraint name="k1" within="" contains="" />
+        <constraint name="v1" within="" contains="" />
+        <constraint name="k2" within="" contains="" />
+        <constraint name="v2" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="TreeBagMultimap.newMultimap(Tuples) to Multimaps.mutable.sortedBag.with()" text="org.eclipse.collections.impl.multimap.bag.sorted.mutable.TreeBagMultimap.&lt;$K$, $V$&gt;newMultimap(Tuples.pair($k1$, $v1$), Tuples.pair($k2$, $v2$), Tuples.pair($k3$, $v3$))" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.factory.Multimaps.mutable.sortedBag.&lt;$K$, $V$&gt;with($k1$, $v1$, $k2$, $v2$, $k3$, $v3$)">
+        <constraint name="K" within="" contains="" />
+        <constraint name="V" within="" contains="" />
+        <constraint name="k1" within="" contains="" />
+        <constraint name="v1" within="" contains="" />
+        <constraint name="k2" within="" contains="" />
+        <constraint name="v2" within="" contains="" />
+        <constraint name="k3" within="" contains="" />
+        <constraint name="v3" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="TreeBagMultimap.newMultimap(Tuples) to Multimaps.mutable.sortedBag.with()" text="org.eclipse.collections.impl.multimap.bag.sorted.mutable.TreeBagMultimap.newMultimap(Tuples.pair($k1$, $v1$), Tuples.pair($k2$, $v2$), Tuples.pair($k3$, $v3$))" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.factory.Multimaps.mutable.sortedBag.with($k1$, $v1$, $k2$, $v2$, $k3$, $v3$)">
+        <constraint name="k1" within="" contains="" />
+        <constraint name="v1" within="" contains="" />
+        <constraint name="k2" within="" contains="" />
+        <constraint name="v2" within="" contains="" />
+        <constraint name="k3" within="" contains="" />
+        <constraint name="v3" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="TreeSortedSetMultimap.newMultimap() to Multimaps.mutable.sortedSet.empty()" text="org.eclipse.collections.impl.multimap.set.sorted.TreeSortedSetMultimap.newMultimap()" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.factory.Multimaps.mutable.sortedSet.empty()">
+      </replaceConfiguration>
+      <replaceConfiguration name="TreeSortedSetMultimap.newMultimap() to Multimaps.mutable.sortedSet.empty()" text="org.eclipse.collections.impl.multimap.set.sorted.TreeSortedSetMultimap.&lt;$K$, $V$&gt;newMultimap()" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.factory.Multimaps.mutable.sortedSet.&lt;$K$, $V$&gt;empty()">
+        <constraint name="K" within="" contains="" />
+        <constraint name="V" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="TreeSortedSetMultimap.newMultimap(Comparator) to Multimaps.mutable.sortedSet.empty(Comparator)" text="org.eclipse.collections.impl.multimap.set.sorted.TreeSortedSetMultimap.newMultimap($comparator$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.factory.Multimaps.mutable.sortedSet.empty($comparator$)">
+        <constraint name="comparator" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="TreeSortedSetMultimap.newMultimap(Comparator) to Multimaps.mutable.sortedSet.empty(Comparator)" text="org.eclipse.collections.impl.multimap.set.sorted.TreeSortedSetMultimap.&lt;$K$, $V$&gt;newMultimap($comparator$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.factory.Multimaps.mutable.sortedSet.&lt;$K$, $V$&gt;empty($comparator$)">
+        <constraint name="K" within="" contains="" />
+        <constraint name="V" within="" contains="" />
+        <constraint name="comparator" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="TreeSortedSetMultimap.newMultimap(Tuples) to Multimaps.mutable.sortedSet.with()" text="org.eclipse.collections.impl.multimap.set.sorted.TreeSortedSetMultimap.&lt;$K$, $V$&gt;newMultimap(Tuples.pair($k1$, $v1$))" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.factory.Multimaps.mutable.sortedSet.&lt;$K$, $V$&gt;with($k1$, $v1$)">
+        <constraint name="K" within="" contains="" />
+        <constraint name="V" within="" contains="" />
+        <constraint name="k1" within="" contains="" />
+        <constraint name="v1" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="TreeSortedSetMultimap.newMultimap(Tuples) to Multimaps.mutable.sortedSet.with()" text="org.eclipse.collections.impl.multimap.set.sorted.TreeSortedSetMultimap.newMultimap(Tuples.pair($k1$, $v1$))" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.factory.Multimaps.mutable.sortedSet.with($k1$, $v1$)">
+        <constraint name="k1" within="" contains="" />
+        <constraint name="v1" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="TreeSortedSetMultimap.newMultimap(Tuples) to Multimaps.mutable.sortedSet.with()" text="org.eclipse.collections.impl.multimap.set.sorted.TreeSortedSetMultimap.&lt;$K$, $V$&gt;newMultimap(Tuples.pair($k1$, $v1$), Tuples.pair($k2$, $v2$))" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.factory.Multimaps.mutable.sortedSet.&lt;$K$, $V$&gt;with($k1$, $v1$, $k2$, $v2$)">
+        <constraint name="K" within="" contains="" />
+        <constraint name="V" within="" contains="" />
+        <constraint name="k1" within="" contains="" />
+        <constraint name="v1" within="" contains="" />
+        <constraint name="k2" within="" contains="" />
+        <constraint name="v2" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="TreeSortedSetMultimap.newMultimap(Tuples) to Multimaps.mutable.sortedSet.with()" text="org.eclipse.collections.impl.multimap.set.sorted.TreeSortedSetMultimap.newMultimap(Tuples.pair($k1$, $v1$), Tuples.pair($k2$, $v2$))" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.factory.Multimaps.mutable.sortedSet.with($k1$, $v1$, $k2$, $v2$)">
+        <constraint name="k1" within="" contains="" />
+        <constraint name="v1" within="" contains="" />
+        <constraint name="k2" within="" contains="" />
+        <constraint name="v2" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="TreeSortedSetMultimap.newMultimap(Tuples) to Multimaps.mutable.sortedSet.with()" text="org.eclipse.collections.impl.multimap.set.sorted.TreeSortedSetMultimap.&lt;$K$, $V$&gt;newMultimap(Tuples.pair($k1$, $v1$), Tuples.pair($k2$, $v2$), Tuples.pair($k3$, $v3$))" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.factory.Multimaps.mutable.sortedSet.&lt;$K$, $V$&gt;with($k1$, $v1$, $k2$, $v2$, $k3$, $v3$)">
+        <constraint name="K" within="" contains="" />
+        <constraint name="V" within="" contains="" />
+        <constraint name="k1" within="" contains="" />
+        <constraint name="v1" within="" contains="" />
+        <constraint name="k2" within="" contains="" />
+        <constraint name="v2" within="" contains="" />
+        <constraint name="k3" within="" contains="" />
+        <constraint name="v3" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="TreeSortedSetMultimap.newMultimap(Tuples) to Multimaps.mutable.sortedSet.with()" text="org.eclipse.collections.impl.multimap.set.sorted.TreeSortedSetMultimap.newMultimap(Tuples.pair($k1$, $v1$), Tuples.pair($k2$, $v2$), Tuples.pair($k3$, $v3$))" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.factory.Multimaps.mutable.sortedSet.with($k1$, $v1$, $k2$, $v2$, $k3$, $v3$)">
+        <constraint name="k1" within="" contains="" />
+        <constraint name="v1" within="" contains="" />
+        <constraint name="k2" within="" contains="" />
+        <constraint name="v2" within="" contains="" />
+        <constraint name="k3" within="" contains="" />
+        <constraint name="v3" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="HashBagMultimap.newMultimap() to Multimaps.mutable.bag.empty()" text="org.eclipse.collections.impl.multimap.bag.HashBagMultimap.newMultimap()" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.factory.Multimaps.mutable.bag.empty()">
+      </replaceConfiguration>
+      <replaceConfiguration name="HashBagMultimap.newMultimap() to Multimaps.mutable.bag.empty()" text="org.eclipse.collections.impl.multimap.bag.HashBagMultimap.&lt;$K$, $V$&gt;newMultimap()" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.factory.Multimaps.mutable.bag.&lt;$K$, $V$&gt;empty()">
+        <constraint name="K" within="" contains="" />
+        <constraint name="V" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="HashBagMultimap.newMultimap(Tuples) to Multimaps.mutable.bag.with()" text="org.eclipse.collections.impl.multimap.bag.HashBagMultimap.&lt;$K$, $V$&gt;newMultimap(Tuples.pair($k1$, $v1$))" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.factory.Multimaps.mutable.bag.&lt;$K$, $V$&gt;with($k1$, $v1$)">
+        <constraint name="K" within="" contains="" />
+        <constraint name="V" within="" contains="" />
+        <constraint name="k1" within="" contains="" />
+        <constraint name="v1" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="HashBagMultimap.newMultimap(Tuples) to Multimaps.mutable.bag.with()" text="org.eclipse.collections.impl.multimap.bag.HashBagMultimap.newMultimap(Tuples.pair($k1$, $v1$))" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.factory.Multimaps.mutable.bag.with($k1$, $v1$)">
+        <constraint name="k1" within="" contains="" />
+        <constraint name="v1" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="HashBagMultimap.newMultimap(Tuples) to Multimaps.mutable.bag.with()" text="org.eclipse.collections.impl.multimap.bag.HashBagMultimap.&lt;$K$, $V$&gt;newMultimap(Tuples.pair($k1$, $v1$), Tuples.pair($k2$, $v2$))" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.factory.Multimaps.mutable.bag.&lt;$K$, $V$&gt;with($k1$, $v1$, $k2$, $v2$)">
+        <constraint name="K" within="" contains="" />
+        <constraint name="V" within="" contains="" />
+        <constraint name="k1" within="" contains="" />
+        <constraint name="v1" within="" contains="" />
+        <constraint name="k2" within="" contains="" />
+        <constraint name="v2" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="HashBagMultimap.newMultimap(Tuples) to Multimaps.mutable.bag.with()" text="org.eclipse.collections.impl.multimap.bag.HashBagMultimap.newMultimap(Tuples.pair($k1$, $v1$), Tuples.pair($k2$, $v2$))" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.factory.Multimaps.mutable.bag.with($k1$, $v1$, $k2$, $v2$)">
+        <constraint name="k1" within="" contains="" />
+        <constraint name="v1" within="" contains="" />
+        <constraint name="k2" within="" contains="" />
+        <constraint name="v2" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="HashBagMultimap.newMultimap(Tuples) to Multimaps.mutable.bag.with()" text="org.eclipse.collections.impl.multimap.bag.HashBagMultimap.&lt;$K$, $V$&gt;newMultimap(Tuples.pair($k1$, $v1$), Tuples.pair($k2$, $v2$), Tuples.pair($k3$, $v3$))" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.factory.Multimaps.mutable.bag.&lt;$K$, $V$&gt;with($k1$, $v1$, $k2$, $v2$, $k3$, $v3$)">
+        <constraint name="K" within="" contains="" />
+        <constraint name="V" within="" contains="" />
+        <constraint name="k1" within="" contains="" />
+        <constraint name="v1" within="" contains="" />
+        <constraint name="k2" within="" contains="" />
+        <constraint name="v2" within="" contains="" />
+        <constraint name="k3" within="" contains="" />
+        <constraint name="v3" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="HashBagMultimap.newMultimap(Tuples) to Multimaps.mutable.bag.with()" text="org.eclipse.collections.impl.multimap.bag.HashBagMultimap.newMultimap(Tuples.pair($k1$, $v1$), Tuples.pair($k2$, $v2$), Tuples.pair($k3$, $v3$))" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.factory.Multimaps.mutable.bag.with($k1$, $v1$, $k2$, $v2$, $k3$, $v3$)">
+        <constraint name="k1" within="" contains="" />
+        <constraint name="v1" within="" contains="" />
+        <constraint name="k2" within="" contains="" />
+        <constraint name="v2" within="" contains="" />
+        <constraint name="k3" within="" contains="" />
+        <constraint name="v3" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="not Iterate.notEmpty()" text="!Iterate.notEmpty($iterable$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.utility.Iterate.isEmpty($iterable$)">
         <constraint name="iterable" nameOfExprType="Iterable" exprTypeWithinHierarchy="true" within="" contains="" />
       </replaceConfiguration>
-      <replaceConfiguration name="TreeBag.newBag() to SortedBags.mutable.empty()" text="org.eclipse.collections.impl.bag.sorted.mutable.TreeBag.newBag()" recursive="false" caseInsensitive="false" type="JAVA" pattern_context="default" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.SortedBags.mutable.empty()">
-        <constraint name="__context__" within="" contains="" />
+      <replaceConfiguration name="not MapIterate.notEmpty()" text="!MapIterate.notEmpty($map$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.utility.MapIterate.isEmpty($map$)">
+        <constraint name="map" nameOfExprType="Map" exprTypeWithinHierarchy="true" within="" contains="" />
       </replaceConfiguration>
-      <replaceConfiguration name="TreeBag.newBag(comparator) to SortedBags.mutable.empty(comparator)" text="org.eclipse.collections.impl.bag.sorted.mutable.TreeBag.newBag($comparator$)" recursive="false" caseInsensitive="false" type="JAVA" pattern_context="default" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.SortedBags.mutable.empty($comparator$)">
-        <constraint name="__context__" within="" contains="" />
-        <constraint name="comparator" nameOfExprType="Comparator" exprTypeWithinHierarchy="true" within="" contains="" />
+      <replaceConfiguration name="nullSafeEquals 1" text="$left$ == null ? $right$ != null : !$left$.equals($right$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="!org.eclipse.collections.impl.block.factory.Comparators.nullSafeEquals($left$, $right$)">
+        <constraint name="left" within="" contains="" />
+        <constraint name="right" within="" contains="" />
       </replaceConfiguration>
-      <replaceConfiguration name="TreeBag.newBag(comparator, iterable) to SortedBags.mutable.withAll(comparator, iterable)" text="org.eclipse.collections.impl.bag.sorted.mutable.TreeBag.newBag($comparator$, $iterable$)" recursive="false" caseInsensitive="false" type="JAVA" pattern_context="default" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.SortedBags.mutable.withAll($comparator$, $iterable$)">
-        <constraint name="__context__" within="" contains="" />
-        <constraint name="iterable" nameOfExprType="Iterable" exprTypeWithinHierarchy="true" within="" contains="" />
-        <constraint name="comparator" nameOfExprType="Comparator" exprTypeWithinHierarchy="true" within="" contains="" />
+      <replaceConfiguration name="nullSafeEquals 2" text="$left$ == null ? $right$ == null : $left$.equals($right$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.block.factory.Comparators.nullSafeEquals($left$, $right$)">
+        <constraint name="left" within="" contains="" />
+        <constraint name="right" within="" contains="" />
       </replaceConfiguration>
-      <replaceConfiguration name="TreeBag.newBag(iterable) to SortedBags.mutable.withAll(iterable)" text="org.eclipse.collections.impl.bag.sorted.mutable.TreeBag.newBag($iterable$)" recursive="false" caseInsensitive="false" type="JAVA" pattern_context="default" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.SortedBags.mutable.withAll($iterable$)">
-        <constraint name="__context__" within="" contains="" />
-        <constraint name="iterable" nameOfExprType="Iterable" exprTypeWithinHierarchy="true" within="" contains="" />
+      <replaceConfiguration name="nullSafeEquals 3" text="$left$ == null ? $right$ == null : $left$ == $right$ || $left$.equals($right$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.block.factory.Comparators.nullSafeEquals($left$, $right$)">
+        <constraint name="left" within="" contains="" />
+        <constraint name="right" within="" contains="" />
       </replaceConfiguration>
-      <replaceConfiguration name="TreeSortedMap.newMap() to SortedMaps.mutable.empty()" text="org.eclipse.collections.impl.map.sorted.mutable.TreeSortedMap.newMap()" recursive="false" caseInsensitive="false" type="JAVA" pattern_context="default" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.SortedMaps.mutable.empty()">
-        <constraint name="__context__" within="" contains="" />
+      <replaceConfiguration name="nullSafeEquals 4" text="$left$ == $right$ || $left$ != null &amp;&amp; $left$.equals($right$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.block.factory.Comparators.nullSafeEquals($left$, $right$)">
+        <constraint name="left" within="" contains="" />
+        <constraint name="right" within="" contains="" />
       </replaceConfiguration>
-      <replaceConfiguration name="TreeSortedSet.newSet(comparator, iterable) to SortedSets.mutable.withAll(comparator, iterable)" text="org.eclipse.collections.impl.set.sorted.mutable.TreeSortedSet.newSet($comparator$, $iterable$)" recursive="false" caseInsensitive="false" type="JAVA" pattern_context="default" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.SortedSets.mutable.withAll($comparator$, $iterable$)">
-        <constraint name="__context__" within="" contains="" />
-        <constraint name="iterable" nameOfExprType="Iterable" exprTypeWithinHierarchy="true" within="" contains="" />
-        <constraint name="comparator" nameOfExprType="Comparator" exprTypeWithinHierarchy="true" within="" contains="" />
+      <replaceConfiguration name="nullSafeEquals 5" text="$right$ == $left$ || $left$ != null &amp;&amp; $left$.equals($right$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.block.factory.Comparators.nullSafeEquals($left$, $right$)">
+        <constraint name="right" within="" contains="" />
+        <constraint name="left" within="" contains="" />
       </replaceConfiguration>
-      <replaceConfiguration name="TreeSortedSet.newSet(iterable) to SortedSets.mutable.withAll(iterable)" text="org.eclipse.collections.impl.set.sorted.mutable.TreeSortedSet.newSet($iterable$)" recursive="false" caseInsensitive="false" type="JAVA" pattern_context="default" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.SortedSets.mutable.withAll($iterable$)">
-        <constraint name="__context__" within="" contains="" />
-        <constraint name="iterable" nameOfExprType="Iterable" exprTypeWithinHierarchy="true" within="" contains="" />
+      <replaceConfiguration name="nullSafeEquals 6" text="$left$ == null || $right$ == null ? $left$ == $right$ : $left$.equals($right$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.block.factory.Comparators.nullSafeEquals($left$, $right$)">
+        <constraint name="left" within="" contains="" />
+        <constraint name="right" within="" contains="" />
       </replaceConfiguration>
-      <replaceConfiguration name="UnifiedMap.newMap() to Maps.mutable.empty()" text="org.eclipse.collections.impl.map.mutable.UnifiedMap.newMap()" recursive="false" caseInsensitive="false" type="JAVA" pattern_context="default" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.Maps.mutable.empty()">
-        <constraint name="__context__" within="" contains="" />
+      <replaceConfiguration name="passThru selector" text="new Function&lt;$type$, $type$&gt;()&#10;{&#10;    public $type$ valueOf($type$ $object$)&#10;    {&#10;        return $object$;&#10;    }&#10;}" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.block.factory.Functions.&lt;$type$&gt;getPassThru()">
+        <constraint name="type" within="" contains="" />
+        <constraint name="object" within="" contains="" />
       </replaceConfiguration>
-      <replaceConfiguration name="UnifiedSet.newSet() to Sets.mutable.empty()" text="org.eclipse.collections.impl.set.mutable.UnifiedSet.newSet()" recursive="false" caseInsensitive="false" type="JAVA" pattern_context="default" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.Sets.mutable.empty()">
-        <constraint name="__context__" within="" contains="" />
+      <replaceConfiguration name="Set to MutableSet" text="java.util.Set&lt;$type$&gt; $set$ = $mutableSet$;" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.set.MutableSet&lt;$type$&gt; $set$ = $mutableSet$;">
+        <constraint name="type" within="" contains="" />
+        <constraint name="set" within="" contains="" />
+        <constraint name="mutableSet" nameOfExprType="MutableSet" exprTypeWithinHierarchy="true" within="" contains="" />
       </replaceConfiguration>
-      <replaceConfiguration name="UnifiedSet.newSet(capacity) to Sets.mutable.withInitialCapacity(capacity)" uuid="8f9161ac-867b-3e6a-bc70-4ff63e44a34a" text="org.eclipse.collections.impl.set.mutable.UnifiedSet.newSet($capacity$)" recursive="false" caseInsensitive="true" type="JAVA" pattern_context="default" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.Sets.mutable.withInitialCapacity($capacity$)">
-        <constraint name="__context__" within="" contains="" />
-        <constraint name="capacity" nameOfExprType="int" within="" contains="" />
+      <replaceConfiguration name="Set to MutableSet 2" text="java.util.Set $set$ = $mutableSet$;" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.set.MutableSet $set$ = $mutableSet$;">
+        <constraint name="set" within="" contains="" />
+        <constraint name="mutableSet" nameOfExprType="MutableSet" exprTypeWithinHierarchy="true" within="" contains="" />
       </replaceConfiguration>
-      <replaceConfiguration name="UnifiedSet.newSet(iterable) to Sets.mutable.withAll(iterable)" text="org.eclipse.collections.impl.set.mutable.UnifiedSet.newSet($iterable$)" recursive="false" caseInsensitive="false" type="JAVA" pattern_context="default" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.Sets.mutable.withAll($iterable$)">
-        <constraint name="__context__" within="" contains="" />
-        <constraint name="iterable" nameOfExprType="Iterable" exprTypeWithinHierarchy="true" within="" contains="" />
+      <replaceConfiguration name="size of array 1" text="Assert.assertTrue($string$, $array$.length == $size$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.test.Verify.assertSize($string$, $size$, $array$)">
+        <constraint name="string" minCount="0" within="" contains="" />
+        <constraint name="array" within="" contains="" />
+        <constraint name="size" within="" contains="" />
       </replaceConfiguration>
-      <replaceConfiguration name="HashBag.newBag(capacity) with Bags.mutable.withInitialCapacity(capacity)." text="org.eclipse.collections.impl.bag.mutable.HashBag.newBag($capacity$)" recursive="false" caseInsensitive="true" type="JAVA" pattern_context="default" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.api.factory.Bags.mutable.withInitialCapacity($capacity$)">
-        <constraint name="__context__" within="" contains="" />
-        <constraint name="capacity" nameOfExprType="int" within="" contains="" />
+      <replaceConfiguration name="size of array 2" text="Assert.assertEquals($string$, $size$, $array$.length)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.test.Verify.assertSize($string$, $size$, $array$)">
+        <constraint name="string" minCount="0" within="" contains="" />
+        <constraint name="array" within="" contains="" />
+        <constraint name="size" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="size of array 3" text="Assert.assertTrue($string$, $size$ == $array$.length)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.test.Verify.assertSize($string$, $size$, $array$)">
+        <constraint name="string" minCount="0" within="" contains="" />
+        <constraint name="array" within="" contains="" />
+        <constraint name="size" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="Size of Collection 1" text="Assert.assertTrue($string$, $collection$.size() == $size$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.test.Verify.assertSize($string$, $size$, $collection$)">
+        <constraint name="string" nameOfExprType="String" minCount="0" within="" contains="" />
+        <constraint name="collection" within="" contains="" />
+        <constraint name="size" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="Size of Collection 2" text="Assert.assertEquals($string$, $size$, $collection$.size())" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.test.Verify.assertSize($string$, $size$, $collection$)">
+        <constraint name="string" nameOfExprType="String" minCount="0" within="" contains="" />
+        <constraint name="size" within="" contains="" />
+        <constraint name="collection" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="Size of Collection 3" text="Assert.assertTrue($string$, $size$ == $collection$.size())" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.test.Verify.assertSize($string$, $size$, $collection$)">
+        <constraint name="string" nameOfExprType="String" minCount="0" within="" contains="" />
+        <constraint name="size" within="" contains="" />
+        <constraint name="collection" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="Stream collect to List" text="$stream$.collect(Collectors.toList())" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="$stream$.toList()">
+        <constraint name="stream" nameOfExprType="org.eclipse.collections.api.RichIterable" exprTypeWithinHierarchy="true" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="Stream collect to Set" text="$stream$.collect(Collectors.toSet())" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="$stream$.toSet()">
+        <constraint name="stream" nameOfExprType="org.eclipse.collections.api.RichIterable" exprTypeWithinHierarchy="true" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="synchronizedCollection() to asSynchronized()" text="Collections.synchronizedCollection($collection$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="$collection$.asSynchronized()">
+        <constraint name="collection" script="&quot;&quot;" nameOfExprType="MutableCollection" exprTypeWithinHierarchy="true" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="synchronizedList() to asSynchronized()" text="Collections.synchronizedList($list$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="$list$.asSynchronized()">
+        <constraint name="list" script="&quot;&quot;" nameOfExprType="MutableList" exprTypeWithinHierarchy="true" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="synchronizedMap() to asSynchronized()" text="Collections.synchronizedMap($map$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="$map$.asSynchronized()">
+        <constraint name="map" script="&quot;&quot;" nameOfExprType="MutableMap" exprTypeWithinHierarchy="true" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="synchronizedSet() to asSynchronized()" text="Collections.synchronizedSet($set$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="$set$.asSynchronized()">
+        <constraint name="set" script="&quot;&quot;" nameOfExprType="MutableSet" exprTypeWithinHierarchy="true" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="Unmodifiable Collection" text="java.util.Collections.unmodifiableCollection($coll$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="$coll$.asUnmodifiable()">
+        <constraint name="coll" nameOfExprType="MutableCollection" exprTypeWithinHierarchy="true" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="Unmodifiable Map" text="java.util.Collections.unmodifiableMap($map$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="$map$.asUnmodifiable()">
+        <constraint name="map" nameOfExprType="MutableMap" exprTypeWithinHierarchy="true" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="Unmodifiable Set" text="java.util.Collections.unmodifiableSet($coll$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="$coll$.asUnmodifiable()">
+        <constraint name="coll" nameOfExprType="MutableSet" exprTypeWithinHierarchy="true" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="UnmodifiableList" text="java.util.Collections.unmodifiableList($coll$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="$coll$.asUnmodifiable()">
+        <constraint name="coll" nameOfExprType="MutableList" exprTypeWithinHierarchy="true" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="Verify.assertContains to AssertJ" text="org.eclipse.collections.impl.test.Verify.assertContains($obj$, $collection$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.assertj.core.api.Assertions.assertThat($collection$).contains($obj$)">
+        <constraint name="obj" within="" contains="" />
+        <constraint name="collection" nameOfExprType="java.lang.Iterable" exprTypeWithinHierarchy="true" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="Verify.assertContains to AssertJ" text="org.eclipse.collections.impl.test.Verify.assertContains($string$, $obj$, $collection$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.assertj.core.api.Assertions.assertThat($collection$).as($string$).contains($obj$)">
+        <constraint name="string" nameOfExprType="String" within="" contains="" />
+        <constraint name="obj" within="" contains="" />
+        <constraint name="collection" nameOfExprType="java.lang.Iterable" exprTypeWithinHierarchy="true" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="Verify.assertContains(String) to AssertJ" text="org.eclipse.collections.impl.test.Verify.assertContains($substring$, $string$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.assertj.core.api.Assertions.assertThat($string$).contains($substring$)">
+        <constraint name="substring" nameOfExprType="java.lang.String" within="" contains="" />
+        <constraint name="string" nameOfExprType="java.lang.String" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="Verify.assertContains(String) to AssertJ" text="org.eclipse.collections.impl.test.Verify.assertContains($description$, $substring$, $string$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.assertj.core.api.Assertions.assertThat($string$).as($description$).contains($substring$)">
+        <constraint name="description" nameOfExprType="java.lang.String" within="" contains="" />
+        <constraint name="substring" nameOfExprType="java.lang.String" within="" contains="" />
+        <constraint name="string" nameOfExprType="java.lang.String" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="Verify.assertContainsAll to AssertJ" text="org.eclipse.collections.impl.test.Verify.assertContainsAll($coll$, $expr$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.assertj.core.api.Assertions.assertThat($coll$).containsAll(org.eclipse.collections.api.factory.Lists.mutable.with($expr$))">
+        <constraint name="coll" nameOfExprType="java.lang.Iterable" exprTypeWithinHierarchy="true" within="" contains="" />
+        <constraint name="expr" minCount="0" maxCount="2147483647" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="Verify.assertContainsAll to AssertJ" text="org.eclipse.collections.impl.test.Verify.assertContainsAll($string$, $coll$, $expr$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.assertj.core.api.Assertions.assertThat($coll$).as($string$).containsAll(org.eclipse.collections.api.factory.Lists.mutable.with($expr$))">
+        <constraint name="string" nameOfExprType="String" within="" contains="" />
+        <constraint name="coll" nameOfExprType="java.lang.Iterable" exprTypeWithinHierarchy="true" within="" contains="" />
+        <constraint name="expr" minCount="0" maxCount="2147483647" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="Verify.assertCount()" text="Assert.assertEquals($expectedCount$, Iterate.count($iterable$, $discriminator$);" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.test.Verify.assertCount($expectedCount$, $iterable$, $discriminator$);">
+        <constraint name="iterable" within="" contains="" />
+        <constraint name="discriminator" within="" contains="" />
+        <constraint name="expectedCount" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="Verify.assertCount to AssertJ" text="org.eclipse.collections.impl.test.Verify.assertCount($expectedCount$, $iterable$, $discriminator$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.assertj.core.api.Assertions.assertThat(org.eclipse.collections.impl.utility.Iterate.count($iterable$, $discriminator$)).isEqualTo($expectedCount$)">
+        <constraint name="expectedCount" within="" contains="" />
+        <constraint name="iterable" within="" contains="" />
+        <constraint name="discriminator" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="Verify.assertEmpty to AssertJ" text="org.eclipse.collections.impl.test.Verify.assertEmpty($collection$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.assertj.core.api.Assertions.assertThat($collection$).isEmpty()">
+        <constraint name="collection" nameOfExprType="java.lang.Iterable" exprTypeWithinHierarchy="true" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="Verify.assertEmpty to AssertJ" text="org.eclipse.collections.impl.test.Verify.assertEmpty($string$, $collection$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.assertj.core.api.Assertions.assertThat($collection$).as($string$).isEmpty()">
+        <constraint name="string" nameOfExprType="String" within="" contains="" />
+        <constraint name="collection" nameOfExprType="java.lang.Iterable" exprTypeWithinHierarchy="true" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="Verify.assertInstanceOf to AssertJ" text="org.eclipse.collections.impl.test.Verify.assertInstanceOf($string$, $expr$, $class$.class)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.assertj.core.api.Assertions.assertThat($expr$).as($string$).isInstanceOf($class$.class)">
+        <constraint name="string" nameOfExprType="String" minCount="0" within="" contains="" />
+        <constraint name="expr" within="" contains="" />
+        <constraint name="class" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="Verify.assertItemAtIndex to AssertJ (List)" text="org.eclipse.collections.impl.test.Verify.assertItemAtIndex($string$, $item$, $index$, $list$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.assertj.core.api.Assertions.assertThat($list$).as($string$).element($index$).isEqualTo($item$)">
+        <constraint name="string" nameOfExprType="String" minCount="0" within="" contains="" />
+        <constraint name="item" within="" contains="" />
+        <constraint name="index" within="" contains="" />
+        <constraint name="list" nameOfExprType="java.util.List" exprTypeWithinHierarchy="true" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="Verify.assertNotContains to AssertJ" text="org.eclipse.collections.impl.test.Verify.assertNotContains($obj$, $collection$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.assertj.core.api.Assertions.assertThat($collection$).doesNotContain($obj$)">
+        <constraint name="obj" within="" contains="" />
+        <constraint name="collection" nameOfExprType="java.lang.Iterable" exprTypeWithinHierarchy="true" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="Verify.assertNotContains to AssertJ" text="org.eclipse.collections.impl.test.Verify.assertNotContains($string$, $obj$, $collection$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.assertj.core.api.Assertions.assertThat($collection$).as($string$).doesNotContain($obj$)">
+        <constraint name="string" nameOfExprType="String" within="" contains="" />
+        <constraint name="obj" within="" contains="" />
+        <constraint name="collection" nameOfExprType="java.lang.Iterable" exprTypeWithinHierarchy="true" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="Verify.assertNotEmpty to AssertJ" text="org.eclipse.collections.impl.test.Verify.assertNotEmpty($collection$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.assertj.core.api.Assertions.assertThat($collection$).isNotEmpty()">
+        <constraint name="collection" nameOfExprType="java.lang.Iterable" exprTypeWithinHierarchy="true" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="Verify.assertNotEmpty to AssertJ" text="org.eclipse.collections.impl.test.Verify.assertNotEmpty($string$, $collection$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.assertj.core.api.Assertions.assertThat($collection$).as($string$).isNotEmpty()">
+        <constraint name="string" nameOfExprType="String" within="" contains="" />
+        <constraint name="collection" nameOfExprType="java.lang.Iterable" exprTypeWithinHierarchy="true" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="Verify.assertNotEmpty to AssertJ (Array)" text="org.eclipse.collections.impl.test.Verify.assertNotEmpty($array$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.assertj.core.api.Assertions.assertThat($array$).isNotEmpty()">
+        <constraint name="array" nameOfExprType="java.lang.Object\[\]" exprTypeWithinHierarchy="true" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="Verify.assertNotEmpty to AssertJ (Array)" text="org.eclipse.collections.impl.test.Verify.assertNotEmpty($string$, $array$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.assertj.core.api.Assertions.assertThat($array$).as($string$).isNotEmpty()">
+        <constraint name="string" nameOfExprType="String" within="" contains="" />
+        <constraint name="array" nameOfExprType="java.lang.Object\[\]" exprTypeWithinHierarchy="true" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="Verify.assertIterableSize to AssertJ" text="org.eclipse.collections.impl.test.Verify.assertIterableSize($size$, $iterable$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.assertj.core.api.Assertions.assertThat($iterable$).hasSize($size$)">
+        <constraint name="size" within="" contains="" />
+        <constraint name="iterable" nameOfExprType="java.lang.Iterable" exprTypeWithinHierarchy="true" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="Verify.assertIterableSize to AssertJ" text="org.eclipse.collections.impl.test.Verify.assertIterableSize($string$, $size$, $iterable$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.assertj.core.api.Assertions.assertThat($iterable$).as($string$).hasSize($size$)">
+        <constraint name="string" nameOfExprType="String" within="" contains="" />
+        <constraint name="size" within="" contains="" />
+        <constraint name="iterable" nameOfExprType="java.lang.Iterable" exprTypeWithinHierarchy="true" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="Verify.assertNotEquals to AssertJ" text="org.eclipse.collections.impl.test.Verify.assertNotEquals($left$, $right$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.assertj.core.api.Assertions.assertThat($left$).isNotEqualTo($right$)">
+        <constraint name="left" within="" contains="" />
+        <constraint name="right" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="Verify.assertNotEquals to AssertJ" text="org.eclipse.collections.impl.test.Verify.assertNotEquals($string$, $left$, $right$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.assertj.core.api.Assertions.assertThat($left$).as($string$).isNotEqualTo($right$)">
+        <constraint name="string" nameOfExprType="String" within="" contains="" />
+        <constraint name="left" within="" contains="" />
+        <constraint name="right" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="Verify.assertNotNull" text="Assert.assertTrue($string$, $expr$ != null)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.eclipse.collections.impl.test.Verify.assertNotNull($string$, $expr$)">
+        <constraint name="string" nameOfExprType="String" minCount="0" within="" contains="" />
+        <constraint name="expr" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="Verify.assertNotNull to AssertJ" text="org.eclipse.collections.impl.test.Verify.assertNotNull($string$, $expr$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.assertj.core.api.Assertions.assertThat($expr$).as($string$).isNotNull()">
+        <constraint name="string" nameOfExprType="String" minCount="0" within="" contains="" />
+        <constraint name="expr" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="Verify.assertSize to AssertJ" text="org.eclipse.collections.impl.test.Verify.assertSize($size$, $collection$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.assertj.core.api.Assertions.assertThat($collection$).hasSize($size$)">
+        <constraint name="size" within="" contains="" />
+        <constraint name="collection" nameOfExprType="java.lang.Iterable" exprTypeWithinHierarchy="true" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="Verify.assertSize to AssertJ" text="org.eclipse.collections.impl.test.Verify.assertSize($string$, $size$, $collection$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.assertj.core.api.Assertions.assertThat($collection$).as($string$).hasSize($size$)">
+        <constraint name="string" nameOfExprType="String" within="" contains="" />
+        <constraint name="size" within="" contains="" />
+        <constraint name="collection" nameOfExprType="java.lang.Iterable" exprTypeWithinHierarchy="true" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="Verify.assertSize to AssertJ (Array)" text="org.eclipse.collections.impl.test.Verify.assertSize($size$, $array$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.assertj.core.api.Assertions.assertThat($array$).hasSize($size$)">
+        <constraint name="size" within="" contains="" />
+        <constraint name="array" nameOfExprType="Object\[\]" exprTypeWithinHierarchy="true" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="Verify.assertSize to AssertJ (Array)" text="org.eclipse.collections.impl.test.Verify.assertSize($string$, $size$, $array$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.assertj.core.api.Assertions.assertThat($array$).as($string$).hasSize($size$)">
+        <constraint name="string" nameOfExprType="String" within="" contains="" />
+        <constraint name="size" within="" contains="" />
+        <constraint name="array" nameOfExprType="Object\[\]" exprTypeWithinHierarchy="true" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="Verify.assertThrows() 1" text="try&#10;{&#10;    $statements$;&#10;    Assert.fail($string$);&#10;}&#10;catch ($Exception$ e)&#10;{&#10;}" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="Verify.assertThrows($Exception$.class, new Runnable()&#10;{&#10;    public void run()&#10;    {&#10;        $statements$;&#10;    }&#10;});&#10;">
+        <constraint name="statements" maxCount="2147483647" within="" contains="" />
+        <constraint name="Exception" regexp="Exception" withinHierarchy="true" within="" contains="" />
+        <constraint name="string" nameOfExprType="String" minCount="0" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="Verify.assertThrows to AssertJ" text="org.eclipse.collections.impl.test.Verify.assertThrows($exception$.class, new Runnable()&#10;{&#10;    public void run()&#10;    {&#10;        $statements$;&#10;    }&#10;})" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.assertj.core.api.Assertions.assertThatThrownBy(() -&gt; {&#10;    $statements$;&#10;}).isInstanceOf($exception$.class)">
+        <constraint name="exception" within="" contains="" />
+        <constraint name="statements" minCount="0" maxCount="2147483647" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="Verify.assertAllSatisfy to AssertJ (Iterable)" text="org.eclipse.collections.impl.test.Verify.assertAllSatisfy($iterable$, $predicate$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.assertj.core.api.Assertions.assertThat($iterable$).allMatch($predicate$)">
+        <constraint name="iterable" nameOfExprType="java.lang.Iterable" exprTypeWithinHierarchy="true" within="" contains="" />
+        <constraint name="predicate" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="Verify.assertAllSatisfy to AssertJ (Iterable)" text="org.eclipse.collections.impl.test.Verify.assertAllSatisfy($message$, $iterable$, $predicate$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.assertj.core.api.Assertions.assertThat($iterable$).as($message$).allMatch($predicate$)">
+        <constraint name="message" nameOfExprType="java.lang.String" within="" contains="" />
+        <constraint name="iterable" nameOfExprType="java.lang.Iterable" exprTypeWithinHierarchy="true" within="" contains="" />
+        <constraint name="predicate" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="Verify.assertAllSatisfy to AssertJ (Map)" text="org.eclipse.collections.impl.test.Verify.assertAllSatisfy($map$, $predicate$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.assertj.core.api.Assertions.assertThat(($map$).values()).allMatch($predicate$)">
+        <constraint name="map" nameOfExprType="java.util.Map" exprTypeWithinHierarchy="true" within="" contains="" />
+        <constraint name="predicate" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="Verify.assertAnySatisfy to AssertJ (Iterable)" text="org.eclipse.collections.impl.test.Verify.assertAnySatisfy($iterable$, $predicate$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.assertj.core.api.Assertions.assertThat($iterable$).anyMatch($predicate$)">
+        <constraint name="iterable" nameOfExprType="java.lang.Iterable" exprTypeWithinHierarchy="true" within="" contains="" />
+        <constraint name="predicate" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="Verify.assertAnySatisfy to AssertJ (Iterable)" text="org.eclipse.collections.impl.test.Verify.assertAnySatisfy($message$, $iterable$, $predicate$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.assertj.core.api.Assertions.assertThat($iterable$).as($message$).anyMatch($predicate$)">
+        <constraint name="message" nameOfExprType="java.lang.String" within="" contains="" />
+        <constraint name="iterable" nameOfExprType="java.lang.Iterable" exprTypeWithinHierarchy="true" within="" contains="" />
+        <constraint name="predicate" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="Verify.assertAnySatisfy to AssertJ (Map)" text="org.eclipse.collections.impl.test.Verify.assertAnySatisfy($map$, $predicate$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.assertj.core.api.Assertions.assertThat(($map$).values()).anyMatch($predicate$)">
+        <constraint name="map" nameOfExprType="java.util.Map" exprTypeWithinHierarchy="true" within="" contains="" />
+        <constraint name="predicate" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="Verify.assertNoneSatisfy to AssertJ (Iterable)" text="org.eclipse.collections.impl.test.Verify.assertNoneSatisfy($iterable$, $predicate$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.assertj.core.api.Assertions.assertThat($iterable$).noneMatch($predicate$)">
+        <constraint name="iterable" nameOfExprType="java.lang.Iterable" exprTypeWithinHierarchy="true" within="" contains="" />
+        <constraint name="predicate" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="Verify.assertNoneSatisfy to AssertJ (Iterable)" text="org.eclipse.collections.impl.test.Verify.assertNoneSatisfy($message$, $iterable$, $predicate$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.assertj.core.api.Assertions.assertThat($iterable$).as($message$).noneMatch($predicate$)">
+        <constraint name="message" nameOfExprType="java.lang.String" within="" contains="" />
+        <constraint name="iterable" nameOfExprType="java.lang.Iterable" exprTypeWithinHierarchy="true" within="" contains="" />
+        <constraint name="predicate" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="Verify.assertNoneSatisfy to AssertJ (Map)" text="org.eclipse.collections.impl.test.Verify.assertNoneSatisfy($map$, $predicate$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.assertj.core.api.Assertions.assertThat(($map$).values()).noneMatch($predicate$)">
+        <constraint name="map" nameOfExprType="java.util.Map" exprTypeWithinHierarchy="true" within="" contains="" />
+        <constraint name="predicate" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="Verify.denyContainsKey to AssertJ" text="org.eclipse.collections.impl.test.Verify.denyContainsKey($key$, $map$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.assertj.core.api.Assertions.assertThat($map$).doesNotContainKey($key$)">
+        <constraint name="key" within="" contains="" />
+        <constraint name="map" nameOfExprType="java.util.Map" exprTypeWithinHierarchy="true" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="Verify.denyContainsKey to AssertJ" text="org.eclipse.collections.impl.test.Verify.denyContainsKey($string$, $key$, $map$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.assertj.core.api.Assertions.assertThat($map$).as($string$).doesNotContainKey($key$)">
+        <constraint name="string" nameOfExprType="String" within="" contains="" />
+        <constraint name="key" within="" contains="" />
+        <constraint name="map" nameOfExprType="java.util.Map" exprTypeWithinHierarchy="true" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="Verify.assertContainsKeyValue to AssertJ" text="org.eclipse.collections.impl.test.Verify.assertContainsKeyValue($key$, $value$, $map$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.assertj.core.api.Assertions.assertThat($map$).containsEntry($key$, $value$)">
+        <constraint name="key" within="" contains="" />
+        <constraint name="value" within="" contains="" />
+        <constraint name="map" nameOfExprType="java.util.Map" exprTypeWithinHierarchy="true" within="" contains="" />
+      </replaceConfiguration>
+      <replaceConfiguration name="Verify.assertContainsKeyValue to AssertJ" text="org.eclipse.collections.impl.test.Verify.assertContainsKeyValue($string$, $key$, $value$, $map$)" recursive="false" caseInsensitive="true" type="JAVA" reformatAccordingToStyle="false" shortenFQN="true" replacement="org.assertj.core.api.Assertions.assertThat($map$).as($string$).containsEntry($key$, $value$)">
+        <constraint name="string" nameOfExprType="String" within="" contains="" />
+        <constraint name="key" within="" contains="" />
+        <constraint name="value" within="" contains="" />
+        <constraint name="map" nameOfExprType="java.util.Map" exprTypeWithinHierarchy="true" within="" contains="" />
       </replaceConfiguration>
     </inspection_tool>
     <inspection_tool class="SafeLock" enabled="true" level="INSPECTION" enabled_by_default="true" />

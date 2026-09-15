@@ -10,6 +10,8 @@
 
 package org.eclipse.collections.impl.utility;
 
+import java.util.Locale;
+
 import org.eclipse.collections.api.bag.MutableBag;
 import org.eclipse.collections.api.block.function.Function;
 import org.eclipse.collections.api.block.procedure.primitive.CharProcedure;
@@ -98,14 +100,14 @@ public class StringIterateTest
         assertEquals("HELLO", helloUppercase2);
 
         CharArrayList arraylist = new CharArrayList();
-        StringIterate.asCharAdapter("Hello".toUpperCase())
+        StringIterate.asCharAdapter("Hello".toUpperCase(Locale.ROOT))
                 .chars()
                 .sorted()
                 .forEach(e -> arraylist.add((char) e));
         assertEquals(StringIterate.asCharAdapter("EHLLO"), arraylist);
 
         ImmutableCharList arrayList2 =
-                StringIterate.asCharAdapter("Hello".toUpperCase())
+                StringIterate.asCharAdapter("Hello".toUpperCase(Locale.ROOT))
                         .toSortedList()
                         .toImmutable();
 
@@ -143,15 +145,15 @@ public class StringIterateTest
                 StringIterate.asCharAdapter(THE_QUICK_BROWN_FOX_JUMPS_OVER_THE_LAZY_DOG).containsAll(alphaCharAdapter));
         assertEquals(
                 CharSets.immutable.empty(),
-                alphaCharAdapter.newWithoutAll(StringIterate.asCharAdapter(THE_QUICK_BROWN_FOX_JUMPS_OVER_THE_LAZY_DOG.toLowerCase())));
+                alphaCharAdapter.newWithoutAll(StringIterate.asCharAdapter(THE_QUICK_BROWN_FOX_JUMPS_OVER_THE_LAZY_DOG.toLowerCase(Locale.ROOT))));
         assertEquals(
                 TQBFJOTLD_MINUS_HALF_ABET_1,
-                StringIterate.asCharAdapter(THE_QUICK_BROWN_FOX_JUMPS_OVER_THE_LAZY_DOG.toLowerCase())
+                StringIterate.asCharAdapter(THE_QUICK_BROWN_FOX_JUMPS_OVER_THE_LAZY_DOG.toLowerCase(Locale.ROOT))
                         .newWithoutAll(StringIterate.asCharAdapter(HALF_ABET.getOne()))
                         .toString());
         assertEquals(
                 TQBFJOTLD_MINUS_HALF_ABET_2,
-                StringIterate.asCharAdapter(THE_QUICK_BROWN_FOX_JUMPS_OVER_THE_LAZY_DOG.toLowerCase())
+                StringIterate.asCharAdapter(THE_QUICK_BROWN_FOX_JUMPS_OVER_THE_LAZY_DOG.toLowerCase(Locale.ROOT))
                         .newWithoutAll(StringIterate.asCharAdapter(HALF_ABET.getTwo()))
                         .toString());
     }
@@ -226,15 +228,15 @@ public class StringIterateTest
                 StringIterate.asCodePointAdapter(THE_QUICK_BROWN_FOX_JUMPS_OVER_THE_LAZY_DOG).containsAll(alphaints));
         assertEquals(
                 IntSets.immutable.empty(),
-                alphaints.newWithoutAll(StringIterate.asCodePointAdapter(THE_QUICK_BROWN_FOX_JUMPS_OVER_THE_LAZY_DOG.toLowerCase())));
+                alphaints.newWithoutAll(StringIterate.asCodePointAdapter(THE_QUICK_BROWN_FOX_JUMPS_OVER_THE_LAZY_DOG.toLowerCase(Locale.ROOT))));
         assertEquals(
                 TQBFJOTLD_MINUS_HALF_ABET_1,
-                StringIterate.asCodePointAdapter(THE_QUICK_BROWN_FOX_JUMPS_OVER_THE_LAZY_DOG.toLowerCase())
+                StringIterate.asCodePointAdapter(THE_QUICK_BROWN_FOX_JUMPS_OVER_THE_LAZY_DOG.toLowerCase(Locale.ROOT))
                         .newWithoutAll(StringIterate.asCodePointAdapter(HALF_ABET.getOne()))
                         .toString());
         assertEquals(
                 TQBFJOTLD_MINUS_HALF_ABET_2,
-                StringIterate.asCodePointAdapter(THE_QUICK_BROWN_FOX_JUMPS_OVER_THE_LAZY_DOG.toLowerCase())
+                StringIterate.asCodePointAdapter(THE_QUICK_BROWN_FOX_JUMPS_OVER_THE_LAZY_DOG.toLowerCase(Locale.ROOT))
                         .newWithoutAll(StringIterate.asCodePointAdapter(HALF_ABET.getTwo()))
                         .toString());
     }
@@ -298,18 +300,18 @@ public class StringIterateTest
                 StringIterate.toCodePointList(THE_QUICK_BROWN_FOX_JUMPS_OVER_THE_LAZY_DOG).containsAll(alphaints));
         assertEquals(
                 IntSets.immutable.empty(),
-                alphaints.newWithoutAll(StringIterate.toCodePointList(THE_QUICK_BROWN_FOX_JUMPS_OVER_THE_LAZY_DOG.toLowerCase())));
+                alphaints.newWithoutAll(StringIterate.toCodePointList(THE_QUICK_BROWN_FOX_JUMPS_OVER_THE_LAZY_DOG.toLowerCase(Locale.ROOT))));
         assertTrue(
                 StringIterate.toCodePointList(THE_QUICK_BROWN_FOX_JUMPS_OVER_THE_LAZY_DOG)
                         .containsAll(StringIterate.toCodePointList(HALF_ABET.getOne())));
         assertEquals(
                 TQBFJOTLD_MINUS_HALF_ABET_1,
-                StringIterate.toCodePointList(THE_QUICK_BROWN_FOX_JUMPS_OVER_THE_LAZY_DOG.toLowerCase())
+                StringIterate.toCodePointList(THE_QUICK_BROWN_FOX_JUMPS_OVER_THE_LAZY_DOG.toLowerCase(Locale.ROOT))
                         .newWithoutAll(StringIterate.toCodePointList(HALF_ABET.getOne()))
                         .toString());
         assertEquals(
                 TQBFJOTLD_MINUS_HALF_ABET_2,
-                StringIterate.toCodePointList(THE_QUICK_BROWN_FOX_JUMPS_OVER_THE_LAZY_DOG.toLowerCase())
+                StringIterate.toCodePointList(THE_QUICK_BROWN_FOX_JUMPS_OVER_THE_LAZY_DOG.toLowerCase(Locale.ROOT))
                         .newWithoutAll(StringIterate.toCodePointList(HALF_ABET.getTwo()))
                         .toString());
     }
@@ -362,11 +364,11 @@ public class StringIterateTest
     public void englishIsUpperLowerCase()
     {
         String allValues = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890~`!@#$%^&*()_-+=[]{};<>,.?/|";
-        String jdkUpper = allValues.toUpperCase();
+        String jdkUpper = allValues.toUpperCase(Locale.ROOT);
         String upper = StringIterate.englishToUpperCase(allValues);
         assertEquals(jdkUpper.length(), upper.length());
         assertEquals(jdkUpper, upper);
-        String jdkLower = allValues.toLowerCase();
+        String jdkLower = allValues.toLowerCase(Locale.ROOT);
         String lower = StringIterate.englishToLowerCase(allValues);
         assertEquals(jdkLower.length(), lower.length());
         assertEquals(jdkLower, lower);

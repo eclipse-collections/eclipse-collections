@@ -93,6 +93,7 @@ public class SynchronizedBooleanIterableTest extends AbstractBooleanIterableTest
     }
 
     @Override
+    @Test
     public void newCollection()
     {
         //Testing newCollection() is not applicable.

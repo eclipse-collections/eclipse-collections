@@ -99,12 +99,14 @@ import org.eclipse.collections.api.stack.primitive.MutableLongStack;
 import org.eclipse.collections.api.stack.primitive.MutableShortStack;
 import org.eclipse.collections.api.tuple.Pair;
 import org.eclipse.collections.impl.block.factory.Predicates;
+import org.eclipse.collections.impl.block.procedure.AppendStringWithSelfProcedure;
 import org.eclipse.collections.impl.list.Interval;
 import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.map.mutable.UnifiedMap;
 import org.eclipse.collections.impl.multimap.list.FastListMultimap;
 import org.eclipse.collections.impl.partition.stack.PartitionArrayStack;
 import org.eclipse.collections.impl.utility.LazyIterate;
+import org.eclipse.collections.impl.utility.internal.IteratorIterate;
 
 /**
  * ArrayStack is a MutableStack which contains a FastList of data. ArrayStack iterates from top to bottom (LIFO order).
@@ -851,37 +853,50 @@ public class ArrayStack<T> implements MutableStack<T>, Externalizable
     @Override
     public String makeString()
     {
-        return this.delegate.asReversed().makeString();
+        return this.makeString(", ");
     }
 
     @Override
     public String makeString(String separator)
     {
-        return this.delegate.asReversed().makeString(separator);
+        return this.makeString("", separator, "");
     }
 
     @Override
     public String makeString(String start, String separator, String end)
     {
-        return this.delegate.asReversed().makeString(start, separator, end);
+        Appendable stringBuilder = new StringBuilder();
+        this.appendString(stringBuilder, start, separator, end);
+        return stringBuilder.toString();
     }
 
     @Override
     public void appendString(Appendable appendable)
     {
-        this.delegate.asReversed().appendString(appendable);
+        this.appendString(appendable, "", ", ", "");
     }
 
     @Override
     public void appendString(Appendable appendable, String separator)
     {
-        this.delegate.asReversed().appendString(appendable, separator);
+        this.appendString(appendable, "", separator, "");
     }
 
     @Override
     public void appendString(Appendable appendable, String start, String separator, String end)
     {
-        this.delegate.asReversed().appendString(appendable, start, separator, end);
+        Procedure<T> appendStringProcedure =
+                new AppendStringWithSelfProcedure<>(appendable, separator, this, "(this Collection)");
+        try
+        {
+            appendable.append(start);
+            this.delegate.asReversed().forEach(appendStringProcedure);
+            appendable.append(end);
+        }
+        catch (IOException e)
+        {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -1078,7 +1093,7 @@ public class ArrayStack<T> implements MutableStack<T>, Externalizable
     }
 
     @Override
-    public <T> T[] toArray(T[] a)
+    public <T2> T2[] toArray(T2[] a)
     {
         return this.delegate.asReversed().toArray(a);
     }
@@ -1103,9 +1118,9 @@ public class ArrayStack<T> implements MutableStack<T>, Externalizable
 
         StackIterable<?> that = (StackIterable<?>) o;
 
-        if (that instanceof ArrayStack<?>)
+        if (that instanceof ArrayStack<?> arrayStack)
         {
-            return this.delegate.equals(((ArrayStack<?>) that).delegate);
+            return this.delegate.equals(arrayStack.delegate);
         }
         Iterator<T> thisIterator = this.iterator();
         Iterator<?> thatIterator = that.iterator();
@@ -1122,7 +1137,7 @@ public class ArrayStack<T> implements MutableStack<T>, Externalizable
     @Override
     public String toString()
     {
-        return this.delegate.asReversed().makeString("[", ", ", "]");
+        return this.makeString("[", ", ", "]");
     }
 
     @Override
@@ -1186,19 +1201,25 @@ public class ArrayStack<T> implements MutableStack<T>, Externalizable
     @Override
     public MutableStack<T> takeWhile(Predicate<? super T> predicate)
     {
-        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".takeWhile() not implemented yet");
+        MutableList<T> result = Lists.mutable.empty();
+        IteratorIterate.takeWhile(this.delegate.asReversed().iterator(), predicate, result);
+        return ArrayStack.newStackFromTopToBottom(result);
     }
 
     @Override
     public MutableStack<T> dropWhile(Predicate<? super T> predicate)
     {
-        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".dropWhile() not implemented yet");
+        MutableList<T> result = Lists.mutable.empty();
+        IteratorIterate.dropWhile(this.delegate.asReversed().iterator(), predicate, result);
+        return ArrayStack.newStackFromTopToBottom(result);
     }
 
     @Override
     public PartitionMutableStack<T> partitionWhile(Predicate<? super T> predicate)
     {
-        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".partitionWhile() not implemented yet");
+        PartitionArrayStack<T> result = new PartitionArrayStack<>();
+        this.delegate.asReversed().forEach(new PartitionArrayStack.PartitionWhileProcedure<>(predicate, result));
+        return result;
     }
 
     @Override

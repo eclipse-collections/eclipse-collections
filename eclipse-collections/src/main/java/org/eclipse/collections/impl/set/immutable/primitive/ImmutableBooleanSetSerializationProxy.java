@@ -48,6 +48,7 @@ public final class ImmutableBooleanSetSerializationProxy implements Externalizab
         {
             this.set.forEach(new CheckedBooleanProcedure()
             {
+                @Override
                 public void safeValue(boolean item) throws Exception
                 {
                     out.writeBoolean(item);

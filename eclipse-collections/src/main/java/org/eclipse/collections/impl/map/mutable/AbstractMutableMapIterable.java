@@ -47,66 +47,6 @@ public abstract class AbstractMutableMapIterable<K, V> extends AbstractMapIterab
     }
 
     @Override
-    public V getIfAbsentPut(K key, Function0<? extends V> function)
-    {
-        V result = this.get(key);
-        if (this.isAbsent(result, key))
-        {
-            result = function.value();
-            this.put(key, result);
-        }
-        return result;
-    }
-
-    @Override
-    public V getIfAbsentPut(K key, V value)
-    {
-        V result = this.get(key);
-        if (this.isAbsent(result, key))
-        {
-            result = value;
-            this.put(key, result);
-        }
-        return result;
-    }
-
-    @Override
-    public V getIfAbsentPutWithKey(K key, Function<? super K, ? extends V> function)
-    {
-        return this.getIfAbsentPutWith(key, function, key);
-    }
-
-    @Override
-    public <P> V getIfAbsentPutWith(K key, Function<? super P, ? extends V> function, P parameter)
-    {
-        V result = this.get(key);
-        if (this.isAbsent(result, key))
-        {
-            result = function.valueOf(parameter);
-            this.put(key, result);
-        }
-        return result;
-    }
-
-    @Override
-    public V updateValue(K key, Function0<? extends V> factory, Function<? super V, ? extends V> function)
-    {
-        V oldValue = this.getIfAbsent(key, factory);
-        V newValue = function.valueOf(oldValue);
-        this.put(key, newValue);
-        return newValue;
-    }
-
-    @Override
-    public <P> V updateValueWith(K key, Function0<? extends V> factory, Function2<? super V, ? super P, ? extends V> function, P parameter)
-    {
-        V oldValue = this.getIfAbsent(key, factory);
-        V newValue = function.value(oldValue, parameter);
-        this.put(key, newValue);
-        return newValue;
-    }
-
-    @Override
     public <VV> MutableMapIterable<VV, V> groupByUniqueKey(Function<? super V, ? extends VV> function)
     {
         return this.groupByUniqueKey(function, UnifiedMap.newMap(this.size()));

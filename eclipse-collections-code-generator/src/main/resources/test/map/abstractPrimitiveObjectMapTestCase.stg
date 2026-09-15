@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -357,7 +358,7 @@ public abstract class Abstract<name>ObjectMapTestCase
         <name>ObjectMap\<String> map1 = this.newWithKeysValues(<(literal.(type))("0")>, "zero", <(literal.(type))("1")>, "one", <(literal.(type))("9")>, "nine");
 
         assertEquals(HashBag.newBagWith("ZERO!", "ONE!", "NINE!"),
-                map1.collectWith((String argument1, String argument2) -> argument1.toUpperCase() + argument2, "!"));
+                map1.collectWith((String argument1, String argument2) -> argument1.toUpperCase(Locale.ROOT) + argument2, "!"));
     }
 
     @Test
@@ -366,7 +367,7 @@ public abstract class Abstract<name>ObjectMapTestCase
         <name>ObjectMap\<String> map1 = this.newWithKeysValues(<(literal.(type))("0")>, "zero", <(literal.(type))("1")>, "one", <(literal.(type))("9")>, "nine");
 
         assertEquals(HashBag.newBagWith("ZERO!", "ONE!", "NINE!"),
-                map1.collectWith((String argument1, String argument2) -> argument1.toUpperCase() + argument2, "!", HashBag.\<String>newBag()));
+                map1.collectWith((String argument1, String argument2) -> argument1.toUpperCase(Locale.ROOT) + argument2, "!", HashBag.\<String>newBag()));
     }
 
     @Test
@@ -1635,15 +1636,15 @@ public abstract class Abstract<name>ObjectMapTestCase
         <name>ObjectMap\<String> map1 = this.newWithKeysValues(<(literal.(type))("0")>, "zero", <(literal.(type))("9")>, "nine");
         <name>ObjectMap\<String> map2 = this.newWithKeysValues(<(literal.(type))("1")>, "one");
 
-        Function\<String, UnifiedSet\<Character>\> toChars = (String object) ->
+        Function\<String, MutableSet\<Character>\> toChars = (String object) ->
         {
-            UnifiedSet\<Character> list = UnifiedSet.newSet();
+            MutableSet\<Character> set = UnifiedSet.newSet();
             char[] chars = object.toCharArray();
             for (char aChar : chars)
             {
-                list.add(aChar);
+                set.add(aChar);
             }
-            return list;
+            return set;
         };
 
         FastListMultimap\<Character, String> expected = FastListMultimap.newMultimap(Tuples.pair('z', "zero"), Tuples.pair('e', "zero"), Tuples.pair('r', "zero"), Tuples.pair('o', "zero"), Tuples.pair('n', "nine"), Tuples.pair('i', "nine"), Tuples.pair('e', "nine"));

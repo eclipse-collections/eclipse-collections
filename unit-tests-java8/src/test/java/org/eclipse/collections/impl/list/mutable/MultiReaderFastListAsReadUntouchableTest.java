@@ -13,9 +13,6 @@ package org.eclipse.collections.impl.list.mutable;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.test.IterableTestCase;
 import org.eclipse.collections.test.list.mutable.UnmodifiableMutableListTestCase;
-import org.junit.jupiter.api.Test;
-
-import static org.eclipse.collections.impl.test.Verify.assertNotSerializable;
 
 public class MultiReaderFastListAsReadUntouchableTest implements UnmodifiableMutableListTestCase
 {
@@ -29,9 +26,8 @@ public class MultiReaderFastListAsReadUntouchableTest implements UnmodifiableMut
     }
 
     @Override
-    @Test
-    public void Object_PostSerializedEqualsAndHashCode()
+    public boolean allowsSerialization()
     {
-        assertNotSerializable(this.newWith());
+        return false;
     }
 }

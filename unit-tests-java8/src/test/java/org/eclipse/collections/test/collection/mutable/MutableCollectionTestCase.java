@@ -10,6 +10,8 @@
 
 package org.eclipse.collections.test.collection.mutable;
 
+import java.util.function.Predicate;
+
 import org.eclipse.collections.api.collection.ImmutableCollection;
 import org.eclipse.collections.api.collection.MutableCollection;
 import org.eclipse.collections.api.factory.Lists;
@@ -24,6 +26,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public interface MutableCollectionTestCase extends CollectionTestCase, RichIterableTestCase
@@ -60,10 +63,24 @@ public interface MutableCollectionTestCase extends CollectionTestCase, RichItera
     {
         String s = "";
 
-        MutableCollection<String> collection = this.newWith();
-        assertTrue(collection.add(s));
-        assertEquals(this.allowsDuplicates(), collection.add(s));
-        assertEquals(this.allowsDuplicates() ? 2 : 1, collection.size());
+        if (this.allowsAdd())
+        {
+            MutableCollection<String> collection = this.newWith();
+            assertTrue(collection.add(s));
+            assertEquals(this.allowsDuplicates(), collection.add(s));
+            assertEquals(this.allowsDuplicates() ? 2 : 1, collection.size());
+        }
+        else
+        {
+            if (this.allowsDuplicates())
+            {
+                assertEquals(2, this.newWith(s, s).size());
+            }
+            else
+            {
+                assertThrows(IllegalStateException.class, () -> this.newWith(s, s));
+            }
+        }
     }
 
     @Test
@@ -76,45 +93,165 @@ public interface MutableCollectionTestCase extends CollectionTestCase, RichItera
     @Test
     default void MutableCollection_removeIf()
     {
-        MutableCollection<Integer> collection1 = this.newWith(5, 5, 4, 4, 3, 3, 2, 2, 1, 1);
-        assertTrue(collection1.removeIf(Predicates.cast(each -> each % 2 == 0)));
-        assertIterablesEqual(this.getExpectedFiltered(5, 5, 3, 3, 1, 1), collection1);
+        if (!this.allowsRemove())
+        {
+            MutableCollection<Integer> collection = this.newWith(5, 4, 3, 2, 1);
+            assertThrows(UnsupportedOperationException.class, () -> collection.removeIf(Predicates.cast(each -> each % 2 == 0)));
+            assertThrows(UnsupportedOperationException.class, () -> this.newWith(7, 4, 5, 1).removeIf(Predicates.cast(null)));
+            assertThrows(UnsupportedOperationException.class, () -> this.newWith(9, 5, 1).removeIf(Predicates.cast(each -> each % 2 == 0)));
+            assertThrows(UnsupportedOperationException.class, () -> this.newWith(6, 4, 2).removeIf(Predicates.cast(each -> each % 2 == 0)));
+            assertThrows(UnsupportedOperationException.class, () -> this.<Integer>newWith().removeIf(Predicates.cast(each -> each % 2 == 0)));
+            assertIterablesEqual(this.newWith(5, 4, 3, 2, 1), collection);
+            return;
+        }
 
-        MutableCollection<Integer> collection2 = this.newWith(1, 2, 3);
-        assertFalse(collection2.removeIf(Predicates.cast(each -> each > 4)));
-        assertIterablesEqual(this.getExpectedFiltered(1, 2, 3), collection2);
-        assertTrue(collection2.removeIf(Predicates.cast(each -> each > 0)));
+        MutableCollection<Integer> collection1 = this.newWith(5, 4, 3, 2, 1);
+        assertTrue(collection1.removeIf(Predicates.cast(each -> each % 2 == 0)));
+        assertIterablesEqual(this.getExpectedFiltered(5, 3, 1), collection1);
+
+        MutableCollection<Integer> collection2 = this.newWith(1, 2, 3, 4);
+        assertFalse(collection2.removeIf(Predicates.equal(5)));
+        assertTrue(collection2.removeIf(Predicates.greaterThan(0)));
+        assertFalse(collection2.removeIf(Predicates.greaterThan(2)));
 
         MutableCollection<Integer> collection3 = this.newWith();
-        assertFalse(collection3.removeIf(Predicates.cast(each -> each % 2 == 0)));
-        assertIterablesEqual(this.getExpectedFiltered(), collection3);
+        assertFalse(collection3.removeIf(Predicates.equal(5)));
 
-        MutableCollection<Integer> collection4 = this.newWith(2, 2, 4, 6);
+        Predicate<Object> predicate = null;
+        assertThrows(NullPointerException.class, () -> this.newWith(7, 4, 5, 1).removeIf(predicate));
+
+        if (!this.allowsDuplicates())
+        {
+            return;
+        }
+
+        MutableCollection<Integer> collection4 = this.newWith(5, 5, 4, 4, 3, 3, 2, 2, 1, 1);
         assertTrue(collection4.removeIf(Predicates.cast(each -> each % 2 == 0)));
-        assertIterablesEqual(this.getExpectedFiltered(), collection4);
-        assertFalse(collection4.removeIf(Predicates.cast(each -> each % 2 == 0)));
+        assertIterablesEqual(this.getExpectedFiltered(5, 5, 3, 3, 1, 1), collection4);
+
+        MutableCollection<Integer> collection5 = this.newWith(1, 2, 3);
+        assertFalse(collection5.removeIf(Predicates.cast(each -> each > 4)));
+        assertIterablesEqual(this.getExpectedFiltered(1, 2, 3), collection5);
+        assertTrue(collection5.removeIf(Predicates.cast(each -> each > 0)));
+
+        MutableCollection<Integer> collection6 = this.newWith();
+        assertFalse(collection6.removeIf(Predicates.cast(each -> each % 2 == 0)));
+        assertIterablesEqual(this.getExpectedFiltered(), collection6);
+
+        MutableCollection<Integer> collection7 = this.newWith(2, 2, 4, 6);
+        assertTrue(collection7.removeIf(Predicates.cast(each -> each % 2 == 0)));
+        assertIterablesEqual(this.getExpectedFiltered(), collection7);
+        assertFalse(collection7.removeIf(Predicates.cast(each -> each % 2 == 0)));
+    }
+
+    @Test
+    default void Collection_removeIf()
+    {
+        if (!this.allowsRemove())
+        {
+            MutableCollection<Integer> collection = this.newWith(5, 4, 3, 2, 1);
+            Predicate<Integer> jdkEvenPredicate = each -> each % 2 == 0;
+            assertThrows(UnsupportedOperationException.class, () -> collection.removeIf(jdkEvenPredicate));
+            assertThrows(UnsupportedOperationException.class, () -> this.newWith(9, 5, 1).removeIf(jdkEvenPredicate));
+            assertThrows(UnsupportedOperationException.class, () -> this.newWith(6, 4, 2).removeIf(jdkEvenPredicate));
+            assertThrows(UnsupportedOperationException.class, () -> this.<Integer>newWith().removeIf(jdkEvenPredicate));
+            assertIterablesEqual(this.newWith(5, 4, 3, 2, 1), collection);
+            return;
+        }
+
+        MutableCollection<Integer> collection1 = this.newWith(5, 4, 3, 2, 1);
+        Predicate<Integer> jdkEvenPredicate = each -> each % 2 == 0;
+        assertTrue(collection1.removeIf(jdkEvenPredicate));
+        assertIterablesEqual(this.getExpectedFiltered(5, 3, 1), collection1);
+
+        MutableCollection<Integer> collection2 = this.newWith(1, 2, 3, 4);
+        Predicate<Integer> jdkGreaterThan5 = each -> each > 5;
+        Predicate<Integer> jdkGreaterThan0 = each -> each > 0;
+        Predicate<Integer> jdkGreaterThan2 = each -> each > 2;
+        assertFalse(collection2.removeIf(jdkGreaterThan5));
+        assertTrue(collection2.removeIf(jdkGreaterThan0));
+        assertFalse(collection2.removeIf(jdkGreaterThan2));
+
+        MutableCollection<Integer> collection3 = this.newWith();
+        Predicate<Integer> jdkEquals5 = each -> each == 5;
+        assertFalse(collection3.removeIf(jdkEquals5));
+
+        if (!this.allowsDuplicates())
+        {
+            return;
+        }
+
+        MutableCollection<Integer> collection4 = this.newWith(5, 5, 4, 4, 3, 3, 2, 2, 1, 1);
+        assertTrue(collection4.removeIf(jdkEvenPredicate));
+        assertIterablesEqual(this.getExpectedFiltered(5, 5, 3, 3, 1, 1), collection4);
+
+        MutableCollection<Integer> collection5 = this.newWith(1, 2, 3);
+        Predicate<Integer> jdkGreaterThan4 = each -> each > 4;
+        assertFalse(collection5.removeIf(jdkGreaterThan4));
+        assertIterablesEqual(this.getExpectedFiltered(1, 2, 3), collection5);
+        assertTrue(collection5.removeIf(jdkGreaterThan0));
+
+        MutableCollection<Integer> collection6 = this.newWith();
+        assertFalse(collection6.removeIf(jdkEvenPredicate));
+        assertIterablesEqual(this.getExpectedFiltered(), collection6);
+
+        MutableCollection<Integer> collection7 = this.newWith(2, 2, 4, 6);
+        assertTrue(collection7.removeIf(jdkEvenPredicate));
+        assertIterablesEqual(this.getExpectedFiltered(), collection7);
+        assertFalse(collection7.removeIf(jdkEvenPredicate));
     }
 
     @Test
     default void MutableCollection_removeIfWith()
     {
-        MutableCollection<Integer> collection1 = this.newWith(5, 5, 4, 4, 3, 3, 2, 2, 1, 1);
-        assertTrue(collection1.removeIfWith(Predicates2.in(), Lists.immutable.with(5, 3, 1)));
-        assertIterablesEqual(this.getExpectedFiltered(4, 4, 2, 2), collection1);
+        if (!this.allowsRemove())
+        {
+            MutableCollection<Integer> collection = this.newWith(5, 4, 3, 2, 1);
+            assertThrows(UnsupportedOperationException.class, () -> Boolean.valueOf(collection.removeIfWith(Predicates2.in(), Lists.immutable.with(5, 3, 1))));
+            assertThrows(UnsupportedOperationException.class, () -> this.newWith(7, 4, 5, 1).removeIfWith(null, this));
+            assertThrows(UnsupportedOperationException.class, () -> this.newWith(9, 5, 1).removeIfWith(Predicates2.greaterThan(), 10));
+            assertThrows(UnsupportedOperationException.class, () -> this.newWith(6, 4, 2).removeIfWith(Predicates2.greaterThan(), 2));
+            assertThrows(UnsupportedOperationException.class, () -> this.<Integer>newWith().removeIfWith(Predicates2.greaterThan(), 2));
+            assertIterablesEqual(this.newWith(5, 4, 3, 2, 1), collection);
+            return;
+        }
 
-        MutableCollection<Integer> collection2 = this.newWith(1, 2, 3);
-        assertFalse(collection2.removeIfWith(Predicates2.in(), Lists.immutable.with(4)));
-        assertIterablesEqual(this.getExpectedFiltered(1, 2, 3), collection2);
-        assertTrue(collection2.removeIfWith(Predicates2.in(), Lists.immutable.with(1, 2, 3)));
+        MutableCollection<Integer> collection = this.newWith(5, 4, 3, 2, 1);
+        collection.removeIfWith(Predicates2.in(), Lists.immutable.with(5, 3, 1));
+        assertIterablesEqual(this.getExpectedFiltered(4, 2), collection);
+
+        MutableCollection<Integer> collection2 = this.newWith(1, 2, 3, 4);
+        assertFalse(collection2.removeIf(Predicates.equal(5)));
+        assertTrue(collection2.removeIf(Predicates.greaterThan(0)));
+        assertFalse(collection2.removeIf(Predicates.greaterThan(2)));
 
         MutableCollection<Integer> collection3 = this.newWith();
-        assertFalse(collection3.removeIfWith(Predicates2.in(), Lists.immutable.with()));
-        assertIterablesEqual(this.getExpectedFiltered(), collection3);
+        assertFalse(collection3.removeIf(Predicates.equal(5)));
 
-        MutableCollection<Integer> collection4 = this.newWith(2, 2, 4, 6);
-        assertTrue(collection4.removeIfWith(Predicates2.greaterThan(), 1));
-        assertIterablesEqual(this.getExpectedFiltered(), collection4);
-        assertFalse(collection4.removeIfWith(Predicates2.greaterThan(), 1));
+        assertThrows(NullPointerException.class, () -> this.newWith(7, 4, 5, 1).removeIf(Predicates.cast(null)));
+
+        if (!this.allowsDuplicates())
+        {
+            return;
+        }
+
+        MutableCollection<Integer> collection4 = this.newWith(5, 5, 4, 4, 3, 3, 2, 2, 1, 1);
+        assertTrue(collection4.removeIfWith(Predicates2.in(), Lists.immutable.with(5, 3, 1)));
+        assertIterablesEqual(this.getExpectedFiltered(4, 4, 2, 2), collection4);
+
+        MutableCollection<Integer> collection5 = this.newWith(1, 2, 3);
+        assertFalse(collection5.removeIfWith(Predicates2.in(), Lists.immutable.with(4)));
+        assertIterablesEqual(this.getExpectedFiltered(1, 2, 3), collection5);
+        assertTrue(collection5.removeIfWith(Predicates2.in(), Lists.immutable.with(1, 2, 3)));
+
+        MutableCollection<Integer> collection6 = this.newWith();
+        assertFalse(collection6.removeIfWith(Predicates2.in(), Lists.immutable.with()));
+        assertIterablesEqual(this.getExpectedFiltered(), collection6);
+
+        MutableCollection<Integer> collection7 = this.newWith(2, 2, 4, 6);
+        assertTrue(collection7.removeIfWith(Predicates2.greaterThan(), 1));
+        assertIterablesEqual(this.getExpectedFiltered(), collection7);
+        assertFalse(collection7.removeIfWith(Predicates2.greaterThan(), 1));
     }
 
     @Test
@@ -122,5 +259,56 @@ public interface MutableCollectionTestCase extends CollectionTestCase, RichItera
     {
         MutableCollection<Integer> collection = this.newWith(4, 4, 4, 4, 3, 3, 3, 2, 2, 1);
         assertEquals(Integer.valueOf(81), collection.injectIntoWith(1, (a, b, c) -> a + b + c, 5));
+    }
+
+    @Override
+    @Test
+    default void Object_equalsAndHashCode()
+    {
+        CollectionTestCase.super.Object_equalsAndHashCode();
+
+        if (!this.allowsAdd() || !this.supportsNonComparableElements())
+        {
+            return;
+        }
+
+        MutableCollection<Object> collection = this.newWith();
+        collection.add(collection);
+
+        assertEquals(collection, collection);
+        assertThrows(StackOverflowError.class, collection::hashCode);
+    }
+
+    @Override
+    @Test
+    default void RichIterable_makeString_appendString()
+    {
+        RichIterableTestCase.super.RichIterable_makeString_appendString();
+
+        if (!this.allowsAdd() || !this.supportsNonComparableElements())
+        {
+            return;
+        }
+
+        MutableCollection<Object> collection = this.newWith();
+        collection.add(collection);
+        String expected = "(this Collection)";
+
+        assertEquals("[" + expected + "]", collection.toString());
+        assertEquals(expected, collection.makeString());
+        assertEquals(expected, collection.makeString("/"));
+        assertEquals("[" + expected + "]", collection.makeString("[", "/", "]"));
+
+        StringBuilder builder1 = new StringBuilder();
+        collection.appendString(builder1);
+        assertEquals(expected, builder1.toString());
+
+        StringBuilder builder2 = new StringBuilder();
+        collection.appendString(builder2, "/");
+        assertEquals(expected, builder2.toString());
+
+        StringBuilder builder3 = new StringBuilder();
+        collection.appendString(builder3, "[", "/", "]");
+        assertEquals("[" + expected + "]", builder3.toString());
     }
 }

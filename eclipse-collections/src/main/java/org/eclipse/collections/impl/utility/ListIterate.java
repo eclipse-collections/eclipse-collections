@@ -1233,6 +1233,14 @@ public final class ListIterate
      */
     public static <T> boolean removeIf(List<T> list, Predicate<? super T> predicate)
     {
+        return ListIterate.removeIf(list, (java.util.function.Predicate<? super T>) predicate);
+    }
+
+    /**
+     * @see Iterate#removeIf(Iterable, java.util.function.Predicate)
+     */
+    public static <T> boolean removeIf(List<T> list, java.util.function.Predicate<? super T> predicate)
+    {
         if (list instanceof RandomAccess)
         {
             return RandomAccessListIterate.removeIf(list, predicate);

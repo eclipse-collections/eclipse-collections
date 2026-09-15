@@ -1,0 +1,10 @@
+name: Forbid Merge Commits
+
+on: pull_request
+
+jobs:
+  forbid-merge-commits:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run Forbid Merge Commits Action
+        uses: motlin/forbid-merge-commits-action@main

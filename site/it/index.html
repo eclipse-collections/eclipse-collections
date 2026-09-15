@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<!--
+  ~ Copyright (c) 2026 Goldman Sachs and others
+  ~ All rights reserved. This program and the accompanying materials
+  ~ are made available under the terms of the Eclipse Public License v1.0
+  ~ and Eclipse Distribution License v. 1.0 which accompany this distribution.
+  ~ The Eclipse Public License is available at http://www.eclipse.org/legal/epl-v10.html
+  ~ and the Eclipse Distribution License is available at
+  ~ http://www.eclipse.org/org/documents/edl-v10.php.
+  -->
+
+<html lang="it">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" type="image/x-icon" href="../favicon.ico" />
+
+    <title>Eclipse Collections - Le feature che vuoi con le collection di cui hai bisogno.</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha256-7s5uDGW3AHqw6xtJmNNtr+OBRJUlgkNJEo78P4b0yRw= sha512-nNo+yCHEyn0smMxSswnf/OnX6/KwJuZTlNZBjauKhTK0c+zT+q5JOCx0UFhXQ6rJR9jg6Es8gPuD2uZcYDLqSw==" crossorigin="anonymous">
+
+    <!-- Custom CSS -->
+    <link href="../css/landing-page.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="//fonts.googleapis.com/css?family=Roboto+Condensed:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
+
+    <!-- Google Code Prettify -->
+    <link href="../css/sunburst.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-fixed-top topnav" role="navigation">
+        <div class="container topnav">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <img src="../img/eclipse-collections-logo.png" style="width:175px;height:50px;" align="left" alt="Eclipse Collections">
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="#start">Primi Passi</a>
+                    </li>
+                    <li>
+                        <a href="#concept">Concept</a>
+                    </li>
+                    <li>
+                        <a href="#learn">Scopri</a>
+                    </li>
+                    <li>
+                        <a href="#history">Storia</a>
+                    </li>
+                    <li>
+                        <a href="#refGuide">Guida di riferimento</a>
+                    </li>
+                    <li>
+                        <a href="#sourceCode">Codice Sorgente</a>
+                    </li>
+                    <li>
+                        <a href="#contribute">Contribuisci</a>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                           aria-expanded="false">Javadoc<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="../javadoc/11.1.0">11.1.0</a></li>
+                            <li><a href="../javadoc/11.0.0">11.0.0</a></li>
+                            <li><a href="../javadoc/10.4.0">10.4.0</a></li>
+                            <li><a href="../javadoc/10.3.0">10.3.0</a></li>
+                            <li><a href="../javadoc/10.2.0">10.2.0</a></li>
+                            <li><a href="../javadoc/10.1.0">10.1.0</a></li>
+                            <li><a href="../javadoc/10.0.0">10.0.0</a></li>
+                            <li><a href="../javadoc/9.2.0">9.2.0</a></li>
+                            <li><a href="../javadoc/8.2.0">8.2.0</a></li>
+                            <li><a href="../javadoc/7.1.0">7.1.0</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                           aria-expanded="false">Lingua<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="../index.html">English</a></li>
+                            <li><a href="../de/index.html">Deutsch</a></li>
+                            <li><a href="../el/index.html">Ελληνικά</a></li>
+                            <li><a href="../es/index.html">Español</a></li>
+                            <li><a href="../cn/index.html">中文</a></li>
+                            <li><a href="../fr/index.html">Français</a></li>
+                            <li><a href="">Italiano</a></li>
+                            <li><a href="../ja/index.html">日本語</a></li>
+                            <li><a href="../no-nb/index.html">Norsk (bokmål)</a></li>
+                            <li><a href="../pt-br/index.html">Português-Brasil</a></li>
+                            <li><a href="../ru/index.html">Русский</a></li>
+                            <li><a href="../hi/index.html">हिंदी</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+
+    <!-- Header -->
+    <a class="anchor" name="about"></a>
+    <div class="intro-header">
+        <div class="container-fluid">
+
+            <div class="row">
+                <div class="col-lg-push-2 col-lg-8">
+                    <div class="intro-message">
+                        <h1>Eclipse <span style="font-weight: 400">Collections</span></h1>
+                        <h3>- Eclipse Collections - Le feature che vuoi con le collection di cui hai bisogno -</h3>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!-- /.container -->
+
+    </div>
+    <!-- /.intro-header -->
+
+    <!-- Page Content -->
+
+    <a class="anchor" name="start"></a>
+    <div class="content-section-a">
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-5 col-sm-6">
+                    <hr class="section-heading-spacer">
+                    <div class="clearfix"></div>
+                    <h2 class="section-heading">Primi passi con le <br>Eclipse Collections</h2>
+                    <p class="lead">Eclipse Collections è il miglior collections framework per Java
+                        che porta gioia al tuo sviluppo Java.
+                        <br><br>Integralo nella tua codebase oggi stesso con i tuoi build tool preferiti!</p>
+                    <object id="badge" data="https://snyk-widget.herokuapp.com/badge/mvn/org.eclipse.collections/eclipse-collections/badge.svg" type="image/svg+xml" style="vertical-align:middle"></object>
+                    <a href="http://search.maven.org/#search%7Cgav%7C1%7Cg:%22org.eclipse.collections%22%20AND%20a:%22eclipse-collections%22"><img src="https://maven-badges.herokuapp.com/maven-central/org.eclipse.collections/eclipse-collections/badge.svg"></a>
+                    <a href="https://github.com/eclipse-collections/eclipse-collections/releases"><img src="https://img.shields.io/github/release/eclipse-collections/eclipse-collections.svg"></a>
+                    <a href="https://github.com/eclipse-collections/eclipse-collections/blob/master/LICENSE-EPL-1.0.txt"><img src="https://img.shields.io/badge/License-EPL-blue.svg"></a>
+                    <a href="https://github.com/eclipse-collections/eclipse-collections/blob/master/LICENSE-EDL-1.0.txt"><img src="https://img.shields.io/badge/License-EDL-blue.svg"></a>
+                </div>
+                <div class="col-lg-7 col-sm-6">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#maven" data-toggle="tab">Maven</a></li>
+                        <li><a href="#gradle" data-toggle="tab">Gradle</a></li>
+                        <li><a href="#ivy" data-toggle="tab">Ivy</a></li>
+                        <li><a href="#download" data-toggle="tab">Download diretto</a></li>
+                    </ul>
+                    <div id="dependencies" class="tab-content">
+                        <div class="tab-pane fade in active" id="maven">
+                            <pre  class="prettyprint">
+&lt;dependency&gt;
+  &lt;groupId&gt;org.eclipse.collections&lt;/groupId&gt;
+  &lt;artifactId&gt;eclipse-collections-api&lt;/artifactId&gt;
+  &lt;version&gt;11.1.0&lt;/version&gt;
+&lt;/dependency&gt;
+
+&lt;dependency&gt;
+  &lt;groupId&gt;org.eclipse.collections&lt;/groupId&gt;
+  &lt;artifactId&gt;eclipse-collections&lt;/artifactId&gt;
+  &lt;version&gt;11.1.0&lt;/version>
+&lt;/dependency&gt;</pre>
+                        </div>
+                        <div class="tab-pane fade" id="gradle">
+                            <pre  class="prettyprint">
+implementation 'org.eclipse.collections:eclipse-collections-api:11.1.0'
+implementation 'org.eclipse.collections:eclipse-collections:11.1.0'</pre>
+                        </div>
+                        <div class="tab-pane fade" id="ivy">
+                            <pre  class="prettyprint">
+&lt;dependency org="org.eclipse.collections" name="eclipse-collections-api" rev="11.1.0" /&gt;
+&lt;dependency org="org.eclipse.collections" name="eclipse-collections" rev="11.1.0" /&gt;</pre>
+                        </div>
+                        <div class="tab-pane fade" id="download">
+                            <pre class="prettyprint">
+<a target="_blank" href="http://mvnrepository.com/artifact/org.eclipse.collections/eclipse-collections-api/11.1.0">eclipse-collections-api-11.1.0.jar</a>
+<a target="_blank" href="http://mvnrepository.com/artifact/org.eclipse.collections/eclipse-collections/11.1.0">eclipse-collections-11.1.0.jar</a></pre>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!-- /.container -->
+
+    </div>
+    <!-- Get Started -->
+
+    <a class="anchor" name="concept"></a>
+    <div class="content-section-b">
+
+        <div class="container-fluid">
+
+            <div class="row">
+                <div class="col-lg-push-7 col-lg-5 col-sm-push-6  col-sm-6">
+                    <hr class="section-heading-spacer">
+                    <div class="clearfix"></div>
+                    <h2 class="section-heading">API Chiare, Ricche e Concise.</h2>
+                    <p class="lead">Massimizza il potere delle Lambda expression e method reference di Java 8
+                        con API ricche di funzionalità direttamente disponibili sulle tue collection.
+                    </p>
+                </div>
+                <div class="col-lg-pull-5 col-lg-7 col-sm-pull-6  col-sm-6">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#method" data-toggle="tab">Eclipse Collections con Method Ref</a></li>
+                        <li><a href="#ec" data-toggle="tab">Eclipse Collections con Lambda expression</a></li>
+                        <li><a href="#streams" data-toggle="tab">Java 8 Streams</a></li>
+                    </ul>
+                    <div id="ec-vs-streams" class="tab-content">
+                        <div class="tab-pane fade in active" id="method">
+                            <pre  class="prettyprint lang-java">
+boolean anyPeopleHaveCats =
+  this.people
+    .anySatisfyWith(Person::hasPet, PetType.CAT);
+
+int countPeopleWithCats =
+  this.people
+    .countWith(Person::hasPet, PetType.CAT);
+
+MutableList&lt;Person&gt; peopleWithCats =
+  this.people
+    .selectWith(Person::hasPet, PetType.CAT)</pre>
+                        </div>
+                        <div class="tab-pane fade" id="ec">
+                            <pre  class="prettyprint lang-java">
+boolean anyPeopleHaveCats =
+  this.people
+    .anySatisfy(person -> person.hasPet(PetType.CAT));
+
+int countPeopleWithCats =
+  this.people
+    .count(person -> person.hasPet(PetType.CAT));
+
+MutableList&lt;Person&gt; peopleWithCats =
+  this.people
+    .select(person -> person.hasPet(PetType.CAT));</pre>
+                        </div>
+                        <div class="tab-pane fade" id="streams">
+                            <pre  class="prettyprint lang-java">
+boolean anyPeopleHaveCats =
+  this.people
+    .stream()
+    .anyMatch(person -> person.hasPet(PetType.CAT));
+
+long countPeopleWithCats =
+  this.people
+    .stream()
+    .filter(person -> person.hasPet(PetType.CAT))
+    .count();
+
+List&lt;Person&gt; peopleWithCats =
+  this.people
+    .stream()
+    .filter(person -> person.hasPet(PetType.CAT))
+    .collect(Collectors.toList());</pre>
+                        </div>
+                    </div>
+                    <!-- /.tab-content -->
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+
+        </div>
+        <!-- /.container -->
+
+    </div>
+    <!-- Rich and fluent API -->
+
+    <div class="content-section-a">
+
+        <div class="container-fluid">
+
+            <div class="row">
+                <div class="col-lg-5 col-sm-6">
+                    <hr class="section-heading-spacer">
+                    <div class="clearfix"></div>
+                    <h2 class="section-heading">Molti tipi di container come <br>immutable collection, primitive collection, bimap, multimap e bag</h2>
+                    <p class="lead">Utilizza vari tipi di container, istanziandoli con comodi factory method.</p>
+                </div>
+                <div class="col-lg-7 col-sm-6">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#mutable" data-toggle="tab">Mutable collections</a></li>
+                        <li><a href="#immutable" data-toggle="tab">Immutable collections</a></li>
+                        <li><a href="#primitives" data-toggle="tab">Primitive collections</a></li>
+                    </ul>
+                    <div id="container-types" class="tab-content">
+                        <div class="tab-pane fade in active" id="mutable">
+                            <pre  class="prettyprint lang-java">
+//Inizializza una mutable list con i metodi empty(), of(), with()
+MutableList&lt;String&gt; mutableListEmpty =
+  Lists.mutable.empty();
+MutableList&lt;String&gt; mutableListOf =
+  Lists.mutable.of("One", "One", "Two", "Three");
+MutableList&lt;String&gt; mutableListWith =
+  Lists.mutable.with("One", "One", "Two", "Three");
+
+//Vari tipi di container disponibili
+MutableSet&lt;String&gt; mutableSet =
+  Sets.mutable.with("One", "One", "Two", "Three");
+MutableBag&lt;String&gt; mutableBag =
+  Bags.mutable.with("One", "One", "Two", "Three");
+MutableStack&lt;String&gt; mutableStack =
+  Stacks.mutable.with("One", "One", "Two", "Three");
+MutableMap&lt;String, String&gt; mutableMap =
+  Maps.mutable.with("key1", "value1", "key2", "value2", "key3", "value3");
+MutableMultimap&lt;String, String&gt; multimapWithList =
+  Multimaps.mutable.list.with("key1", "value1-1", "key1", "value1-2", "key2","value2-1");
+MutableBiMap&lt;String, String&gt; mutableBiMap =
+  BiMaps.mutable.with("key1", "value1", "key2", "value2", "key3", "value3");</pre>
+                        </div>
+                        <div class="tab-pane fade" id="immutable">
+                            <pre  class="prettyprint lang-java">
+//Inizializza una immutable list con i metodi empty(), of(), with()
+ImmutableList&lt;String&gt; immutableListEmpty =
+  Lists.immutable.empty();
+ImmutableList&lt;String&gt; immutableListOf =
+  Lists.immutable.of("One", "One", "Two", "Three");
+ImmutableList&lt;String&gt; immutableListWith =
+  Lists.immutable.with("One", "One", "Two", "Three");
+
+//Vari tipi di container disponibili
+ImmutableSet&lt;String&gt; immutableSet =
+  Sets.immutable.with("One", "One", "Two", "Three");
+ImmutableBag&lt;String&gt; immutableBag =
+  Bags.immutable.with("One", "One", "Two", "Three");
+ImmutableStack&lt;String&gt; immutableStack =
+  Stacks.immutable.with("One", "One", "Two", "Three");
+ImmutableMap&lt;String, String&gt; immutableMap =
+  Maps.immutable.with("key1", "value1", "key2", "value2", "key3", "value3");
+ImmutableMultimap&lt;String, String&gt; immutableMultimapWithList =
+  Multimaps.immutable.list.with("key1", "value1-1", "key1", "value1-2", "key2","value2-1");
+ImmutableBiMap&lt;String, String&gt; immutableBiMap =
+  BiMaps.immutable.with("key1", "value1", "key2", "value2", "key3", "value3");</pre>
+                        </div>
+                        <div class="tab-pane fade" id="primitives">
+                            <pre  class="prettyprint lang-java">
+//Mutable e immutable List, Set, Bag, Stack e Map sono disponibili per tutti gli 8 tipi primitivi
+MutableIntList intList =
+  IntLists.mutable.of(1, 2, 3);
+MutableLongList longList =
+  LongLists.mutable.of(1L, 2L, 3L);
+MutableCharList charList =
+  CharLists.mutable.of('a', 'b', 'c');
+MutableShortList shortList =
+  ShortLists.mutable.of((short)1, (short)2, (short)3);
+MutableByteList byteList =
+  ByteLists.mutable.of((byte)1, (byte)2, (byte)3);
+MutableBooleanList booleanList =
+  BooleanLists.mutable.of(true, false);
+MutableFloatList floatList =
+  FloatLists.mutable.of(1.0f, 2.0f, 3.0f);
+MutableDoubleList doubleList =
+  DoubleLists.mutable.of(1.0, 2.0, 3.0);
+
+//Crea un intervallo di interi con IntInterval
+IntInterval oneTo10 =
+  IntInterval.fromTo(1, 10); // interi da 1 a 10
+// [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+IntInterval oneTo10By3 =
+  IntInterval.fromToBy(1, 10, 3); // interi da 1 a 10, avanzando di 3 alla volta
+// [1, 4, 7, 10]
+IntInterval oddsFrom1To10 =
+  IntInterval.oddsFromTo(1, 10); // interi dispari da 1 a 10
+// [1, 3, 5, 7, 9]
+IntInterval evensFrom1To10 =
+  IntInterval.evensFromTo(1, 10); // interi pari da 1 a 10
+// [2, 4, 6, 8, 10]</pre>
+                        </div>
+                    </div>
+                    <!-- /.tab-content -->
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+
+        </div>
+        <!-- /.container -->
+
+    </div>
+    <!-- Container Types -->
+
+    <a class="anchor" name="memory"></a>
+    <div class="content-section-b">
+
+        <div class="container-fluid">
+
+            <div class="row">
+                <div class="col-lg-push-6 col-lg-6 col-sm-push-6 col-sm-6">
+                    <hr class="section-heading-spacer">
+                    <div class="clearfix"></div>
+                    <h2 class="section-heading">Riduci l'utilizzo di memoria<br>con dei container memory efficient</h2>
+                    <p class="lead">Eclipse Collections fornisce una implementazione memory efficient di Set, Map e di collection per tipi primitivi.</p>
+                </div>
+                <div class="col-lg-pull-6 col-lg-6 col-sm-pull-6 col-sm-6">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#set" data-toggle="tab">Set</a></li>
+                        <li><a href="#map" data-toggle="tab">Map</a></li>
+                        <li><a href="#ints" data-toggle="tab">Primitive Collection</a></li>
+                    </ul>
+                    <div id="memory" class="tab-content">
+                        <div class="tab-pane fade in active" id="set">
+                            <img class="img-responsive" src="../img/set.png" alt="">
+                        </div>
+                        <div class="tab-pane fade" id="map">
+                            <img class="img-responsive" src="../img/map.png" alt="">
+                        </div>
+                        <div class="tab-pane fade" id="ints">
+                            <img class="img-responsive" src="../img/ints.png" alt="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!-- /.container -->
+
+    </div>
+    <!-- Memory footprint -->
+
+    <a class="anchor" name="learn"></a>
+    <div class="content-section-a">
+
+        <div class="container-fluid">
+
+            <div class="row">
+                <div class="col-lg-5 col-sm-6">
+                    <hr class="section-heading-spacer">
+                    <div class="clearfix"></div>
+                    <h2 class="section-heading">Impara a usare le Eclipse Collections con un Kata</h2>
+                    <p class="lead">
+                        Dai un'occhiata a <a href="https://github.com/eclipse-collections/eclipse-collections-kata">Eclipse Collections Kata</a>, un modo divertente per imparare a usare le Eclipse Collections.
+                        Questo Kata consiste di una serie di unit test che falliscono.
+                        Il tuo compito è di farli passare, utilizzando le Eclipse Collections.
+                    </p>
+                </div>
+                <div class="col-lg-7 col-sm-6">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#exercise" data-toggle="tab">Esempio di esercizio</a></li>
+                        <li><a href="#solution" data-toggle="tab">Esempio di soluzione</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane fade in active" id="exercise">
+                            <pre  class="prettyprint lang-java">
+@Test
+public void getFirstNamesOfAllPeople()
+{
+  MutableList&lt;Person&gt; people = this.people;
+  MutableList&lt;String&gt; firstNames = null; //Sostituisci null con una chiamata ad un metodo di MutableList.
+  MutableList&lt;String&gt; expectedFirstNames =
+    Lists.mutable.with("Mary", "Bob", "Ted", "Jake", "Barry", "Terry", "Harry", "John");
+  Assert.assertEquals(expectedFirstNames, firstNames);
+}</pre>
+                        </div>
+                        <div class="tab-pane fade" id="solution">
+                            <pre  class="prettyprint lang-java">
+@Test
+public void getFirstNamesOfAllPeople()
+{
+  MutableList&lt;Person&gt; people = this.people;
+  MutableList&lt;String&gt; firstNames = people.collect(Person::getFirstName);
+  MutableList&lt;String&gt; expectedFirstNames =
+    Lists.mutable.with("Mary", "Bob", "Ted", "Jake", "Barry", "Terry", "Harry", "John");
+  Assert.assertEquals(expectedFirstNames, firstNames);
+}</pre>
+                        </div>
+                    </div>
+                    <!-- /.tab-content -->
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+
+        </div>
+        <!-- /.container -->
+
+    </div>
+    <!-- Kata -->
+
+    <a class="anchor" name="history"></a>
+    <div class="content-section-b">
+
+        <div class="container-fluid">
+
+            <h2 class="section-heading">Storia delle Eclipse Collections</h2>
+            <p class="lead">
+                Le Eclipse Collections nacquero come collections framework di nome Caramel a Goldman Sachs nel 2004.
+
+                Da allora il framework si è evoluto, e nel 2012 è stato reso open source con un progetto GitHub chiamato
+                <a href="https://github.com/goldmansachs/gs-collections">GS Collections</a>.
+                <br><br>
+                Il progetto GS Collections è stato presentato a varie
+                <a href="https://github.com/eclipse-collections/eclipse-collections/wiki/Conference-talks-and-meetups">conferenze</a>,
+                tra cui la JVM Summit nel 2012 e la JavaOne nel 2014.
+                Un confronto di performance tra le implementazioni parallele di Java 8, Scala e GS Collections è stato presentato al
+                <a href="http://www.infoq.com/presentations/java-streams-scala-parallel-collections">QCon New York</a> nel 2014.
+                Inoltre, <a href="https://github.com/eclipse-collections/eclipse-collections/wiki/Articles">articoli</a> su GS Collections
+                (<a href="http://www.infoq.com/articles/GS-Collections-by-Example-1">Parte 1</a> /
+                <a href="http://www.infoq.com/articles/GS-Collections-by-Example-2">Parte 2</a>)
+                sono stati pubblicati su InfoQ.com
+                mostrando alcune delle potenzialità del collections framework attraverso esempi e interviste al creatore di GS Collections.
+                <br><br>
+
+                Nel corso degli anni, circa 40 sviluppatori della stessa società hanno contribuito al collections framework.
+                <br><br>
+
+                Per massimizzare la natura open source del progetto, GS Collections è stato migrato alla Eclipse Foundation e rinominato Eclipse Collections nel 2015.
+                Ora il framework è totalmente aperto alla community, accettando ogni contributo!
+            </p>
+        </div>
+    </div>
+    <!-- History  -->
+
+    <a class="anchor" name="refGuide"></a>
+    <div class="content-section-a">
+        <div class="container-fluid">
+            <h2 class="section-heading">Guida di riferimento</h2>
+            <p class="lead">
+                Una completa guida di riferimento della libreria è disponibile su GitHub:
+                <a href="https://github.com/eclipse-collections/eclipse-collections/blob/master/docs/guide.md#eclipse-collections-reference-guide">Guida di riferimento (in inglese)</a>.
+            </p>
+        </div>
+        <!-- /.container -->
+
+    </div>
+    <!-- Reference Guide  -->
+
+    <a class="anchor" name="sourceCode"></a>
+    <div class="content-section-b">
+        <div class="container-fluid">
+            <h2 class="section-heading">Codice Sorgente</h2>
+            <p class="lead">
+                Il codice sorgente è disponibile su GitHub: <a href="https://github.com/eclipse-collections/eclipse-collections">Eclipse Collections</a>.
+            </p>
+        </div>
+        <!-- /.container -->
+    </div>
+    <!-- Source Code  -->
+
+    <a class="anchor" name="contribute"></a>
+    <div class="content-footer">
+
+        <div class="container-fluid">
+
+            <div class="row">
+                <div class="col-lg-4 col-sm-4">
+                    <h3>Contribute</h3>
+                    <p class="regular">
+                        Il tuo contributo è il benvenuto!
+                        <br><br>
+                        La Project Roadmap di Eclipse Collections è accessibile <a href="https://github.com/eclipse-collections/eclipse-collections/wiki/Roadmap">qui</a>.
+                        <br><br>
+                        Accettiamo contributi via pull requests su GitHub.
+                        Si prega di consultare la sezione <a href="https://github.com/eclipse-collections/eclipse-collections/blob/master/CONTRIBUTING.md">How To Contribute</a> per cominciare.
+                    </p>
+                </div>
+                <div class="col-lg-4 col-sm-4">
+                    <h3>Ultime Novità</h3>
+                    <p class="regular">Eclipse Collections 11.1.0 <a href="https://github.com/eclipse-collections/eclipse-collections/releases/tag/11.1.0">rilasciato il</a> <a class="light">(Jun 23rd 2022)</a></p>
+                    <p class="regular">Eclipse Collections 11.0.0 <a href="https://github.com/eclipse-collections/eclipse-collections/releases/tag/11.0.0">rilasciato il</a> <a class="light">(Nov 23rd 2021)</a></p>
+                    <p class="regular">Eclipse Collections 10.4.0 <a href="https://github.com/eclipse-collections/eclipse-collections/releases/tag/10.4.0">rilasciato il</a> <a class="light">(Aug 20th 2020)</a></p>
+                    <p class="regular">Eclipse Collections 10.3.0 <a href="https://github.com/eclipse-collections/eclipse-collections/releases/tag/10.3.0">rilasciato il</a> <a class="light">(Aug 8th 2020)</a></p>
+                    <p class="regular">Eclipse Collections 10.2.0 <a href="https://github.com/eclipse-collections/eclipse-collections/releases/tag/10.2.0">rilasciato il</a> <a class="light">(Feb 11th 2020)</a></p>
+                    <p class="regular">Eclipse Collections 10.1.0 <a href="https://github.com/eclipse-collections/eclipse-collections/releases/tag/10.1.0">rilasciato il</a> <a class="light">(Dec 4th 2019)</a></p>
+                    <p class="regular">Eclipse Collections 10.0.0 <a href="https://github.com/eclipse-collections/eclipse-collections/releases/tag/10.0.0">rilasciato il</a> <a class="light">(Jul 10th 2019)</a></p>
+                </div>
+                <div class="col-lg-4 col-sm-4">
+                    <h3>Link della community</h3>
+                        <p class="regular">Eclipse PMI: <a href="https://projects.eclipse.org/projects/technology.collections">Infrastruttura del management del progetto eclipse</a></p>
+                        <p class="regular">GitHub: <a href="https://github.com/eclipse-collections/eclipse-collections">eclipse-collections</a></p>
+                        <p class="regular">Issues: <a href="https://github.com/eclipse-collections/eclipse-collections/issues">Issue GitHub</a></p>
+                        <p class="regular">Mailing lists: <a href="https://dev.eclipse.org/mailman/listinfo/collections-dev">collections-dev</a> mailing list</p>
+                        <p class="regular">Wiki: <a href="https://github.com/eclipse-collections/eclipse-collections/wiki">GitHub wiki</a></p>
+                        <p class="regular">Forum: <a href="https://www.eclipse.org/forums/index.php?t=thread&amp;frm_id=329">Eclipse Collections Forum</a></p>
+                        <p class="regular">StackOverflow: tagga con <a href="http://stackoverflow.com/questions/tagged/eclipse-collections">eclipse-collections</a></p>
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+
+        </div>
+        <!-- /.container -->
+
+    </div>
+    <!-- Container Types -->
+
+
+    <div class="banner">
+
+        <div class="container-fluid">
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <h3>- Più features, meno spreco -</h3>
+                </div>
+            </div>
+
+        </div>
+        <!-- /.container -->
+
+    </div>
+    <!-- /.banner -->
+
+    <!-- Footer -->
+    <footer>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <ul class="list-inline">
+                        <li>
+                            <p class="copyright text-muted small">Copyright &copy; 2018 The Eclipse Foundation. All Rights Reserved. </p>
+                        </li>
+                        <li class="footer-menu-divider">&sdot;</li>
+                        <li>
+                            <a class="small" href="http://www.eclipse.org">Eclipse Foundation</a>
+                        </li>
+                        <li class="footer-menu-divider">&sdot;</li>
+                        <li>
+                            <a class="small" href="http://www.eclipse.org/legal">Informazioni legali</a>
+                        </li>
+                        <li class="footer-menu-divider">&sdot;</li>
+                        <li>
+                            <a class="small" href="http://www.eclipse.org/legal/privacy.php">Privacy</a>
+                        </li>
+                        <li class="footer-menu-divider">&sdot;</li>
+                        <li>
+                            <a class="small" href="http://www.eclipse.org/legal/termsofuse.php">Termini di utilizzo</a>
+                        </li>
+                        <li class="footer-menu-divider">&sdot;</li>
+                        <li>
+                            <a class="small" href="http://www.eclipse.org/legal/copyright.php">Copyright</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha256-KXn5puMvxCw+dAYznun+drMdG1IFl3agK0p/pqT9KAo= sha512-2e8qq0ETcfWRI4HJBzQiA3UoyFk6tbNyG+qSaIBZLyW9Xf3sWZHN/lxe9fTh1U45DpPf07yj94KsUHHWe4Yk1A==" crossorigin="anonymous"></script>
+
+    <!-- Google Code Prettify -->
+    <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js?skin=sunburst"></script>
+</body>
+
+</html>

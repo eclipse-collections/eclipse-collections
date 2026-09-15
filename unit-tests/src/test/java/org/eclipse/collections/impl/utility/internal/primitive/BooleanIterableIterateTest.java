@@ -66,4 +66,10 @@ public class BooleanIterableIterateTest
     {
         assertTrue(BooleanIterableIterate.notEmpty(this.iterable));
     }
+
+    @Test
+    public void classIsNonInstantiable()
+    {
+        Verify.assertClassNonInstantiable(BooleanIterableIterate.class);
+    }
 }

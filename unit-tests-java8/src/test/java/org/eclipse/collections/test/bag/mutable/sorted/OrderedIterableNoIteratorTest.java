@@ -14,12 +14,14 @@ import org.eclipse.collections.test.NoIteratorTestCase;
 import org.eclipse.collections.test.OrderedIterableTestCase;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 public interface OrderedIterableNoIteratorTest extends NoIteratorTestCase, OrderedIterableTestCase
 {
     @Override
     @Test
-    default void OrderedIterable_next()
+    default void Iterable_next()
     {
-        // Not applicable
+        assertThrows(AssertionError.class, () -> this.newWith(3, 2, 1).iterator());
     }
 }

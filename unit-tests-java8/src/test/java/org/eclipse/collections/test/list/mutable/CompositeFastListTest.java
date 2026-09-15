@@ -11,10 +11,13 @@
 package org.eclipse.collections.test.list.mutable;
 
 import org.eclipse.collections.api.RichIterable;
+import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.impl.list.mutable.CompositeFastList;
 import org.eclipse.collections.impl.list.mutable.FastList;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class CompositeFastListTest implements MutableListTestCase
 {
@@ -31,10 +34,10 @@ public class CompositeFastListTest implements MutableListTestCase
         return result;
     }
 
-    @Test
     @Override
+    @Test
     public void List_subList_subList_addAll()
     {
-        // Not applicable
+        assertThrows(UnsupportedOperationException.class, () -> this.newWith("A", "B", "C", "D").subList(0, 3).subList(0, 2).addAll(0, Lists.mutable.with("E")));
     }
 }

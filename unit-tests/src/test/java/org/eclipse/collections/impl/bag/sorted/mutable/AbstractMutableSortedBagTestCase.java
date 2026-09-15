@@ -198,6 +198,7 @@ public abstract class AbstractMutableSortedBagTestCase extends MutableBagTestCas
     }
 
     @Override
+    @Test
     public void makeStringWithSeparator()
     {
         super.makeStringWithSeparator();
@@ -206,6 +207,7 @@ public abstract class AbstractMutableSortedBagTestCase extends MutableBagTestCas
     }
 
     @Override
+    @Test
     public void makeStringWithSeparatorAndStartAndEnd()
     {
         super.makeStringWithSeparatorAndStartAndEnd();
@@ -227,6 +229,7 @@ public abstract class AbstractMutableSortedBagTestCase extends MutableBagTestCas
     }
 
     @Override
+    @Test
     public void appendStringWithSeparator()
     {
         super.appendStringWithSeparator();
@@ -239,6 +242,7 @@ public abstract class AbstractMutableSortedBagTestCase extends MutableBagTestCas
     }
 
     @Override
+    @Test
     public void appendStringWithSeparatorAndStartAndEnd()
     {
         super.appendStringWithSeparatorAndStartAndEnd();
@@ -641,6 +645,7 @@ public abstract class AbstractMutableSortedBagTestCase extends MutableBagTestCas
     }
 
     @Override
+    @Test
     public void selectInstancesOf()
     {
         MutableSortedBag<Number> numbers = this.newWith((Number o1, Number o2) -> Double.compare(o2.doubleValue(), o1.doubleValue()), 5, 4.0, 3, 2.0, 1, 1);

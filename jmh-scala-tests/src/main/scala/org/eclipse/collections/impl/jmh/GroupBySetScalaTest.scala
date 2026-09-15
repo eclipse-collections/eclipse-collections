@@ -12,8 +12,9 @@ package org.eclipse.collections.impl.jmh
 
 import org.junit.Assert
 
-import scala.collection.IterableView
+import scala.collection.View
 import scala.collection.mutable.HashSet
+import scala.collection.parallel.CollectionConverters._
 import scala.collection.parallel.immutable.ParMap
 import scala.collection.parallel.mutable.ParHashSet
 
@@ -72,52 +73,52 @@ object GroupBySetScalaTest
         }
     }
 
-    def groupBy_unordered_lists_2_keys_serial_lazy_scala(): Map[Boolean, IterableView[Int, HashSet[Int]]] =
+    def groupBy_unordered_lists_2_keys_serial_lazy_scala(): Map[Boolean, View[Int]] =
     {
-        val multimap: Map[Boolean, IterableView[Int, HashSet[Int]]] = this.integers.view.groupBy((each: Int) => each % 2 == 0)
+        val multimap: Map[Boolean, View[Int]] = this.integers.view.groupBy((each: Int) => each % 2 == 0)
         Assert.assertEquals(2, multimap.size)
         multimap
     }
 
     def test_groupBy_unordered_lists_2_keys_serial_lazy_scala(): Unit =
     {
-        val multimap: Map[Boolean, IterableView[Int, HashSet[Int]]] = groupBy_unordered_lists_2_keys_serial_lazy_scala()
-        val evens: IterableView[Int, HashSet[Int]] = multimap(true)
-        val odds: IterableView[Int, HashSet[Int]] = multimap(false)
+        val multimap: Map[Boolean, View[Int]] = groupBy_unordered_lists_2_keys_serial_lazy_scala()
+        val evens: View[Int] = multimap(true)
+        val odds: View[Int] = multimap(false)
         Assert.assertEquals(0.to(999999, 2).toSet, evens.toSet)
         Assert.assertEquals(1.to(999999, 2).toSet, odds.toSet)
     }
 
-    def groupBy_unordered_lists_100_keys_serial_lazy_scala(): Map[Int, IterableView[Int, HashSet[Int]]] =
+    def groupBy_unordered_lists_100_keys_serial_lazy_scala(): Map[Int, View[Int]] =
     {
-        val multimap: Map[Int, IterableView[Int, HashSet[Int]]] = this.integers.view.groupBy((each: Int) => each % 100)
+        val multimap: Map[Int, View[Int]] = this.integers.view.groupBy((each: Int) => each % 100)
         Assert.assertEquals(100, multimap.size)
         multimap
     }
 
     def test_groupBy_unordered_lists_100_keys_serial_lazy_scala(): Unit =
     {
-        val multimap: Map[Int, IterableView[Int, HashSet[Int]]] = groupBy_unordered_lists_100_keys_serial_lazy_scala()
+        val multimap: Map[Int, View[Int]] = groupBy_unordered_lists_100_keys_serial_lazy_scala()
         for (i <- 0 to 99)
         {
-            val integers: IterableView[Int, HashSet[Int]] = multimap(i)
+            val integers: View[Int] = multimap(i)
             Assert.assertEquals(i.to(999999, 100).toSet, integers.toSet)
         }
     }
 
-    def groupBy_unordered_lists_10000_keys_serial_lazy_scala(): Map[Int, IterableView[Int, HashSet[Int]]] =
+    def groupBy_unordered_lists_10000_keys_serial_lazy_scala(): Map[Int, View[Int]] =
     {
-        val multimap: Map[Int, IterableView[Int, HashSet[Int]]] = this.integers.view.groupBy((each: Int) => each % 10000)
+        val multimap: Map[Int, View[Int]] = this.integers.view.groupBy((each: Int) => each % 10000)
         Assert.assertEquals(10000, multimap.size)
         multimap
     }
 
     def test_groupBy_unordered_lists_10000_keys_serial_lazy_scala(): Unit =
     {
-        val multimap: Map[Int, IterableView[Int, HashSet[Int]]] = groupBy_unordered_lists_10000_keys_serial_lazy_scala()
+        val multimap: Map[Int, View[Int]] = groupBy_unordered_lists_10000_keys_serial_lazy_scala()
         for (i <- 0 to 9999)
         {
-            val integers: IterableView[Int, HashSet[Int]] = multimap(i)
+            val integers: View[Int] = multimap(i)
             Assert.assertEquals(i.to(999999, 10000).toSet, integers.toSet)
         }
     }

@@ -10,7 +10,10 @@
 
 package org.eclipse.collections.test.bimap;
 
+import java.util.Map;
+
 import org.eclipse.collections.api.bimap.BiMap;
+import org.eclipse.collections.api.bimap.MutableBiMap;
 import org.eclipse.collections.api.collection.MutableCollection;
 import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.list.MutableList;
@@ -36,6 +39,34 @@ public interface BiMapTestCase extends RichIterableUniqueTestCase, MapIterableTe
     }
 
     @Override
+    default boolean supportsSelfReferentialValues()
+    {
+        // A BiMap indexes by value, so a self-referential value overflows hashCode() at put time.
+        return false;
+    }
+
+    @Override
+    @Test
+    default void RichIterable_makeString_appendString()
+    {
+        MapIterableTestCase.super.RichIterable_makeString_appendString();
+
+        if (this.allowsPut())
+        {
+            // The map-as-value scenario overflows for a BiMap, so exercise self-reference
+            // through the inverse view, which is keyed on the non-recursive value instead.
+            BiMap<Object, Object> selfValue = this.newWithKeysValues();
+            ((Map<Object, Object>) selfValue.inverse()).put(selfValue, "key");
+            MapIterableTestCase.assertMakeStringAndAppendStringWithSelfReference(selfValue);
+
+            BiMap<Object, Object> bimap = this.newWithKeysValues();
+            BiMap<Object, Object> inverse = bimap.inverse();
+            ((Map<Object, Object>) bimap).put(inverse, "value");
+            MapIterableTestCase.assertMakeStringAndAppendStringWithSelfReference(inverse);
+        }
+    }
+
+    @Override
     @Test
     default void Iterable_sanity_check()
     {
@@ -46,8 +77,6 @@ public interface BiMapTestCase extends RichIterableUniqueTestCase, MapIterableTe
     @Test
     default void Iterable_toString()
     {
-        RichIterableUniqueTestCase.super.Iterable_toString();
-
         BiMap<String, Integer> bimap = this.newWithKeysValues("Two", 2, "One", 1);
         assertEquals("{Two=2, One=1}", bimap.toString());
         assertEquals("[Two, One]", bimap.keysView().toString());
@@ -104,13 +133,6 @@ public interface BiMapTestCase extends RichIterableUniqueTestCase, MapIterableTe
                 result);
     }
 
-    @Override
-    @Test
-    default void RichIterable_size()
-    {
-        RichIterableUniqueTestCase.super.RichIterable_size();
-    }
-
     @Test
     default void BiMap_toList()
     {
@@ -129,6 +151,19 @@ public interface BiMapTestCase extends RichIterableUniqueTestCase, MapIterableTe
         assertIterablesEqual(
                 target,
                 iterable.toList());
+    }
+
+    @SafeVarargs
+    static <T> void populateBiMapWithSameKeyAndValue(MutableBiMap<T, T> result, T... elements)
+    {
+        for (T element : elements)
+        {
+            if (result.containsKey(element))
+            {
+                throw new IllegalStateException();
+            }
+            result.put(element, element);
+        }
     }
 
     @Override

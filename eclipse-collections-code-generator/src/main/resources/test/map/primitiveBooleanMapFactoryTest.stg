@@ -24,6 +24,7 @@ import org.eclipse.collections.impl.factory.Lists;
 import org.eclipse.collections.impl.factory.primitive.<name>BooleanMaps;
 import org.eclipse.collections.impl.map.mutable.primitive.<name>BooleanHashMap;
 
+import org.eclipse.collections.impl.test.Verify;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -64,6 +65,12 @@ public class <name>BooleanMapFactoryTest
                 <name>BooleanHashMap.newWithKeysValues(<if(!charPrimitive)><(literal.(type))("1")><else>'1'<endif>, false, <if(!charPrimitive)><(literal.(type))("2")><else>'2'<endif>, true, <if(!charPrimitive)><(literal.(type))("3")><else>'3'<endif>, false),
                 <name>BooleanMaps.immutable.from(iterable, <if(!charPrimitive)><wrapperName>::valueOf<else>each -> each.charAt(0)<endif>, each -> Integer.valueOf(each) % 2 == 0));
         assertTrue(<name>BooleanMaps.immutable.from(iterable, <if(!charPrimitive)><wrapperName>::valueOf<else>each -> each.charAt(0)<endif>, each -> Integer.valueOf(each) % 2 == 0) instanceof Immutable<name>BooleanMap);
+    }
+
+    @Test
+    public void classIsNonInstantiable()
+    {
+        Verify.assertClassNonInstantiable(<name>BooleanMaps.class);
     }
 }
 

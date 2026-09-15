@@ -49,7 +49,9 @@ import org.eclipse.collections.api.block.predicate.Predicate;
 import org.eclipse.collections.api.block.predicate.Predicate2;
 import org.eclipse.collections.api.block.procedure.Procedure;
 import org.eclipse.collections.api.factory.BiMaps;
+import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.factory.Sets;
+import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.map.primitive.MutableObjectDoubleMap;
 import org.eclipse.collections.api.map.primitive.MutableObjectLongMap;
 import org.eclipse.collections.api.multimap.set.MutableSetMultimap;
@@ -511,6 +513,12 @@ abstract class AbstractMutableBiMap<K, V> extends AbstractBiMap<K, V> implements
     }
 
     @Override
+    public <P, VV> MutableBag<VV> flatCollectWith(Function2<? super V, ? super P, ? extends Iterable<VV>> function, P parameter)
+    {
+        return this.delegate.flatCollectWith(function, parameter);
+    }
+
+    @Override
     public MutableBooleanBag collectBoolean(BooleanFunction<? super V> booleanFunction)
     {
         return this.delegate.collectBoolean(booleanFunction);
@@ -730,6 +738,10 @@ abstract class AbstractMutableBiMap<K, V> extends AbstractBiMap<K, V> implements
         @Override
         public boolean equals(Object obj)
         {
+            if (obj == this)
+            {
+                return true;
+            }
             return AbstractMutableBiMap.this.delegate.keySet().equals(obj);
         }
 
@@ -806,15 +818,15 @@ abstract class AbstractMutableBiMap<K, V> extends AbstractBiMap<K, V> implements
         public boolean retainAll(Collection<?> collection)
         {
             int oldSize = AbstractMutableBiMap.this.size();
-            Iterator<K> iterator = this.iterator();
-            while (iterator.hasNext())
+            MutableList<K> toRemove = Lists.mutable.empty();
+            AbstractMutableBiMap.this.delegate.forEachKey(key ->
             {
-                K next = iterator.next();
-                if (!collection.contains(next))
+                if (!collection.contains(key))
                 {
-                    this.remove(next);
+                    toRemove.add(key);
                 }
-            }
+            });
+            toRemove.each(AbstractMutableBiMap.this::removeKey);
             return oldSize != AbstractMutableBiMap.this.size();
         }
 
@@ -941,15 +953,15 @@ abstract class AbstractMutableBiMap<K, V> extends AbstractBiMap<K, V> implements
         public boolean retainAll(Collection<?> collection)
         {
             int oldSize = AbstractMutableBiMap.this.size();
-            Iterator<V> iterator = this.iterator();
-            while (iterator.hasNext())
+            MutableList<V> toRemove = Lists.mutable.empty();
+            AbstractMutableBiMap.this.delegate.forEachValue(value ->
             {
-                V next = iterator.next();
-                if (!collection.contains(next))
+                if (!collection.contains(value))
                 {
-                    this.remove(next);
+                    toRemove.add(value);
                 }
-            }
+            });
+            toRemove.each(AbstractMutableBiMap.this.inverse()::removeKey);
             return oldSize != AbstractMutableBiMap.this.size();
         }
 
@@ -983,9 +995,12 @@ abstract class AbstractMutableBiMap<K, V> extends AbstractBiMap<K, V> implements
         @Override
         public boolean equals(Object obj)
         {
-            if (obj instanceof Set)
+            if (obj == this)
             {
-                Set<?> other = (Set<?>) obj;
+                return true;
+            }
+            if (obj instanceof Set<?> other)
+            {
                 if (other.size() == this.size())
                 {
                     return this.containsAll(other);
@@ -1219,9 +1234,8 @@ abstract class AbstractMutableBiMap<K, V> extends AbstractBiMap<K, V> implements
             @Override
             public boolean equals(Object obj)
             {
-                if (obj instanceof Entry)
+                if (obj instanceof Entry<?, ?> other)
                 {
-                    Entry<?, ?> other = (Entry<?, ?>) obj;
                     Object otherKey = other.getKey();
                     Object otherValue = other.getValue();
                     return AbstractMutableBiMap.nullSafeEquals(this.key, otherKey)

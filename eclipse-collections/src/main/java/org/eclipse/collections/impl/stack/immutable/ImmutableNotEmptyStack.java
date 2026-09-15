@@ -43,6 +43,7 @@ import org.eclipse.collections.api.factory.primitive.IntStacks;
 import org.eclipse.collections.api.factory.primitive.LongStacks;
 import org.eclipse.collections.api.factory.primitive.ShortStacks;
 import org.eclipse.collections.api.list.ListIterable;
+import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.map.ImmutableMap;
 import org.eclipse.collections.api.map.primitive.ImmutableObjectDoubleMap;
 import org.eclipse.collections.api.map.primitive.ImmutableObjectLongMap;
@@ -69,7 +70,9 @@ import org.eclipse.collections.impl.factory.Multimaps;
 import org.eclipse.collections.impl.partition.stack.PartitionArrayStack;
 import org.eclipse.collections.impl.partition.stack.PartitionArrayStack.PartitionPredicate2Procedure;
 import org.eclipse.collections.impl.partition.stack.PartitionArrayStack.PartitionProcedure;
+import org.eclipse.collections.impl.partition.stack.PartitionArrayStack.PartitionWhileProcedure;
 import org.eclipse.collections.impl.tuple.Tuples;
+import org.eclipse.collections.impl.utility.internal.IteratorIterate;
 
 final class ImmutableNotEmptyStack<T>
         extends AbstractRichIterable<T>
@@ -429,19 +432,25 @@ final class ImmutableNotEmptyStack<T>
     @Override
     public ImmutableStack<T> takeWhile(Predicate<? super T> predicate)
     {
-        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".takeWhile() not implemented yet");
+        MutableList<T> result = Lists.mutable.empty();
+        IteratorIterate.takeWhile(this.iterator(), predicate, result);
+        return Stacks.immutable.withAllReversed(result);
     }
 
     @Override
     public ImmutableStack<T> dropWhile(Predicate<? super T> predicate)
     {
-        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".dropWhile() not implemented yet");
+        MutableList<T> result = Lists.mutable.empty();
+        IteratorIterate.dropWhile(this.iterator(), predicate, result);
+        return Stacks.immutable.withAllReversed(result);
     }
 
     @Override
     public PartitionImmutableStack<T> partitionWhile(Predicate<? super T> predicate)
     {
-        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".partitionWhile() not implemented yet");
+        PartitionArrayStack<T> result = new PartitionArrayStack<>();
+        this.forEach(new PartitionWhileProcedure<>(predicate, result));
+        return result.toImmutable();
     }
 
     @Override

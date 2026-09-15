@@ -22,6 +22,7 @@ import org.eclipse.collections.api.RichIterable;
 import org.eclipse.collections.api.block.function.Function;
 import org.eclipse.collections.api.block.function.Function0;
 import org.eclipse.collections.api.block.function.Function2;
+import org.eclipse.collections.api.block.predicate.Predicate;
 import org.eclipse.collections.api.block.predicate.Predicate2;
 import org.eclipse.collections.api.block.procedure.Procedure;
 import org.eclipse.collections.api.block.procedure.Procedure2;
@@ -32,7 +33,9 @@ import org.eclipse.collections.api.factory.Sets;
 import org.eclipse.collections.api.factory.SortedMaps;
 import org.eclipse.collections.api.map.ImmutableMap;
 import org.eclipse.collections.api.map.sorted.ImmutableSortedMap;
+import org.eclipse.collections.api.partition.list.PartitionImmutableList;
 import org.eclipse.collections.api.tuple.Pair;
+import org.eclipse.collections.impl.partition.list.PartitionImmutableListImpl;
 import org.eclipse.collections.impl.utility.LazyIterate;
 
 /**
@@ -43,6 +46,8 @@ final class ImmutableEmptySortedMap<K, V>
         implements Serializable
 {
     static final ImmutableSortedMap<?, ?> INSTANCE = new ImmutableEmptySortedMap<>();
+    private static final PartitionImmutableList<?> EMPTY_PARTITION =
+            new PartitionImmutableListImpl<>(Lists.immutable.empty(), Lists.immutable.empty());
     private static final long serialVersionUID = 2L;
 
     private final Comparator<? super K> comparator;
@@ -295,6 +300,24 @@ final class ImmutableEmptySortedMap<K, V>
         }
 
         return this;
+    }
+
+    @Override
+    public ImmutableSortedMap<K, V> takeWhile(Predicate<? super V> predicate)
+    {
+        return this;
+    }
+
+    @Override
+    public ImmutableSortedMap<K, V> dropWhile(Predicate<? super V> predicate)
+    {
+        return this;
+    }
+
+    @Override
+    public PartitionImmutableList<V> partitionWhile(Predicate<? super V> predicate)
+    {
+        return (PartitionImmutableList<V>) EMPTY_PARTITION;
     }
 
     @Override

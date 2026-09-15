@@ -11,29 +11,15 @@
 package org.eclipse.collections.test.set.mutable.sorted;
 
 import org.eclipse.collections.test.UnmodifiableMutableCollectionTestCase;
-import org.eclipse.collections.test.set.sorted.UnmodifiableSortedSetTestCase;
+import org.eclipse.collections.test.set.sorted.UnmodifiableNavigableSetTestCase;
 import org.junit.jupiter.api.Test;
 
-public interface UnmodifiableMutableSortedSetTestCase extends UnmodifiableMutableCollectionTestCase, UnmodifiableSortedSetTestCase, MutableSortedSetTestCase
+public interface UnmodifiableMutableSortedSetTestCase extends UnmodifiableMutableCollectionTestCase, UnmodifiableNavigableSetTestCase, MutableSortedSetTestCase
 {
     @Override
     @Test
     default void Iterable_remove()
     {
-        UnmodifiableSortedSetTestCase.super.Iterable_remove();
-    }
-
-    @Override
-    @Test
-    default void MutableCollection_removeIf()
-    {
-        UnmodifiableMutableCollectionTestCase.super.MutableCollection_removeIf();
-    }
-
-    @Override
-    @Test
-    default void MutableCollection_removeIfWith()
-    {
-        UnmodifiableMutableCollectionTestCase.super.MutableCollection_removeIfWith();
+        UnmodifiableNavigableSetTestCase.super.Iterable_remove();
     }
 }
