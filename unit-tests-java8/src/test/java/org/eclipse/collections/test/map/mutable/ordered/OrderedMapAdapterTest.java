@@ -14,8 +14,10 @@ import java.util.LinkedHashMap;
 
 import org.eclipse.collections.api.map.MutableOrderedMap;
 import org.eclipse.collections.impl.map.ordered.mutable.OrderedMapAdapter;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
 public class OrderedMapAdapterTest implements MutableOrderedMapTestCase
@@ -47,5 +49,37 @@ public class OrderedMapAdapterTest implements MutableOrderedMapTestCase
             assertNull(result.put((K) elements[i], (V) elements[i + 1]));
         }
         return result;
+    }
+
+    @Override
+    @Test
+    public void ReversibleIterable_detectLastIndex()
+    {
+        // TODO Support detectLastIndex for OrderedMapAdapter.
+        assertThrows(UnsupportedOperationException.class, () -> this.newWith(3, 2, 1).detectLastIndex(each -> true));
+    }
+
+    @Override
+    @Test
+    public void OrderedIterable_forEach_from_to()
+    {
+        // TODO Support indexed traversal for OrderedMapAdapter.
+        assertThrows(UnsupportedOperationException.class, () -> this.newWith(3, 2, 1).forEach(0, 1, each -> { }));
+    }
+
+    @Override
+    @Test
+    public void OrderedIterable_forEachWithIndex_from_to()
+    {
+        // TODO Support indexed traversal for OrderedMapAdapter.
+        assertThrows(UnsupportedOperationException.class, () -> this.newWith(3, 2, 1).forEachWithIndex(0, 1, (each, index) -> { }));
+    }
+
+    @Override
+    @Test
+    public void ReversibleIterable_reverseForEach()
+    {
+        // TODO Support reverseForEach for OrderedMapAdapter (depends on forEach(int, int)).
+        assertThrows(UnsupportedOperationException.class, () -> this.newWith(3, 2, 1).reverseForEach(each -> { }));
     }
 }
