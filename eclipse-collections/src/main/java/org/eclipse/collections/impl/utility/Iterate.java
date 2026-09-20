@@ -28,6 +28,16 @@ import java.util.stream.Stream;
 
 import org.eclipse.collections.api.InternalIterable;
 import org.eclipse.collections.api.RichIterable;
+import org.eclipse.collections.api.annotation.category.Aggregating;
+import org.eclipse.collections.api.annotation.category.Converting;
+import org.eclipse.collections.api.annotation.category.Counting;
+import org.eclipse.collections.api.annotation.category.Filtering;
+import org.eclipse.collections.api.annotation.category.Finding;
+import org.eclipse.collections.api.annotation.category.Grouping;
+import org.eclipse.collections.api.annotation.category.Iterating;
+import org.eclipse.collections.api.annotation.category.Mutating;
+import org.eclipse.collections.api.annotation.category.Testing;
+import org.eclipse.collections.api.annotation.category.Transforming;
 import org.eclipse.collections.api.block.function.Function;
 import org.eclipse.collections.api.block.function.Function0;
 import org.eclipse.collections.api.block.function.Function2;
@@ -113,6 +123,7 @@ public final class Iterate
      * Iterate.<b>forEach</b>(people, person -&gt; LOGGER.info(person.getName());
      * </pre>
      */
+    @Iterating
     public static <T> void forEach(Iterable<T> iterable, Procedure<? super T> procedure)
     {
         if (iterable instanceof InternalIterable)
@@ -149,6 +160,7 @@ public final class Iterate
      * </pre>
      *
      */
+    @Iterating
     public static <T, P> void forEachWith(
             Iterable<T> iterable,
             Procedure2<? super T, ? super P> procedure,
@@ -185,6 +197,7 @@ public final class Iterate
      * Iterate.<b>forEachWithIndex</b>(people, (Person person, int index) -&gt; LOGGER.info("Index: " + index + " person: " + person.getName()));
      * </pre>
      */
+    @Iterating
     public static <T> void forEachWithIndex(Iterable<T> iterable, ObjectIntProcedure<? super T> objectIntProcedure)
     {
         if (iterable instanceof InternalIterable)
@@ -218,6 +231,7 @@ public final class Iterate
      *     Iterate.<b>select</b>(people, person -&gt; person.getAddress().getCity().equals("Metuchen"));
      * </pre>
      */
+    @Filtering
     public static <T> Collection<T> select(Iterable<T> iterable, Predicate<? super T> predicate)
     {
         if (iterable instanceof MutableCollection)
@@ -255,6 +269,7 @@ public final class Iterate
      *     Iterate.<b>selectWith</b>(people, (Person person, Integer age) -&gt; person.getAge() &gt;= age, Integer.valueOf(18));
      * </pre>
      */
+    @Filtering
     public static <T, IV> Collection<T> selectWith(
             Iterable<T> iterable,
             Predicate2<? super T, ? super IV> predicate,
@@ -296,6 +311,7 @@ public final class Iterate
      *      Iterate.<b>selectAndRejectWith</b>(people, (Person person, String lastName) -&gt; lastName.equals(person.getLastName()), "Mason");
      * </pre>
      */
+    @Filtering
     public static <T, IV> Twin<MutableList<T>> selectAndRejectWith(
             Iterable<T> iterable,
             Predicate2<? super T, ? super IV> predicate,
@@ -329,6 +345,7 @@ public final class Iterate
      *      Iterate.<b>partition</b>(people, person -&gt; person.getAddress().getState().getName().equals("New York"));
      * </pre>
      */
+    @Filtering
     public static <T> PartitionIterable<T> partition(Iterable<T> iterable, Predicate<? super T> predicate)
     {
         if (iterable instanceof RichIterable<?>)
@@ -361,6 +378,7 @@ public final class Iterate
      *
      * @since 5.0.
      */
+    @Filtering
     public static <T, P> PartitionIterable<T> partitionWith(Iterable<T> iterable, Predicate2<? super T, ? super P> predicate, P parameter)
     {
         if (iterable instanceof RichIterable<?>)
@@ -385,6 +403,7 @@ public final class Iterate
     /**
      * Returns a new collection with only the elements that are instances of the Class {@code clazz}.
      */
+    @Filtering
     public static <T> Collection<T> selectInstancesOf(Iterable<?> iterable, Class<T> clazz)
     {
         if (iterable instanceof MutableCollection<?> mutableCollection)
@@ -421,6 +440,7 @@ public final class Iterate
      * int count = Iterate.<b>count</b>(people, person -&gt; person.getAddress().getState().getName().equals("New York"));
      * </pre>
      */
+    @Counting
     public static <T> int count(Iterable<T> iterable, Predicate<? super T> predicate)
     {
         if (iterable instanceof RichIterable)
@@ -449,6 +469,7 @@ public final class Iterate
      * return Iterate.<b>countWith</b>(lastNames, Predicates2.equal(), "Smith");
      * </pre>
      */
+    @Counting
     public static <T, IV> int countWith(
             Iterable<T> iterable,
             Predicate2<? super T, ? super IV> predicate,
@@ -476,6 +497,7 @@ public final class Iterate
     /**
      * @see RichIterable#collectIf(Predicate, Function)
      */
+    @Transforming
     public static <T, V> Collection<V> collectIf(
             Iterable<T> iterable,
             Predicate<? super T> predicate,
@@ -511,6 +533,8 @@ public final class Iterate
     /**
      * @see RichIterable#collectIf(Predicate, Function, Collection)
      */
+    @Filtering
+    @Transforming
     public static <T, V, R extends Collection<V>> R collectIf(
             Iterable<T> iterable,
             Predicate<? super T> predicate,
@@ -550,6 +574,7 @@ public final class Iterate
      * MutableList&lt;Person&gt; selected = Iterate.<b>select</b>(collection, Predicates.attributeEqual("lastName", "Smith"), FastList.newList());
      * </pre>
      */
+    @Filtering
     public static <T, R extends Collection<T>> R select(
             Iterable<T> iterable,
             Predicate<? super T> predicate,
@@ -577,6 +602,7 @@ public final class Iterate
     /**
      * Same as the selectWith method with two parameters but uses the specified target collection.
      */
+    @Filtering
     public static <T, P, R extends Collection<T>> R selectWith(
             Iterable<T> iterable,
             Predicate2<? super T, ? super P> predicate,
@@ -612,6 +638,7 @@ public final class Iterate
      * @return a new list with the items take from the given collection.
      * @throws IllegalArgumentException if {@code count} is less than zero
      */
+    @Filtering
     public static <T> Collection<T> take(Iterable<T> iterable, int count)
     {
         if (iterable instanceof ArrayList)
@@ -645,6 +672,7 @@ public final class Iterate
      * @return a new list with the items dropped from the given collection.
      * @throws IllegalArgumentException if {@code count} is less than zero
      */
+    @Filtering
     public static <T> Collection<T> drop(Iterable<T> iterable, int count)
     {
         if (iterable instanceof ArrayList)
@@ -684,6 +712,7 @@ public final class Iterate
      *      Iterate.<b>reject</b>(people, Predicates.attributeEqual("lastName", "Smith"));
      * </pre>
      */
+    @Filtering
     public static <T> Collection<T> reject(Iterable<T> iterable, Predicate<? super T> predicate)
     {
         if (iterable instanceof MutableCollection)
@@ -715,6 +744,7 @@ public final class Iterate
     /**
      * SortThis is a mutating method. The List passed in is also returned.
      */
+    @Mutating
     public static <T extends Comparable<? super T>, L extends List<T>> L sortThis(L list)
     {
         if (list instanceof MutableList<?>)
@@ -734,6 +764,7 @@ public final class Iterate
     /**
      * SortThis is a mutating method. The List passed in is also returned.
      */
+    @Mutating
     public static <T, L extends List<T>> L sortThis(L list, Comparator<? super T> comparator)
     {
         if (list instanceof MutableList)
@@ -753,6 +784,7 @@ public final class Iterate
     /**
      * SortThis is a mutating method. The List passed in is also returned.
      */
+    @Mutating
     public static <T, L extends List<T>> L sortThis(L list, Predicate2<? super T, ? super T> predicate)
     {
         return Iterate.sortThis(list, (Comparator<T>) (o1, o2) -> {
@@ -772,6 +804,7 @@ public final class Iterate
      * Sort the list by comparing an attribute defined by the function.
      * SortThisBy is a mutating method. The List passed in is also returned.
      */
+    @Mutating
     public static <T, V extends Comparable<? super V>, L extends List<T>> L sortThisBy(L list, Function<? super T, ? extends V> function)
     {
         return Iterate.sortThis(list, Comparators.byFunction(function));
@@ -780,6 +813,7 @@ public final class Iterate
     /**
      * Removes all elements from the iterable that evaluate to true for the specified predicate.
      */
+    @Mutating
     public static <T> boolean removeIf(Iterable<T> iterable, Predicate<? super T> predicate)
     {
         return Iterate.removeIf(iterable, (java.util.function.Predicate<? super T>) predicate);
@@ -788,6 +822,7 @@ public final class Iterate
     /**
      * Removes all elements from the iterable that evaluate to true for the specified predicate.
      */
+    @Mutating
     public static <T> boolean removeIf(Iterable<T> iterable, java.util.function.Predicate<? super T> predicate)
     {
         if (iterable instanceof MutableCollection)
@@ -812,6 +847,7 @@ public final class Iterate
     /**
      * Removes all elements of the iterable that evaluate to true for the specified predicate2 and parameter.
      */
+    @Mutating
     public static <T, P> boolean removeIfWith(
             Iterable<T> iterable,
             Predicate2<? super T, ? super P> predicate,
@@ -845,6 +881,7 @@ public final class Iterate
      *     Iterate.<b>rejectWith</b>(people, (Person person, Integer age) -&gt; person.getAge() &gt;= age, Integer.valueOf(18));
      * </pre>
      */
+    @Filtering
     public static <T, P> Collection<T> rejectWith(
             Iterable<T> iterable,
             Predicate2<? super T, ? super P> predicate,
@@ -892,6 +929,7 @@ public final class Iterate
      *      Iterate.<b>reject</b>(people, Predicates.attributeEqual("lastName", "Smith"), FastList.newList());
      * </pre>
      */
+    @Filtering
     public static <T, R extends Collection<T>> R reject(
             Iterable<T> iterable,
             Predicate<? super T> predicate,
@@ -919,6 +957,7 @@ public final class Iterate
     /**
      * Same as the reject method with two parameters but uses the specified target collection.
      */
+    @Filtering
     public static <T, P, R extends Collection<T>> R rejectWith(
             Iterable<T> iterable,
             Predicate2<? super T, ? super P> predicate,
@@ -951,6 +990,7 @@ public final class Iterate
     /**
      * Add all elements from the source Iterable to the target collection, return the target collection.
      */
+    @Mutating
     public static <T, R extends Collection<T>> R addAllTo(Iterable<? extends T> iterable, R targetCollection)
     {
         Iterate.addAllIterable(iterable, targetCollection);
@@ -960,6 +1000,7 @@ public final class Iterate
     /**
      * Add all elements from the source Iterable to the target collection, returns true if any element was added.
      */
+    @Mutating
     public static <T> boolean addAllIterable(Iterable<? extends T> iterable, Collection<T> targetCollection)
     {
         if (iterable == null)
@@ -978,6 +1019,7 @@ public final class Iterate
     /**
      * Remove all elements present in Iterable from the target collection, return the target collection.
      */
+    @Mutating
     public static <T, R extends Collection<T>> R removeAllFrom(Iterable<? extends T> iterable, R targetCollection)
     {
         Iterate.removeAllIterable(iterable, targetCollection);
@@ -987,6 +1029,7 @@ public final class Iterate
     /**
      * Remove all elements present in Iterable from the target collection, returns true if any element was removed.
      */
+    @Mutating
     public static <T> boolean removeAllIterable(Iterable<? extends T> iterable, Collection<T> targetCollection)
     {
         if (iterable == null)
@@ -1011,6 +1054,7 @@ public final class Iterate
      *      Iterate.<b>collect</b>(people, person -&gt; person.getFirstName() + " " + person.getLastName());
      * </pre>
      */
+    @Transforming
     public static <T, V> Collection<V> collect(
             Iterable<T> iterable,
             Function<? super T, ? extends V> function)
@@ -1053,6 +1097,7 @@ public final class Iterate
      *      Iterate.<b>collect</b>(people, person -&gt; person.getFirstName() + " " + person.getLastName(), FastList.newList());
      * </pre>
      */
+    @Transforming
     public static <T, A, R extends Collection<A>> R collect(
             Iterable<T> iterable,
             Function<? super T, ? extends A> function,
@@ -1086,6 +1131,7 @@ public final class Iterate
      *      Iterable.<b>collectBoolean</b>(people, person -&gt; person.canVote());
      * </pre>
      */
+    @Transforming
     public static <T> MutableBooleanCollection collectBoolean(
             Iterable<T> iterable,
             BooleanFunction<? super T> booleanFunction)
@@ -1119,6 +1165,7 @@ public final class Iterate
      *      Iterable.<b>collectBoolean</b>(people, person -&gt; person.canVote(), new BooleanArrayList());
      * </pre>
      */
+    @Transforming
     public static <T, R extends MutableBooleanCollection> R collectBoolean(
             Iterable<T> iterable,
             BooleanFunction<? super T> booleanFunction,
@@ -1152,6 +1199,7 @@ public final class Iterate
      *      Iterate.<b>collectByte</b>(people, person -&gt; person.getCode());
      * </pre>
      */
+    @Transforming
     public static <T> MutableByteCollection collectByte(
             Iterable<T> iterable,
             ByteFunction<? super T> byteFunction)
@@ -1185,6 +1233,7 @@ public final class Iterate
      *      Iterate.<b>collectByte</b>(people, person -&gt; person.getCode(), new ByteArrayList());
      * </pre>
      */
+    @Transforming
     public static <T, R extends MutableByteCollection> R collectByte(
             Iterable<T> iterable,
             ByteFunction<? super T> byteFunction,
@@ -1218,6 +1267,7 @@ public final class Iterate
      *      Iterate.<b>collectChar</b>(people, person -&gt; person.getMiddleInitial());
      * </pre>
      */
+    @Transforming
     public static <T> MutableCharCollection collectChar(
             Iterable<T> iterable,
             CharFunction<? super T> charFunction)
@@ -1250,6 +1300,7 @@ public final class Iterate
      *      Iterate.<b>collectChar</b>(people, person -&gt; person.getMiddleInitial());
      * </pre>
      */
+    @Transforming
     public static <T, R extends MutableCharCollection> R collectChar(
             Iterable<T> iterable,
             CharFunction<? super T> charFunction,
@@ -1283,6 +1334,7 @@ public final class Iterate
      *      Iterate.<b>collectDouble</b>(people, person -&gt; person.getMilesFromNorthPole());
      * </pre>
      */
+    @Transforming
     public static <T> MutableDoubleCollection collectDouble(
             Iterable<T> iterable,
             DoubleFunction<? super T> doubleFunction)
@@ -1316,6 +1368,7 @@ public final class Iterate
      *      Iterate.<b>collectDouble</b>(people, person -&gt; person.getMilesFromNorthPole());
      * </pre>
      */
+    @Transforming
     public static <T, R extends MutableDoubleCollection> R collectDouble(
             Iterable<T> iterable,
             DoubleFunction<? super T> doubleFunction,
@@ -1349,6 +1402,7 @@ public final class Iterate
      *      Iterate.<b>collectFloat</b>(people, person -&gt; person.getHeightInInches());
      * </pre>
      */
+    @Transforming
     public static <T> MutableFloatCollection collectFloat(
             Iterable<T> iterable,
             FloatFunction<? super T> floatFunction)
@@ -1382,6 +1436,7 @@ public final class Iterate
      *      Iterate.<b>collectFloat</b>(people, person -&gt; person.getHeightInInches(), new FloatArrayList());
      * </pre>
      */
+    @Transforming
     public static <T, R extends MutableFloatCollection> R collectFloat(
             Iterable<T> iterable,
             FloatFunction<? super T> floatFunction,
@@ -1415,6 +1470,7 @@ public final class Iterate
      *      Iterate.<b>collectInt</b>(people, person -&gt; person.getAge());
      * </pre>
      */
+    @Transforming
     public static <T> MutableIntCollection collectInt(
             Iterable<T> iterable,
             IntFunction<? super T> intFunction)
@@ -1448,6 +1504,7 @@ public final class Iterate
      *      Iterate.<b>collectInt</b>(people, person -&gt; person.getAge(), new IntArrayList());
      * </pre>
      */
+    @Transforming
     public static <T, R extends MutableIntCollection> R collectInt(
             Iterable<T> iterable,
             IntFunction<? super T> intFunction,
@@ -1481,6 +1538,7 @@ public final class Iterate
      *      Iterate.<b>collectLong</b>(people, person -&gt; person.getGuid());
      * </pre>
      */
+    @Transforming
     public static <T> MutableLongCollection collectLong(
             Iterable<T> iterable,
             LongFunction<? super T> longFunction)
@@ -1514,6 +1572,7 @@ public final class Iterate
      *      Iterate.<b>collectLong</b>(people, person -&gt; person.getGuid(), new LongArrayList());
      * </pre>
      */
+    @Transforming
     public static <T, R extends MutableLongCollection> R collectLong(
             Iterable<T> iterable,
             LongFunction<? super T> longFunction,
@@ -1547,6 +1606,7 @@ public final class Iterate
      *      Iterate.<b>collectShort</b>(people, person -&gt; person.getNumberOfJunkMailItemsReceivedPerMonth());
      * </pre>
      */
+    @Transforming
     public static <T> MutableShortCollection collectShort(
             Iterable<T> iterable,
             ShortFunction<? super T> shortFunction)
@@ -1580,6 +1640,7 @@ public final class Iterate
      *      Iterate.<b>collectShort</b>(people, person -&gt; person.getNumberOfJunkMailItemsReceivedPerMonth(), new ShortArrayList());
      * </pre>
      */
+    @Transforming
     public static <T, R extends MutableShortCollection> R collectShort(
             Iterable<T> iterable,
             ShortFunction<? super T> shortFunction,
@@ -1607,6 +1668,7 @@ public final class Iterate
     /**
      * @see RichIterable#flatCollect(Function)
      */
+    @Transforming
     public static <T, V> Collection<V> flatCollect(
             Iterable<T> iterable,
             Function<? super T, ? extends Iterable<V>> function)
@@ -1642,6 +1704,7 @@ public final class Iterate
     /**
      * @see RichIterable#flatCollect(Function, Collection)
      */
+    @Transforming
     public static <T, A, R extends Collection<A>> R flatCollect(
             Iterable<T> iterable,
             Function<? super T, ? extends Iterable<A>> function,
@@ -1669,6 +1732,7 @@ public final class Iterate
     /**
      * Same as collect with a Function2 and specified parameter which is passed to the function.
      */
+    @Transforming
     public static <T, P, A> Collection<A> collectWith(
             Iterable<T> iterable,
             Function2<? super T, ? super P, ? extends A> function,
@@ -1706,6 +1770,7 @@ public final class Iterate
     /**
      * Same as collectWith but with a targetCollection parameter to gather the results.
      */
+    @Transforming
     public static <T, P, A, R extends Collection<A>> R collectWith(
             Iterable<T> iterable,
             Function2<? super T, ? super P, ? extends A> function,
@@ -1737,6 +1802,7 @@ public final class Iterate
      * @param iterable A list of lists, e.g. { { 1, 2, 3 }, { 4, 5 }, { 6 } }
      * @return A flattened list, e.g. { 1, 2, 3, 4, 5, 6 }
      */
+    @Transforming
     public static <T> Collection<T> flatten(Iterable<? extends Iterable<T>> iterable)
     {
         return Iterate.flatCollect(iterable, Functions.<Iterable<T>>identity());
@@ -1745,6 +1811,7 @@ public final class Iterate
     /**
      * Same as {@link #flatten(Iterable)} except that the results are gathered into the specified targetCollection.
      */
+    @Transforming
     public static <T, R extends Collection<T>> R flatten(Iterable<? extends Iterable<T>> iterable, R targetCollection)
     {
         return Iterate.flatCollect(iterable, Functions.<Iterable<T>>identity(), targetCollection);
@@ -1760,6 +1827,7 @@ public final class Iterate
      *
      * @throws IllegalArgumentException if the Collection is null
      */
+    @Finding
     public static <T> T getFirst(Iterable<T> iterable)
     {
         if (iterable instanceof RichIterable)
@@ -1788,6 +1856,7 @@ public final class Iterate
     /**
      * A null-safe check on a collection to see if it isEmpty. A null collection results in a true.
      */
+    @Testing
     public static boolean isEmpty(Iterable<?> iterable)
     {
         if (iterable == null)
@@ -1808,6 +1877,7 @@ public final class Iterate
     /**
      * A null-safe check on a collection to see if it is notEmpty. A null collection results in a false.
      */
+    @Testing
     public static boolean notEmpty(Iterable<?> iterable)
     {
         return !Iterate.isEmpty(iterable);
@@ -1823,6 +1893,7 @@ public final class Iterate
      *
      * @throws IllegalArgumentException if the Collection is null
      */
+    @Finding
     public static <T> T getLast(Iterable<T> iterable)
     {
         if (iterable instanceof RichIterable)
@@ -1857,6 +1928,7 @@ public final class Iterate
      * Person person = Iterate.<b>detect</b>(people, person -&gt; person.getFirstName().equals("John") &amp;&amp; person.getLastName().equals("Smith"));
      * </pre>
      */
+    @Finding
     public static <T> T detect(Iterable<T> iterable, Predicate<? super T> predicate)
     {
         if (iterable instanceof RichIterable)
@@ -1887,6 +1959,7 @@ public final class Iterate
      * Person person = Iterate.<b>detectWith</b>(people, (person, fullName) -&gt; person.getFullName().equals(fullName), "John Smith");
      * </pre>
      */
+    @Finding
     public static <T, P> T detectWith(
             Iterable<T> iterable,
             Predicate2<? super T, ? super P> predicate,
@@ -1925,6 +1998,7 @@ public final class Iterate
      * @throws NullPointerException if the element selected is null
      * @since 8.0
      */
+    @Finding
     public static <T> Optional<T> detectOptional(Iterable<T> iterable, Predicate<? super T> predicate)
     {
         if (iterable instanceof RichIterable)
@@ -1961,6 +2035,7 @@ public final class Iterate
      * @throws NullPointerException if the element selected is null
      * @since 8.0
      */
+    @Finding
     public static <T, P> Optional<T> detectWithOptional(
             Iterable<T> iterable,
             Predicate2<? super T, ? super P> predicate,
@@ -1989,6 +2064,7 @@ public final class Iterate
      * Returns the first element of the iterable that evaluates to true for the specified predicate, or returns the
      * result ifNone if no element evaluates to true.
      */
+    @Finding
     public static <T> T detectIfNone(Iterable<T> iterable, Predicate<? super T> predicate, T ifNone)
     {
         T result = Iterate.detect(iterable, predicate);
@@ -1999,6 +2075,7 @@ public final class Iterate
      * Returns the first element of the iterable that evaluates to true for the specified predicate2 and parameter,
      * or returns the result ifNone if no element evaluates to true.
      */
+    @Finding
     public static <T, P> T detectWithIfNone(
             Iterable<T> iterable,
             Predicate2<? super T, ? super P> predicate,
@@ -2012,6 +2089,7 @@ public final class Iterate
     /**
      * Searches for the first occurrence where the predicate evaluates to true, returns -1 if the predicate does not evaluate to true.
      */
+    @Finding
     public static <T> int detectIndex(Iterable<T> iterable, Predicate<? super T> predicate)
     {
         if (iterable instanceof ArrayList<?>)
@@ -2032,6 +2110,7 @@ public final class Iterate
     /**
      * Searches for the first occurrence where the predicate2 and parameter evaluates to true, returns -1 if the predicate2 and parameter do not evaluate to true.
      */
+    @Finding
     public static <T, P> int detectIndexWith(
             Iterable<T> iterable,
             Predicate2<? super T, ? super P> predicate,
@@ -2057,6 +2136,7 @@ public final class Iterate
      *
      * @since 8.0
      */
+    @Aggregating
     public static <T, A, R> R reduceInPlace(Iterable<T> iterable, Collector<? super T, A, R> collector)
     {
         if (iterable instanceof RichIterable)
@@ -2075,6 +2155,7 @@ public final class Iterate
      *
      * @since 8.0
      */
+    @Aggregating
     public static <T, R> R reduceInPlace(Iterable<T> iterable, Supplier<R> supplier, BiConsumer<R, ? super T> accumulator)
     {
         if (iterable instanceof RichIterable)
@@ -2089,6 +2170,7 @@ public final class Iterate
     /**
      * @see RichIterable#injectInto(Object, Function2)
      */
+    @Aggregating
     public static <T, IV> IV injectInto(
             IV injectValue,
             Iterable<T> iterable,
@@ -2116,6 +2198,7 @@ public final class Iterate
     /**
      * @see RichIterable#injectInto(int, IntObjectToIntFunction)
      */
+    @Aggregating
     public static <T> int injectInto(
             int injectValue,
             Iterable<T> iterable,
@@ -2143,6 +2226,7 @@ public final class Iterate
     /**
      * @see RichIterable#injectInto(long, LongObjectToLongFunction)
      */
+    @Aggregating
     public static <T> long injectInto(
             long injectValue,
             Iterable<T> iterable,
@@ -2170,6 +2254,7 @@ public final class Iterate
     /**
      * @see RichIterable#injectInto(double, DoubleObjectToDoubleFunction)
      */
+    @Aggregating
     public static <T> double injectInto(
             double injectValue,
             Iterable<T> iterable,
@@ -2197,6 +2282,7 @@ public final class Iterate
     /**
      * @see RichIterable#injectInto(float, FloatObjectToFloatFunction)
      */
+    @Aggregating
     public static <T> float injectInto(
             float injectValue,
             Iterable<T> iterable,
@@ -2224,6 +2310,7 @@ public final class Iterate
     /**
      * @see RichIterable#sumOfInt(IntFunction)
      */
+    @Aggregating
     public static <T> long sumOfInt(Iterable<T> iterable, IntFunction<? super T> function)
     {
         if (iterable instanceof RichIterable)
@@ -2244,6 +2331,7 @@ public final class Iterate
     /**
      * @see RichIterable#sumOfLong(LongFunction)
      */
+    @Aggregating
     public static <T> long sumOfLong(Iterable<T> iterable, LongFunction<? super T> function)
     {
         if (iterable instanceof RichIterable)
@@ -2264,6 +2352,7 @@ public final class Iterate
     /**
      * @see RichIterable#sumOfFloat(FloatFunction)
      */
+    @Aggregating
     public static <T> double sumOfFloat(Iterable<T> iterable, FloatFunction<? super T> function)
     {
         if (iterable instanceof RichIterable)
@@ -2284,6 +2373,7 @@ public final class Iterate
     /**
      * @see RichIterable#sumOfDouble(DoubleFunction)
      */
+    @Aggregating
     public static <T> double sumOfDouble(Iterable<T> iterable, DoubleFunction<? super T> function)
     {
         if (iterable instanceof RichIterable)
@@ -2306,6 +2396,7 @@ public final class Iterate
      *
      * @since 6.0
      */
+    @Aggregating
     public static <T> BigDecimal sumOfBigDecimal(Iterable<T> iterable, Function<? super T, BigDecimal> function)
     {
         if (iterable instanceof List)
@@ -2324,6 +2415,7 @@ public final class Iterate
      *
      * @since 6.0
      */
+    @Aggregating
     public static <T> BigInteger sumOfBigInteger(Iterable<T> iterable, Function<? super T, BigInteger> function)
     {
         if (iterable instanceof List)
@@ -2342,6 +2434,7 @@ public final class Iterate
      *
      * @since 6.0
      */
+    @Aggregating
     public static <V, T> MutableMap<V, BigDecimal> sumByBigDecimal(Iterable<T> iterable, Function<T, V> groupBy, Function<? super T, BigDecimal> function)
     {
         if (iterable instanceof List)
@@ -2360,6 +2453,7 @@ public final class Iterate
      *
      * @since 6.0
      */
+    @Aggregating
     public static <V, T> MutableMap<V, BigInteger> sumByBigInteger(Iterable<T> iterable, Function<T, V> groupBy, Function<? super T, BigInteger> function)
     {
         if (iterable instanceof List)
@@ -2376,6 +2470,7 @@ public final class Iterate
     /**
      * @see RichIterable#sumByInt(Function, IntFunction)
      */
+    @Aggregating
     public static <T, V> ObjectLongMap<V> sumByInt(Iterable<T> iterable, Function<T, V> groupBy, IntFunction<? super T> function)
     {
         if (iterable instanceof RichIterable)
@@ -2396,6 +2491,7 @@ public final class Iterate
     /**
      * @see RichIterable#sumByLong(Function, LongFunction)
      */
+    @Aggregating
     public static <T, V> ObjectLongMap<V> sumByLong(Iterable<T> iterable, Function<T, V> groupBy, LongFunction<? super T> function)
     {
         if (iterable instanceof RichIterable)
@@ -2416,6 +2512,7 @@ public final class Iterate
     /**
      * @see RichIterable#sumOfFloat(FloatFunction)
      */
+    @Aggregating
     public static <T, V> ObjectDoubleMap<V> sumByFloat(Iterable<T> iterable, Function<T, V> groupBy, FloatFunction<? super T> function)
     {
         if (iterable instanceof RichIterable)
@@ -2436,6 +2533,7 @@ public final class Iterate
     /**
      * @see RichIterable#sumOfDouble(DoubleFunction)
      */
+    @Aggregating
     public static <T, V> ObjectDoubleMap<V> sumByDouble(Iterable<T> iterable, Function<T, V> groupBy, DoubleFunction<? super T> function)
     {
         if (iterable instanceof RichIterable)
@@ -2456,6 +2554,7 @@ public final class Iterate
     /**
      * Similar to {@link #injectInto(Object, Iterable, Function2)}, except with a parameter is used as third generic argument in function3.
      */
+    @Aggregating
     public static <T, IV, P> IV injectIntoWith(
             IV injectValue,
             Iterable<T> iterable,
@@ -2485,6 +2584,7 @@ public final class Iterate
      * Returns true if the predicate evaluates to true for any element of the iterable.
      * Returns false if the iterable is empty or if no elements return true for the predicate.
      */
+    @Testing
     public static <T> boolean anySatisfy(Iterable<T> iterable, Predicate<? super T> predicate)
     {
         if (iterable instanceof RichIterable)
@@ -2510,6 +2610,7 @@ public final class Iterate
      * Returns true if the predicate2 and parameter evaluates to true for any element of the iterable.
      * Returns false if the iterable is empty or if no elements return true for the predicate2.
      */
+    @Testing
     public static <T, P> boolean anySatisfyWith(
             Iterable<T> iterable,
             Predicate2<? super T, ? super P> predicate,
@@ -2538,6 +2639,7 @@ public final class Iterate
      * Returns true if the predicate evaluates to true for every element of the iterable, or returns false.
      * Returns true if the iterable is empty.
      */
+    @Testing
     public static <T> boolean allSatisfy(Iterable<T> iterable, Predicate<? super T> predicate)
     {
         if (iterable instanceof RichIterable)
@@ -2562,6 +2664,7 @@ public final class Iterate
     /**
      * Returns true if the predicate evaluates to true for every element of the iterable, or returns false.
      */
+    @Testing
     public static <T, P> boolean allSatisfyWith(
             Iterable<T> iterable,
             Predicate2<? super T, ? super P> predicate,
@@ -2590,6 +2693,7 @@ public final class Iterate
      * Returns true if the predicate evaluates to false for every element of the iterable, or returns false.
      * Returns true if the iterable is empty.
      */
+    @Testing
     public static <T> boolean noneSatisfy(Iterable<T> iterable, Predicate<? super T> predicate)
     {
         if (iterable instanceof RichIterable)
@@ -2615,6 +2719,7 @@ public final class Iterate
      * Returns true if the predicate evaluates to false for every element of the iterable, or returns false.
      * Returns true if the iterable is empty.
      */
+    @Testing
     public static <T, P> boolean noneSatisfyWith(
             Iterable<T> iterable,
             Predicate2<? super T, ? super P> predicate,
@@ -2643,6 +2748,7 @@ public final class Iterate
      * Iterate over the specified collection applying the specified Function to each element to calculate
      * a key and return the results as a Map.
      */
+    @Converting
     public static <T, K> MutableMap<K, T> toMap(
             Iterable<T> iterable,
             Function<? super T, ? extends K> keyFunction)
@@ -2656,6 +2762,7 @@ public final class Iterate
      * Iterate over the specified collection applying the specified Functions to each element to calculate
      * a key and value, and return the results as a Map.
      */
+    @Converting
     public static <T, K, V> MutableMap<K, V> toMap(
             Iterable<T> iterable,
             Function<? super T, ? extends K> keyFunction,
@@ -2668,6 +2775,7 @@ public final class Iterate
      * Iterate over the specified collection applying the specified Functions to each element to calculate
      * a key and value, and return the results in the specified Map instance.
      */
+    @Converting
     public static <T, K, V, R extends Map<K, V>> R toMap(
             Iterable<T> iterable,
             Function<? super T, ? extends K> keyFunction,
@@ -2682,6 +2790,7 @@ public final class Iterate
      * key, and add the results to input Map.
      * This method will mutate the input Map.
      */
+    @Mutating
     public static <T, K, V, M extends Map<K, V>> M addToMap(
             Iterable<T> iterable,
             Function<? super T, ? extends K> keyFunction,
@@ -2696,6 +2805,7 @@ public final class Iterate
      * a key and value, and add the results to input Map.
      * This method will mutate the input Map.
      */
+    @Mutating
     public static <T, K, V, M extends Map<K, V>> M addToMap(
             Iterable<T> iterable,
             Function<? super T, ? extends K> keyFunction,
@@ -2720,6 +2830,7 @@ public final class Iterate
      * @see Iterate#groupByEach(Iterable, Function) when only keys get transformed and Function returns multiple keys
      * @see Iterate#groupByAndCollect(Iterable, Function, Function, MutableMultimap) when both keys and values get transformed and Function returns single key and value
      */
+    @Converting
     public static <T, K, V, R extends MutableMultimap<K, V>> R toMultimap(
             Iterable<T> iterable,
             Function<? super T, ? extends K> keyFunction,
@@ -2733,6 +2844,7 @@ public final class Iterate
     /**
      * Return the specified collection as a sorted List.
      */
+    @Converting
     public static <T extends Comparable<? super T>> MutableList<T> toSortedList(Iterable<T> iterable)
     {
         return Iterate.toSortedList(iterable, Comparators.naturalOrder());
@@ -2741,6 +2853,7 @@ public final class Iterate
     /**
      * Return the specified collection as a sorted List using the specified Comparator.
      */
+    @Converting
     public static <T> MutableList<T> toSortedList(Iterable<T> iterable, Comparator<? super T> comparator)
     {
         return Lists.mutable.withAll(iterable).sortThis(comparator);
@@ -2751,6 +2864,7 @@ public final class Iterate
      * In the case of Collections and RichIterables, the method size is called.
      * All other iterables will force a complete iteration to happen, which can be unnecessarily costly.
      */
+    @Counting
     public static int sizeOf(Iterable<?> iterable)
     {
         if (iterable instanceof Collection<?> collection)
@@ -2769,6 +2883,7 @@ public final class Iterate
      * In the case of Collections and RichIterables, the method contains is called.
      * All other iterables will force a complete iteration to happen, which can be unnecessarily costly.
      */
+    @Testing
     public static boolean contains(Iterable<?> iterable, Object value)
     {
         if (iterable instanceof Collection<?> collection)
@@ -2785,6 +2900,7 @@ public final class Iterate
     /**
      * Converts the specified iterable to an array.
      */
+    @Converting
     public static <T> Object[] toArray(Iterable<T> iterable)
     {
         if (iterable == null)
@@ -2807,6 +2923,7 @@ public final class Iterate
     /**
      * Copies the specified iterable into the specified array.
      */
+    @Converting
     public static <T> T[] toArray(Iterable<? extends T> iterable, T[] target)
     {
         if (iterable instanceof Collection)
@@ -2828,6 +2945,7 @@ public final class Iterate
      * @see Iterate#groupByAndCollect(Iterable, Function, Function, MutableMultimap) when both keys and values get transformed
      * @see Iterate#toMultimap(Iterable, Function, Function, MutableMultimap) when both keys and values get transformed and Function returns multiple values
      */
+    @Grouping
     public static <T, V> MutableMultimap<V, T> groupBy(
             Iterable<T> iterable,
             Function<? super T, ? extends V> function)
@@ -2861,6 +2979,7 @@ public final class Iterate
      * @see Iterate#groupByAndCollect(Iterable, Function, Function, MutableMultimap) when both keys and values get transformed
      * @see Iterate#toMultimap(Iterable, Function, Function, MutableMultimap) when both keys and values get transformed and Function returns multiple values
      */
+    @Grouping
     public static <T, V, R extends MutableMultimap<V, T>> R groupBy(
             Iterable<T> iterable,
             Function<? super T, ? extends V> function,
@@ -2888,6 +3007,7 @@ public final class Iterate
     /**
      * @see RichIterable#aggregateInPlaceBy(Function, Function0, Procedure2)
      */
+    @Aggregating
     public static <T, K, V> MutableMap<K, V> aggregateInPlaceBy(
             Iterable<T> iterable,
             Function<? super T, ? extends K> groupBy,
@@ -2916,6 +3036,7 @@ public final class Iterate
     /**
      * @see RichIterable#aggregateBy(Function, Function0, Function2)
      */
+    @Aggregating
     public static <T, K, V> MutableMap<K, V> aggregateBy(
             Iterable<T> iterable,
             Function<? super T, ? extends K> groupBy,
@@ -2947,6 +3068,7 @@ public final class Iterate
      * @see Iterate#groupByAndCollect(Iterable, Function, Function, MutableMultimap) when both keys and values get transformed
      * @see Iterate#toMultimap(Iterable, Function, Function, MutableMultimap) when both keys and values get transformed and Function returns multiple values
      */
+    @Grouping
     public static <T, V> MutableMultimap<V, T> groupByEach(
             Iterable<T> iterable,
             Function<? super T, ? extends Iterable<V>> function)
@@ -2980,6 +3102,7 @@ public final class Iterate
      * @see Iterate#groupByAndCollect(Iterable, Function, Function, MutableMultimap) when both keys and values get transformed
      * @see Iterate#toMultimap(Iterable, Function, Function, MutableMultimap) when both keys and values get transformed and Function returns multiple values
      */
+    @Grouping
     public static <T, V, R extends MutableMultimap<V, T>> R groupByEach(
             Iterable<T> iterable,
             Function<? super T, ? extends Iterable<V>> function,
@@ -3018,6 +3141,8 @@ public final class Iterate
      * @see Iterate#groupByEach(Iterable, Function) when function returns multiple keys
      * @see Iterate#toMultimap(Iterable, Function, Function, MutableMultimap) when both keys and values get transformed and Function returns multiple values
      */
+    @Grouping
+    @Transforming
     public static <T, K, V, R extends MutableMultimap<K, V>> R groupByAndCollect(
             Iterable<T> iterable,
             Function<? super T, ? extends K> groupByFunction,
@@ -3031,6 +3156,7 @@ public final class Iterate
     /**
      * @see RichIterable#groupByUniqueKey(Function)
      */
+    @Grouping
     public static <V, T> MutableMap<V, T> groupByUniqueKey(
             Iterable<T> iterable,
             Function<? super T, ? extends V> function)
@@ -3049,6 +3175,7 @@ public final class Iterate
     /**
      * @see RichIterable#groupByUniqueKey(Function, MutableMapIterable)
      */
+    @Grouping
     public static <V, T, R extends MutableMapIterable<V, T>> R groupByUniqueKey(
             Iterable<T> iterable,
             Function<? super T, ? extends V> function,
@@ -3068,6 +3195,7 @@ public final class Iterate
     /**
      * @see RichIterable#min(Comparator)
      */
+    @Finding
     public static <T> T min(Iterable<T> iterable, Comparator<? super T> comparator)
     {
         MinComparatorProcedure<T> procedure = new MinComparatorProcedure<>(comparator);
@@ -3078,6 +3206,7 @@ public final class Iterate
     /**
      * @see RichIterable#max(Comparator)
      */
+    @Finding
     public static <T> T max(Iterable<T> iterable, Comparator<? super T> comparator)
     {
         MaxComparatorProcedure<T> procedure = new MaxComparatorProcedure<>(comparator);
@@ -3088,6 +3217,7 @@ public final class Iterate
     /**
      * @see RichIterable#min()
      */
+    @Finding
     public static <T> T min(Iterable<T> iterable)
     {
         return Iterate.min(iterable, Comparators.naturalOrder());
@@ -3096,6 +3226,7 @@ public final class Iterate
     /**
      * @see RichIterable#max()
      */
+    @Finding
     public static <T> T max(Iterable<T> iterable)
     {
         return Iterate.max(iterable, Comparators.naturalOrder());
@@ -3106,6 +3237,7 @@ public final class Iterate
      *
      * @throws IllegalArgumentException if the Collection is null, empty, or has more than one element.
      */
+    @Finding
     public static <T> T getOnly(Iterable<T> iterable)
     {
         if (iterable != null)
@@ -3118,6 +3250,7 @@ public final class Iterate
     /**
      * @see RichIterable#zip(Iterable)
      */
+    @Transforming
     public static <X, Y> Collection<Pair<X, Y>> zip(Iterable<X> xs, Iterable<Y> ys)
     {
         if (xs instanceof MutableCollection)
@@ -3142,6 +3275,7 @@ public final class Iterate
     /**
      * @see RichIterable#zip(Iterable, Collection)
      */
+    @Transforming
     public static <X, Y, R extends Collection<Pair<X, Y>>> R zip(
             Iterable<X> xs,
             Iterable<Y> ys,
@@ -3169,6 +3303,7 @@ public final class Iterate
     /**
      * @see RichIterable#zipWithIndex()
      */
+    @Transforming
     public static <T> Collection<Pair<T, Integer>> zipWithIndex(Iterable<T> iterable)
     {
         if (iterable instanceof MutableCollection)
@@ -3201,6 +3336,7 @@ public final class Iterate
     /**
      * @see RichIterable#zipWithIndex(Collection)
      */
+    @Transforming
     public static <T, R extends Collection<Pair<T, Integer>>> R zipWithIndex(
             Iterable<T> iterable,
             R targetCollection)
@@ -3227,6 +3363,7 @@ public final class Iterate
     /**
      * @see RichIterable#chunk(int)
      */
+    @Grouping
     public static <T> RichIterable<RichIterable<T>> chunk(Iterable<T> iterable, int size)
     {
         if (iterable instanceof RichIterable)
@@ -3243,6 +3380,7 @@ public final class Iterate
     /**
      * @see RichIterable#makeString()
      */
+    @Converting
     public static <T> String makeString(Iterable<T> iterable)
     {
         return Iterate.makeString(iterable, ", ");
@@ -3251,6 +3389,7 @@ public final class Iterate
     /**
      * @see RichIterable#makeString(String)
      */
+    @Converting
     public static <T> String makeString(Iterable<T> iterable, String separator)
     {
         return Iterate.makeString(iterable, "", separator, "");
@@ -3259,6 +3398,7 @@ public final class Iterate
     /**
      * @see RichIterable#makeString(String, String, String)
      */
+    @Converting
     public static <T> String makeString(Iterable<T> iterable, String start, String separator, String end)
     {
         Appendable stringBuilder = new StringBuilder();
@@ -3269,6 +3409,7 @@ public final class Iterate
     /**
      * @see RichIterable#appendString(Appendable)
      */
+    @Converting
     public static <T> void appendString(Iterable<T> iterable, Appendable appendable)
     {
         Iterate.appendString(iterable, appendable, ", ");
@@ -3277,6 +3418,7 @@ public final class Iterate
     /**
      * @see RichIterable#appendString(Appendable, String)
      */
+    @Converting
     public static <T> void appendString(Iterable<T> iterable, Appendable appendable, String separator)
     {
         Iterate.appendString(iterable, appendable, "", separator, "");
@@ -3285,6 +3427,7 @@ public final class Iterate
     /**
      * @see RichIterable#appendString(Appendable, String, String, String)
      */
+    @Converting
     public static <T> void appendString(
             Iterable<T> iterable,
             Appendable appendable,
@@ -3313,6 +3456,7 @@ public final class Iterate
     /**
      * Returns the maximum element out of the iterable based on the natural order of the attribute returned by the function.
      */
+    @Finding
     public static <T, V extends Comparable<? super V>> T maxBy(Iterable<T> iterable, Function<? super T, ? extends V> function)
     {
         if (iterable instanceof RichIterable)
@@ -3333,6 +3477,7 @@ public final class Iterate
     /**
      * Returns the minimum element out of the iterable based on the natural order of the attribute returned by the function.
      */
+    @Finding
     public static <T, V extends Comparable<? super V>> T minBy(Iterable<T> iterable, Function<? super T, ? extends V> function)
     {
         if (iterable instanceof RichIterable)
@@ -3353,6 +3498,7 @@ public final class Iterate
     /**
      * Flip the keys and values of the multimap.
      */
+    @Grouping
     public static <K, V> HashBagMultimap<V, K> flip(BagMultimap<K, V> bagMultimap)
     {
         HashBagMultimap<V, K> result = new HashBagMultimap<>();
@@ -3363,6 +3509,7 @@ public final class Iterate
     /**
      * Flip the keys and values of the multimap.
      */
+    @Grouping
     public static <K, V> HashBagMultimap<V, K> flip(ListMultimap<K, V> listMultimap)
     {
         HashBagMultimap<V, K> result = new HashBagMultimap<>();
@@ -3373,6 +3520,7 @@ public final class Iterate
     /**
      * Flip the keys and values of the multimap.
      */
+    @Grouping
     public static <K, V> UnifiedSetMultimap<V, K> flip(SetMultimap<K, V> setMultimap)
     {
         UnifiedSetMultimap<V, K> result = new UnifiedSetMultimap<>();
