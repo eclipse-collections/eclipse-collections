@@ -125,6 +125,24 @@ import org.eclipse.collections.impl.utility.LazyIterate;
  * five insertions fit without rehashing. The sixth insertion triggers a rehash before it is stored:
  * with 5 live entries, the new index table capacity is 16 (the smallest power of two at least
  * {@code 5 * 3 = 15}), and the usable capacity becomes 10.
+ * <p>
+ * <b>Memory footprint.</b> Entries are stored inline in two arrays instead of one node object per entry,
+ * so the map needs roughly a third to a half of the memory that {@link java.util.LinkedHashMap} needs
+ * on top of the keys and values themselves. The table shows retained bytes excluding keys and values,
+ * on a 64-bit JVM with compressed references. The last column is {@code LinkedHashMap} with compact object headers
+ * ({@code -XX:+UseCompactObjectHeaders}), which do not change the size of {@code OrderedHashMap}:
+ * <pre>
+ *    size  OrderedHashMap  per entry  LinkedHashMap  per entry  LinkedHashMap (compact headers)
+ *       0              72                        64                                          56
+ *       1             136      136.0            184      184.0                              168
+ *      10             208       20.8            544       54.4                              456
+ *     100           2,448       24.5          5,104       51.0                            4,296
+ *   1,000          19,176       19.2         48,272       48.3                           40,264
+ *  10,000         152,976       15.3        465,616       46.6                          385,608
+ * </pre>
+ * An empty map created with the no-argument constructor is 32 bytes. The other 40 bytes at size 0 are
+ * the two unallocated arrays, which exist once and are shared by all such maps.
+ * These figures are asserted by {@code OrderedHashMapMemoryTest}.
  *
  * @since 14.0
  */
