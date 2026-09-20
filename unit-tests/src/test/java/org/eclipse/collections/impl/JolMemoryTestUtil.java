@@ -51,4 +51,11 @@ public class JolMemoryTestUtil
         long memoryRequired = IS_COH_ENABLED ? expectedCOH : expected;
         assertEquals(memoryRequired, GraphLayout.parseInstance(instance).totalSize());
     }
+
+    public static void assertGraphMemoryExcludingEquals(long expected, long expectedCOH, Object instance, Object... excluded)
+    {
+        long memoryRequired = IS_COH_ENABLED ? expectedCOH : expected;
+        long excludedSize = excluded.length == 0 ? 0L : GraphLayout.parseInstance(excluded).totalSize();
+        assertEquals(memoryRequired, GraphLayout.parseInstance(instance).totalSize() - excludedSize);
+    }
 }
