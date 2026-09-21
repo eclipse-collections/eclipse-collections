@@ -106,8 +106,8 @@ import org.eclipse.collections.api.tuple.Pair;
  * other mutable and immutable collection types. The converter methods typically have a prefix of "to" (e.g. toList, toSet,
  * toBag, toMap, etc.).
  * <p>
- * The methods in RichIterable are organized into the following method categories via region comments which are collapsible
- * in various IDEs.
+ * The methods in RichIterable are organized into the following method categories via category annotations and region
+ * comments which are collapsible in various IDEs.
  * Links are provided below as a convenience to help discover specific methods in Javadoc.
  *
  * <ul>
