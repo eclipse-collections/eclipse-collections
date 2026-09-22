@@ -63,9 +63,9 @@ import org.eclipse.collections.api.tuple.Pair;
 
 /**
  * A MutableList is an extension of java.util.List which provides methods matching the Smalltalk Collection protocol.
- *
- * The methods in MutableList are organized into method categories via region comments which are collapsible in various
- * IDEs. Links are provided below as a convenience to help discover specific methods in Javadoc.
+ * <p>
+ * The methods in MutableList are organized into method categories via category annotations.
+ * Links are provided below as a convenience to help discover specific methods in Javadoc.
  *
  * <ul>
  * <li><b>Converting 🔌</b>

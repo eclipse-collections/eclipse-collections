@@ -105,6 +105,116 @@ import org.eclipse.collections.impl.utility.internal.RandomAccessListIterate;
  * implementations based on the type of Iterable. The lowest common denominator used will normally be IterableIterate.
  * Iterate can be used when a JDK interface is the only type available to the developer, as it can
  * determine the best way to iterate based on instanceof checks.
+ * <p>
+ * The methods in Iterate are organized into method categories via category annotations.
+ * Links are provided below as a convenience to help discover specific methods in Javadoc.
+ *
+ * <ul>
+ * <li><b>Aggregating 📊</b>
+ * <ul><li>
+ * {@link #aggregateBy(Iterable, Function, Function0, Function2)},
+ * {@link #aggregateInPlaceBy(Iterable, Function, Function0, Procedure2)},
+ * {@link #injectInto(Object, Iterable, Function2)}, {@link #injectInto(double, Iterable, DoubleObjectToDoubleFunction)},
+ * {@link #injectInto(float, Iterable, FloatObjectToFloatFunction)},
+ * {@link #injectInto(int, Iterable, IntObjectToIntFunction)},
+ * {@link #injectInto(long, Iterable, LongObjectToLongFunction)},
+ * {@link #injectIntoWith(Object, Iterable, Function3, Object)}, {@link #reduceInPlace(Iterable, Collector)},
+ * {@link #reduceInPlace(Iterable, Supplier, BiConsumer)}, {@link #sumByBigDecimal(Iterable, Function, Function)},
+ * {@link #sumByBigInteger(Iterable, Function, Function)}, {@link #sumByDouble(Iterable, Function, DoubleFunction)},
+ * {@link #sumByFloat(Iterable, Function, FloatFunction)}, {@link #sumByInt(Iterable, Function, IntFunction)},
+ * {@link #sumByLong(Iterable, Function, LongFunction)}, {@link #sumOfBigDecimal(Iterable, Function)},
+ * {@link #sumOfBigInteger(Iterable, Function)}, {@link #sumOfDouble(Iterable, DoubleFunction)},
+ * {@link #sumOfFloat(Iterable, FloatFunction)}, {@link #sumOfInt(Iterable, IntFunction)},
+ * {@link #sumOfLong(Iterable, LongFunction)}
+ * </li></ul>
+ * <li><b>Converting 🔌</b>
+ * <ul><li>
+ * {@link #appendString(Iterable, Appendable)}, {@link #appendString(Iterable, Appendable, String)},
+ * {@link #appendString(Iterable, Appendable, String, String, String)}, {@link #makeString(Iterable)},
+ * {@link #makeString(Iterable, String)}, {@link #makeString(Iterable, String, String, String)},
+ * {@link #toArray(Iterable)}, {@link #toArray(Iterable, Object[])}, {@link #toMap(Iterable, Function)},
+ * {@link #toMap(Iterable, Function, Function)}, {@link #toMap(Iterable, Function, Function, Map)},
+ * {@link #toMultimap(Iterable, Function, Function, MutableMultimap)}, {@link #toSortedList(Iterable)},
+ * {@link #toSortedList(Iterable, Comparator)}
+ * </li></ul>
+ * <li><b>Counting 🔢</b>
+ * <ul><li>
+ * {@link #count(Iterable, Predicate)}, {@link #countWith(Iterable, Predicate2, Object)}, {@link #sizeOf(Iterable)}
+ * </li></ul>
+ * <li><b>Filtering 🚰</b>
+ * <ul><li>
+ * {@link #collectIf(Iterable, Predicate, Function, Collection)}, {@link #drop(Iterable, int)},
+ * {@link #partition(Iterable, Predicate)}, {@link #partitionWith(Iterable, Predicate2, Object)},
+ * {@link #reject(Iterable, Predicate)}, {@link #reject(Iterable, Predicate, Collection)},
+ * {@link #rejectWith(Iterable, Predicate2, Object)}, {@link #rejectWith(Iterable, Predicate2, Object, Collection)},
+ * {@link #select(Iterable, Predicate)}, {@link #select(Iterable, Predicate, Collection)},
+ * {@link #selectAndRejectWith(Iterable, Predicate2, Object)}, {@link #selectInstancesOf(Iterable, Class)},
+ * {@link #selectWith(Iterable, Predicate2, Object)}, {@link #selectWith(Iterable, Predicate2, Object, Collection)},
+ * {@link #take(Iterable, int)}
+ * </li></ul>
+ * <li><b>Finding 🔎</b>
+ * <ul><li>
+ * {@link #detect(Iterable, Predicate)}, {@link #detectIfNone(Iterable, Predicate, Object)},
+ * {@link #detectIndex(Iterable, Predicate)}, {@link #detectIndexWith(Iterable, Predicate2, Object)},
+ * {@link #detectOptional(Iterable, Predicate)}, {@link #detectWith(Iterable, Predicate2, Object)},
+ * {@link #detectWithIfNone(Iterable, Predicate2, Object, Object)},
+ * {@link #detectWithOptional(Iterable, Predicate2, Object)}, {@link #getFirst(Iterable)}, {@link #getLast(Iterable)},
+ * {@link #getOnly(Iterable)}, {@link #max(Iterable)}, {@link #max(Iterable, Comparator)},
+ * {@link #maxBy(Iterable, Function)}, {@link #min(Iterable)}, {@link #min(Iterable, Comparator)},
+ * {@link #minBy(Iterable, Function)}
+ * </li></ul>
+ * <li><b>Grouping 🏘️</b>
+ * <ul><li>
+ * {@link #chunk(Iterable, int)}, {@link #flip(BagMultimap)}, {@link #flip(ListMultimap)}, {@link #flip(SetMultimap)},
+ * {@link #groupBy(Iterable, Function)}, {@link #groupBy(Iterable, Function, MutableMultimap)},
+ * {@link #groupByAndCollect(Iterable, Function, Function, MutableMultimap)}, {@link #groupByEach(Iterable, Function)},
+ * {@link #groupByEach(Iterable, Function, MutableMultimap)}, {@link #groupByUniqueKey(Iterable, Function)},
+ * {@link #groupByUniqueKey(Iterable, Function, MutableMapIterable)}
+ * </li></ul>
+ * <li><b>Iterating 🔄</b>
+ * <ul><li>
+ * {@link #forEach(Iterable, Procedure)}, {@link #forEachWith(Iterable, Procedure2, Object)},
+ * {@link #forEachWithIndex(Iterable, ObjectIntProcedure)}
+ * </li></ul>
+ * <li><b>Mutating 🧬</b>
+ * <ul><li>
+ * {@link #addAllIterable(Iterable, Collection)}, {@link #addAllTo(Iterable, Collection)},
+ * {@link #addToMap(Iterable, Function, Function, Map)}, {@link #addToMap(Iterable, Function, Map)},
+ * {@link #removeAllFrom(Iterable, Collection)}, {@link #removeAllIterable(Iterable, Collection)},
+ * {@link #removeIf(Iterable, Predicate)}, {@link #removeIfWith(Iterable, Predicate2, Object)}, {@link #sortThis(List)},
+ * {@link #sortThis(List, Comparator)}, {@link #sortThis(List, Predicate2)}, {@link #sortThisBy(List, Function)}
+ * </li></ul>
+ * <li><b>Testing 🧪</b>
+ * <ul><li>
+ * {@link #allSatisfy(Iterable, Predicate)}, {@link #allSatisfyWith(Iterable, Predicate2, Object)},
+ * {@link #anySatisfy(Iterable, Predicate)}, {@link #anySatisfyWith(Iterable, Predicate2, Object)},
+ * {@link #contains(Iterable, Object)}, {@link #isEmpty(Iterable)}, {@link #noneSatisfy(Iterable, Predicate)},
+ * {@link #noneSatisfyWith(Iterable, Predicate2, Object)}, {@link #notEmpty(Iterable)}
+ * </li></ul>
+ * <li><b>Transforming 🦋</b>
+ * <ul><li>
+ * {@link #collect(Iterable, Function)}, {@link #collect(Iterable, Function, Collection)},
+ * {@link #collectBoolean(Iterable, BooleanFunction)},
+ * {@link #collectBoolean(Iterable, BooleanFunction, MutableBooleanCollection)},
+ * {@link #collectByte(Iterable, ByteFunction)}, {@link #collectByte(Iterable, ByteFunction, MutableByteCollection)},
+ * {@link #collectChar(Iterable, CharFunction)}, {@link #collectChar(Iterable, CharFunction, MutableCharCollection)},
+ * {@link #collectDouble(Iterable, DoubleFunction)},
+ * {@link #collectDouble(Iterable, DoubleFunction, MutableDoubleCollection)},
+ * {@link #collectFloat(Iterable, FloatFunction)},
+ * {@link #collectFloat(Iterable, FloatFunction, MutableFloatCollection)},
+ * {@link #collectIf(Iterable, Predicate, Function)}, {@link #collectIf(Iterable, Predicate, Function, Collection)},
+ * {@link #collectInt(Iterable, IntFunction)}, {@link #collectInt(Iterable, IntFunction, MutableIntCollection)},
+ * {@link #collectLong(Iterable, LongFunction)}, {@link #collectLong(Iterable, LongFunction, MutableLongCollection)},
+ * {@link #collectShort(Iterable, ShortFunction)},
+ * {@link #collectShort(Iterable, ShortFunction, MutableShortCollection)},
+ * {@link #collectWith(Iterable, Function2, Object)}, {@link #collectWith(Iterable, Function2, Object, Collection)},
+ * {@link #flatCollect(Iterable, Function)}, {@link #flatCollect(Iterable, Function, Collection)},
+ * {@link #flatten(Iterable)}, {@link #flatten(Iterable, Collection)},
+ * {@link #groupByAndCollect(Iterable, Function, Function, MutableMultimap)}, {@link #zip(Iterable, Iterable)},
+ * {@link #zip(Iterable, Iterable, Collection)}, {@link #zipWithIndex(Iterable)},
+ * {@link #zipWithIndex(Iterable, Collection)}
+ * </li></ul>
+ * </ul>
  *
  * @since 1.0
  */
