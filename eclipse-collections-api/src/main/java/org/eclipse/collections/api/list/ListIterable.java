@@ -18,6 +18,14 @@ import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 
 import org.eclipse.collections.api.annotation.Beta;
+import org.eclipse.collections.api.annotation.category.Aggregating;
+import org.eclipse.collections.api.annotation.category.Converting;
+import org.eclipse.collections.api.annotation.category.Filtering;
+import org.eclipse.collections.api.annotation.category.Finding;
+import org.eclipse.collections.api.annotation.category.Grouping;
+import org.eclipse.collections.api.annotation.category.Iterating;
+import org.eclipse.collections.api.annotation.category.Testing;
+import org.eclipse.collections.api.annotation.category.Transforming;
 import org.eclipse.collections.api.block.HashingStrategy;
 import org.eclipse.collections.api.block.function.Function;
 import org.eclipse.collections.api.block.function.Function2;
@@ -53,6 +61,56 @@ import org.eclipse.collections.api.tuple.Pair;
  * internal iterator is available iterating over the indexed iterable in reverse, starting from
  * the end and going to the beginning. Additionally, internal iterators are available for batching
  * style iteration which is useful for parallel processing.
+ * <p>
+ * The methods in ListIterable are organized into method categories via category annotations.
+ * Links are provided below as a convenience to help discover specific methods in Javadoc.
+ *
+ * <ul>
+ * <li><b>Aggregating 📊</b>
+ * <ul><li>
+ * {@link #hashCode()}
+ * </li></ul>
+ * <li><b>Converting 🔌</b>
+ * <ul><li>
+ * {@link #toImmutable()}, {@link #toReversed()}
+ * </li></ul>
+ * <li><b>Filtering 🚰</b>
+ * <ul><li>
+ * {@link #distinct()}, {@link #distinct(HashingStrategy)}, {@link #distinctBy(Function)}, {@link #drop(int)},
+ * {@link #dropWhile(Predicate)}, {@link #partition(Predicate)}, {@link #partitionWhile(Predicate)},
+ * {@link #partitionWith(Predicate2, Object)}, {@link #reject(Predicate)}, {@link #rejectWith(Predicate2, Object)},
+ * {@link #rejectWithIndex(ObjectIntPredicate)}, {@link #select(Predicate)}, {@link #selectInstancesOf(Class)},
+ * {@link #selectWith(Predicate2, Object)}, {@link #selectWithIndex(ObjectIntPredicate)}, {@link #subList(int, int)},
+ * {@link #take(int)}, {@link #takeWhile(Predicate)}
+ * </li></ul>
+ * <li><b>Finding 🔎</b>
+ * <ul><li>
+ * {@link #binarySearch(Object)}, {@link #binarySearch(Object, Comparator)}, {@link #get(int)}, {@link #getFirst()},
+ * {@link #getLast()}, {@link #lastIndexOf(Object)}
+ * </li></ul>
+ * <li><b>Grouping 🏘️</b>
+ * <ul><li>
+ * {@link #groupBy(Function)}, {@link #groupByEach(Function)}
+ * </li></ul>
+ * <li><b>Iterating 🔄</b>
+ * <ul><li>
+ * {@link #asParallel(ExecutorService, int)}, {@link #forEachInBoth(ListIterable, Procedure2)}, {@link #listIterator()},
+ * {@link #listIterator(int)}, {@link #tap(Procedure)}
+ * </li></ul>
+ * <li><b>Testing 🧪</b>
+ * <ul><li>
+ * {@link #equals(Object)}
+ * </li></ul>
+ * <li><b>Transforming 🦋</b>
+ * <ul><li>
+ * {@link #collect(Function)}, {@link #collectBoolean(BooleanFunction)}, {@link #collectByte(ByteFunction)},
+ * {@link #collectChar(CharFunction)}, {@link #collectDouble(DoubleFunction)}, {@link #collectFloat(FloatFunction)},
+ * {@link #collectIf(Predicate, Function)}, {@link #collectInt(IntFunction)}, {@link #collectLong(LongFunction)},
+ * {@link #collectShort(ShortFunction)}, {@link #collectWith(Function2, Object)},
+ * {@link #collectWithIndex(ObjectIntToObjectFunction)}, {@link #flatCollect(Function)},
+ * {@link #flatCollectWith(Function2, Object)}, {@link #zip(Iterable)}, {@link #zipWithIndex()}
+ * </li></ul>
+ * </ul>
  */
 public interface ListIterable<T>
         extends ReversibleIterable<T>
@@ -60,12 +118,14 @@ public interface ListIterable<T>
     /**
      * Returns the item at the specified position in this list iterable.
      */
+    @Finding
     T get(int index);
 
     /**
      * Returns the index of the last occurrence of the specified item
      * in this list, or -1 if this list does not contain the item.
      */
+    @Finding
     int lastIndexOf(Object o);
 
     /**
@@ -74,6 +134,7 @@ public interface ListIterable<T>
      * empty first.
      */
     @Override
+    @Finding
     T getFirst();
 
     /**
@@ -82,18 +143,21 @@ public interface ListIterable<T>
      * empty first.
      */
     @Override
+    @Finding
     T getLast();
 
     /**
      * @see List#listIterator()
      * @since 1.0.
      */
+    @Iterating
     ListIterator<T> listIterator();
 
     /**
      * @see List#listIterator(int)
      * @since 1.0.
      */
+    @Iterating
     ListIterator<T> listIterator(int index);
 
     /**
@@ -101,39 +165,50 @@ public interface ListIterable<T>
      *
      * @since 5.0
      */
+    @Converting
     ImmutableList<T> toImmutable();
 
     @Override
+    @Iterating
     ListIterable<T> tap(Procedure<? super T> procedure);
 
     @Override
+    @Filtering
     ListIterable<T> select(Predicate<? super T> predicate);
 
     @Override
+    @Filtering
     <P> ListIterable<T> selectWith(Predicate2<? super T, ? super P> predicate, P parameter);
 
     @Override
+    @Filtering
     ListIterable<T> reject(Predicate<? super T> predicate);
 
     @Override
+    @Filtering
     <P> ListIterable<T> rejectWith(Predicate2<? super T, ? super P> predicate, P parameter);
 
     @Override
+    @Filtering
     PartitionList<T> partition(Predicate<? super T> predicate);
 
     @Override
+    @Filtering
     <P> PartitionList<T> partitionWith(Predicate2<? super T, ? super P> predicate, P parameter);
 
     @Override
+    @Filtering
     <S> ListIterable<S> selectInstancesOf(Class<S> clazz);
 
     @Override
+    @Transforming
     <V> ListIterable<V> collect(Function<? super T, ? extends V> function);
 
     /**
      * @since 9.1.
      */
     @Override
+    @Transforming
     default <V> ListIterable<V> collectWithIndex(ObjectIntToObjectFunction<? super T, ? extends V> function)
     {
         int[] index = {0};
@@ -146,6 +221,7 @@ public interface ListIterable<T>
      *
      * @since 11.0
      */
+    @Filtering
     default ListIterable<T> selectWithIndex(ObjectIntPredicate<? super T> predicate)
     {
         int[] index = {0};
@@ -158,6 +234,7 @@ public interface ListIterable<T>
      *
      * @since 11.0
      */
+    @Filtering
     default ListIterable<T> rejectWithIndex(ObjectIntPredicate<? super T> predicate)
     {
         int[] index = {0};
@@ -165,42 +242,54 @@ public interface ListIterable<T>
     }
 
     @Override
+    @Transforming
     BooleanList collectBoolean(BooleanFunction<? super T> booleanFunction);
 
     @Override
+    @Transforming
     ByteList collectByte(ByteFunction<? super T> byteFunction);
 
     @Override
+    @Transforming
     CharList collectChar(CharFunction<? super T> charFunction);
 
     @Override
+    @Transforming
     DoubleList collectDouble(DoubleFunction<? super T> doubleFunction);
 
     @Override
+    @Transforming
     FloatList collectFloat(FloatFunction<? super T> floatFunction);
 
     @Override
+    @Transforming
     IntList collectInt(IntFunction<? super T> intFunction);
 
     @Override
+    @Transforming
     LongList collectLong(LongFunction<? super T> longFunction);
 
     @Override
+    @Transforming
     ShortList collectShort(ShortFunction<? super T> shortFunction);
 
     @Override
+    @Transforming
     <P, V> ListIterable<V> collectWith(Function2<? super T, ? super P, ? extends V> function, P parameter);
 
     @Override
+    @Transforming
     <V> ListIterable<V> collectIf(Predicate<? super T> predicate, Function<? super T, ? extends V> function);
 
     @Override
+    @Transforming
     <V> ListIterable<V> flatCollect(Function<? super T, ? extends Iterable<V>> function);
 
     /**
      * @since 9.2
      */
     @Override
+    @Transforming
     default <P, V> ListIterable<V> flatCollectWith(
             Function2<? super T, ? super P, ? extends Iterable<V>> function,
             P parameter)
@@ -209,9 +298,11 @@ public interface ListIterable<T>
     }
 
     @Override
+    @Grouping
     <V> ListMultimap<V, T> groupBy(Function<? super T, ? extends V> function);
 
     @Override
+    @Grouping
     <V> ListMultimap<V, T> groupByEach(Function<? super T, ? extends Iterable<V>> function);
 
     /**
@@ -224,6 +315,7 @@ public interface ListIterable<T>
      * @since 3.0
      */
     @Override
+    @Filtering
     ListIterable<T> distinct();
 
     /**
@@ -232,6 +324,7 @@ public interface ListIterable<T>
      * @return {@code ListIterable} of distinct elements
      * @since 7.0
      */
+    @Filtering
     ListIterable<T> distinct(HashingStrategy<? super T> hashingStrategy);
 
     /**
@@ -241,15 +334,19 @@ public interface ListIterable<T>
      * @see ListIterable#distinct(HashingStrategy)
      * @since 9.0
      */
+    @Filtering
     <V> ListIterable<T> distinctBy(Function<? super T, ? extends V> function);
 
     @Override
+    @Transforming
     <S> ListIterable<Pair<T, S>> zip(Iterable<S> that);
 
     @Override
+    @Transforming
     ListIterable<Pair<T, Integer>> zipWithIndex();
 
     @Override
+    @Filtering
     ListIterable<T> take(int count);
 
     /**
@@ -259,9 +356,11 @@ public interface ListIterable<T>
      * @since 3.0
      */
     @Override
+    @Filtering
     ListIterable<T> takeWhile(Predicate<? super T> predicate);
 
     @Override
+    @Filtering
     ListIterable<T> drop(int count);
 
     /**
@@ -271,6 +370,7 @@ public interface ListIterable<T>
      * @since 3.0
      */
     @Override
+    @Filtering
     ListIterable<T> dropWhile(Predicate<? super T> predicate);
 
     /**
@@ -280,9 +380,11 @@ public interface ListIterable<T>
      * @since 3.0
      */
     @Override
+    @Filtering
     PartitionList<T> partitionWhile(Predicate<? super T> predicate);
 
     @Override
+    @Converting
     ListIterable<T> toReversed();
 
     /**
@@ -291,6 +393,7 @@ public interface ListIterable<T>
      * @since 6.0
      */
     @Beta
+    @Iterating
     ParallelListIterable<T> asParallel(ExecutorService executorService, int batchSize);
 
     /**
@@ -299,6 +402,7 @@ public interface ListIterable<T>
      *
      * @see Collections#binarySearch(List, Object, Comparator)
      */
+    @Finding
     default int binarySearch(T key, Comparator<? super T> comparator)
     {
         return Collections.binarySearch((List<? extends T>) this, key, comparator);
@@ -310,6 +414,7 @@ public interface ListIterable<T>
      *
      * @see Collections#binarySearch(List, Object)
      */
+    @Finding
     default int binarySearch(T key)
     {
         return Collections.binarySearch((List<? extends Comparable<? super T>>) this, key);
@@ -319,18 +424,21 @@ public interface ListIterable<T>
      * Follows the same general contract as {@link List#equals(Object)}.
      */
     @Override
+    @Testing
     boolean equals(Object o);
 
     /**
      * Follows the same general contract as {@link List#hashCode()}.
      */
     @Override
+    @Aggregating
     int hashCode();
 
     /**
      * @see List#subList(int, int)
      * @since 6.0
      */
+    @Filtering
     ListIterable<T> subList(int fromIndex, int toIndex);
 
     /**
@@ -339,6 +447,7 @@ public interface ListIterable<T>
      *
      * @since 10.3
      */
+    @Iterating
     default <T2> void forEachInBoth(ListIterable<T2> other, Procedure2<? super T, ? super T2> procedure)
     {
         Objects.requireNonNull(other);

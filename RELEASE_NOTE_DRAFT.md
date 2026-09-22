@@ -10,13 +10,17 @@
 * Improved Javadoc for 'Sets' factory class ([#782](https://github.com/eclipse-collections/eclipse-collections/issues/782))
 * Rewritten the category index for `RichIterable`
 * Added Javadoc category index to:
+  * `ImmutableList`
   * `Iterate`
+  * `ListIterable`
   * `MutableList`
 
 ## API Changes
 * Added category annotations package
 * Added category annotations to:
+  * `ImmutableList`
   * `Iterate`
+  * `ListIterable`
   * `MutableList`
   * `RichIterable`
 
