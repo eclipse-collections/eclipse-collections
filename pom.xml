@@ -430,7 +430,7 @@ Arrays, Maps or Strings. The iteration protocol was inspired by the Smalltalk co
                         <dependency>
                             <groupId>org.junit.vintage</groupId>
                             <artifactId>junit-vintage-engine</artifactId>
-                            <version>5.10.3</version>
+                            <version>6.0.3</version>
                         </dependency>
                     </dependencies>
                 </plugin>
