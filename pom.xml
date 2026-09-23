@@ -137,6 +137,7 @@ Arrays, Maps or Strings. The iteration protocol was inspired by the Smalltalk co
         <checkstyle.plugin.version>3.6.0</checkstyle.plugin.version>
         <jacoco.plugin.version>0.8.12</jacoco.plugin.version>
         <junit.version>4.13.2</junit.version>
+        <junit6.version>6.1.3</junit6.version>
         <jmh.version>1.37</jmh.version>
         <jol.version>0.17</jol.version>
 
@@ -185,9 +186,11 @@ Arrays, Maps or Strings. The iteration protocol was inspired by the Smalltalk co
             </dependency>
 
             <dependency>
-                <groupId>org.junit.jupiter</groupId>
-                <artifactId>junit-jupiter-api</artifactId>
-                <version>5.10.2</version>
+                <groupId>org.junit</groupId>
+                <artifactId>junit-bom</artifactId>
+                <version>${junit6.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
 
             <dependency>
@@ -401,7 +404,7 @@ Arrays, Maps or Strings. The iteration protocol was inspired by the Smalltalk co
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>3.5.5</version>
+                    <version>3.6.0</version>
                     <configuration>
                         <includes>
                             <include>**/*Test.java</include>
@@ -411,28 +414,6 @@ Arrays, Maps or Strings. The iteration protocol was inspired by the Smalltalk co
                         <!--<forkCount>2C</forkCount>-->
                         <printSummary>false</printSummary>
                     </configuration>
-                    <!-- Configure surefire to run JUnit 4 and 5 tests -->
-                    <!-- In maven 3.9.6 and 4.x, maven is able to auto-detect JUnit and these dependencies are not required -->
-                    <!-- In maven 3.9.5, there is an internal exception inside surefire without these declared -->
-                    <!-- Even with newer versions of maven, it is advantageous to keep these declarations -->
-                    <!-- Without them, maven may only run JUnit 5 tests, in a project with both JUnit 4 and 5 -->
-                    <dependencies>
-                        <dependency>
-                            <groupId>org.junit.jupiter</groupId>
-                            <artifactId>junit-jupiter-engine</artifactId>
-                            <version>5.10.3</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>org.junit.platform</groupId>
-                            <artifactId>junit-platform-engine</artifactId>
-                            <version>1.10.3</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>org.junit.vintage</groupId>
-                            <artifactId>junit-vintage-engine</artifactId>
-                            <version>5.10.3</version>
-                        </dependency>
-                    </dependencies>
                 </plugin>
 
                 <plugin>

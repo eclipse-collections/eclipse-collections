@@ -15,10 +15,10 @@ import java.util.Iterator;
 import org.eclipse.collections.impl.utility.Iterate;
 import org.junit.jupiter.api.Test;
 
-import static org.eclipse.collections.impl.test.Verify.assertThrows;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.isOneOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public interface MutableUnorderedIterableTestCase extends UnorderedIterableTestCase
 {

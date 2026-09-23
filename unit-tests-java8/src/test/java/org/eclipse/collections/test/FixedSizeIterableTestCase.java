@@ -14,7 +14,7 @@ import java.util.Iterator;
 
 import org.junit.jupiter.api.Test;
 
-import static org.eclipse.collections.impl.test.Verify.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public interface FixedSizeIterableTestCase extends IterableTestCase
 {
