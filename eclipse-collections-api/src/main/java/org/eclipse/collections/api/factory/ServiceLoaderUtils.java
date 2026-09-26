@@ -280,6 +280,7 @@ public final class ServiceLoaderUtils
         FACTORY_IMPL.put("org.eclipse.collections.api.factory.stack.primitive.MutableIntStackFactory", "org.eclipse.collections.impl.stack.mutable.primitive.MutableIntStackFactoryImpl");
         FACTORY_IMPL.put("org.eclipse.collections.api.factory.stack.primitive.MutableLongStackFactory", "org.eclipse.collections.impl.stack.mutable.primitive.MutableLongStackFactoryImpl");
         FACTORY_IMPL.put("org.eclipse.collections.api.factory.stack.primitive.MutableShortStackFactory", "org.eclipse.collections.impl.stack.mutable.primitive.MutableShortStackFactoryImpl");
+        FACTORY_IMPL.put("org.eclipse.collections.api.factory.primitive.PrimitiveTupleFactoryProvider", "org.eclipse.collections.impl.factory.primitive.PrimitiveTupleFactoryProviderImpl");
     }
 
     private ServiceLoaderUtils()
