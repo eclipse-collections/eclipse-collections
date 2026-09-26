@@ -15,6 +15,7 @@ import java.util.Objects;
 
 import org.eclipse.collections.api.factory.map.ImmutableMapFactory;
 import org.eclipse.collections.api.map.ImmutableMap;
+import org.eclipse.collections.api.map.MapIterable;
 
 @aQute.bnd.annotation.spi.ServiceProvider(ImmutableMapFactory.class)
 public class ImmutableMapFactoryImpl implements ImmutableMapFactory
@@ -133,23 +134,17 @@ public class ImmutableMapFactoryImpl implements ImmutableMapFactory
     }
 
     /**
-     * @deprecated use {@link #ofAll(Map)} instead (inlineable)
+     * @deprecated use {@link #withMap(Map)} instead (inlineable)
      */
     @Override
     @Deprecated
     public <K, V> ImmutableMap<K, V> ofMap(Map<? extends K, ? extends V> map)
     {
-        return this.ofAll(map);
+        return this.withMap(map);
     }
 
     @Override
-    public <K, V> ImmutableMap<K, V> ofAll(Map<? extends K, ? extends V> map)
-    {
-        return this.withAll(map);
-    }
-
-    @Override
-    public <K, V> ImmutableMap<K, V> withAll(Map<? extends K, ? extends V> map)
+    public <K, V> ImmutableMap<K, V> withMap(Map<? extends K, ? extends V> map)
     {
         if (map.isEmpty())
         {
@@ -184,5 +179,37 @@ public class ImmutableMapFactoryImpl implements ImmutableMapFactory
             default:
                 throw new AssertionError();
         }
+    }
+
+    @Override
+    public <K, V> ImmutableMap<K, V> ofMapIterable(MapIterable<? extends K, ? extends V> mapIterable)
+    {
+        return this.withMapIterable(mapIterable);
+    }
+
+    @Override
+    public <K, V> ImmutableMap<K, V> withMapIterable(MapIterable<? extends K, ? extends V> mapIterable)
+    {
+        return this.withMap(mapIterable);
+    }
+
+    /**
+     * @deprecated use {@link #withMap(Map)} instead
+     */
+    @Override
+    @Deprecated
+    public <K, V> ImmutableMap<K, V> ofAll(Map<? extends K, ? extends V> map)
+    {
+        return this.withAll(map);
+    }
+
+    /**
+     * @deprecated use {@link #withMap(Map)} instead
+     */
+    @Override
+    @Deprecated
+    public <K, V> ImmutableMap<K, V> withAll(Map<? extends K, ? extends V> map)
+    {
+        return this.withMap(map);
     }
 }
