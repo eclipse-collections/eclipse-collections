@@ -116,7 +116,7 @@ import org.eclipse.collections.api.tuple.Pair;
  * {@link #each(Procedure)}, {@link #forEach(Procedure)}, {@link #forEachWith(Procedure2, Object)},
  * {@link #forEachWithIndex(ObjectIntProcedure)}, {@link #tap(Procedure)}, {@link #asLazy()}, {@link #iterator()},
  * {@link #spliterator()}
- * </ul></li>
+ * </li></ul>
  * <li><b>Counting 🔢</b>
  * <ul><li>
  * {@link #count(Predicate)} , {@link #countBy(Function)} , {@link #countBy(Function, MutableBagIterable)} ,
