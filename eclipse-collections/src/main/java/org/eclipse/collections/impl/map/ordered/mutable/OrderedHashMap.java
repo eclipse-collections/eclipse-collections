@@ -119,7 +119,11 @@ import org.eclipse.collections.impl.utility.LazyIterate;
  *     <li>After a rehash, the index table is at most one third full, leaving room for at least
  *     {@code size} more insertions before the next rehash.</li>
  *     <li>Removal-heavy workloads rehash at the same or a smaller capacity. Steady remove/re-add
- *     churn periodically compacts tombstones away instead of growing the arrays unboundedly.</li>
+ *     churn periodically compacts tombstones away instead of growing the arrays unboundedly.
+ *     Removing the most recently added entry reclaims its slot immediately. Removing any other entry
+ *     leaves a tombstone, and re-adding the same key appends it again, so repeatedly removing and
+ *     re-adding one interior key triggers a compacting rehash about once every {@code size} such
+ *     cycles even though the set of keys never changes.</li>
  * </ul>
  * For example, a map with the default index table capacity of 8 has a usable capacity of 5. The first
  * five insertions fit without rehashing. The sixth insertion triggers a rehash before it is stored:
