@@ -133,17 +133,14 @@ import org.eclipse.collections.impl.utility.LazyIterate;
  * ({@code -XX:+UseCompactObjectHeaders}), which do not change the size of {@code OrderedHashMap}:
  * <pre>
  *    size  OrderedHashMap  per entry  LinkedHashMap  per entry  LinkedHashMap (compact headers)
- *       0              72                        64                                          56
+ *       0              32                        64                                          56
  *       1             136      136.0            184      184.0                              168
  *      10             208       20.8            544       54.4                              456
  *     100           2,448       24.5          5,104       51.0                            4,296
  *   1,000          19,176       19.2         48,272       48.3                           40,264
  *  10,000         152,976       15.3        465,616       46.6                          385,608
  * </pre>
- * An empty map created with the no-argument constructor is 32 bytes. The other 40 bytes at size 0
- * (32 with compact object headers) are the two unallocated arrays, which exist once and are shared by
- * all such maps. The {@code LinkedHashMap} figures are for Java 21 and later. It is 8 bytes smaller
- * before Java 21.
+ * The {@code LinkedHashMap} figures are for Java 21 and later. It is 8 bytes smaller before Java 21.
  * These figures are asserted by {@code OrderedHashMapMemoryTest}.
  *
  * @since 14.0
@@ -157,10 +154,7 @@ public class OrderedHashMap<K, V>
     private static final int MINIMUM_INDICES_HASH_TABLE_CAPACITY = 8;
     private static final int EMPTY = -1;
     private static final int REMOVED = -2;
-
-    // Shared by every map created with the no-argument constructor until its first insertion. Never written to.
-    private static final int[] UNALLOCATED_INDICES_HASH_TABLE = {EMPTY};
-    private static final Object[] UNALLOCATED_ORDERED_KEY_VALUES = {};
+    private static final int NO_SLOT = -1;
 
     private static final Object NULL_KEY = new Object()
     {
@@ -205,6 +199,7 @@ public class OrderedHashMap<K, V>
     };
 
     // Sparse open-addressed hash table. Each slot holds an orderedKeyValues pair index, EMPTY, or REMOVED.
+    // Both arrays are null until the first insertion into a map created with the no-argument constructor.
     private int[] indicesHashTable;
     // Counts live and REMOVED slots in indicesHashTable.
     private int indicesHashTableOccupied;
@@ -217,8 +212,6 @@ public class OrderedHashMap<K, V>
 
     public OrderedHashMap()
     {
-        this.indicesHashTable = UNALLOCATED_INDICES_HASH_TABLE;
-        this.orderedKeyValues = UNALLOCATED_ORDERED_KEY_VALUES;
     }
 
     public OrderedHashMap(int initialCapacity)
@@ -302,7 +295,12 @@ public class OrderedHashMap<K, V>
 
     private int usableEntryCapacity()
     {
-        return usableEntryCapacity(this.indicesHashTable.length);
+        return this.indicesHashTable == null ? 0 : usableEntryCapacity(this.indicesHashTable.length);
+    }
+
+    private int indexAt(int slot)
+    {
+        return slot == NO_SLOT ? EMPTY : this.indicesHashTable[slot];
     }
 
     private static int usableEntryCapacity(int indicesHashTableCapacity)
@@ -366,9 +364,14 @@ public class OrderedHashMap<K, V>
      *     <li>{@code indicesHashTable[slot] == EMPTY} — key not found, insert here</li>
      *     <li>{@code indicesHashTable[slot] == REMOVED} — key not found, but this removed slot can be reused</li>
      * </ul>
+     * Returns {@code NO_SLOT} when the tables have not been allocated yet.
      */
     private int probe(Object key)
     {
+        if (this.indicesHashTable == null)
+        {
+            return NO_SLOT;
+        }
         int slot = this.spread(key);
         int removedSlot = -1;
 
@@ -413,7 +416,7 @@ public class OrderedHashMap<K, V>
 
     private void addKeyValueAtSlot(K key, V value, int slot)
     {
-        boolean reusedRemovedHashTableSlot = this.indicesHashTable[slot] == REMOVED;
+        boolean reusedRemovedHashTableSlot = this.indexAt(slot) == REMOVED;
 
         if (this.needsRehashBeforeAdd(reusedRemovedHashTableSlot))
         {
@@ -500,7 +503,7 @@ public class OrderedHashMap<K, V>
     public V get(Object key)
     {
         int slot = this.probe(key);
-        int idx = this.indicesHashTable[slot];
+        int idx = this.indexAt(slot);
         if (idx >= 0)
         {
             return (V) this.orderedKeyValues[(idx << 1) + 1];
@@ -512,7 +515,7 @@ public class OrderedHashMap<K, V>
     public V put(K key, V value)
     {
         int slot = this.probe(key);
-        int idx = this.indicesHashTable[slot];
+        int idx = this.indexAt(slot);
 
         if (idx >= 0)
         {
@@ -529,7 +532,7 @@ public class OrderedHashMap<K, V>
     public V removeKey(K key)
     {
         int slot = this.probe(key);
-        int idx = this.indicesHashTable[slot];
+        int idx = this.indexAt(slot);
 
         if (idx >= 0)
         {
@@ -565,7 +568,7 @@ public class OrderedHashMap<K, V>
     public boolean containsKey(Object key)
     {
         int slot = this.probe(key);
-        return this.indicesHashTable[slot] >= 0;
+        return this.indexAt(slot) >= 0;
     }
 
     @Override
@@ -602,7 +605,7 @@ public class OrderedHashMap<K, V>
     @Override
     public void clear()
     {
-        if (this.indicesHashTable == UNALLOCATED_INDICES_HASH_TABLE)
+        if (this.indicesHashTable == null)
         {
             return;
         }
@@ -1728,8 +1731,11 @@ public class OrderedHashMap<K, V>
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException
     {
         int deserializedSize = in.readInt();
-        int indicesHashTableCapacity = smallestIndicesHashTableCapacityForEntryCount(deserializedSize);
-        this.allocateTable(indicesHashTableCapacity, usableEntryCapacity(indicesHashTableCapacity));
+        if (deserializedSize > 0)
+        {
+            int indicesHashTableCapacity = smallestIndicesHashTableCapacityForEntryCount(deserializedSize);
+            this.allocateTable(indicesHashTableCapacity, usableEntryCapacity(indicesHashTableCapacity));
+        }
         for (int i = 0; i < deserializedSize; i++)
         {
             K key = (K) in.readObject();

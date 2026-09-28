@@ -44,9 +44,7 @@ public class OrderedHashMapMemoryTest
     @Test
     public void size0()
     {
-        // 32 bytes for the map, plus the two unallocated arrays that are shared by all empty maps.
-        assertOverheadEquals(72L, 64L, new OrderedHashMap<>(), 0);
-        JolMemoryTestUtil.assertClassMemoryEquals(32L, 32L, new OrderedHashMap<>());
+        assertOverheadEquals(32L, 32L, new OrderedHashMap<>(), 0);
         assertLinkedHashMapOverheadEquals(64L, 56L, 0);
     }
 

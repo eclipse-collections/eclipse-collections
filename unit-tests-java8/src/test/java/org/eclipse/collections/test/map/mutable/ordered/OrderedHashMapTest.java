@@ -102,11 +102,16 @@ public class OrderedHashMapTest implements MutableOrderedMapTestCase
 
     private static int getIntField(OrderedHashMap<?, ?> map, String fieldName)
     {
+        return (int) getField(map, fieldName);
+    }
+
+    private static Object getField(OrderedHashMap<?, ?> map, String fieldName)
+    {
         try
         {
             Field field = OrderedHashMap.class.getDeclaredField(fieldName);
             field.setAccessible(true);
-            return (int) field.get(map);
+            return field.get(map);
         }
         catch (ReflectiveOperationException e)
         {
@@ -417,13 +422,36 @@ public class OrderedHashMapTest implements MutableOrderedMapTestCase
     public void OrderedHashMap_usesTwoThirdsUsableEntryCapacity()
     {
         OrderedHashMap<Integer, Integer> defaultMap = new OrderedHashMap<>();
-        assertEquals(1, getIndicesHashTableLength(defaultMap));
-        assertEquals(0, getOrderedKeyValuesLength(defaultMap));
+        assertNull(getField(defaultMap, "indicesHashTable"));
+        assertNull(getField(defaultMap, "orderedKeyValues"));
         defaultMap.clear();
-        assertEquals(1, getIndicesHashTableLength(defaultMap));
+        assertNull(getField(defaultMap, "indicesHashTable"));
         assertNull(defaultMap.get(1));
         assertFalse(defaultMap.containsKey(1));
+        assertFalse(defaultMap.containsValue(1));
         assertNull(defaultMap.removeKey(1));
+        assertNull(defaultMap.remove(1));
+        assertFalse(defaultMap.removeIf((key, value) -> true));
+        assertNull(defaultMap.getIfAbsent(1, () -> null));
+        assertEquals(0, defaultMap.size());
+        assertTrue(defaultMap.isEmpty());
+        assertTrue(defaultMap.keySet().isEmpty());
+        assertTrue(defaultMap.values().isEmpty());
+        assertTrue(defaultMap.entrySet().isEmpty());
+        assertFalse(defaultMap.iterator().hasNext());
+        assertFalse(defaultMap.keySet().iterator().hasNext());
+        assertFalse(defaultMap.entrySet().iterator().hasNext());
+        assertEquals("{}", defaultMap.toString());
+        assertEquals(0, defaultMap.hashCode());
+        assertEquals(new OrderedHashMap<>(), defaultMap);
+        assertEquals(defaultMap, new LinkedHashMap<>());
+        assertEquals(List.of(), new ArrayList<>(defaultMap.keySet()));
+        defaultMap.forEachKeyValue((key, value) -> fail());
+        defaultMap.forEachKey(key -> fail());
+        defaultMap.forEachValue(value -> fail());
+        assertNull(defaultMap.getFirst());
+        assertNull(defaultMap.getLast());
+        assertNull(getField(defaultMap, "indicesHashTable"));
 
         defaultMap.put(1, 1);
         assertEquals(8, getIndicesHashTableLength(defaultMap));
