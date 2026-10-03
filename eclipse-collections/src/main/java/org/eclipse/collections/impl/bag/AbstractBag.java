@@ -26,14 +26,6 @@ import org.eclipse.collections.api.ShortIterable;
 import org.eclipse.collections.api.bag.Bag;
 import org.eclipse.collections.api.bag.MutableBag;
 import org.eclipse.collections.api.bag.MutableBagIterable;
-import org.eclipse.collections.api.bag.primitive.MutableBooleanBag;
-import org.eclipse.collections.api.bag.primitive.MutableByteBag;
-import org.eclipse.collections.api.bag.primitive.MutableCharBag;
-import org.eclipse.collections.api.bag.primitive.MutableDoubleBag;
-import org.eclipse.collections.api.bag.primitive.MutableFloatBag;
-import org.eclipse.collections.api.bag.primitive.MutableIntBag;
-import org.eclipse.collections.api.bag.primitive.MutableLongBag;
-import org.eclipse.collections.api.bag.primitive.MutableShortBag;
 import org.eclipse.collections.api.bag.sorted.MutableSortedBag;
 import org.eclipse.collections.api.block.function.Function;
 import org.eclipse.collections.api.block.function.Function2;
@@ -229,25 +221,20 @@ public abstract class AbstractBag<T>
         return result.getCount();
     }
 
+    /**
+     * Applies the function once per occurrence. For pure functions with bag targets prefer
+     * {@link Bag#collectEachOccurrences(Function, Collection)}.
+     */
     @Override
     public <V, R extends Collection<V>> R collect(Function<? super T, ? extends V> function, R target)
     {
-        if (target instanceof MutableBagIterable<?>)
+        this.forEachWithOccurrences((each, occurrences) ->
         {
-            MutableBagIterable<V> targetBag = (MutableBagIterable<V>) target;
-
-            this.forEachWithOccurrences((each, occurrences) -> targetBag.addOccurrences(function.valueOf(each), occurrences));
-        }
-        else
-        {
-            this.forEachWithOccurrences((each, occurrences) -> {
-                V value = function.valueOf(each);
-                for (int i = 0; i < occurrences; i++)
-                {
-                    target.add(value);
-                }
-            });
-        }
+            for (int i = 0; i < occurrences; i++)
+            {
+                target.add(function.valueOf(each));
+            }
+        });
         return target;
     }
 
@@ -257,22 +244,13 @@ public abstract class AbstractBag<T>
             P parameter,
             R target)
     {
-        if (target instanceof MutableBagIterable<?>)
+        this.forEachWithOccurrences((each, occurrences) ->
         {
-            MutableBagIterable<V> targetBag = (MutableBagIterable<V>) target;
-
-            this.forEachWithOccurrences((each, occurrences) -> targetBag.addOccurrences(function.value(each, parameter), occurrences));
-        }
-        else
-        {
-            this.forEachWithOccurrences((each, occurrences) -> {
-                V value = function.value(each, parameter);
-                for (int i = 0; i < occurrences; i++)
-                {
-                    target.add(value);
-                }
-            });
-        }
+            for (int i = 0; i < occurrences; i++)
+            {
+                target.add(function.value(each, parameter));
+            }
+        });
         return target;
     }
 
@@ -282,75 +260,42 @@ public abstract class AbstractBag<T>
             Function<? super T, ? extends V> function,
             R target)
     {
-        if (target instanceof MutableBagIterable<?>)
+        this.forEachWithOccurrences((each, occurrences) ->
         {
-            MutableBagIterable<V> targetBag = (MutableBagIterable<V>) target;
-
-            this.forEachWithOccurrences((each, occurrences) -> {
-                if (predicate.accept(each))
+            if (predicate.accept(each))
+            {
+                for (int i = 0; i < occurrences; i++)
                 {
-                    targetBag.addOccurrences(function.valueOf(each), occurrences);
+                    target.add(function.valueOf(each));
                 }
-            });
-        }
-        else
-        {
-            this.forEachWithOccurrences((each, occurrences) -> {
-                if (predicate.accept(each))
-                {
-                    V value = function.valueOf(each);
-                    for (int i = 0; i < occurrences; i++)
-                    {
-                        target.add(value);
-                    }
-                }
-            });
-        }
+            }
+        });
         return target;
     }
 
     @Override
     public <V, R extends Collection<V>> R flatCollect(Function<? super T, ? extends Iterable<V>> function, R target)
     {
-        if (target instanceof MutableBagIterable<?>)
+        this.forEachWithOccurrences((each, occurrences) ->
         {
-            MutableBagIterable<V> targetBag = (MutableBagIterable<V>) target;
-
-            this.forEachWithOccurrences((each, occurrences) -> {
-                Iterable<V> values = function.valueOf(each);
-                Iterate.forEach(values, eachValue -> targetBag.addOccurrences(eachValue, occurrences));
-            });
-        }
-        else
-        {
-            this.forEachWithOccurrences((each, occurrences) -> {
-                Iterable<V> values = function.valueOf(each);
-                for (int i = 0; i < occurrences; i++)
-                {
-                    Iterate.forEach(values, target::add);
-                }
-            });
-        }
+            for (int i = 0; i < occurrences; i++)
+            {
+                Iterate.forEach(function.valueOf(each), target::add);
+            }
+        });
         return target;
     }
 
     @Override
     public <R extends MutableBooleanCollection> R collectBoolean(BooleanFunction<? super T> booleanFunction, R target)
     {
-        if (target instanceof MutableBooleanBag targetBag)
+        this.forEachWithOccurrences((each, occurrences) ->
         {
-            this.forEachWithOccurrences((each, occurrences) -> targetBag.addOccurrences(booleanFunction.booleanValueOf(each), occurrences));
-        }
-        else
-        {
-            this.forEachWithOccurrences((each, occurrences) -> {
-                boolean value = booleanFunction.booleanValueOf(each);
-                for (int i = 0; i < occurrences; i++)
-                {
-                    target.add(value);
-                }
-            });
-        }
+            for (int i = 0; i < occurrences; i++)
+            {
+                target.add(booleanFunction.booleanValueOf(each));
+            }
+        });
         return target;
     }
 
@@ -358,43 +303,26 @@ public abstract class AbstractBag<T>
     public <R extends MutableBooleanCollection> R flatCollectBoolean(
             Function<? super T, ? extends BooleanIterable> function, R target)
     {
-        if (target instanceof MutableBooleanBag targetBag)
+        this.forEachWithOccurrences((each, occurrences) ->
         {
-            this.forEachWithOccurrences((each, occurrences) -> {
-                BooleanIterable values = function.valueOf(each);
-                values.forEach(value -> targetBag.addOccurrences(value, occurrences));
-            });
-        }
-        else
-        {
-            this.forEachWithOccurrences((each, occurrences) -> {
-                BooleanIterable value = function.valueOf(each);
-                for (int i = 0; i < occurrences; i++)
-                {
-                    value.forEach(target::add);
-                }
-            });
-        }
+            for (int i = 0; i < occurrences; i++)
+            {
+                function.valueOf(each).forEach(target::add);
+            }
+        });
         return target;
     }
 
     @Override
     public <R extends MutableByteCollection> R collectByte(ByteFunction<? super T> byteFunction, R target)
     {
-        if (target instanceof MutableByteBag targetBag)
+        this.forEachWithOccurrences((each, occurrences) ->
         {
-            this.forEachWithOccurrences((each, occurrences) -> targetBag.addOccurrences(byteFunction.byteValueOf(each), occurrences));
-        }
-        else
-        {
-            this.forEachWithOccurrences((each, occurrences) -> {
-                byte value = byteFunction.byteValueOf(each);
-                for (int i = 0; i < occurrences; i++)
-                {
-                    target.add(value);
-                }
-            });
-        }
+            for (int i = 0; i < occurrences; i++)
+            {
+                target.add(byteFunction.byteValueOf(each));
+            }
+        });
         return target;
     }
 
@@ -402,43 +330,26 @@ public abstract class AbstractBag<T>
     public <R extends MutableByteCollection> R flatCollectByte(
             Function<? super T, ? extends ByteIterable> function, R target)
     {
-        if (target instanceof MutableByteBag targetBag)
+        this.forEachWithOccurrences((each, occurrences) ->
         {
-            this.forEachWithOccurrences((each, occurrences) -> {
-                ByteIterable values = function.valueOf(each);
-                values.forEach(value -> targetBag.addOccurrences(value, occurrences));
-            });
-        }
-        else
-        {
-            this.forEachWithOccurrences((each, occurrences) -> {
-                ByteIterable value = function.valueOf(each);
-                for (int i = 0; i < occurrences; i++)
-                {
-                    value.forEach(target::add);
-                }
-            });
-        }
+            for (int i = 0; i < occurrences; i++)
+            {
+                function.valueOf(each).forEach(target::add);
+            }
+        });
         return target;
     }
 
     @Override
     public <R extends MutableCharCollection> R collectChar(CharFunction<? super T> charFunction, R target)
     {
-        if (target instanceof MutableCharBag targetBag)
+        this.forEachWithOccurrences((each, occurrences) ->
         {
-            this.forEachWithOccurrences((each, occurrences) -> targetBag.addOccurrences(charFunction.charValueOf(each), occurrences));
-        }
-        else
-        {
-            this.forEachWithOccurrences((each, occurrences) -> {
-                char value = charFunction.charValueOf(each);
-                for (int i = 0; i < occurrences; i++)
-                {
-                    target.add(value);
-                }
-            });
-        }
+            for (int i = 0; i < occurrences; i++)
+            {
+                target.add(charFunction.charValueOf(each));
+            }
+        });
         return target;
     }
 
@@ -446,43 +357,26 @@ public abstract class AbstractBag<T>
     public <R extends MutableCharCollection> R flatCollectChar(
             Function<? super T, ? extends CharIterable> function, R target)
     {
-        if (target instanceof MutableCharBag targetBag)
+        this.forEachWithOccurrences((each, occurrences) ->
         {
-            this.forEachWithOccurrences((each, occurrences) -> {
-                CharIterable values = function.valueOf(each);
-                values.forEach(value -> targetBag.addOccurrences(value, occurrences));
-            });
-        }
-        else
-        {
-            this.forEachWithOccurrences((each, occurrences) -> {
-                CharIterable value = function.valueOf(each);
-                for (int i = 0; i < occurrences; i++)
-                {
-                    value.forEach(target::add);
-                }
-            });
-        }
+            for (int i = 0; i < occurrences; i++)
+            {
+                function.valueOf(each).forEach(target::add);
+            }
+        });
         return target;
     }
 
     @Override
     public <R extends MutableDoubleCollection> R collectDouble(DoubleFunction<? super T> doubleFunction, R target)
     {
-        if (target instanceof MutableDoubleBag targetBag)
+        this.forEachWithOccurrences((each, occurrences) ->
         {
-            this.forEachWithOccurrences((each, occurrences) -> targetBag.addOccurrences(doubleFunction.doubleValueOf(each), occurrences));
-        }
-        else
-        {
-            this.forEachWithOccurrences((each, occurrences) -> {
-                double value = doubleFunction.doubleValueOf(each);
-                for (int i = 0; i < occurrences; i++)
-                {
-                    target.add(value);
-                }
-            });
-        }
+            for (int i = 0; i < occurrences; i++)
+            {
+                target.add(doubleFunction.doubleValueOf(each));
+            }
+        });
         return target;
     }
 
@@ -491,43 +385,26 @@ public abstract class AbstractBag<T>
             Function<? super T, ? extends DoubleIterable> function,
             R target)
     {
-        if (target instanceof MutableDoubleBag targetBag)
+        this.forEachWithOccurrences((each, occurrences) ->
         {
-            this.forEachWithOccurrences((each, occurrences) -> {
-                DoubleIterable values = function.valueOf(each);
-                values.forEach(value -> targetBag.addOccurrences(value, occurrences));
-            });
-        }
-        else
-        {
-            this.forEachWithOccurrences((each, occurrences) -> {
-                DoubleIterable value = function.valueOf(each);
-                for (int i = 0; i < occurrences; i++)
-                {
-                    value.forEach(target::add);
-                }
-            });
-        }
+            for (int i = 0; i < occurrences; i++)
+            {
+                function.valueOf(each).forEach(target::add);
+            }
+        });
         return target;
     }
 
     @Override
     public <R extends MutableFloatCollection> R collectFloat(FloatFunction<? super T> floatFunction, R target)
     {
-        if (target instanceof MutableFloatBag targetBag)
+        this.forEachWithOccurrences((each, occurrences) ->
         {
-            this.forEachWithOccurrences((each, occurrences) -> targetBag.addOccurrences(floatFunction.floatValueOf(each), occurrences));
-        }
-        else
-        {
-            this.forEachWithOccurrences((each, occurrences) -> {
-                float value = floatFunction.floatValueOf(each);
-                for (int i = 0; i < occurrences; i++)
-                {
-                    target.add(value);
-                }
-            });
-        }
+            for (int i = 0; i < occurrences; i++)
+            {
+                target.add(floatFunction.floatValueOf(each));
+            }
+        });
         return target;
     }
 
@@ -535,43 +412,26 @@ public abstract class AbstractBag<T>
     public <R extends MutableFloatCollection> R flatCollectFloat(
             Function<? super T, ? extends FloatIterable> function, R target)
     {
-        if (target instanceof MutableFloatBag targetBag)
+        this.forEachWithOccurrences((each, occurrences) ->
         {
-            this.forEachWithOccurrences((each, occurrences) -> {
-                FloatIterable values = function.valueOf(each);
-                values.forEach(value -> targetBag.addOccurrences(value, occurrences));
-            });
-        }
-        else
-        {
-            this.forEachWithOccurrences((each, occurrences) -> {
-                FloatIterable value = function.valueOf(each);
-                for (int i = 0; i < occurrences; i++)
-                {
-                    value.forEach(target::add);
-                }
-            });
-        }
+            for (int i = 0; i < occurrences; i++)
+            {
+                function.valueOf(each).forEach(target::add);
+            }
+        });
         return target;
     }
 
     @Override
     public <R extends MutableIntCollection> R collectInt(IntFunction<? super T> intFunction, R target)
     {
-        if (target instanceof MutableIntBag targetBag)
+        this.forEachWithOccurrences((each, occurrences) ->
         {
-            this.forEachWithOccurrences((each, occurrences) -> targetBag.addOccurrences(intFunction.intValueOf(each), occurrences));
-        }
-        else
-        {
-            this.forEachWithOccurrences((each, occurrences) -> {
-                int value = intFunction.intValueOf(each);
-                for (int i = 0; i < occurrences; i++)
-                {
-                    target.add(value);
-                }
-            });
-        }
+            for (int i = 0; i < occurrences; i++)
+            {
+                target.add(intFunction.intValueOf(each));
+            }
+        });
         return target;
     }
 
@@ -579,43 +439,26 @@ public abstract class AbstractBag<T>
     public <R extends MutableIntCollection> R flatCollectInt(
             Function<? super T, ? extends IntIterable> function, R target)
     {
-        if (target instanceof MutableIntBag targetBag)
+        this.forEachWithOccurrences((each, occurrences) ->
         {
-            this.forEachWithOccurrences((each, occurrences) -> {
-                IntIterable values = function.valueOf(each);
-                values.forEach(value -> targetBag.addOccurrences(value, occurrences));
-            });
-        }
-        else
-        {
-            this.forEachWithOccurrences((each, occurrences) -> {
-                IntIterable value = function.valueOf(each);
-                for (int i = 0; i < occurrences; i++)
-                {
-                    value.forEach(target::add);
-                }
-            });
-        }
+            for (int i = 0; i < occurrences; i++)
+            {
+                function.valueOf(each).forEach(target::add);
+            }
+        });
         return target;
     }
 
     @Override
     public <R extends MutableLongCollection> R collectLong(LongFunction<? super T> longFunction, R target)
     {
-        if (target instanceof MutableLongBag targetBag)
+        this.forEachWithOccurrences((each, occurrences) ->
         {
-            this.forEachWithOccurrences((each, occurrences) -> targetBag.addOccurrences(longFunction.longValueOf(each), occurrences));
-        }
-        else
-        {
-            this.forEachWithOccurrences((each, occurrences) -> {
-                long value = longFunction.longValueOf(each);
-                for (int i = 0; i < occurrences; i++)
-                {
-                    target.add(value);
-                }
-            });
-        }
+            for (int i = 0; i < occurrences; i++)
+            {
+                target.add(longFunction.longValueOf(each));
+            }
+        });
         return target;
     }
 
@@ -623,43 +466,26 @@ public abstract class AbstractBag<T>
     public <R extends MutableLongCollection> R flatCollectLong(
             Function<? super T, ? extends LongIterable> function, R target)
     {
-        if (target instanceof MutableLongBag targetBag)
+        this.forEachWithOccurrences((each, occurrences) ->
         {
-            this.forEachWithOccurrences((each, occurrences) -> {
-                LongIterable values = function.valueOf(each);
-                values.forEach(value -> targetBag.addOccurrences(value, occurrences));
-            });
-        }
-        else
-        {
-            this.forEachWithOccurrences((each, occurrences) -> {
-                LongIterable value = function.valueOf(each);
-                for (int i = 0; i < occurrences; i++)
-                {
-                    value.forEach(target::add);
-                }
-            });
-        }
+            for (int i = 0; i < occurrences; i++)
+            {
+                function.valueOf(each).forEach(target::add);
+            }
+        });
         return target;
     }
 
     @Override
     public <R extends MutableShortCollection> R collectShort(ShortFunction<? super T> shortFunction, R target)
     {
-        if (target instanceof MutableShortBag targetBag)
+        this.forEachWithOccurrences((each, occurrences) ->
         {
-            this.forEachWithOccurrences((each, occurrences) -> targetBag.addOccurrences(shortFunction.shortValueOf(each), occurrences));
-        }
-        else
-        {
-            this.forEachWithOccurrences((each, occurrences) -> {
-                short value = shortFunction.shortValueOf(each);
-                for (int i = 0; i < occurrences; i++)
-                {
-                    target.add(value);
-                }
-            });
-        }
+            for (int i = 0; i < occurrences; i++)
+            {
+                target.add(shortFunction.shortValueOf(each));
+            }
+        });
         return target;
     }
 
@@ -667,23 +493,13 @@ public abstract class AbstractBag<T>
     public <R extends MutableShortCollection> R flatCollectShort(
             Function<? super T, ? extends ShortIterable> function, R target)
     {
-        if (target instanceof MutableShortBag targetBag)
+        this.forEachWithOccurrences((each, occurrences) ->
         {
-            this.forEachWithOccurrences((each, occurrences) -> {
-                ShortIterable values = function.valueOf(each);
-                values.forEach(value -> targetBag.addOccurrences(value, occurrences));
-            });
-        }
-        else
-        {
-            this.forEachWithOccurrences((each, occurrences) -> {
-                ShortIterable value = function.valueOf(each);
-                for (int i = 0; i < occurrences; i++)
-                {
-                    value.forEach(target::add);
-                }
-            });
-        }
+            for (int i = 0; i < occurrences; i++)
+            {
+                function.valueOf(each).forEach(target::add);
+            }
+        });
         return target;
     }
 

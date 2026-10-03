@@ -21,20 +21,41 @@ import java.util.stream.Collector;
 import java.util.stream.Stream;
 
 import org.eclipse.collections.api.RichIterable;
+import org.eclipse.collections.api.bag.primitive.MutableBooleanBag;
+import org.eclipse.collections.api.bag.primitive.MutableByteBag;
+import org.eclipse.collections.api.bag.primitive.MutableCharBag;
+import org.eclipse.collections.api.bag.primitive.MutableDoubleBag;
+import org.eclipse.collections.api.bag.primitive.MutableFloatBag;
+import org.eclipse.collections.api.bag.primitive.MutableIntBag;
+import org.eclipse.collections.api.bag.primitive.MutableLongBag;
+import org.eclipse.collections.api.bag.primitive.MutableShortBag;
 import org.eclipse.collections.api.block.function.Function;
 import org.eclipse.collections.api.block.function.Function0;
 import org.eclipse.collections.api.block.function.Function2;
+import org.eclipse.collections.api.block.function.primitive.BooleanFunction;
+import org.eclipse.collections.api.block.function.primitive.ByteFunction;
+import org.eclipse.collections.api.block.function.primitive.CharFunction;
 import org.eclipse.collections.api.block.function.primitive.DoubleFunction;
 import org.eclipse.collections.api.block.function.primitive.FloatFunction;
 import org.eclipse.collections.api.block.function.primitive.IntFunction;
 import org.eclipse.collections.api.block.function.primitive.LongFunction;
 import org.eclipse.collections.api.block.function.primitive.ObjectIntToObjectFunction;
+import org.eclipse.collections.api.block.function.primitive.ShortFunction;
 import org.eclipse.collections.api.block.predicate.Predicate;
 import org.eclipse.collections.api.block.predicate.Predicate2;
 import org.eclipse.collections.api.block.predicate.primitive.IntPredicate;
 import org.eclipse.collections.api.block.predicate.primitive.ObjectIntPredicate;
 import org.eclipse.collections.api.block.procedure.Procedure;
 import org.eclipse.collections.api.block.procedure.primitive.ObjectIntProcedure;
+import org.eclipse.collections.api.collection.primitive.MutableBooleanCollection;
+import org.eclipse.collections.api.collection.primitive.MutableByteCollection;
+import org.eclipse.collections.api.collection.primitive.MutableCharCollection;
+import org.eclipse.collections.api.collection.primitive.MutableDoubleCollection;
+import org.eclipse.collections.api.collection.primitive.MutableFloatCollection;
+import org.eclipse.collections.api.collection.primitive.MutableIntCollection;
+import org.eclipse.collections.api.collection.primitive.MutableLongCollection;
+import org.eclipse.collections.api.collection.primitive.MutableShortCollection;
+import org.eclipse.collections.api.factory.Bags;
 import org.eclipse.collections.api.list.ListIterable;
 import org.eclipse.collections.api.map.MapIterable;
 import org.eclipse.collections.api.map.MutableMapIterable;
@@ -355,6 +376,319 @@ public interface Bag<T>
     {
         this.forEachWithOccurrences((each, occurrences) -> target.add(function.valueOf(each, occurrences)));
         return target;
+    }
+
+    /**
+     * Applies the function once for each distinct element and adds the result with the same number of occurrences
+     * to the target. Unlike {@link #collect(Function, Collection)}, the function is not applied once per occurrence.
+     * Prefer this method when the function is pure (stable and repeatable for the same input) and especially when the
+     * target is a {@link MutableBagIterable}.
+     *
+     * @since 14.0
+     */
+    default <V> Bag<V> collectEachOccurrences(Function<? super T, ? extends V> function)
+    {
+        return this.collectEachOccurrences(function, Bags.mutable.empty());
+    }
+
+    /**
+     * Same as {@link #collectEachOccurrences(Function)} but adds results into the target collection.
+     *
+     * @since 14.0
+     */
+    default <V, R extends Collection<V>> R collectEachOccurrences(
+            Function<? super T, ? extends V> function,
+            R target)
+    {
+        if (target instanceof MutableBagIterable<?>)
+        {
+            MutableBagIterable<V> targetBag = (MutableBagIterable<V>) target;
+            this.forEachWithOccurrences((each, occurrences) ->
+                    targetBag.addOccurrences(function.valueOf(each), occurrences));
+        }
+        else
+        {
+            this.forEachWithOccurrences((each, occurrences) ->
+            {
+                V value = function.valueOf(each);
+                for (int i = 0; i < occurrences; i++)
+                {
+                    target.add(value);
+                }
+            });
+        }
+        return target;
+    }
+
+    /**
+     * Same as {@link #collectEachOccurrences(Function, Collection)} using a two-argument function and parameter.
+     *
+     * @since 14.0
+     */
+    default <P, V, R extends Collection<V>> R collectWithEachOccurrences(
+            Function2<? super T, ? super P, ? extends V> function,
+            P parameter,
+            R target)
+    {
+        if (target instanceof MutableBagIterable<?>)
+        {
+            MutableBagIterable<V> targetBag = (MutableBagIterable<V>) target;
+            this.forEachWithOccurrences((each, occurrences) ->
+                    targetBag.addOccurrences(function.value(each, parameter), occurrences));
+        }
+        else
+        {
+            this.forEachWithOccurrences((each, occurrences) ->
+            {
+                V value = function.value(each, parameter);
+                for (int i = 0; i < occurrences; i++)
+                {
+                    target.add(value);
+                }
+            });
+        }
+        return target;
+    }
+
+    /**
+     * Applies the function once per distinct element and multiplies occurrences into the target.
+     *
+     * @since 14.0
+     */
+    default <R extends MutableBooleanCollection> R collectEachOccurrencesBoolean(
+            BooleanFunction<? super T> booleanFunction,
+            R target)
+    {
+        if (target instanceof MutableBooleanBag targetBag)
+        {
+            this.forEachWithOccurrences((each, occurrences) ->
+                    targetBag.addOccurrences(booleanFunction.booleanValueOf(each), occurrences));
+        }
+        else
+        {
+            this.forEachWithOccurrences((each, occurrences) ->
+            {
+                boolean value = booleanFunction.booleanValueOf(each);
+                for (int i = 0; i < occurrences; i++)
+                {
+                    target.add(value);
+                }
+            });
+        }
+        return target;
+    }
+
+    /**
+     * @since 14.0
+     */
+    default <R extends MutableByteCollection> R collectEachOccurrencesByte(
+            ByteFunction<? super T> byteFunction,
+            R target)
+    {
+        if (target instanceof MutableByteBag targetBag)
+        {
+            this.forEachWithOccurrences((each, occurrences) ->
+                    targetBag.addOccurrences(byteFunction.byteValueOf(each), occurrences));
+        }
+        else
+        {
+            this.forEachWithOccurrences((each, occurrences) ->
+            {
+                byte value = byteFunction.byteValueOf(each);
+                for (int i = 0; i < occurrences; i++)
+                {
+                    target.add(value);
+                }
+            });
+        }
+        return target;
+    }
+
+    /**
+     * @since 14.0
+     */
+    default <R extends MutableCharCollection> R collectEachOccurrencesChar(
+            CharFunction<? super T> charFunction,
+            R target)
+    {
+        if (target instanceof MutableCharBag targetBag)
+        {
+            this.forEachWithOccurrences((each, occurrences) ->
+                    targetBag.addOccurrences(charFunction.charValueOf(each), occurrences));
+        }
+        else
+        {
+            this.forEachWithOccurrences((each, occurrences) ->
+            {
+                char value = charFunction.charValueOf(each);
+                for (int i = 0; i < occurrences; i++)
+                {
+                    target.add(value);
+                }
+            });
+        }
+        return target;
+    }
+
+    /**
+     * @since 14.0
+     */
+    default <R extends MutableDoubleCollection> R collectEachOccurrencesDouble(
+            DoubleFunction<? super T> doubleFunction,
+            R target)
+    {
+        if (target instanceof MutableDoubleBag targetBag)
+        {
+            this.forEachWithOccurrences((each, occurrences) ->
+                    targetBag.addOccurrences(doubleFunction.doubleValueOf(each), occurrences));
+        }
+        else
+        {
+            this.forEachWithOccurrences((each, occurrences) ->
+            {
+                double value = doubleFunction.doubleValueOf(each);
+                for (int i = 0; i < occurrences; i++)
+                {
+                    target.add(value);
+                }
+            });
+        }
+        return target;
+    }
+
+    /**
+     * @since 14.0
+     */
+    default <R extends MutableFloatCollection> R collectEachOccurrencesFloat(
+            FloatFunction<? super T> floatFunction,
+            R target)
+    {
+        if (target instanceof MutableFloatBag targetBag)
+        {
+            this.forEachWithOccurrences((each, occurrences) ->
+                    targetBag.addOccurrences(floatFunction.floatValueOf(each), occurrences));
+        }
+        else
+        {
+            this.forEachWithOccurrences((each, occurrences) ->
+            {
+                float value = floatFunction.floatValueOf(each);
+                for (int i = 0; i < occurrences; i++)
+                {
+                    target.add(value);
+                }
+            });
+        }
+        return target;
+    }
+
+    /**
+     * @since 14.0
+     */
+    default <R extends MutableIntCollection> R collectEachOccurrencesInt(
+            IntFunction<? super T> intFunction,
+            R target)
+    {
+        if (target instanceof MutableIntBag targetBag)
+        {
+            this.forEachWithOccurrences((each, occurrences) ->
+                    targetBag.addOccurrences(intFunction.intValueOf(each), occurrences));
+        }
+        else
+        {
+            this.forEachWithOccurrences((each, occurrences) ->
+            {
+                int value = intFunction.intValueOf(each);
+                for (int i = 0; i < occurrences; i++)
+                {
+                    target.add(value);
+                }
+            });
+        }
+        return target;
+    }
+
+    /**
+     * @since 14.0
+     */
+    default <R extends MutableLongCollection> R collectEachOccurrencesLong(
+            LongFunction<? super T> longFunction,
+            R target)
+    {
+        if (target instanceof MutableLongBag targetBag)
+        {
+            this.forEachWithOccurrences((each, occurrences) ->
+                    targetBag.addOccurrences(longFunction.longValueOf(each), occurrences));
+        }
+        else
+        {
+            this.forEachWithOccurrences((each, occurrences) ->
+            {
+                long value = longFunction.longValueOf(each);
+                for (int i = 0; i < occurrences; i++)
+                {
+                    target.add(value);
+                }
+            });
+        }
+        return target;
+    }
+
+    /**
+     * @since 14.0
+     */
+    default <R extends MutableShortCollection> R collectEachOccurrencesShort(
+            ShortFunction<? super T> shortFunction,
+            R target)
+    {
+        if (target instanceof MutableShortBag targetBag)
+        {
+            this.forEachWithOccurrences((each, occurrences) ->
+                    targetBag.addOccurrences(shortFunction.shortValueOf(each), occurrences));
+        }
+        else
+        {
+            this.forEachWithOccurrences((each, occurrences) ->
+            {
+                short value = shortFunction.shortValueOf(each);
+                for (int i = 0; i < occurrences; i++)
+                {
+                    target.add(value);
+                }
+            });
+        }
+        return target;
+    }
+
+    /**
+     * {@inheritDoc}
+     * <p>
+     * On a {@code Bag}, the function is applied once per distinct element and the bag occurrence count is preserved
+     * (see {@link #collectEachOccurrences(Function, Collection)}). Use {@link #collect(Function, Collection)} when the
+     * function is stateful and must run once per occurrence.
+     *
+     * @since 14.0
+     */
+    @Override
+    default <V, R extends MutableBagIterable<V>> R countBy(Function<? super T, ? extends V> function, R target)
+    {
+        return this.collectEachOccurrences(function, target);
+    }
+
+    /**
+     * {@inheritDoc}
+     * <p>
+     * On a {@code Bag}, the function is applied once per distinct element and the bag occurrence count is preserved.
+     *
+     * @since 14.0
+     */
+    @Override
+    default <V, P, R extends MutableBagIterable<V>> R countByWith(
+            Function2<? super T, ? super P, ? extends V> function,
+            P parameter,
+            R target)
+    {
+        return this.collectWithEachOccurrences(function, parameter, target);
     }
 
     /**
