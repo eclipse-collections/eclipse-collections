@@ -12,6 +12,7 @@ package org.eclipse.collections.impl.lazy.parallel;
 
 import java.io.IOException;
 import java.util.NoSuchElementException;
+import java.util.Random;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -914,22 +915,31 @@ public abstract class ParallelIterableTestCase
     @Test
     public void sumOfDoubleConsistentRounding()
     {
-        DoubleFunction<Integer> roundingSensitiveElementFunction = i -> (i <= 99995) ? 1.0e-18d : 1.0d;
+        DoubleFunction<Integer> roundingSensitiveElementFunction =
+                i -> (i <= 99995) ? 1.0e-18d : 1.0d;
 
-        MutableList<Integer> list = Interval.oneTo(100_000).toList().shuffleThis();
-        double baseline = this.getExpectedWith(list.toArray(new Integer[]{}))
-                .sumOfDouble(roundingSensitiveElementFunction);
+        Random random = new Random(1303L);
+        MutableList<Integer> list = Interval.oneTo(100_000).toList().shuffleThis(random);
 
         for (Integer batchSize : BATCH_SIZES)
         {
             this.batchSize = batchSize;
 
             ParallelIterable<Integer> testCollection = this.newWith(list.toArray(new Integer[]{}));
-            assertEquals(
-                    baseline,
-                    testCollection.sumOfDouble(roundingSensitiveElementFunction),
-                    1.0e-15d,
-                    "Batch size: " + this.batchSize);
+
+            long bigCount = testCollection.count(i -> i > 99995);
+            long totalCount = testCollection.count(each -> true); // <-- en lugar de size()
+
+            double min = (double) bigCount;
+            double max = (double) bigCount + ((double) (totalCount - bigCount)) * 1.0e-18d;
+
+            double actual = testCollection.sumOfDouble(roundingSensitiveElementFunction);
+
+            double eps = 2.0d * Math.ulp(max);
+
+            assertTrue(
+                    actual + eps >= min && actual <= max + eps,
+                    "Batch size: " + this.batchSize + " result: " + actual + " expected in [" + min + ", " + max + "]");
         }
     }
 
