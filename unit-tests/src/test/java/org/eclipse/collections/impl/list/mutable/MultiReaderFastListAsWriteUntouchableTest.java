@@ -19,7 +19,6 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class MultiReaderFastListAsWriteUntouchableTest extends AbstractListTestCase
 {
@@ -35,20 +34,6 @@ public class MultiReaderFastListAsWriteUntouchableTest extends AbstractListTestC
     {
         MutableList<Integer> collection = this.newWith(1, 2, 3, 4, 5);
         assertFalse(collection instanceof Serializable);
-    }
-
-    @Override
-    @Test
-    public void asSynchronized()
-    {
-        assertThrows(UnsupportedOperationException.class, () -> this.newWith().asSynchronized());
-    }
-
-    @Override
-    @Test
-    public void asUnmodifiable()
-    {
-        assertThrows(UnsupportedOperationException.class, () -> this.newWith().asUnmodifiable());
     }
 
     @Override
