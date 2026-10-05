@@ -292,4 +292,22 @@ public class ImmutableListFactoryImpl implements ImmutableListFactory
         Arrays.sort(array, comparator);
         return new ImmutableArrayList<>(array);
     }
+
+    @Override
+    public <T> ImmutableList<T> ofNCopiesOf(int copies, T item)
+    {
+        if (copies < 0)
+        {
+            throw new IllegalArgumentException("Copies must be > 0 but was " + copies);
+        }
+        if (copies == 0)
+        {
+            return this.empty();
+        }
+        if (copies == 1)
+        {
+            return this.of(item);
+        }
+        return new ImmutableNCopiesList<T>(item, copies);
+    }
 }
