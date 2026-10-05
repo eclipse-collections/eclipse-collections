@@ -421,24 +421,6 @@ public class FastListTest extends AbstractListTestCase
 
     @Override
     @Test
-    public void getFirst()
-    {
-        assertNull(FastList.<Integer>newList().getFirst());
-        assertEquals(Integer.valueOf(1), FastList.newListWith(1, 2, 3).getFirst());
-        assertNotEquals(Integer.valueOf(3), FastList.newListWith(1, 2, 3).getFirst());
-    }
-
-    @Override
-    @Test
-    public void getLast()
-    {
-        assertNull(FastList.<Integer>newList().getLast());
-        assertNotEquals(Integer.valueOf(1), FastList.newListWith(1, 2, 3).getLast());
-        assertEquals(Integer.valueOf(3), FastList.newListWith(1, 2, 3).getLast());
-    }
-
-    @Override
-    @Test
     public void isEmpty()
     {
         Verify.assertEmpty(FastList.<Integer>newList());
