@@ -87,14 +87,14 @@ import org.eclipse.collections.impl.utility.internal.SortedSetIterables;
  * <p>
  * To create a new wrapper around an existing SortedSet instance, use the {@link #adapt(SortedSet)} factory method.
  */
-public final class SortedSetAdapter<T>
+public class SortedSetAdapter<T>
         extends AbstractCollectionAdapter<T>
         implements Serializable, MutableSortedSet<T>
 {
     private static final long serialVersionUID = 1L;
     private final SortedSet<T> delegate;
 
-    SortedSetAdapter(SortedSet<T> newDelegate)
+    protected SortedSetAdapter(SortedSet<T> newDelegate)
     {
         if (newDelegate == null)
         {

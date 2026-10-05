@@ -50,14 +50,14 @@ import org.eclipse.collections.impl.utility.internal.SetIterate;
  * <p>
  * To create a new wrapper around an existing Set instance, use the {@link #adapt(Set)} factory method.
  */
-public final class SetAdapter<T>
+public class SetAdapter<T>
         extends AbstractCollectionAdapter<T>
         implements Serializable, MutableSet<T>
 {
     private static final long serialVersionUID = 1L;
     private final Set<T> delegate;
 
-    SetAdapter(Set<T> newDelegate)
+    protected SetAdapter(Set<T> newDelegate)
     {
         if (newDelegate == null)
         {

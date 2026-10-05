@@ -42,14 +42,14 @@ import org.eclipse.collections.impl.utility.internal.RandomAccessListIterate;
  * <p>
  * To create a new wrapper around an existing List instance, use the {@link #adapt(List)} factory method.
  */
-public final class RandomAccessListAdapter<T>
+public class RandomAccessListAdapter<T>
         extends AbstractListAdapter<T>
         implements RandomAccess, Serializable
 {
     private static final long serialVersionUID = 1L;
     private final List<T> delegate;
 
-    RandomAccessListAdapter(List<T> newDelegate)
+    protected RandomAccessListAdapter(List<T> newDelegate)
     {
         if (newDelegate == null)
         {

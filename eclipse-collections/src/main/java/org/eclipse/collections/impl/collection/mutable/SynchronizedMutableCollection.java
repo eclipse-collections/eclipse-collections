@@ -28,12 +28,12 @@ public class SynchronizedMutableCollection<T>
 {
     private static final long serialVersionUID = 2L;
 
-    SynchronizedMutableCollection(MutableCollection<T> newCollection)
+    protected SynchronizedMutableCollection(MutableCollection<T> newCollection)
     {
         this(newCollection, null);
     }
 
-    SynchronizedMutableCollection(MutableCollection<T> newCollection, Object newLock)
+    protected SynchronizedMutableCollection(MutableCollection<T> newCollection, Object newLock)
     {
         super(newCollection, newLock);
     }

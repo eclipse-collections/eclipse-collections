@@ -69,7 +69,7 @@ public class UnmodifiableSortedBag<T>
         extends AbstractUnmodifiableMutableCollection<T>
         implements MutableSortedBag<T>, Serializable
 {
-    UnmodifiableSortedBag(MutableSortedBag<? extends T> sortedBag)
+    protected UnmodifiableSortedBag(MutableSortedBag<? extends T> sortedBag)
     {
         super(sortedBag);
     }

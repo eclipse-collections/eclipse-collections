@@ -88,13 +88,13 @@ import org.eclipse.collections.api.tuple.Pair;
 import org.eclipse.collections.impl.UnmodifiableIteratorAdapter;
 import org.eclipse.collections.impl.block.factory.PrimitiveFunctions;
 
-public final class UnmodifiableStack<T> implements MutableStack<T>, Serializable
+public class UnmodifiableStack<T> implements MutableStack<T>, Serializable
 {
     private static final long serialVersionUID = 1L;
 
     private final MutableStack<T> mutableStack;
 
-    UnmodifiableStack(MutableStack<T> mutableStack)
+    protected UnmodifiableStack(MutableStack<T> mutableStack)
     {
         if (mutableStack == null)
         {
