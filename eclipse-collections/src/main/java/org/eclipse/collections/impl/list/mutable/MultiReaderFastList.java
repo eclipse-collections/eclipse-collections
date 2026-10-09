@@ -328,6 +328,42 @@ public final class MultiReaderFastList<T>
     }
 
     @Override
+    public MutableList<T> select(Predicate<? super T> predicate)
+    {
+        try (LockWrapper wrapper = this.lockWrapper.acquireReadLock())
+        {
+            return this.delegate.select(predicate);
+        }
+    }
+
+    @Override
+    public <P> MutableList<T> selectWith(Predicate2<? super T, ? super P> predicate, P parameter)
+    {
+        try (LockWrapper wrapper = this.lockWrapper.acquireReadLock())
+        {
+            return this.delegate.selectWith(predicate, parameter);
+        }
+    }
+
+    @Override
+    public MutableList<T> reject(Predicate<? super T> predicate)
+    {
+        try (LockWrapper wrapper = this.lockWrapper.acquireReadLock())
+        {
+            return this.delegate.reject(predicate);
+        }
+    }
+
+    @Override
+    public <P> MutableList<T> rejectWith(Predicate2<? super T, ? super P> predicate, P parameter)
+    {
+        try (LockWrapper wrapper = this.lockWrapper.acquireReadLock())
+        {
+            return this.delegate.rejectWith(predicate, parameter);
+        }
+    }
+
+    @Override
     public MultiReaderList<T> tap(Procedure<? super T> procedure)
     {
         try (LockWrapper wrapper = this.lockWrapper.acquireReadLock())
