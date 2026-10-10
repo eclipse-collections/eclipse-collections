@@ -11,14 +11,13 @@
 package org.eclipse.collections.impl;
 
 import org.eclipse.collections.api.map.sorted.MutableSortedMap;
-import org.eclipse.collections.impl.block.factory.Functions;
 import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.map.sorted.mutable.TreeSortedMap;
 import org.eclipse.collections.impl.tuple.Tuples;
 import org.junit.jupiter.api.Test;
 
 public class SynchronizedSortedMapTest
-        implements SynchronizedMapIterableTestTrait
+        implements SynchronizedMutableMapIterableTestTrait
 {
     private final MutableSortedMap<String, String> classUnderTest = TreeSortedMap.newMapWith("A", "1", "B", "2", "C", "3").asSynchronized();
 
@@ -26,42 +25,6 @@ public class SynchronizedSortedMapTest
     public MutableSortedMap<String, String> getClassUnderTest()
     {
         return this.classUnderTest;
-    }
-
-    @Test
-    public void newEmpty_synchronized()
-    {
-        this.assertSynchronized(this.getClassUnderTest()::newEmpty);
-    }
-
-    @Test
-    public void removeKey_synchronized()
-    {
-        this.assertSynchronized(() -> this.getClassUnderTest().remove("1"));
-    }
-
-    @Test
-    public void getIfAbsentPut_synchronized()
-    {
-        this.assertSynchronized(() -> this.getClassUnderTest().getIfAbsentPut("Nine", () -> "foo"));
-    }
-
-    @Test
-    public void getIfAbsentPutWith_synchronized()
-    {
-        this.assertSynchronized(() -> this.getClassUnderTest().getIfAbsentPutWith("Nine", Functions.getPassThru(), "foo"));
-    }
-
-    @Test
-    public void asUnmodifiable_synchronized()
-    {
-        this.assertSynchronized(this.getClassUnderTest()::asUnmodifiable);
-    }
-
-    @Test
-    public void toImmutable_synchronized()
-    {
-        this.assertSynchronized(this.getClassUnderTest()::toImmutable);
     }
 
     @Test
@@ -78,24 +41,6 @@ public class SynchronizedSortedMapTest
     public void comparator_synchronized()
     {
         this.assertSynchronized(this.getClassUnderTest()::comparator);
-    }
-
-    @Test
-    public void values_synchronized()
-    {
-        this.assertSynchronized(this.getClassUnderTest()::values);
-    }
-
-    @Test
-    public void keySet_synchronized()
-    {
-        this.assertSynchronized(this.getClassUnderTest()::keySet);
-    }
-
-    @Test
-    public void entrySet_synchronized()
-    {
-        this.assertSynchronized(this.getClassUnderTest()::entrySet);
     }
 
     @Test

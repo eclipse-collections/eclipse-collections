@@ -1704,7 +1704,7 @@ public class OrderedHashMap<K, V>
     @Override
     public MutableOrderedMap<K, V> asSynchronized()
     {
-        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".asSynchronized() not implemented yet");
+        return SynchronizedMutableOrderedMap.of(this);
     }
 
     @Override

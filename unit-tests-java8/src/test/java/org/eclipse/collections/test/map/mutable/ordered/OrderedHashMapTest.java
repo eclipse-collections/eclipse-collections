@@ -591,14 +591,6 @@ public class OrderedHashMapTest implements MutableOrderedMapTestCase
         assertThrows(UnsupportedOperationException.class, () -> map.clone());
     }
 
-    @Test
-    public void MutableMapIterable_asSynchronized()
-    {
-        OrderedHashMap<String, Integer> map = new OrderedHashMap<>();
-        map.put("A", 1);
-        assertThrows(UnsupportedOperationException.class, () -> map.asSynchronized());
-    }
-
     @Override
     public <K, V> MutableOrderedMap<K, V> newWithKeysValues(Object... elements)
     {

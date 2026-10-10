@@ -411,4 +411,7 @@ public interface MutableOrderedMap<K, V> extends OrderedMap<K, V>, MutableMapIte
 
     @Override
     MutableOrderedMap<K, V> asUnmodifiable();
+
+    @Override
+    MutableOrderedMap<K, V> asSynchronized();
 }
