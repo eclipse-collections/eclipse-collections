@@ -684,7 +684,10 @@ public final class SynchronizedStack<T> implements MutableStack<T>, Serializable
     @Override
     public T getLast()
     {
-        return this.delegate.getLast();
+        synchronized (this.lock)
+        {
+            return this.delegate.getLast();
+        }
     }
 
     @Override
