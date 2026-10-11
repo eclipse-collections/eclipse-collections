@@ -35,6 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -151,6 +152,11 @@ public abstract class AbstractMutableMultimapTestCase extends AbstractMultimapTe
 
         expected = expected.withKeyValue(2, "Z").withKeyValue(2, "K").withKeyValue(2, "Y");
         assertEquals(expected, multimap);
+
+        MutableMultimap<Integer, String> fluent = this.newMultimap();
+        assertSame(fluent, fluent.withKeyMultiValues(1, "A"));
+        assertSame(fluent, fluent.withKeyMultiValues(1));
+        assertSame(fluent, fluent.withKeyValue(2, "B"));
     }
 
     @Test

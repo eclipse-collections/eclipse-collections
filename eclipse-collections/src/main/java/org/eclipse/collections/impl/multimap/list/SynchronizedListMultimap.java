@@ -131,11 +131,22 @@ public class SynchronizedListMultimap<K, V>
     }
 
     @Override
+    public MutableListMultimap<K, V> withKeyValue(K key, V value)
+    {
+        synchronized (this.getLock())
+        {
+            this.getDelegate().withKeyValue(key, value);
+            return this;
+        }
+    }
+
+    @Override
     public MutableListMultimap<K, V> withKeyMultiValues(K key, V... values)
     {
         synchronized (this.getLock())
         {
-            return this.getDelegate().withKeyMultiValues(key, values);
+            this.getDelegate().withKeyMultiValues(key, values);
+            return this;
         }
     }
 

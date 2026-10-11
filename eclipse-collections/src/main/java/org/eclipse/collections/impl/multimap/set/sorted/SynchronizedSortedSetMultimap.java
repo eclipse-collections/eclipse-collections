@@ -70,11 +70,22 @@ public class SynchronizedSortedSetMultimap<K, V>
     }
 
     @Override
+    public MutableSortedSetMultimap<K, V> withKeyValue(K key, V value)
+    {
+        synchronized (this.getLock())
+        {
+            this.getDelegate().withKeyValue(key, value);
+            return this;
+        }
+    }
+
+    @Override
     public MutableSortedSetMultimap<K, V> withKeyMultiValues(K key, V... values)
     {
         synchronized (this.getLock())
         {
-            return this.getDelegate().withKeyMultiValues(key, values);
+            this.getDelegate().withKeyMultiValues(key, values);
+            return this;
         }
     }
 
