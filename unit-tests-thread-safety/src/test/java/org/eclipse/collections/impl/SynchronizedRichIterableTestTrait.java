@@ -46,6 +46,12 @@ public interface SynchronizedRichIterableTestTrait
     }
 
     @Test
+    default void getLast_synchronized()
+    {
+        this.assertSynchronized(() -> this.getClassUnderTest().getLast());
+    }
+
+    @Test
     default void contains_synchronized()
     {
         this.assertSynchronized(() -> this.getClassUnderTest().contains(null));
