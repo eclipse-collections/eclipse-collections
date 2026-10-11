@@ -27,15 +27,12 @@ import org.eclipse.collections.api.RichIterable;
 import org.eclipse.collections.api.block.predicate.Predicate;
 import org.eclipse.collections.api.block.procedure.Procedure2;
 import org.eclipse.collections.api.factory.SortedMaps;
-import org.eclipse.collections.api.factory.SortedSets;
 import org.eclipse.collections.api.map.ImmutableMap;
 import org.eclipse.collections.api.map.sorted.ImmutableSortedMap;
 import org.eclipse.collections.api.map.sorted.MutableSortedMap;
 import org.eclipse.collections.api.partition.list.PartitionImmutableList;
 import org.eclipse.collections.api.partition.list.PartitionMutableList;
-import org.eclipse.collections.api.set.sorted.MutableSortedSet;
 import org.eclipse.collections.api.tuple.Pair;
-import org.eclipse.collections.impl.block.factory.Comparators;
 import org.eclipse.collections.impl.block.factory.Predicates2;
 import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.partition.list.PartitionFastList;
@@ -249,13 +246,7 @@ public class ImmutableTreeMap<K, V>
     @Override
     public Set<Entry<K, V>> entrySet()
     {
-        int length = this.keys.length;
-        MutableSortedSet<Entry<K, V>> entrySet = SortedSets.mutable.with(new EntryComparator<>(this.comparator));
-        for (int index = 0; index < length; index++)
-        {
-            entrySet.add(ImmutableEntry.of(this.keys[index], this.values[index]));
-        }
-        return entrySet.toImmutable().castToSortedSet();
+        return new ImmutableSortedMapEntrySet();
     }
 
     protected Object writeReplace()
@@ -373,29 +364,6 @@ public class ImmutableTreeMap<K, V>
         return result.toImmutable();
     }
 
-    private static final class EntryComparator<K, V> implements Comparator<Entry<K, V>>
-    {
-        private final Comparator<? super K> comparator;
-
-        private EntryComparator(Comparator<? super K> comparator)
-        {
-            if (comparator == null)
-            {
-                this.comparator = Comparators.naturalOrder();
-            }
-            else
-            {
-                this.comparator = comparator;
-            }
-        }
-
-        @Override
-        public int compare(Entry<K, V> o1, Entry<K, V> o2)
-        {
-            return this.comparator.compare(o1.getKey(), o2.getKey());
-        }
-    }
-
     protected class ImmutableSortedMapKeySet extends AbstractSet<K> implements Serializable
     {
         private static final long serialVersionUID = 1L;
@@ -488,6 +456,98 @@ public class ImmutableTreeMap<K, V>
         protected Object writeReplace()
         {
             return TreeSortedSet.newSetWith(ImmutableTreeMap.this.comparator, ImmutableTreeMap.this.keys).toImmutable();
+        }
+    }
+
+    protected class ImmutableSortedMapEntrySet extends AbstractSet<Entry<K, V>>
+    {
+        @Override
+        public boolean contains(Object o)
+        {
+            if (!(o instanceof Entry))
+            {
+                return false;
+            }
+            Entry<?, ?> entry = (Entry<?, ?>) o;
+            int index = Arrays.binarySearch(ImmutableTreeMap.this.keys, (K) entry.getKey(), ImmutableTreeMap.this.comparator);
+            return index >= 0 && Objects.equals(ImmutableTreeMap.this.values[index], entry.getValue());
+        }
+
+        @Override
+        public int size()
+        {
+            return ImmutableTreeMap.this.keys.length;
+        }
+
+        @Override
+        public Iterator<Entry<K, V>> iterator()
+        {
+            return new ImmutableSortedMapEntryIterator();
+        }
+
+        @Override
+        public boolean add(Entry<K, V> entry)
+        {
+            throw new UnsupportedOperationException("Cannot call add() on " + this.getClass().getSimpleName());
+        }
+
+        @Override
+        public boolean addAll(Collection<? extends Entry<K, V>> collection)
+        {
+            throw new UnsupportedOperationException("Cannot call addAll() on " + this.getClass().getSimpleName());
+        }
+
+        @Override
+        public boolean remove(Object entry)
+        {
+            throw new UnsupportedOperationException("Cannot call remove() on " + this.getClass().getSimpleName());
+        }
+
+        @Override
+        public boolean removeAll(Collection<?> collection)
+        {
+            throw new UnsupportedOperationException("Cannot call removeAll() on " + this.getClass().getSimpleName());
+        }
+
+        @Override
+        public void clear()
+        {
+            throw new UnsupportedOperationException("Cannot call clear() on " + this.getClass().getSimpleName());
+        }
+
+        @Override
+        public boolean retainAll(Collection<?> collection)
+        {
+            throw new UnsupportedOperationException("Cannot call retainAll() on " + this.getClass().getSimpleName());
+        }
+    }
+
+    protected class ImmutableSortedMapEntryIterator implements Iterator<Entry<K, V>>
+    {
+        private int index;
+
+        @Override
+        public boolean hasNext()
+        {
+            return this.index < ImmutableTreeMap.this.keys.length;
+        }
+
+        @Override
+        public Entry<K, V> next()
+        {
+            if (!this.hasNext())
+            {
+                throw new NoSuchElementException();
+            }
+            Entry<K, V> entry = ImmutableEntry.of(ImmutableTreeMap.this.keys[this.index], ImmutableTreeMap.this.values[this.index]);
+            this.index++;
+            return entry;
+        }
+
+        @Override
+        public void remove()
+        {
+            throw new UnsupportedOperationException("Cannot call remove() on " + this.getClass().getSimpleName());
         }
     }
 }
