@@ -122,11 +122,22 @@ public abstract class AbstractSynchronizedMultimap<K, V> implements MutableMulti
     }
 
     @Override
+    public MutableMultimap<K, V> withKeyValue(K key, V value)
+    {
+        synchronized (this.lock)
+        {
+            this.getDelegate().withKeyValue(key, value);
+            return this;
+        }
+    }
+
+    @Override
     public MutableMultimap<K, V> withKeyMultiValues(K key, V... values)
     {
         synchronized (this.lock)
         {
-            return this.getDelegate().withKeyMultiValues(key, values);
+            this.getDelegate().withKeyMultiValues(key, values);
+            return this;
         }
     }
 
