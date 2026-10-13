@@ -10,10 +10,6 @@
 
 package org.eclipse.collections.test.map.mutable.ordered;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,6 +23,7 @@ import java.util.Set;
 import org.eclipse.collections.api.map.MapIterable;
 import org.eclipse.collections.api.map.MutableOrderedMap;
 import org.eclipse.collections.impl.map.ordered.mutable.OrderedHashMap;
+import org.eclipse.collections.impl.test.SerializeTestHelper;
 import org.eclipse.collections.test.CollisionsTestCase;
 import org.eclipse.collections.test.map.MapKeySetTestCase;
 import org.eclipse.collections.test.map.MapValuesCollectionTestCase;
@@ -183,6 +180,152 @@ public class OrderedHashMapTest implements MutableOrderedMapTestCase
         {
             assertTrue(key > prev);
             prev = key;
+        }
+
+        // A map created with the no-argument constructor holds no arrays until its first put, and every operation works on it.
+        {
+            OrderedHashMap<Integer, Integer> defaultMap = new OrderedHashMap<>();
+            assertNull(getField(defaultMap, "indicesHashTable"));
+            assertNull(getField(defaultMap, "orderedKeyValues"));
+            defaultMap.clear();
+            assertNull(getField(defaultMap, "indicesHashTable"));
+            assertNull(defaultMap.get(1));
+            assertFalse(defaultMap.containsKey(1));
+            assertFalse(defaultMap.containsValue(1));
+            assertNull(defaultMap.removeKey(1));
+            assertNull(defaultMap.remove(1));
+            assertFalse(defaultMap.removeIf((key, value) -> true));
+            assertNull(defaultMap.getIfAbsent(1, () -> null));
+            assertEquals(0, defaultMap.size());
+            assertTrue(defaultMap.isEmpty());
+            assertTrue(defaultMap.keySet().isEmpty());
+            assertTrue(defaultMap.values().isEmpty());
+            assertTrue(defaultMap.entrySet().isEmpty());
+            assertFalse(defaultMap.iterator().hasNext());
+            assertFalse(defaultMap.keySet().iterator().hasNext());
+            assertFalse(defaultMap.entrySet().iterator().hasNext());
+            assertEquals("{}", defaultMap.toString());
+            assertEquals(0, defaultMap.hashCode());
+            assertEquals(new OrderedHashMap<>(), defaultMap);
+            assertEquals(defaultMap, new LinkedHashMap<>());
+            assertEquals(List.of(), new ArrayList<>(defaultMap.keySet()));
+            defaultMap.forEachKeyValue((key, value) -> fail());
+            defaultMap.forEachKey(key -> fail());
+            defaultMap.forEachValue(value -> fail());
+            assertNull(defaultMap.getFirst());
+            assertNull(defaultMap.getLast());
+            assertNull(getField(defaultMap, "indicesHashTable"));
+
+            defaultMap.put(1, 1);
+            assertEquals(8, getIndicesHashTableLength(defaultMap));
+            assertEquals(10, getOrderedKeyValuesLength(defaultMap));
+            assertEquals(5, getOrderedKeyValueCapacity(defaultMap));
+
+            OrderedHashMap<Integer, Integer> map = new OrderedHashMap<>(16);
+
+            assertEquals(32, getIndicesHashTableLength(map));
+            assertEquals(42, getOrderedKeyValuesLength(map));
+            assertEquals(21, getOrderedKeyValueCapacity(map));
+        }
+
+        // Growth: the sixth put into a default map exceeds its usable capacity of 5 and doubles the tables.
+        {
+            OrderedHashMap<Integer, Integer> map = new OrderedHashMap<>();
+            for (int i = 0; i < 5; i++)
+            {
+                map.put(i, i);
+            }
+
+            assertEquals(8, getIndicesHashTableLength(map));
+            assertEquals(10, getOrderedKeyValuesLength(map));
+            assertEquals(5, getIndicesHashTableOccupied(map));
+            assertEquals(5, getOrderedKeyValuesOccupied(map));
+
+            map.put(5, 5);
+
+            assertEquals(16, getIndicesHashTableLength(map));
+            assertEquals(20, getOrderedKeyValuesLength(map));
+            assertEquals(6, getIndicesHashTableOccupied(map));
+            assertEquals(6, getOrderedKeyValuesOccupied(map));
+        }
+
+        // Compaction: index-table tombstones are cleared without growing.
+        {
+            OrderedHashMap<Integer, Integer> map = new OrderedHashMap<>(10);
+            for (int i = 0; i < 10; i++)
+            {
+                map.put(i, i);
+            }
+            for (int i = 9; i >= 5; i--)
+            {
+                map.removeKey(i);
+            }
+
+            assertEquals(16, getIndicesHashTableLength(map));
+            assertEquals(10, getIndicesHashTableOccupied(map));
+            assertEquals(5, getOrderedKeyValuesOccupied(map));
+            assertEquals(5, map.size());
+
+            map.put(10, 10);
+
+            assertEquals(16, getIndicesHashTableLength(map));
+            assertEquals(20, getOrderedKeyValuesLength(map));
+            assertEquals(6, getIndicesHashTableOccupied(map));
+            assertEquals(6, getOrderedKeyValuesOccupied(map));
+            assertEquals(6, map.size());
+        }
+
+        // Compaction: dense-storage tombstones are cleared without growing.
+        {
+            OrderedHashMap<Integer, Integer> map = new OrderedHashMap<>();
+            map.put(0, 0);
+            map.put(1, 1);
+
+            while (getOrderedKeyValuesOccupied(map) < getOrderedKeyValueCapacity(map))
+            {
+                map.removeKey(0);
+                map.put(0, 0);
+                if (getOrderedKeyValuesOccupied(map) < getOrderedKeyValueCapacity(map))
+                {
+                    map.removeKey(1);
+                    map.put(1, 1);
+                }
+            }
+
+            assertEquals(8, getIndicesHashTableLength(map));
+            assertEquals(10, getOrderedKeyValuesLength(map));
+            assertEquals(5, getOrderedKeyValuesOccupied(map));
+            assertEquals(2, map.size());
+
+            map.removeKey(1);
+            map.put(1, 1);
+
+            assertEquals(8, getIndicesHashTableLength(map));
+            assertEquals(10, getOrderedKeyValuesLength(map));
+            assertEquals(2, getIndicesHashTableOccupied(map));
+            assertEquals(2, getOrderedKeyValuesOccupied(map));
+            assertEquals(2, map.size());
+        }
+
+        // Delete-heavy churn reuses the same capacity instead of growing.
+        {
+            OrderedHashMap<String, Integer> map = new OrderedHashMap<>();
+            map.put("A", 1);
+            map.put("B", 2);
+
+            for (int i = 0; i < 10_000; i++)
+            {
+                assertEquals(Integer.valueOf(1), map.removeKey("A"));
+                assertNull(map.put("A", 1));
+                assertEquals(Integer.valueOf(2), map.removeKey("B"));
+                assertNull(map.put("B", 2));
+            }
+
+            assertEquals(8, getIndicesHashTableLength(map));
+            assertEquals(10, getOrderedKeyValuesLength(map));
+            assertEquals(2, getIndicesHashTableOccupied(map));
+            assertEquals(2, getOrderedKeyValuesOccupied(map));
+            assertEquals(List.of("A", "B"), new ArrayList<>(map.keySet()));
         }
     }
 
@@ -418,264 +561,30 @@ public class OrderedHashMapTest implements MutableOrderedMapTestCase
         assertTrue(fromEmpty.isEmpty());
     }
 
+    @Override
     @Test
-    public void OrderedHashMap_usesTwoThirdsUsableEntryCapacity()
+    public void Object_equalsAndHashCode()
     {
-        OrderedHashMap<Integer, Integer> defaultMap = new OrderedHashMap<>();
-        assertNull(getField(defaultMap, "indicesHashTable"));
-        assertNull(getField(defaultMap, "orderedKeyValues"));
-        defaultMap.clear();
-        assertNull(getField(defaultMap, "indicesHashTable"));
-        assertNull(defaultMap.get(1));
-        assertFalse(defaultMap.containsKey(1));
-        assertFalse(defaultMap.containsValue(1));
-        assertNull(defaultMap.removeKey(1));
-        assertNull(defaultMap.remove(1));
-        assertFalse(defaultMap.removeIf((key, value) -> true));
-        assertNull(defaultMap.getIfAbsent(1, () -> null));
-        assertEquals(0, defaultMap.size());
-        assertTrue(defaultMap.isEmpty());
-        assertTrue(defaultMap.keySet().isEmpty());
-        assertTrue(defaultMap.values().isEmpty());
-        assertTrue(defaultMap.entrySet().isEmpty());
-        assertFalse(defaultMap.iterator().hasNext());
-        assertFalse(defaultMap.keySet().iterator().hasNext());
-        assertFalse(defaultMap.entrySet().iterator().hasNext());
-        assertEquals("{}", defaultMap.toString());
-        assertEquals(0, defaultMap.hashCode());
-        assertEquals(new OrderedHashMap<>(), defaultMap);
-        assertEquals(defaultMap, new LinkedHashMap<>());
-        assertEquals(List.of(), new ArrayList<>(defaultMap.keySet()));
-        defaultMap.forEachKeyValue((key, value) -> fail());
-        defaultMap.forEachKey(key -> fail());
-        defaultMap.forEachValue(value -> fail());
-        assertNull(defaultMap.getFirst());
-        assertNull(defaultMap.getLast());
-        assertNull(getField(defaultMap, "indicesHashTable"));
+        MutableOrderedMapTestCase.super.Object_equalsAndHashCode();
 
-        defaultMap.put(1, 1);
-        assertEquals(8, getIndicesHashTableLength(defaultMap));
-        assertEquals(10, getOrderedKeyValuesLength(defaultMap));
-        assertEquals(5, getOrderedKeyValueCapacity(defaultMap));
-
-        OrderedHashMap<Integer, Integer> map = new OrderedHashMap<>(16);
-
-        assertEquals(32, getIndicesHashTableLength(map));
-        assertEquals(42, getOrderedKeyValuesLength(map));
-        assertEquals(21, getOrderedKeyValueCapacity(map));
-    }
-
-    @Test
-    public void OrderedHashMap_growsWhenLiveEntriesExhaustUsableCapacity()
-    {
-        OrderedHashMap<Integer, Integer> map = new OrderedHashMap<>();
-        for (int i = 0; i < 5; i++)
-        {
-            map.put(i, i);
-        }
-
-        assertEquals(8, getIndicesHashTableLength(map));
-        assertEquals(10, getOrderedKeyValuesLength(map));
-        assertEquals(5, getIndicesHashTableOccupied(map));
-        assertEquals(5, getOrderedKeyValuesOccupied(map));
-
-        map.put(5, 5);
-
-        assertEquals(16, getIndicesHashTableLength(map));
-        assertEquals(20, getOrderedKeyValuesLength(map));
-        assertEquals(6, getIndicesHashTableOccupied(map));
-        assertEquals(6, getOrderedKeyValuesOccupied(map));
-    }
-
-    @Test
-    public void OrderedHashMap_compactsHashTableTombstonesWithoutGrowing()
-    {
-        OrderedHashMap<Integer, Integer> map = new OrderedHashMap<>(10);
-        for (int i = 0; i < 10; i++)
-        {
-            map.put(i, i);
-        }
-        for (int i = 9; i >= 5; i--)
-        {
-            map.removeKey(i);
-        }
-
-        assertEquals(16, getIndicesHashTableLength(map));
-        assertEquals(10, getIndicesHashTableOccupied(map));
-        assertEquals(5, getOrderedKeyValuesOccupied(map));
-        assertEquals(5, map.size());
-
-        map.put(10, 10);
-
-        assertEquals(16, getIndicesHashTableLength(map));
-        assertEquals(20, getOrderedKeyValuesLength(map));
-        assertEquals(6, getIndicesHashTableOccupied(map));
-        assertEquals(6, getOrderedKeyValuesOccupied(map));
-        assertEquals(6, map.size());
-    }
-
-    @Test
-    public void OrderedHashMap_compactsOrderedStorageTombstonesWithoutGrowing()
-    {
-        OrderedHashMap<Integer, Integer> map = new OrderedHashMap<>();
-        map.put(0, 0);
-        map.put(1, 1);
-
-        while (getOrderedKeyValuesOccupied(map) < getOrderedKeyValueCapacity(map))
-        {
-            map.removeKey(0);
-            map.put(0, 0);
-            if (getOrderedKeyValuesOccupied(map) < getOrderedKeyValueCapacity(map))
-            {
-                map.removeKey(1);
-                map.put(1, 1);
-            }
-        }
-
-        assertEquals(8, getIndicesHashTableLength(map));
-        assertEquals(10, getOrderedKeyValuesLength(map));
-        assertEquals(5, getOrderedKeyValuesOccupied(map));
-        assertEquals(2, map.size());
-
-        map.removeKey(1);
-        map.put(1, 1);
-
-        assertEquals(8, getIndicesHashTableLength(map));
-        assertEquals(10, getOrderedKeyValuesLength(map));
-        assertEquals(2, getIndicesHashTableOccupied(map));
-        assertEquals(2, getOrderedKeyValuesOccupied(map));
-        assertEquals(2, map.size());
-    }
-
-    @Test
-    public void OrderedHashMap_deleteHeavyChurnDoesNotGrowUnbounded()
-    {
-        OrderedHashMap<String, Integer> map = new OrderedHashMap<>();
-        map.put("A", 1);
-        map.put("B", 2);
-
-        for (int i = 0; i < 10_000; i++)
-        {
-            assertEquals(Integer.valueOf(1), map.removeKey("A"));
-            assertNull(map.put("A", 1));
-            assertEquals(Integer.valueOf(2), map.removeKey("B"));
-            assertNull(map.put("B", 2));
-        }
-
-        assertEquals(8, getIndicesHashTableLength(map));
-        assertEquals(10, getOrderedKeyValuesLength(map));
-        assertEquals(2, getIndicesHashTableOccupied(map));
-        assertEquals(2, getOrderedKeyValuesOccupied(map));
-        assertEquals(List.of("A", "B"), new ArrayList<>(map.keySet()));
-    }
-
-    @Test
-    public void OrderedHashMap_newMap()
-    {
-        OrderedHashMap<String, Integer> map = OrderedHashMap.newMap();
-        assertEquals(0, map.size());
-        assertEquals(List.of(), new ArrayList<>(map.keySet()));
-    }
-
-    @Test
-    public void OrderedHashMap_newWithKeysValues()
-    {
-        OrderedHashMap<String, Integer> one = OrderedHashMap.newWithKeysValues("A", 1);
-        assertEquals(1, one.size());
-        assertEquals(List.of("A"), new ArrayList<>(one.keySet()));
-        assertEquals(List.of(1), new ArrayList<>(one.values()));
-
-        OrderedHashMap<String, Integer> two = OrderedHashMap.newWithKeysValues("A", 1, "B", 2);
-        assertEquals(2, two.size());
-        assertEquals(List.of("A", "B"), new ArrayList<>(two.keySet()));
-        assertEquals(List.of(1, 2), new ArrayList<>(two.values()));
-
-        OrderedHashMap<String, Integer> three = OrderedHashMap.newWithKeysValues("A", 1, "B", 2, "C", 3);
-        assertEquals(3, three.size());
-        assertEquals(List.of("A", "B", "C"), new ArrayList<>(three.keySet()));
-        assertEquals(List.of(1, 2, 3), new ArrayList<>(three.values()));
-
-        OrderedHashMap<String, Integer> four = OrderedHashMap.newWithKeysValues("A", 1, "B", 2, "C", 3, "D", 4);
-        assertEquals(4, four.size());
-        assertEquals(List.of("A", "B", "C", "D"), new ArrayList<>(four.keySet()));
-        assertEquals(List.of(1, 2, 3, 4), new ArrayList<>(four.values()));
-    }
-
-    @Test
-    public void OrderedHashMap_serialization() throws Exception
-    {
-        OrderedHashMap<String, Integer> map = new OrderedHashMap<>();
-        map.put("A", 1);
-        map.put("B", 2);
-        map.put("C", 3);
-
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ObjectOutputStream oos = new ObjectOutputStream(baos);
-        oos.writeObject(map);
-        oos.close();
-
-        ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(baos.toByteArray()));
-        @SuppressWarnings("unchecked")
-        OrderedHashMap<String, Integer> deserialized = (OrderedHashMap<String, Integer>) ois.readObject();
-
+        // Serialization preserves insertion order, including for an empty map.
+        OrderedHashMap<String, Integer> map = OrderedHashMap.newWithKeysValues("A", 1, "B", 2, "C", 3);
+        OrderedHashMap<String, Integer> deserialized = SerializeTestHelper.serializeDeserialize(map);
         assertEquals(map, deserialized);
         assertEquals(List.of("A", "B", "C"), new ArrayList<>(deserialized.keySet()));
         assertEquals(List.of(1, 2, 3), new ArrayList<>(deserialized.values()));
-        assertEquals(
-                List.of(Map.entry("A", 1), Map.entry("B", 2), Map.entry("C", 3)),
-                new ArrayList<>(deserialized.entrySet()));
+        assertEquals(List.of(Map.entry("A", 1), Map.entry("B", 2), Map.entry("C", 3)), new ArrayList<>(deserialized.entrySet()));
+        assertTrue(SerializeTestHelper.serializeDeserialize(new OrderedHashMap<>()).isEmpty());
 
-        // Empty map
-        OrderedHashMap<String, Integer> emptyMap = new OrderedHashMap<>();
-
-        ByteArrayOutputStream emptyBaos = new ByteArrayOutputStream();
-        ObjectOutputStream emptyOos = new ObjectOutputStream(emptyBaos);
-        emptyOos.writeObject(emptyMap);
-        emptyOos.close();
-
-        ObjectInputStream emptyOis = new ObjectInputStream(new ByteArrayInputStream(emptyBaos.toByteArray()));
-        @SuppressWarnings("unchecked")
-        OrderedHashMap<String, Integer> emptyDeserialized = (OrderedHashMap<String, Integer>) emptyOis.readObject();
-
-        assertTrue(emptyDeserialized.isEmpty());
+        // The entrySet view and its entries serialize too.
+        Set<Map.Entry<String, Integer>> entrySet = SerializeTestHelper.serializeDeserialize(map.entrySet());
+        assertEquals(map.entrySet(), entrySet);
+        assertEquals(List.of(Map.entry("A", 1), Map.entry("B", 2), Map.entry("C", 3)), new ArrayList<>(entrySet));
+        assertEquals(Map.entry("A", 1), SerializeTestHelper.serializeDeserialize(map.entrySet().iterator().next()));
     }
 
     @Test
-    public void OrderedHashMap_entrySet_serialization() throws Exception
-    {
-        OrderedHashMap<String, Integer> map = new OrderedHashMap<>();
-        map.put("A", 1);
-        map.put("B", 2);
-        map.put("C", 3);
-
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ObjectOutputStream oos = new ObjectOutputStream(baos);
-        oos.writeObject(map.entrySet());
-        oos.close();
-
-        ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(baos.toByteArray()));
-        @SuppressWarnings("unchecked")
-        Set<Map.Entry<String, Integer>> deserialized = (Set<Map.Entry<String, Integer>>) ois.readObject();
-
-        assertEquals(map.entrySet(), deserialized);
-        assertEquals(
-                List.of(Map.entry("A", 1), Map.entry("B", 2), Map.entry("C", 3)),
-                new ArrayList<>(deserialized));
-
-        ByteArrayOutputStream entryBaos = new ByteArrayOutputStream();
-        ObjectOutputStream entryOos = new ObjectOutputStream(entryBaos);
-        entryOos.writeObject(map.entrySet().iterator().next());
-        entryOos.close();
-
-        ObjectInputStream entryOis = new ObjectInputStream(new ByteArrayInputStream(entryBaos.toByteArray()));
-        @SuppressWarnings("unchecked")
-        Map.Entry<String, Integer> deserializedEntry = (Map.Entry<String, Integer>) entryOis.readObject();
-
-        assertEquals(Map.entry("A", 1), deserializedEntry);
-    }
-
-    @Test
-    public void OrderedHashMap_clone()
+    public void Object_clone()
     {
         OrderedHashMap<String, Integer> map = new OrderedHashMap<>();
         map.put("A", 1);
@@ -683,7 +592,7 @@ public class OrderedHashMapTest implements MutableOrderedMapTestCase
     }
 
     @Test
-    public void OrderedHashMap_asSynchronized()
+    public void MutableMapIterable_asSynchronized()
     {
         OrderedHashMap<String, Integer> map = new OrderedHashMap<>();
         map.put("A", 1);
@@ -698,12 +607,27 @@ public class OrderedHashMapTest implements MutableOrderedMapTestCase
             fail(String.valueOf(elements.length));
         }
 
-        MutableOrderedMap<K, V> result = new OrderedHashMap<>();
-        for (int i = 0; i < elements.length; i += 2)
+        // Exercise the static factories for the sizes they cover
+        switch (elements.length)
         {
-            assertNull(result.put((K) elements[i], (V) elements[i + 1]));
+            case 0:
+                return OrderedHashMap.newMap();
+            case 2:
+                return OrderedHashMap.newWithKeysValues((K) elements[0], (V) elements[1]);
+            case 4:
+                return OrderedHashMap.newWithKeysValues((K) elements[0], (V) elements[1], (K) elements[2], (V) elements[3]);
+            case 6:
+                return OrderedHashMap.newWithKeysValues((K) elements[0], (V) elements[1], (K) elements[2], (V) elements[3], (K) elements[4], (V) elements[5]);
+            case 8:
+                return OrderedHashMap.newWithKeysValues((K) elements[0], (V) elements[1], (K) elements[2], (V) elements[3], (K) elements[4], (V) elements[5], (K) elements[6], (V) elements[7]);
+            default:
+                MutableOrderedMap<K, V> result = new OrderedHashMap<>();
+                for (int i = 0; i < elements.length; i += 2)
+                {
+                    assertNull(result.put((K) elements[i], (V) elements[i + 1]));
+                }
+                return result;
         }
-        return result;
     }
 
     @Nested
