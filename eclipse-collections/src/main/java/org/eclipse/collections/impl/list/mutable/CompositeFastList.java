@@ -367,6 +367,10 @@ public final class CompositeFastList<E>
         {
             throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + localSize);
         }
+        if (this.lists.isEmpty())
+        {
+            this.addComposited(FastList.newList());
+        }
         int max = 0;
         for (int i = 0; i < this.lists.size(); i++)
         {

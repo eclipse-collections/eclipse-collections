@@ -78,9 +78,12 @@ public class ReversedMutableListTest implements MutableListTestCase
         Verify.assertInstanceOf(FastList.class, this.newWith().newEmpty());
     }
 
+    @Override
     @Test
     public void List_add()
     {
+        MutableListTestCase.super.List_add();
+
         MutableList<Integer> delegate = FastList.newListWith(1, 2, 3);
         MutableList<Integer> reversed = delegate.reversed();
         reversed.add(0, 99);

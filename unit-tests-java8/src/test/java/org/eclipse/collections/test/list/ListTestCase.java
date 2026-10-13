@@ -96,6 +96,37 @@ public interface ListTestCase extends CollectionTestCase
     }
 
     @Test
+    default void List_add()
+    {
+        List<Integer> list = this.newWith(3, 2, 1);
+
+        if (!this.allowsAdd())
+        {
+            assertThrows(UnsupportedOperationException.class, () -> list.add(0, 4));
+            assertIterablesEqual(this.newWith(3, 2, 1), list);
+            return;
+        }
+
+        list.add(0, 4);
+        assertIterablesEqual(this.newWith(4, 3, 2, 1), list);
+        list.add(2, 5);
+        assertIterablesEqual(this.newWith(4, 3, 5, 2, 1), list);
+        list.add(5, 6);
+        assertIterablesEqual(this.newWith(4, 3, 5, 2, 1, 6), list);
+
+        assertThrows(IndexOutOfBoundsException.class, () -> list.add(-1, 7));
+        assertThrows(IndexOutOfBoundsException.class, () -> list.add(7, 7));
+        assertIterablesEqual(this.newWith(4, 3, 5, 2, 1, 6), list);
+
+        // Adding at index 0 of an empty list
+        List<Integer> empty = this.newWith();
+        assertThrows(IndexOutOfBoundsException.class, () -> empty.add(-1, 1));
+        assertThrows(IndexOutOfBoundsException.class, () -> empty.add(1, 1));
+        empty.add(0, 1);
+        assertIterablesEqual(this.newWith(1), empty);
+    }
+
+    @Test
     default void List_subList_subList_remove()
     {
         List<String> list = this.newWith("A", "B", "C", "D");
