@@ -17,6 +17,7 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import org.eclipse.collections.impl.block.factory.Comparators;
+import org.eclipse.collections.test.IterableTestCase.OrderingType;
 import org.eclipse.collections.test.map.MapKeySetTestCase;
 import org.eclipse.collections.test.map.MapValuesCollectionTestCase;
 import org.junit.jupiter.api.Nested;
@@ -39,6 +40,12 @@ public class TreeMapTest implements NavigableMapTestCase
             i--;
         }
         return result;
+    }
+
+    @Override
+    public OrderingType getOrderingType()
+    {
+        return OrderingType.SORTED_REVERSE_NATURAL;
     }
 
     @Override
