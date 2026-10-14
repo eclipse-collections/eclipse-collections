@@ -80,6 +80,16 @@ public class UnifiedMapWithHashingStrategyNoIteratorTest implements MutableMapTe
 
     @Override
     @Test
+    public void MapIterable_keysView_valuesView_keyValuesView()
+    {
+        // TODO: Optimize UnifiedMapWithHashingStrategy.keysView(), valuesView(), and keyValuesView() to avoid delegating to iterator().
+        assertThrows(AssertionError.class, () -> this.<Integer, String>newWithKeysValues(3, "Three").keysView().toBag());
+        assertThrows(AssertionError.class, () -> this.<Integer, String>newWithKeysValues(3, "Three").valuesView().toBag());
+        assertThrows(AssertionError.class, () -> this.<Integer, String>newWithKeysValues(3, "Three").keyValuesView().toBag());
+    }
+
+    @Override
+    @Test
     public void RichIterable_anySatisfy_allSatisfy_noneSatisfy()
     {
         /*

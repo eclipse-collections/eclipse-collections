@@ -282,6 +282,37 @@ public interface RichIterableTestCase extends IterableTestCase
     }
 
     @Test
+    default void InternalIterable_forEachWithIndex()
+    {
+        MutableCollection<Integer> result = this.newMutableForFilter();
+        MutableList<Integer> indices = Lists.mutable.empty();
+        this.newWith(3, 2, 1).forEachWithIndex((each, index) ->
+        {
+            result.add(each);
+            indices.add(index);
+        });
+        assertIterablesEqual(this.newMutableForFilter(3, 2, 1), result);
+        assertEquals(Lists.immutable.with(0, 1, 2), indices);
+
+        this.newWith().forEachWithIndex((each, index) -> fail());
+
+        if (!this.allowsDuplicates())
+        {
+            return;
+        }
+
+        MutableCollection<Integer> result2 = this.newMutableForFilter();
+        MutableList<Integer> indices2 = Lists.mutable.empty();
+        this.newWith(3, 3, 3, 2, 2, 1).forEachWithIndex((each, index) ->
+        {
+            result2.add(each);
+            indices2.add(index);
+        });
+        assertIterablesEqual(this.newMutableForFilter(3, 3, 3, 2, 2, 1), result2);
+        assertEquals(Lists.immutable.with(0, 1, 2, 3, 4, 5), indices2);
+    }
+
+    @Test
     default void RichIterable_size_empty()
     {
         assertEquals(0, this.newWith().size());

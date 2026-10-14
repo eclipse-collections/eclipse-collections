@@ -207,17 +207,6 @@ public class UnmodifiableOrderedHashMapTest
 
     @Override
     @Test
-    public void OrderedIterable_getFirst_getLast_afterMutableOrderedMapMutations()
-    {
-        MutableOrderedMap<String, Integer> map = this.newWithKeysValues("A", 1, "B", 2);
-        assertEquals(Integer.valueOf(1), map.getFirst());
-        assertEquals(Integer.valueOf(2), map.getLast());
-        assertThrows(UnsupportedOperationException.class, () -> map.removeKey("A"));
-        assertThrows(UnsupportedOperationException.class, () -> map.put("C", 3));
-    }
-
-    @Override
-    @Test
     public void Map_merge()
     {
         assertThrows(UnsupportedOperationException.class, () -> this.newWithKeysValues("A", 1).merge("B", 2, (a, b) -> b));
