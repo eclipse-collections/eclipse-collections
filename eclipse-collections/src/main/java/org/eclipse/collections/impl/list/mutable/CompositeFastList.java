@@ -339,7 +339,7 @@ public final class CompositeFastList<E>
 
     private void rangeCheck(int index)
     {
-        if (index >= this.size())
+        if (index >= this.size() || index < 0)
         {
             throw new IndexOutOfBoundsException("No such element " + index + " size: " + this.size());
         }
