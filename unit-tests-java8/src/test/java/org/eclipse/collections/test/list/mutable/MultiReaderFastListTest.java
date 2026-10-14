@@ -24,6 +24,7 @@ import org.eclipse.collections.test.collection.mutable.MultiReaderMutableCollect
 import org.junit.jupiter.api.Test;
 
 import static org.eclipse.collections.test.IterableTestCase.assertIterablesEqual;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -142,5 +143,20 @@ public class MultiReaderFastListTest implements MutableListTestCase, MultiReader
         });
 
         assertIterablesEqual(Lists.immutable.with("A", "B", "C", "D"), list);
+    }
+
+    @Override
+    @Test
+    public void List_listIterator_set()
+    {
+        MultiReaderList<Integer> list = this.newWith(3, 2, 1);
+        assertThrows(UnsupportedOperationException.class, list::listIterator);
+
+        list.withWriteLockAndDelegate(delegate -> {
+            ListIterator<Integer> iterator = delegate.listIterator();
+            assertEquals(Integer.valueOf(3), iterator.next());
+            iterator.set(4);
+        });
+        assertIterablesEqual(this.newWith(4, 2, 1), list);
     }
 }

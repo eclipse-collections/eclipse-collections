@@ -20,8 +20,10 @@ import org.junit.jupiter.api.Test;
 
 import static org.eclipse.collections.test.IterableTestCase.assertIterablesEqual;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public interface ListTestCase extends CollectionTestCase
 {
@@ -96,6 +98,19 @@ public interface ListTestCase extends CollectionTestCase
     }
 
     @Test
+    default void List_listIterator_set()
+    {
+        List<Integer> list = this.newWith(3, 2, 1);
+        ListIterator<Integer> iterator = list.listIterator();
+        assertEquals(Integer.valueOf(3), iterator.next());
+        iterator.set(4);
+        assertEquals(Integer.valueOf(2), iterator.next());
+        assertEquals(Integer.valueOf(1), iterator.next());
+        iterator.set(5);
+        assertIterablesEqual(this.newWith(4, 2, 5), list);
+    }
+
+    @Test
     default void List_add()
     {
         List<Integer> list = this.newWith(3, 2, 1);
@@ -140,14 +155,42 @@ public interface ListTestCase extends CollectionTestCase
 
         assertEquals(Integer.valueOf(4), list.remove(0));
         assertIterablesEqual(this.newWith(3, 2, 1), list);
+        assertEquals(Integer.valueOf(2), list.remove(1));
+        assertIterablesEqual(this.newWith(3, 1), list);
         assertEquals(Integer.valueOf(1), list.remove(list.size() - 1));
-        assertIterablesEqual(this.newWith(3, 2), list);
+        assertIterablesEqual(this.newWith(3), list);
 
         // Out-of-range indexes throw without modifying the list
         assertThrows(IndexOutOfBoundsException.class, () -> list.remove(-1));
-        assertIterablesEqual(this.newWith(3, 2), list);
+        assertIterablesEqual(this.newWith(3), list);
         assertThrows(IndexOutOfBoundsException.class, () -> list.remove(list.size()));
-        assertIterablesEqual(this.newWith(3, 2), list);
+        assertIterablesEqual(this.newWith(3), list);
+    }
+
+    @Test
+    default void List_addAll()
+    {
+        List<Integer> list = this.newWith(3, 2, 1);
+
+        if (!this.allowsAdd())
+        {
+            assertThrows(UnsupportedOperationException.class, () -> list.addAll(1, Lists.mutable.with(8, 9)));
+            assertIterablesEqual(this.newWith(3, 2, 1), list);
+            return;
+        }
+
+        assertTrue(list.addAll(1, Lists.mutable.with(8, 9)));
+        assertIterablesEqual(this.newWith(3, 8, 9, 2, 1), list);
+        assertTrue(list.addAll(0, Lists.mutable.with(7)));
+        assertIterablesEqual(this.newWith(7, 3, 8, 9, 2, 1), list);
+        assertTrue(list.addAll(list.size(), Lists.mutable.with(6)));
+        assertIterablesEqual(this.newWith(7, 3, 8, 9, 2, 1, 6), list);
+        assertFalse(list.addAll(1, Lists.mutable.empty()));
+        assertIterablesEqual(this.newWith(7, 3, 8, 9, 2, 1, 6), list);
+
+        assertThrows(IndexOutOfBoundsException.class, () -> list.addAll(-1, Lists.mutable.with(5)));
+        assertThrows(IndexOutOfBoundsException.class, () -> list.addAll(list.size() + 1, Lists.mutable.with(5)));
+        assertIterablesEqual(this.newWith(7, 3, 8, 9, 2, 1, 6), list);
     }
 
     @Test
