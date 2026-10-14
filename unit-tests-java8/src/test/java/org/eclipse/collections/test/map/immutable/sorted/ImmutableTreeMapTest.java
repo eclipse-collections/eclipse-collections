@@ -11,18 +11,25 @@
 package org.eclipse.collections.test.map.immutable.sorted;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
-import org.eclipse.collections.api.map.sorted.ImmutableSortedMap;
 import org.eclipse.collections.api.map.sorted.MutableSortedMap;
 import org.eclipse.collections.impl.block.factory.Comparators;
+import org.eclipse.collections.impl.map.sorted.immutable.AbstractImmutableSortedMap;
 import org.eclipse.collections.impl.map.sorted.mutable.TreeSortedMap;
+import org.eclipse.collections.impl.tuple.ImmutableEntry;
 import org.eclipse.collections.test.map.UnmodifiableMapKeySetTestCase;
 import org.eclipse.collections.test.map.UnmodifiableMapValuesCollectionTestCase;
 import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 public class ImmutableTreeMapTest implements ImmutableSortedMapIterableTestCase
@@ -30,7 +37,7 @@ public class ImmutableTreeMapTest implements ImmutableSortedMapIterableTestCase
     private static final long CURRENT_TIME_MILLIS = System.currentTimeMillis();
 
     @Override
-    public <T> ImmutableSortedMap<Object, T> newWith(T... elements)
+    public <T> AbstractImmutableSortedMap<Object, T> newWith(T... elements)
     {
         int i = elements.length;
         MutableSortedMap<Object, T> result = new TreeSortedMap<>(Comparators.reverseNaturalOrder());
@@ -39,11 +46,11 @@ public class ImmutableTreeMapTest implements ImmutableSortedMapIterableTestCase
             assertNull(result.put(i, each));
             i--;
         }
-        return result.toImmutable();
+        return (AbstractImmutableSortedMap<Object, T>) result.toImmutable();
     }
 
     @Override
-    public <K, V> ImmutableSortedMap<K, V> newWithKeysValues(Object... elements)
+    public <K, V> AbstractImmutableSortedMap<K, V> newWithKeysValues(Object... elements)
     {
         if (elements.length % 2 != 0)
         {
@@ -55,7 +62,21 @@ public class ImmutableTreeMapTest implements ImmutableSortedMapIterableTestCase
         {
             assertNull(result.put((K) elements[i], (V) elements[i + 1]));
         }
-        return result.toImmutable();
+        return (AbstractImmutableSortedMap<K, V>) result.toImmutable();
+    }
+
+    @Override
+    @Test
+    public void Map_entrySet()
+    {
+        Set<Map.Entry<Integer, String>> entrySet = this.<Integer, String>newWithKeysValues(3, "Three", 2, "Two", 1, "One").entrySet();
+        assertEquals(3, entrySet.size());
+        assertTrue(entrySet.containsAll(List.of(
+                ImmutableEntry.of(1, "One"),
+                ImmutableEntry.of(2, "Two"),
+                ImmutableEntry.of(3, "Three"))));
+        assertFalse(entrySet.contains(ImmutableEntry.of(4, "Four")));
+        assertFalse(entrySet.contains(ImmutableEntry.of(1, "Wrong")));
     }
 
     @Nested
