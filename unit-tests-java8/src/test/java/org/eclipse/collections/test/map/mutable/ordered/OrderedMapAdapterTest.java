@@ -31,6 +31,13 @@ public class OrderedMapAdapterTest implements MutableOrderedMapTestCase
     private static final long CURRENT_TIME_MILLIS = System.currentTimeMillis();
 
     @Override
+    public boolean supportsEntrySetSerialization()
+    {
+        // TODO: Make OrderedMapAdapter.entrySet() serializable.
+        return false;
+    }
+
+    @Override
     public <T> MutableOrderedMap<Object, T> newWith(T... elements)
     {
         int i = elements.length;

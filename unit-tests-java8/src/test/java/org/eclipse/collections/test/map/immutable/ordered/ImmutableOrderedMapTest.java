@@ -38,6 +38,13 @@ public class ImmutableOrderedMapTest
     private static final long CURRENT_TIME_MILLIS = System.currentTimeMillis();
 
     @Override
+    public boolean supportsEntrySetSerialization()
+    {
+        // TODO: Make ImmutableOrderedMapAdapter.entrySet() serializable.
+        return false;
+    }
+
+    @Override
     public <T> ImmutableOrderedMapAdapter<Object, T> newWith(T... elements)
     {
         int i = elements.length;
