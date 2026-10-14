@@ -139,14 +139,14 @@ public class UnmodifiableOrderedHashMapTest
     @Test
     public void Map_keySet_remove()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.newWithKeysValues("A", 1).keySet().remove("A"));
+        UnmodifiableMutableMapIterableTestCase.super.Map_keySet_remove();
     }
 
     @Override
     @Test
     public void Map_values_remove()
     {
-        assertThrows(UnsupportedOperationException.class, () -> this.newWithKeysValues("A", 1).values().remove(1));
+        UnmodifiableMutableMapIterableTestCase.super.Map_values_remove();
     }
 
     @Override

@@ -21,6 +21,8 @@ import java.util.Set;
 import java.util.Spliterator;
 import java.util.function.BiConsumer;
 
+import org.eclipse.collections.api.bag.MutableBag;
+import org.eclipse.collections.api.factory.Bags;
 import org.eclipse.collections.api.factory.Sets;
 import org.eclipse.collections.api.set.MutableSet;
 import org.eclipse.collections.impl.test.Verify;
@@ -205,6 +207,21 @@ public interface MapTestCase
         MutableSet<Integer> actual = Sets.mutable.with();
         map.keySet().forEach(actual::add);
         assertEquals(Sets.immutable.with(3, 2, 1), actual);
+    }
+
+    @Test
+    default void Map_keySet_remove()
+    {
+        Map<Integer, String> map = this.newWithKeysValues(3, "Three", 2, "Two", 1, "One");
+        assertTrue(map.keySet().remove(2));
+        assertIterablesEqual(
+                this.newWithKeysValues(3, "Three", 1, "One"),
+                map);
+
+        assertFalse(map.keySet().remove(4));
+        assertIterablesEqual(
+                this.newWithKeysValues(3, "Three", 1, "One"),
+                map);
     }
 
     @Test
@@ -800,6 +817,34 @@ public interface MapTestCase
             assertTrue(map2.values().contains(null));
             assertFalse(map2.values().spliterator().hasCharacteristics(Spliterator.NONNULL));
         }
+    }
+
+    @Test
+    default void Map_values_forEach()
+    {
+        MutableBag<String> actual = Bags.mutable.empty();
+        this.<Integer, String>newWithKeysValues(3, "Three", 2, "Two", 1, "One").values().forEach(actual::add);
+        assertEquals(Bags.immutable.with("Three", "Two", "One"), actual);
+
+        // values().forEach() visits a repeated value once per key
+        MutableBag<String> actualWithDuplicateValues = Bags.mutable.empty();
+        this.<Integer, String>newWithKeysValues(3, "Three", 2, "Two", 1, "Three").values().forEach(actualWithDuplicateValues::add);
+        assertEquals(Bags.immutable.with("Three", "Two", "Three"), actualWithDuplicateValues);
+    }
+
+    @Test
+    default void Map_values_remove()
+    {
+        Map<Integer, String> map = this.newWithKeysValues(3, "Three", 2, "Two", 1, "One");
+        assertTrue(map.values().remove("Two"));
+        assertIterablesEqual(
+                this.newWithKeysValues(3, "Three", 1, "One"),
+                map);
+
+        assertFalse(map.values().remove("Four"));
+        assertIterablesEqual(
+                this.newWithKeysValues(3, "Three", 1, "One"),
+                map);
     }
 
     class AlwaysEqual
