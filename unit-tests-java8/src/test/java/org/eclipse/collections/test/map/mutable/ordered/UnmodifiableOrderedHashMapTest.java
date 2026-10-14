@@ -10,14 +10,20 @@
 
 package org.eclipse.collections.test.map.mutable.ordered;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Random;
+import java.util.Set;
 
 import org.eclipse.collections.api.map.MutableOrderedMap;
 import org.eclipse.collections.impl.map.ordered.mutable.OrderedHashMap;
 import org.eclipse.collections.impl.map.ordered.mutable.UnmodifiableMutableOrderedMap;
 import org.eclipse.collections.impl.tuple.Tuples;
 import org.eclipse.collections.test.FixedSizeIterableTestCase;
+import org.eclipse.collections.test.map.UnmodifiableMapKeySetTestCase;
+import org.eclipse.collections.test.map.UnmodifiableMapValuesCollectionTestCase;
 import org.eclipse.collections.test.map.mutable.UnmodifiableMutableMapIterableTestCase;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -28,6 +34,8 @@ import static org.junit.jupiter.api.Assertions.fail;
 public class UnmodifiableOrderedHashMapTest
         implements MutableOrderedMapTestCase, FixedSizeIterableTestCase, UnmodifiableMutableMapIterableTestCase
 {
+    private static final long CURRENT_TIME_MILLIS = System.currentTimeMillis();
+
     @Override
     public <T> MutableOrderedMap<Object, T> newWith(T... elements)
     {
@@ -228,5 +236,45 @@ public class UnmodifiableOrderedHashMapTest
     {
         MutableOrderedMap<String, Integer> map = this.newWithKeysValues("A", 1, "B", 2);
         assertEquals(2, map.toImmutable().size());
+    }
+
+    @Nested
+    public class KeySetView implements UnmodifiableMapKeySetTestCase
+    {
+        @Override
+        public OrderingType getOrderingType()
+        {
+            return OrderingType.INSERTION_ORDER;
+        }
+
+        @SafeVarargs
+        @Override
+        public final <T> Set<T> newWith(T... elements)
+        {
+            Random random = new Random(CURRENT_TIME_MILLIS);
+            MutableOrderedMap<T, Object> result = new OrderedHashMap<>();
+            for (T element : elements)
+            {
+                assertNull(result.put(element, random.nextDouble()));
+            }
+            return UnmodifiableMutableOrderedMap.of(result).keySet();
+        }
+    }
+
+    @Nested
+    public class ValuesCollectionView implements UnmodifiableMapValuesCollectionTestCase
+    {
+        @Override
+        public OrderingType getOrderingType()
+        {
+            return OrderingType.INSERTION_ORDER;
+        }
+
+        @SafeVarargs
+        @Override
+        public final <T> Collection<T> newWith(T... elements)
+        {
+            return UnmodifiableOrderedHashMapTest.this.newWith(elements).values();
+        }
     }
 }
