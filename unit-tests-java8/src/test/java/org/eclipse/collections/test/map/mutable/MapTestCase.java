@@ -10,6 +10,7 @@
 
 package org.eclipse.collections.test.map.mutable;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -23,10 +24,12 @@ import java.util.function.BiConsumer;
 
 import org.eclipse.collections.api.bag.MutableBag;
 import org.eclipse.collections.api.factory.Bags;
+import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.factory.Sets;
 import org.eclipse.collections.api.set.MutableSet;
 import org.eclipse.collections.impl.test.Verify;
 import org.eclipse.collections.impl.tuple.ImmutableEntry;
+import org.eclipse.collections.test.OrderingTypeTrait;
 import org.junit.jupiter.api.Test;
 
 import static org.eclipse.collections.impl.test.Verify.assertSize;
@@ -41,7 +44,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-public interface MapTestCase
+public interface MapTestCase extends OrderingTypeTrait
 {
     <T> Map<Object, T> newWith(T... elements);
 
@@ -203,10 +206,16 @@ public interface MapTestCase
     @Test
     default void Map_keySet_forEach()
     {
-        Map<Integer, String> map = this.newWithKeysValues(3, "Three", 2, "Two", 1, "One");
-        MutableSet<Integer> actual = Sets.mutable.with();
-        map.keySet().forEach(actual::add);
-        assertEquals(Sets.immutable.with(3, 2, 1), actual);
+        Map<String, Integer> map = this.newWithKeysValues("A", 1, "B", 2, "C", 3);
+        List<String> keys = new ArrayList<>();
+        map.keySet().forEach(keys::add);
+        switch (this.getOrderingType())
+        {
+            case UNORDERED -> assertEquals(Bags.immutable.with("A", "B", "C"), Bags.immutable.withAll(keys));
+            case INSERTION_ORDER, SORTED_NATURAL -> assertEquals(Lists.immutable.with("A", "B", "C"), keys);
+            case SORTED_REVERSE_NATURAL -> assertEquals(Lists.immutable.with("C", "B", "A"), keys);
+            default -> fail("Unexpected value: " + this.getOrderingType());
+        }
     }
 
     @Test
@@ -222,6 +231,16 @@ public interface MapTestCase
         assertIterablesEqual(
                 this.newWithKeysValues(3, "Three", 1, "One"),
                 map);
+
+        Map<String, Integer> map2 = this.newWithKeysValues("A", 1, "B", 2, "C", 3);
+        map2.keySet().remove("B");
+        switch (this.getOrderingType())
+        {
+            case UNORDERED -> assertEquals(Sets.immutable.with("A", "C"), map2.keySet());
+            case INSERTION_ORDER, SORTED_NATURAL -> Verify.assertIterablesEqual(Lists.immutable.with("A", "C"), map2.keySet());
+            case SORTED_REVERSE_NATURAL -> Verify.assertIterablesEqual(Lists.immutable.with("C", "A"), map2.keySet());
+            default -> fail("Unexpected value: " + this.getOrderingType());
+        }
     }
 
     @Test
@@ -268,10 +287,33 @@ public interface MapTestCase
     @Test
     default void Map_entrySet_forEach()
     {
-        Map<Integer, String> map = this.newWithKeysValues(3, "Three", 2, "Two", 1, "One");
-        MutableSet<String> actual = Sets.mutable.with();
-        map.entrySet().forEach(each -> actual.add(each.getValue()));
-        assertEquals(Sets.immutable.with("Three", "Two", "One"), actual);
+        Map<String, Integer> map = this.newWithKeysValues("A", 1, "B", 2, "C", 3);
+        List<String> keys = new ArrayList<>();
+        List<Integer> values = new ArrayList<>();
+        map.entrySet().forEach(entry ->
+        {
+            keys.add(entry.getKey());
+            values.add(entry.getValue());
+        });
+        switch (this.getOrderingType())
+        {
+            case UNORDERED ->
+            {
+                assertEquals(Bags.immutable.with("A", "B", "C"), Bags.immutable.withAll(keys));
+                assertEquals(Bags.immutable.with(1, 2, 3), Bags.immutable.withAll(values));
+            }
+            case INSERTION_ORDER, SORTED_NATURAL ->
+            {
+                assertEquals(Lists.immutable.with("A", "B", "C"), keys);
+                assertEquals(Lists.immutable.with(1, 2, 3), values);
+            }
+            case SORTED_REVERSE_NATURAL ->
+            {
+                assertEquals(Lists.immutable.with("C", "B", "A"), keys);
+                assertEquals(Lists.immutable.with(3, 2, 1), values);
+            }
+            default -> fail("Unexpected value: " + this.getOrderingType());
+        }
     }
 
     @Test
@@ -300,6 +342,17 @@ public interface MapTestCase
             assertIterablesEqual(
                     this.newWithKeysValues(3, "Three", 1, "One"),
                     map2);
+        }
+
+        Map<String, Integer> map3 = this.newWithKeysValues("A", 1, "B", 2, "C", 3);
+        map3.entrySet().remove(ImmutableEntry.of("B", 2));
+        assertEquals(2, map3.size());
+        switch (this.getOrderingType())
+        {
+            case UNORDERED -> assertEquals(Sets.immutable.with("A", "C"), map3.keySet());
+            case INSERTION_ORDER, SORTED_NATURAL -> Verify.assertIterablesEqual(Lists.immutable.with("A", "C"), map3.keySet());
+            case SORTED_REVERSE_NATURAL -> Verify.assertIterablesEqual(Lists.immutable.with("C", "A"), map3.keySet());
+            default -> fail("Unexpected value: " + this.getOrderingType());
         }
     }
 
@@ -438,6 +491,20 @@ public interface MapTestCase
         map2.putAll(hashMapToAdd);
 
         assertIterablesEqual(expected, map2);
+
+        Map<String, Integer> map3 = this.newWithKeysValues("A", 1, "B", 2);
+        Map<String, Integer> source = new LinkedHashMap<>();
+        source.put("D", 4);
+        source.put("C", 3);
+        map3.putAll(source);
+        switch (this.getOrderingType())
+        {
+            case UNORDERED -> assertEquals(Sets.immutable.with("A", "B", "D", "C"), map3.keySet());
+            case INSERTION_ORDER -> Verify.assertIterablesEqual(Lists.immutable.with("A", "B", "D", "C"), map3.keySet());
+            case SORTED_NATURAL -> Verify.assertIterablesEqual(Lists.immutable.with("A", "B", "C", "D"), map3.keySet());
+            case SORTED_REVERSE_NATURAL -> Verify.assertIterablesEqual(Lists.immutable.with("D", "C", "B", "A"), map3.keySet());
+            default -> fail("Unexpected value: " + this.getOrderingType());
+        }
     }
 
     @Test
@@ -503,6 +570,17 @@ public interface MapTestCase
             });
             assertEquals("Two", value5);
         }
+
+        Map<String, Integer> map2 = this.newWithKeysValues("A", 1, "B", 2, "C", 3);
+        map2.merge("D", 4, Integer::sum);
+        map2.merge("C", 0, (oldValue, newValue) -> null);
+        switch (this.getOrderingType())
+        {
+            case UNORDERED -> assertEquals(Sets.immutable.with("A", "B", "D"), map2.keySet());
+            case INSERTION_ORDER, SORTED_NATURAL -> Verify.assertIterablesEqual(Lists.immutable.with("A", "B", "D"), map2.keySet());
+            case SORTED_REVERSE_NATURAL -> Verify.assertIterablesEqual(Lists.immutable.with("D", "B", "A"), map2.keySet());
+            default -> fail("Unexpected value: " + this.getOrderingType());
+        }
     }
 
     @Test
@@ -549,6 +627,17 @@ public interface MapTestCase
         }));
         assertSame(exception, actualException2);
         assertIterablesEqual(this.newWithKeysValues(1, "1", 2, "2Modified", 4, "4"), map);
+
+        Map<String, Integer> map2 = this.newWithKeysValues("A", 1, "B", 2, "C", 3);
+        map2.compute("D", (key, value) -> 4);
+        map2.compute("B", (key, value) -> null);
+        switch (this.getOrderingType())
+        {
+            case UNORDERED -> assertEquals(Sets.immutable.with("A", "C", "D"), map2.keySet());
+            case INSERTION_ORDER, SORTED_NATURAL -> Verify.assertIterablesEqual(Lists.immutable.with("A", "C", "D"), map2.keySet());
+            case SORTED_REVERSE_NATURAL -> Verify.assertIterablesEqual(Lists.immutable.with("D", "C", "A"), map2.keySet());
+            default -> fail("Unexpected value: " + this.getOrderingType());
+        }
     }
 
     @Test
@@ -822,14 +911,21 @@ public interface MapTestCase
     @Test
     default void Map_values_forEach()
     {
-        MutableBag<String> actual = Bags.mutable.empty();
-        this.<Integer, String>newWithKeysValues(3, "Three", 2, "Two", 1, "One").values().forEach(actual::add);
-        assertEquals(Bags.immutable.with("Three", "Two", "One"), actual);
-
         // values().forEach() visits a repeated value once per key
         MutableBag<String> actualWithDuplicateValues = Bags.mutable.empty();
         this.<Integer, String>newWithKeysValues(3, "Three", 2, "Two", 1, "Three").values().forEach(actualWithDuplicateValues::add);
         assertEquals(Bags.immutable.with("Three", "Two", "Three"), actualWithDuplicateValues);
+
+        Map<String, Integer> map = this.newWithKeysValues("A", 1, "B", 2, "C", 3);
+        List<Integer> values = new ArrayList<>();
+        map.values().forEach(values::add);
+        switch (this.getOrderingType())
+        {
+            case UNORDERED -> assertEquals(Bags.immutable.with(1, 2, 3), Bags.immutable.withAll(values));
+            case INSERTION_ORDER, SORTED_NATURAL -> assertEquals(Lists.immutable.with(1, 2, 3), values);
+            case SORTED_REVERSE_NATURAL -> assertEquals(Lists.immutable.with(3, 2, 1), values);
+            default -> fail("Unexpected value: " + this.getOrderingType());
+        }
     }
 
     @Test
@@ -845,6 +941,16 @@ public interface MapTestCase
         assertIterablesEqual(
                 this.newWithKeysValues(3, "Three", 1, "One"),
                 map);
+
+        Map<String, Integer> map2 = this.newWithKeysValues("A", 1, "B", 2, "C", 3);
+        map2.values().remove(2);
+        switch (this.getOrderingType())
+        {
+            case UNORDERED -> assertEquals(Sets.immutable.with("A", "C"), map2.keySet());
+            case INSERTION_ORDER, SORTED_NATURAL -> Verify.assertIterablesEqual(Lists.immutable.with("A", "C"), map2.keySet());
+            case SORTED_REVERSE_NATURAL -> Verify.assertIterablesEqual(Lists.immutable.with("C", "A"), map2.keySet());
+            default -> fail("Unexpected value: " + this.getOrderingType());
+        }
     }
 
     class AlwaysEqual

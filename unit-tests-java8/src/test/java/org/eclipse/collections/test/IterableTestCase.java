@@ -69,7 +69,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-public interface IterableTestCase
+public interface IterableTestCase extends OrderingTypeTrait
 {
     <T> Iterable<T> newWith(T... elements);
 
@@ -106,11 +106,6 @@ public interface IterableTestCase
         INSERTION_ORDER,
         SORTED_NATURAL,
         SORTED_REVERSE_NATURAL,
-    }
-
-    default OrderingType getOrderingType()
-    {
-        return OrderingType.INSERTION_ORDER;
     }
 
     static void assertIterablesEqual(Object o1, Object o2)
