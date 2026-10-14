@@ -91,7 +91,6 @@ import org.eclipse.collections.api.map.sorted.MutableSortedMap;
 import org.eclipse.collections.api.multimap.MutableMultimap;
 import org.eclipse.collections.api.multimap.list.MutableListMultimap;
 import org.eclipse.collections.api.ordered.OrderedIterable;
-import org.eclipse.collections.api.ordered.ReversibleIterable;
 import org.eclipse.collections.api.partition.list.PartitionMutableList;
 import org.eclipse.collections.api.set.MutableSet;
 import org.eclipse.collections.api.set.sorted.MutableSortedSet;
@@ -1578,7 +1577,7 @@ public class UnmodifiableMutableOrderedMap<K, V>
     }
 
     @Override
-    public <V1> ReversibleIterable<V1> collectWithIndex(ObjectIntToObjectFunction<? super V, ? extends V1> function)
+    public <V1> MutableList<V1> collectWithIndex(ObjectIntToObjectFunction<? super V, ? extends V1> function)
     {
         return this.delegate.collectWithIndex(function);
     }

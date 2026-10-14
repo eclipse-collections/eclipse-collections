@@ -19,6 +19,7 @@ import org.eclipse.collections.api.block.function.primitive.DoubleFunction;
 import org.eclipse.collections.api.block.function.primitive.FloatFunction;
 import org.eclipse.collections.api.block.function.primitive.IntFunction;
 import org.eclipse.collections.api.block.function.primitive.LongFunction;
+import org.eclipse.collections.api.block.function.primitive.ObjectIntToObjectFunction;
 import org.eclipse.collections.api.block.function.primitive.ShortFunction;
 import org.eclipse.collections.api.block.predicate.Predicate;
 import org.eclipse.collections.api.block.predicate.Predicate2;
@@ -138,6 +139,13 @@ public interface OrderedMap<K, V>
 
     @Override
     <VV> ListIterable<VV> collect(Function<? super V, ? extends VV> function);
+
+    @Override
+    default <VV> ListIterable<VV> collectWithIndex(ObjectIntToObjectFunction<? super V, ? extends VV> function)
+    {
+        int[] index = {0};
+        return this.collect(each -> function.valueOf(each, index[0]++));
+    }
 
     @Override
     <P, V1> ListIterable<V1> collectWith(Function2<? super V, ? super P, ? extends V1> function, P parameter);

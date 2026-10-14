@@ -22,6 +22,7 @@ import org.eclipse.collections.api.block.function.primitive.DoubleFunction;
 import org.eclipse.collections.api.block.function.primitive.FloatFunction;
 import org.eclipse.collections.api.block.function.primitive.IntFunction;
 import org.eclipse.collections.api.block.function.primitive.LongFunction;
+import org.eclipse.collections.api.block.function.primitive.ObjectIntToObjectFunction;
 import org.eclipse.collections.api.block.function.primitive.ShortFunction;
 import org.eclipse.collections.api.block.predicate.Predicate;
 import org.eclipse.collections.api.block.predicate.Predicate2;
@@ -160,6 +161,13 @@ public interface ImmutableOrderedMap<K, V> extends OrderedMap<K, V>, ImmutableMa
 
     @Override
     <VV> ImmutableList<VV> collect(Function<? super V, ? extends VV> function);
+
+    @Override
+    default <VV> ImmutableList<VV> collectWithIndex(ObjectIntToObjectFunction<? super V, ? extends VV> function)
+    {
+        int[] index = {0};
+        return this.collect(each -> function.valueOf(each, index[0]++));
+    }
 
     @Override
     <P, V1> ImmutableList<V1> collectWith(Function2<? super V, ? super P, ? extends V1> function, P parameter);
