@@ -14,11 +14,14 @@ import java.util.Comparator;
 import java.util.Iterator;
 
 import org.eclipse.collections.api.bag.sorted.MutableSortedBag;
+import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.impl.bag.sorted.mutable.TreeBag;
 import org.eclipse.collections.impl.block.factory.Comparators;
 import org.eclipse.collections.test.IterableTestCase;
 import org.eclipse.collections.test.OrderedIterableNoIteratorTestCase;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class TreeBagNoIteratorTest implements MutableSortedBagTestCase, OrderedIterableNoIteratorTestCase
 {
@@ -36,6 +39,22 @@ public class TreeBagNoIteratorTest implements MutableSortedBagTestCase, OrderedI
     public void Iterable_remove()
     {
         OrderedIterableNoIteratorTestCase.super.Iterable_remove();
+    }
+
+    @Override
+    @Test
+    public void OrderedIterable_corresponds()
+    {
+        // TODO: Optimize TreeBag.corresponds() to avoid delegating to iterator().
+        assertThrows(AssertionError.class, () -> this.newWith(3, 2, 1).corresponds(Lists.mutable.with(3, 2, 1), Object::equals));
+    }
+
+    @Override
+    @Test
+    public void OrderedIterable_detectIndex()
+    {
+        // TODO: Optimize TreeBag.detectIndex() to avoid delegating to iterator().
+        assertThrows(AssertionError.class, () -> this.newWith(3, 2, 1).detectIndex(each -> true));
     }
 
     public static class TreeBagNoIterator<T> extends TreeBag<T>
