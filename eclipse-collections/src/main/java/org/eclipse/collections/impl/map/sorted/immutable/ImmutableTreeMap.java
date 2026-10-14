@@ -459,8 +459,10 @@ public class ImmutableTreeMap<K, V>
         }
     }
 
-    protected class ImmutableSortedMapEntrySet extends AbstractSet<Entry<K, V>>
+    protected class ImmutableSortedMapEntrySet extends AbstractSet<Entry<K, V>> implements Serializable
     {
+        private static final long serialVersionUID = 1L;
+
         @Override
         public boolean contains(Object o)
         {
