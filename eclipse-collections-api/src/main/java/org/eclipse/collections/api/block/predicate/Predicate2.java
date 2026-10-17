@@ -22,6 +22,13 @@ import java.util.function.BiPredicate;
 public interface Predicate2<T1, T2>
         extends BiPredicate<T1, T2>, Serializable
 {
+    /**
+     * Evaluates this predicate against the two given arguments.
+     *
+     * @param argument1 the first argument to evaluate
+     * @param argument2 the second argument to evaluate
+     * @return {@code true} if the arguments meet the criteria of this predicate, {@code false} otherwise
+     */
     boolean accept(T1 argument1, T2 argument2);
 
     @Override
