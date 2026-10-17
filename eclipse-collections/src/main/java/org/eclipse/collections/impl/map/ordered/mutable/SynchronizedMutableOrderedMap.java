@@ -660,7 +660,7 @@ public class SynchronizedMutableOrderedMap<K, V>
     {
         synchronized (this.lock)
         {
-            return (MutableList<R>) this.getDelegate().collectWithIndex(function);
+            return this.getDelegate().collectWithIndex(function);
         }
     }
 
