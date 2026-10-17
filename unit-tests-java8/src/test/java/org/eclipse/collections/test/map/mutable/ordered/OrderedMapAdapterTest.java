@@ -10,10 +10,16 @@
 
 package org.eclipse.collections.test.map.mutable.ordered;
 
+import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.Random;
+import java.util.Set;
 
 import org.eclipse.collections.api.map.MutableOrderedMap;
 import org.eclipse.collections.impl.map.ordered.mutable.OrderedMapAdapter;
+import org.eclipse.collections.test.map.MapKeySetTestCase;
+import org.eclipse.collections.test.map.MapValuesCollectionTestCase;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -22,6 +28,8 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 public class OrderedMapAdapterTest implements MutableOrderedMapTestCase
 {
+    private static final long CURRENT_TIME_MILLIS = System.currentTimeMillis();
+
     @Override
     public <T> MutableOrderedMap<Object, T> newWith(T... elements)
     {
@@ -81,5 +89,57 @@ public class OrderedMapAdapterTest implements MutableOrderedMapTestCase
     {
         // TODO Support reverseForEach for OrderedMapAdapter (depends on forEach(int, int)).
         assertThrows(UnsupportedOperationException.class, () -> this.newWith(3, 2, 1).reverseForEach(each -> { }));
+    }
+
+    @Nested
+    public class KeySetView implements MapKeySetTestCase
+    {
+        @Override
+        public OrderingType getOrderingType()
+        {
+            return OrderingType.INSERTION_ORDER;
+        }
+
+        @Override
+        public boolean allowsSerialization()
+        {
+            return false;
+        }
+
+        @SafeVarargs
+        @Override
+        public final <T> Set<T> newWith(T... elements)
+        {
+            Random random = new Random(CURRENT_TIME_MILLIS);
+            MutableOrderedMap<T, Object> result = OrderedMapAdapter.adapt(new LinkedHashMap<>());
+            for (T element : elements)
+            {
+                assertNull(result.put(element, random.nextDouble()));
+            }
+            return result.keySet();
+        }
+    }
+
+    @Nested
+    public class ValuesCollectionView implements MapValuesCollectionTestCase
+    {
+        @Override
+        public OrderingType getOrderingType()
+        {
+            return OrderingType.INSERTION_ORDER;
+        }
+
+        @Override
+        public boolean allowsSerialization()
+        {
+            return false;
+        }
+
+        @SafeVarargs
+        @Override
+        public final <T> Collection<T> newWith(T... elements)
+        {
+            return OrderedMapAdapterTest.this.newWith(elements).values();
+        }
     }
 }
