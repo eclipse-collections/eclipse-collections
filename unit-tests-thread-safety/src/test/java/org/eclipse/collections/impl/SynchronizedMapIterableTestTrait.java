@@ -87,6 +87,18 @@ public interface SynchronizedMapIterableTestTrait
     }
 
     @Test
+    default void flipUniqueValues_synchronized()
+    {
+        this.assertSynchronized(() -> this.getClassUnderTest().flipUniqueValues());
+    }
+
+    @Test
+    default void flip_synchronized()
+    {
+        this.assertSynchronized(() -> this.getClassUnderTest().flip());
+    }
+
+    @Test
     default void mapSelect_synchronized()
     {
         this.assertSynchronized(() -> this.getClassUnderTest().select((x, y) -> false));
@@ -111,8 +123,26 @@ public interface SynchronizedMapIterableTestTrait
     }
 
     @Test
+    default void collectKeysUnique_synchronized()
+    {
+        this.assertSynchronized(() -> this.getClassUnderTest().collectKeysUnique((key, value) -> key + value));
+    }
+
+    @Test
     default void mapDetect_synchronized()
     {
         this.assertSynchronized(() -> this.getClassUnderTest().detect((x, y) -> false));
+    }
+
+    @Test
+    default void toImmutable_synchronized()
+    {
+        this.assertSynchronized(() -> this.getClassUnderTest().toImmutable());
+    }
+
+    @Test
+    default void mapAggregateBy_synchronized()
+    {
+        this.assertSynchronized(() -> this.getClassUnderTest().aggregateBy(key -> key, value -> value, () -> "", (aggregate, value) -> aggregate + value));
     }
 }

@@ -408,6 +408,30 @@ public interface SynchronizedRichIterableTestTrait
     }
 
     @Test
+    default void groupByUniqueKey_synchronized()
+    {
+        this.assertSynchronized(() -> this.getClassUnderTest().groupByUniqueKey(x -> x));
+    }
+
+    @Test
+    default void aggregateInPlaceBy_synchronized()
+    {
+        this.assertSynchronized(() -> this.getClassUnderTest().aggregateInPlaceBy(x -> x, StringBuilder::new, StringBuilder::append));
+    }
+
+    @Test
+    default void aggregateBy_synchronized()
+    {
+        this.assertSynchronized(() -> this.getClassUnderTest().aggregateBy(x -> x, () -> "", (aggregate, x) -> aggregate + x));
+    }
+
+    @Test
+    default void reduceBy_synchronized()
+    {
+        this.assertSynchronized(() -> this.getClassUnderTest().reduceBy(x -> x, (left, right) -> left + right));
+    }
+
+    @Test
     default void toString_synchronized()
     {
         this.assertSynchronized(() -> this.getClassUnderTest().toString());

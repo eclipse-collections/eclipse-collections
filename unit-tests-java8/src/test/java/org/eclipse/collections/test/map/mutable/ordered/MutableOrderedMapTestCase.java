@@ -19,6 +19,7 @@ import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.map.ImmutableOrderedMap;
 import org.eclipse.collections.api.map.MutableOrderedMap;
 import org.eclipse.collections.api.partition.ordered.PartitionOrderedIterable;
+import org.eclipse.collections.impl.map.ordered.mutable.SynchronizedMutableOrderedMap;
 import org.eclipse.collections.impl.test.Verify;
 import org.eclipse.collections.impl.tuple.Tuples;
 import org.eclipse.collections.test.MutableOrderedIterableTestCase;
@@ -29,6 +30,7 @@ import org.junit.jupiter.api.Test;
 import static org.eclipse.collections.test.IterableTestCase.assertIterablesEqual;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -587,6 +589,29 @@ public interface MutableOrderedMapTestCase extends OrderedMapIterableTestCase, M
         assertThrows(UnsupportedOperationException.class, () -> unmodifiable.put("D", 4));
         assertThrows(UnsupportedOperationException.class, () -> unmodifiable.removeKey("A"));
         assertThrows(UnsupportedOperationException.class, unmodifiable::clear);
+    }
+
+    @Test
+    default void MutableMapIterable_asSynchronized()
+    {
+        MutableOrderedMap<String, Integer> map = this.newWithKeysValues("A", 1, "B", 2, "C", 3);
+
+        MutableOrderedMap<String, Integer> synchronizedMap = map.asSynchronized();
+        assertInstanceOf(SynchronizedMutableOrderedMap.class, synchronizedMap);
+        assertEquals(map, synchronizedMap);
+        Verify.assertIterablesEqual(Lists.immutable.with("A", "B", "C"), synchronizedMap.keySet());
+        assertEquals(Integer.valueOf(2), synchronizedMap.get("B"));
+
+        if (this.allowsPut())
+        {
+            // The synchronized view writes through to the map
+            synchronizedMap.put("D", 4);
+            Verify.assertIterablesEqual(Lists.immutable.with("A", "B", "C", "D"), map.keySet());
+        }
+        else
+        {
+            assertThrows(UnsupportedOperationException.class, () -> synchronizedMap.put("D", 4));
+        }
     }
 
     @Test

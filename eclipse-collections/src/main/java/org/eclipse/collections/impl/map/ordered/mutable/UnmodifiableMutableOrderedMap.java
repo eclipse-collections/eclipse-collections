@@ -353,9 +353,9 @@ public class UnmodifiableMutableOrderedMap<K, V>
     }
 
     @Override
-    public MutableMapIterable<K, V> asSynchronized()
+    public MutableOrderedMap<K, V> asSynchronized()
     {
-        throw new UnsupportedOperationException(this.getClass().getSimpleName() + ".asSynchronized() not implemented yet");
+        return SynchronizedMutableOrderedMap.of(this);
     }
 
     @Override
