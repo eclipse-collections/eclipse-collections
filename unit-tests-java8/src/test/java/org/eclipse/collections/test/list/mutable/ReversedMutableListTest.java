@@ -93,9 +93,12 @@ public class ReversedMutableListTest implements MutableListTestCase
         assertThrows(IndexOutOfBoundsException.class, () -> reversed.add(reversed.size() + 1, 88));
     }
 
+    @Override
     @Test
     public void List_remove()
     {
+        MutableListTestCase.super.List_remove();
+
         MutableList<Integer> delegate = FastList.newListWith(1, 2, 3);
         MutableList<Integer> reversed = delegate.reversed();
         reversed.remove(0);

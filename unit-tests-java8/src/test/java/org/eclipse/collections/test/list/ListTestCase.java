@@ -127,6 +127,30 @@ public interface ListTestCase extends CollectionTestCase
     }
 
     @Test
+    default void List_remove()
+    {
+        List<Integer> list = this.newWith(4, 3, 2, 1);
+
+        if (!this.allowsRemove())
+        {
+            assertThrows(UnsupportedOperationException.class, () -> list.remove(0));
+            assertIterablesEqual(this.newWith(4, 3, 2, 1), list);
+            return;
+        }
+
+        assertEquals(Integer.valueOf(4), list.remove(0));
+        assertIterablesEqual(this.newWith(3, 2, 1), list);
+        assertEquals(Integer.valueOf(1), list.remove(list.size() - 1));
+        assertIterablesEqual(this.newWith(3, 2), list);
+
+        // Out-of-range indexes throw without modifying the list
+        assertThrows(IndexOutOfBoundsException.class, () -> list.remove(-1));
+        assertIterablesEqual(this.newWith(3, 2), list);
+        assertThrows(IndexOutOfBoundsException.class, () -> list.remove(list.size()));
+        assertIterablesEqual(this.newWith(3, 2), list);
+    }
+
+    @Test
     default void List_subList_subList_remove()
     {
         List<String> list = this.newWith("A", "B", "C", "D");
