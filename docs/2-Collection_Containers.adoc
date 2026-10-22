@@ -1138,6 +1138,28 @@ Primitive stack implementations are similar to JCF *ArrayStack* but optimized fo
 
 Primitive bag implementations are similar to JCF *HashBag*, but both _item_ and _count_ are primitives.
 
+.Primitive Bag Iteration Patterns
+[source,java]
+----
+IntBag intBag = IntBags.mutable.with(1, 2, 2, 3, 3, 3);
+
+// Filter elements using select and reject
+IntBag evens = intBag.select(each -> each % 2 == 0);
+IntBag odds = intBag.reject(each -> each % 2 == 0);
+
+// Transform elements using collect and collectInt
+Bag<String> strings = intBag.collect(each -> "Value: " + each);
+IntBag doubled = intBag.collectInt(each -> each * 2);
+
+// Iterate through elements and their occurrences
+intBag.forEachWithOccurrences((value, count) -> {
+    // process value and count
+});
+
+// Inspect occurrences
+IntBag topTwo = intBag.topOccurrences(2);
+----
+
 === Primitive Maps
 
 There are three types of primitive maps:
