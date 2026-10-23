@@ -24,6 +24,10 @@
   * `MutableList`
   * `RichIterable`
 
+## Tests
+* Upgrade to JUnit 6
+* Added tests and utilities to verify category annotations and javadoc category indexes.
+
 13.0.0
 ====================
 
