@@ -22,7 +22,6 @@ import org.junit.jupiter.api.Test;
 
 import static org.eclipse.collections.test.IterableTestCase.assertIterablesEqual;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -99,42 +98,10 @@ public class ReversedMutableListTest implements MutableListTestCase
     {
         MutableListTestCase.super.List_remove();
 
+        // remove() writes through to the delegate
         MutableList<Integer> delegate = FastList.newListWith(1, 2, 3);
-        MutableList<Integer> reversed = delegate.reversed();
-        reversed.remove(0);
+        delegate.reversed().remove(0);
         assertEquals(Lists.mutable.with(1, 2), delegate);
-        assertEquals(Lists.mutable.with(2, 1), reversed);
-        assertThrows(IndexOutOfBoundsException.class, () -> reversed.remove(-1));
-        assertThrows(IndexOutOfBoundsException.class, () -> reversed.remove(reversed.size()));
-    }
-
-    @Test
-    public void List_addAll()
-    {
-        MutableList<Integer> delegate = FastList.newListWith(1, 2, 3);
-        MutableList<Integer> reversed = delegate.reversed();
-        // reversed is [3, 2, 1]
-        reversed.addAll(1, Lists.mutable.with(8, 9));
-        assertEquals(Lists.mutable.with(3, 8, 9, 2, 1), reversed);
-
-        MutableList<Integer> delegate2 = FastList.newListWith(1, 2, 3);
-        MutableList<Integer> reversed2 = delegate2.reversed();
-        reversed2.addAll(0, Lists.mutable.with(8, 9));
-        assertEquals(Lists.mutable.with(8, 9, 3, 2, 1), reversed2);
-
-        MutableList<Integer> delegate3 = FastList.newListWith(1, 2, 3);
-        MutableList<Integer> reversed3 = delegate3.reversed();
-        reversed3.addAll(3, Lists.mutable.with(8, 9));
-        assertEquals(Lists.mutable.with(3, 2, 1, 8, 9), reversed3);
-
-        MutableList<Integer> delegate4 = FastList.newListWith(1, 2, 3);
-        MutableList<Integer> reversed4 = delegate4.reversed();
-        assertFalse(reversed4.addAll(1, Lists.mutable.empty()));
-        assertEquals(Lists.mutable.with(3, 2, 1), reversed4);
-
-        assertThrows(IndexOutOfBoundsException.class, () -> reversed.addAll(-1, Lists.mutable.with(8)));
-        assertThrows(IndexOutOfBoundsException.class,
-                () -> delegate.reversed().addAll(delegate.size() + 1, Lists.mutable.with(8)));
     }
 
     @Override
@@ -164,16 +131,18 @@ public class ReversedMutableListTest implements MutableListTestCase
         assertEquals(Lists.mutable.with(3, 2, 1), collected);
     }
 
+    @Override
     @Test
-    public void List_listIterator()
+    public void List_listIterator_set()
     {
+        MutableListTestCase.super.List_listIterator_set();
+
+        // listIterator().set() writes through to the delegate
         MutableList<Integer> delegate = FastList.newListWith(1, 2, 3);
-        MutableList<Integer> reversed = delegate.reversed();
-        ListIterator<Integer> it = reversed.listIterator();
+        ListIterator<Integer> it = delegate.reversed().listIterator();
         it.next(); // 3
         it.set(99);
         assertEquals(Lists.mutable.with(1, 2, 99), delegate);
-        assertEquals(Lists.mutable.with(99, 2, 1), reversed);
     }
 
     @Override

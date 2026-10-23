@@ -10,8 +10,12 @@
 
 package org.eclipse.collections.test.list;
 
+import java.util.List;
+import java.util.ListIterator;
+
 import org.junit.jupiter.api.Test;
 
+import static org.eclipse.collections.test.IterableTestCase.assertIterablesEqual;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public interface UnmodifiableListTestCase extends FixedSizeListTestCase
@@ -26,5 +30,16 @@ public interface UnmodifiableListTestCase extends FixedSizeListTestCase
 
         assertThrows(UnsupportedOperationException.class, () -> this.newWith().set(-1, 4));
         assertThrows(UnsupportedOperationException.class, () -> this.newWith(1, 2, 3).set(4, 4));
+    }
+
+    @Override
+    @Test
+    default void List_listIterator_set()
+    {
+        List<Integer> list = this.newWith(3, 2, 1);
+        ListIterator<Integer> iterator = list.listIterator();
+        iterator.next();
+        assertThrows(UnsupportedOperationException.class, () -> iterator.set(4));
+        assertIterablesEqual(this.newWith(3, 2, 1), list);
     }
 }

@@ -41,4 +41,11 @@ public class FastListNoIteratorTest implements MutableListTestCase, NoIteratorTe
     {
         assertThrows(AssertionError.class, () -> this.newWith("A", "B", "C", "D").subList(0, 3).subList(0, 2).listIterator());
     }
+
+    @Override
+    @Test
+    public void List_listIterator_set()
+    {
+        assertThrows(AssertionError.class, () -> this.newWith(3, 2, 1).listIterator());
+    }
 }

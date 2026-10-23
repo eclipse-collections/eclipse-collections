@@ -40,4 +40,12 @@ public class CompositeFastListTest implements MutableListTestCase
     {
         assertThrows(UnsupportedOperationException.class, () -> this.newWith("A", "B", "C", "D").subList(0, 3).subList(0, 2).addAll(0, Lists.mutable.with("E")));
     }
+
+    @Override
+    @Test
+    public void List_addAll()
+    {
+        // TODO: Implement CompositeFastList.addAll(int, Collection).
+        assertThrows(UnsupportedOperationException.class, () -> this.newWith(3, 2, 1).addAll(1, Lists.mutable.with(8, 9)));
+    }
 }
