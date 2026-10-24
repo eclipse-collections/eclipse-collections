@@ -353,23 +353,6 @@ public class MultiReaderFastListTest extends AbstractListTestCase
 
     @Override
     @Test
-    public void getFirst()
-    {
-        assertNull(MultiReaderFastList.newList().getFirst());
-        assertEquals(Integer.valueOf(1), MultiReaderFastList.newListWith(1, 2, 3).getFirst());
-    }
-
-    @Override
-    @Test
-    public void getLast()
-    {
-        assertNull(MultiReaderFastList.newList().getLast());
-        assertNotEquals(Integer.valueOf(1), MultiReaderFastList.newListWith(1, 2, 3).getLast());
-        assertEquals(Integer.valueOf(3), MultiReaderFastList.newListWith(1, 2, 3).getLast());
-    }
-
-    @Override
-    @Test
     public void isEmpty()
     {
         Verify.assertEmpty(MultiReaderFastList.newList());
