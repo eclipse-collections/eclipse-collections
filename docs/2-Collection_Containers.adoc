@@ -1138,6 +1138,26 @@ Primitive stack implementations are similar to JCF *ArrayStack* but optimized fo
 
 Primitive bag implementations are similar to JCF *HashBag*, but both _item_ and _count_ are primitives.
 
+=== Iteration Patterns
+
+[source,java]
+----
+// Create a mutable primitive bag of integers
+MutableIntBag intBag = IntBags.mutable.with(1, 2, 2, 3);
+
+// 1. forEach() - Iterate through every value inside the primitive bag
+intBag.forEach(each -> System.out.println("Value: " + each));
+
+// 2. select() - Filter and keep only values matching a specific criteria
+IntBag greaterThanOne = intBag.select(each -> each > 1);
+
+// 3. reject() - Filter out values matching a criteria (keep items that fail condition)
+IntBag lessThanThree = intBag.reject(each -> each >= 3);
+
+// 4. anySatisfy() - Evaluate if at least one value matches a condition (returns boolean)
+boolean hasTwo = intBag.anySatisfy(each -> each == 2);
+----
+
 === Primitive Maps
 
 There are three types of primitive maps:
