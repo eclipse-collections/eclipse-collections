@@ -118,6 +118,7 @@ public class ImmutableOrderedMapTest
     @Test
     public void Map_compute()
     {
+        // TODO: Throw before calling the function, like the unmodifiable maps do; ImmutableOrderedMapAdapter inherits the default java.util.Map method, which calls the function before put() throws
         Map<Integer, String> map = this.newWithKeysValues(1, "1", 2, "2", 3, "3");
         assertThrows(UnsupportedOperationException.class, () -> map.compute(1, (k, v) -> {
             assertEquals(Integer.valueOf(1), k);
@@ -137,6 +138,7 @@ public class ImmutableOrderedMapTest
     @Test
     public void Map_computeIfAbsent()
     {
+        // TODO: Throw before calling the function, like the unmodifiable maps do; ImmutableOrderedMapAdapter inherits the default java.util.Map method, which calls the function before put() throws
         Map<Integer, String> map = this.newWithKeysValues(1, "1", 2, "2", 3, "3");
         assertEquals("1", map.computeIfAbsent(1, k -> {
             fail("Expected lambda not to be called for existing key");
@@ -150,6 +152,7 @@ public class ImmutableOrderedMapTest
     @Test
     public void Map_computeIfPresent()
     {
+        // TODO: Throw before calling the function, like the unmodifiable maps do; ImmutableOrderedMapAdapter inherits the default java.util.Map method, which calls the function before put() throws
         Map<Integer, String> map = this.newWithKeysValues(1, "1", 2, "2", 3, "3");
         assertThrows(UnsupportedOperationException.class, () -> map.computeIfPresent(1, (k, v) -> {
             assertEquals(Integer.valueOf(1), k);
@@ -168,6 +171,7 @@ public class ImmutableOrderedMapTest
     @Test
     public void Map_replaceAll()
     {
+        // TODO: Throw before calling the function, like the unmodifiable maps do; ImmutableOrderedMapAdapter inherits the default java.util.Map method, which calls the function before put() throws
         Map<Integer, String> map = this.newWithKeysValues(1, "1", 2, "2", 3, "3");
 
         assertThrows(UnsupportedOperationException.class, () -> map.replaceAll((k, v) -> v + "modified"));
