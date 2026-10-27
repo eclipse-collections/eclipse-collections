@@ -36,6 +36,14 @@ public class CompositeFastListTest implements MutableListTestCase
 
     @Override
     @Test
+    public void Object_clone()
+    {
+        // TODO: Implement CompositeFastList.clone().
+        assertThrows(UnsupportedOperationException.class, () -> this.newWith(3, 2, 1).clone());
+    }
+
+    @Override
+    @Test
     public void List_subList_subList_addAll()
     {
         assertThrows(UnsupportedOperationException.class, () -> this.newWith("A", "B", "C", "D").subList(0, 3).subList(0, 2).addAll(0, Lists.mutable.with("E")));

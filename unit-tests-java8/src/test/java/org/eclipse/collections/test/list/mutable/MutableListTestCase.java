@@ -141,4 +141,20 @@ public interface MutableListTestCase extends MutableCollectionTestCase, ListTest
         assertTrue(reversed.add(99));
         assertIterablesEqual(Lists.immutable.with(3, 2, 1), list);
     }
+
+    @Test
+    default void Object_clone()
+    {
+        MutableList<Integer> list = this.newWith(3, 2, 1);
+        MutableList<Integer> clone = list.clone();
+        assertNotSame(list, clone);
+        assertIterablesEqual(this.newWith(3, 2, 1), clone);
+
+        if (this.allowsAdd())
+        {
+            // The clone does not share state with the original
+            clone.add(4);
+            assertIterablesEqual(this.newWith(3, 2, 1), list);
+        }
+    }
 }

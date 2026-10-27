@@ -91,6 +91,20 @@ public interface MutableCollectionTestCase extends CollectionTestCase, RichItera
     }
 
     @Test
+    default void MutableCollection_newEmpty()
+    {
+        MutableCollection<Integer> collection = this.newWith(3, 2, 1);
+        MutableCollection<Integer> empty = collection.newEmpty();
+        assertIterablesEqual(this.newWith(), empty);
+        assertIterablesEqual(this.newWith(3, 2, 1), collection);
+
+        // The empty collection is mutable and independent of the original
+        assertTrue(empty.add(4));
+        assertIterablesEqual(this.newMutableForFilter(4), empty);
+        assertIterablesEqual(this.newWith(3, 2, 1), collection);
+    }
+
+    @Test
     default void MutableCollection_removeIf()
     {
         if (!this.allowsRemove())

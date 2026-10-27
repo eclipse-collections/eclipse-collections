@@ -71,9 +71,12 @@ public class ReversedMutableListTest implements MutableListTestCase
         Verify.assertInstanceOf(FastList.class, deserialized);
     }
 
+    @Override
     @Test
     public void MutableCollection_newEmpty()
     {
+        MutableListTestCase.super.MutableCollection_newEmpty();
+
         Verify.assertInstanceOf(FastList.class, this.newWith().newEmpty());
     }
 
@@ -169,17 +172,5 @@ public class ReversedMutableListTest implements MutableListTestCase
         reversed.retainAll(Lists.mutable.with(2, 4));
         assertEquals(Lists.mutable.with(2, 4), delegate);
         assertEquals(Lists.mutable.with(4, 2), reversed);
-    }
-
-    @Test
-    public void MutableList_clone()
-    {
-        MutableList<Integer> delegate = FastList.newListWith(1, 2, 3);
-        MutableList<Integer> reversed = delegate.reversed();
-        MutableList<Integer> cloned = reversed.clone();
-        assertEquals(reversed, cloned);
-        assertNotSame(reversed, cloned);
-        cloned.add(99);
-        assertEquals(3, delegate.size());
     }
 }
