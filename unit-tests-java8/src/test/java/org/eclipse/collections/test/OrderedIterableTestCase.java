@@ -16,10 +16,12 @@ import java.util.Optional;
 import org.eclipse.collections.api.RichIterable;
 import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.factory.Sets;
+import org.eclipse.collections.api.factory.Stacks;
 import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.ordered.OrderedIterable;
 import org.eclipse.collections.api.ordered.SortedIterable;
 import org.eclipse.collections.api.partition.ordered.PartitionOrderedIterable;
+import org.eclipse.collections.api.stack.MutableStack;
 import org.eclipse.collections.api.tuple.Pair;
 import org.eclipse.collections.api.tuple.primitive.ObjectIntPair;
 import org.eclipse.collections.impl.factory.primitive.IntLists;
@@ -30,8 +32,10 @@ import org.junit.jupiter.api.Test;
 
 import static org.eclipse.collections.test.IterableTestCase.assertIterablesEqual;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 public interface OrderedIterableTestCase extends RichIterableTestCase
@@ -456,6 +460,192 @@ public interface OrderedIterableTestCase extends RichIterableTestCase
         assertThrows(IndexOutOfBoundsException.class, () -> integers.forEach(0, -1, result::add));
         assertThrows(IndexOutOfBoundsException.class, () -> integers.forEach(0, 10, result::add));
         assertThrows(IndexOutOfBoundsException.class, () -> integers.forEach(10, 0, result::add));
+    }
+
+    @Test
+    default void OrderedIterable_forEachWithIndex_from_to()
+    {
+        OrderedIterable<Integer> integers = (OrderedIterable<Integer>) this.newWith(9, 8, 7, 6, 5, 4, 3, 2, 1, 0);
+
+        MutableList<Integer> result = Lists.mutable.empty();
+        MutableList<Integer> indexes = Lists.mutable.empty();
+        integers.forEachWithIndex(5, 7, (each, index) ->
+        {
+            result.add(each);
+            indexes.add(index);
+        });
+        assertIterablesEqual(
+                switch (this.getOrderingType())
+                {
+                    case SORTED_NATURAL -> Lists.immutable.with(5, 6, 7);
+                    case UNORDERED, INSERTION_ORDER, SORTED_REVERSE_NATURAL -> Lists.immutable.with(4, 3, 2);
+                },
+                result);
+        assertIterablesEqual(Lists.immutable.with(5, 6, 7), indexes);
+
+        if (this.supportsForEachFromToReverseIteration())
+        {
+            MutableList<Integer> reverseResult = Lists.mutable.empty();
+            MutableList<Integer> reverseIndexes = Lists.mutable.empty();
+            integers.forEachWithIndex(7, 5, (each, index) ->
+            {
+                reverseResult.add(each);
+                reverseIndexes.add(index);
+            });
+            assertIterablesEqual(
+                    switch (this.getOrderingType())
+                    {
+                        case SORTED_NATURAL -> Lists.immutable.with(7, 6, 5);
+                        case UNORDERED, INSERTION_ORDER, SORTED_REVERSE_NATURAL -> Lists.immutable.with(2, 3, 4);
+                    },
+                    reverseResult);
+            assertIterablesEqual(Lists.immutable.with(7, 6, 5), reverseIndexes);
+        }
+        else
+        {
+            // TODO: Support reverse indexed traversal where this still throws.
+            assertThrows(IllegalArgumentException.class, () -> integers.forEachWithIndex(7, 5, (each, index) -> { }));
+        }
+
+        assertThrows(IndexOutOfBoundsException.class, () -> integers.forEachWithIndex(-1, 0, (each, index) -> { }));
+        assertThrows(IndexOutOfBoundsException.class, () -> integers.forEachWithIndex(0, -1, (each, index) -> { }));
+        assertThrows(IndexOutOfBoundsException.class, () -> integers.forEachWithIndex(0, 10, (each, index) -> { }));
+        assertThrows(IndexOutOfBoundsException.class, () -> integers.forEachWithIndex(10, 0, (each, index) -> { }));
+    }
+
+    @Test
+    default void OrderedIterable_corresponds()
+    {
+        OrderedIterable<Integer> iterable = (OrderedIterable<Integer>) this.newWith(3, 2, 1);
+        MutableList<Integer> expected = switch (this.getOrderingType())
+        {
+            case SORTED_NATURAL -> Lists.mutable.with(1, 2, 3);
+            case UNORDERED, INSERTION_ORDER, SORTED_REVERSE_NATURAL -> Lists.mutable.with(3, 2, 1);
+        };
+        MutableList<Integer> differentOrder = switch (this.getOrderingType())
+        {
+            case SORTED_NATURAL -> Lists.mutable.with(3, 2, 1);
+            case UNORDERED, INSERTION_ORDER, SORTED_REVERSE_NATURAL -> Lists.mutable.with(1, 2, 3);
+        };
+
+        assertTrue(iterable.corresponds(expected, Integer::equals));
+        assertFalse(iterable.corresponds(differentOrder, Integer::equals));
+        assertFalse(iterable.corresponds(Lists.mutable.with(1, 2), Integer::equals));
+        assertTrue(((OrderedIterable<Integer>) this.<Integer>newWith()).corresponds(Lists.mutable.empty(), Integer::equals));
+
+        if (!this.allowsDuplicates())
+        {
+            return;
+        }
+
+        OrderedIterable<Integer> iterableWithDuplicates = (OrderedIterable<Integer>) this.newWith(3, 3, 3, 2, 2, 1);
+        MutableList<Integer> expectedWithDuplicates = switch (this.getOrderingType())
+        {
+            case SORTED_NATURAL -> Lists.mutable.with(1, 2, 2, 3, 3, 3);
+            case UNORDERED, INSERTION_ORDER, SORTED_REVERSE_NATURAL -> Lists.mutable.with(3, 3, 3, 2, 2, 1);
+        };
+        assertTrue(iterableWithDuplicates.corresponds(expectedWithDuplicates, Integer::equals));
+        assertFalse(iterableWithDuplicates.corresponds(expected, Integer::equals));
+    }
+
+    @Test
+    default void OrderedIterable_distinct()
+    {
+        assertIterablesEqual(
+                switch (this.getOrderingType())
+                {
+                    case SORTED_NATURAL -> Lists.immutable.with(1, 2, 3);
+                    case UNORDERED, INSERTION_ORDER, SORTED_REVERSE_NATURAL -> Lists.immutable.with(3, 2, 1);
+                },
+                ((OrderedIterable<Integer>) this.newWith(3, 2, 1)).distinct().toList());
+
+        if (!this.allowsDuplicates())
+        {
+            return;
+        }
+
+        assertIterablesEqual(
+                switch (this.getOrderingType())
+                {
+                    case SORTED_NATURAL -> Lists.immutable.with(0, 1, 2, 3);
+                    case UNORDERED, INSERTION_ORDER, SORTED_REVERSE_NATURAL -> Lists.immutable.with(3, 2, 1, 0);
+                },
+                ((OrderedIterable<Integer>) this.newWith(3, 3, 3, 2, 2, 1, 0, 0)).distinct().toList());
+    }
+
+    @Test
+    default void OrderedIterable_toStack()
+    {
+        // toStack() pushes the elements in iteration order, so the last element ends up on top
+        MutableStack<Integer> stack = ((OrderedIterable<Integer>) this.newWith(3, 2, 1)).toStack();
+        switch (this.getOrderingType())
+        {
+            case UNORDERED -> throw new AssertionError("OrderedIterable should not have UNORDERED ordering type");
+            case INSERTION_ORDER, SORTED_REVERSE_NATURAL -> assertEquals(Stacks.mutable.with(3, 2, 1), stack);
+            case SORTED_NATURAL -> assertEquals(Stacks.mutable.with(1, 2, 3), stack);
+            default -> fail("Unexpected value: " + this.getOrderingType());
+        }
+
+        if (!this.allowsDuplicates())
+        {
+            return;
+        }
+
+        MutableStack<Integer> stackWithDuplicates = ((OrderedIterable<Integer>) this.newWith(3, 3, 2, 1, 1)).toStack();
+        switch (this.getOrderingType())
+        {
+            case UNORDERED -> throw new AssertionError("OrderedIterable should not have UNORDERED ordering type");
+            case INSERTION_ORDER, SORTED_REVERSE_NATURAL -> assertEquals(Stacks.mutable.with(3, 3, 2, 1, 1), stackWithDuplicates);
+            case SORTED_NATURAL -> assertEquals(Stacks.mutable.with(1, 1, 2, 3, 3), stackWithDuplicates);
+            default -> fail("Unexpected value: " + this.getOrderingType());
+        }
+    }
+
+    @Test
+    default void OrderedIterable_detectIndex()
+    {
+        OrderedIterable<Integer> iterable = (OrderedIterable<Integer>) this.newWith(3, 2, 1);
+        switch (this.getOrderingType())
+        {
+            case SORTED_NATURAL ->
+            {
+                assertEquals(0, iterable.detectIndex(each -> each == 1));
+                assertEquals(1, iterable.detectIndex(each -> each == 2));
+                assertEquals(2, iterable.detectIndex(each -> each == 3));
+            }
+            case UNORDERED, INSERTION_ORDER, SORTED_REVERSE_NATURAL ->
+            {
+                assertEquals(0, iterable.detectIndex(each -> each == 3));
+                assertEquals(1, iterable.detectIndex(each -> each == 2));
+                assertEquals(2, iterable.detectIndex(each -> each == 1));
+            }
+            default -> fail("Unexpected value: " + this.getOrderingType());
+        }
+        assertEquals(-1, iterable.detectIndex(each -> each == 99));
+        assertEquals(-1, ((OrderedIterable<Integer>) this.<Integer>newWith()).detectIndex(each -> true));
+
+        if (!this.allowsDuplicates())
+        {
+            return;
+        }
+
+        OrderedIterable<Integer> iterableWithDuplicates = (OrderedIterable<Integer>) this.newWith(3, 3, 3, 2, 2, 1);
+        switch (this.getOrderingType())
+        {
+            case SORTED_NATURAL ->
+            {
+                assertEquals(0, iterableWithDuplicates.detectIndex(each -> each == 1));
+                assertEquals(1, iterableWithDuplicates.detectIndex(each -> each == 2));
+                assertEquals(3, iterableWithDuplicates.detectIndex(each -> each == 3));
+            }
+            case UNORDERED, INSERTION_ORDER, SORTED_REVERSE_NATURAL ->
+            {
+                assertEquals(0, iterableWithDuplicates.detectIndex(each -> each == 3));
+                assertEquals(3, iterableWithDuplicates.detectIndex(each -> each == 2));
+                assertEquals(5, iterableWithDuplicates.detectIndex(each -> each == 1));
+            }
+            default -> fail("Unexpected value: " + this.getOrderingType());
+        }
     }
 
     default boolean supportsForEachFromToReverseIteration()

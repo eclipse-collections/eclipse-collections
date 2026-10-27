@@ -147,4 +147,47 @@ public interface SortedMapIterableTestCase extends MapIterableTestCase, OrderedI
         // TODO Support reverse indexed traversal for sorted maps.
         assertThrows(UnsupportedOperationException.class, () -> this.newWith(9, 8, 7, 6, 5, 4, 3, 2, 1, 0).forEach(7, 5, each -> { }));
     }
+
+    @Override
+    @Test
+    default void OrderedIterable_forEachWithIndex_from_to()
+    {
+        // TODO: Support indexed traversal with index for sorted maps.
+        assertThrows(UnsupportedOperationException.class, () -> this.newWith(9, 8, 7, 6, 5, 4, 3, 2, 1, 0).forEachWithIndex(5, 7, (each, index) -> { }));
+
+        // TODO: Support reverse indexed traversal with index for sorted maps.
+        assertThrows(UnsupportedOperationException.class, () -> this.newWith(9, 8, 7, 6, 5, 4, 3, 2, 1, 0).forEachWithIndex(7, 5, (each, index) -> { }));
+    }
+
+    @Override
+    @Test
+    default void OrderedIterable_corresponds()
+    {
+        // TODO: Support corresponds() for sorted maps.
+        assertThrows(UnsupportedOperationException.class, () -> this.newWith(3, 2, 1).corresponds(Lists.mutable.with(3, 2, 1), Object::equals));
+    }
+
+    @Override
+    @Test
+    default void OrderedIterable_distinct()
+    {
+        // TODO: Support distinct() for sorted maps.
+        assertThrows(UnsupportedOperationException.class, () -> this.newWith(3, 2, 1).distinct());
+    }
+
+    @Override
+    @Test
+    default void OrderedIterable_toStack()
+    {
+        // TODO: Support toStack() for sorted maps.
+        assertThrows(UnsupportedOperationException.class, () -> this.newWith(3, 2, 1).toStack());
+    }
+
+    @Override
+    @Test
+    default void OrderedIterable_detectIndex()
+    {
+        // TODO: Support detectIndex() for sorted maps.
+        assertThrows(UnsupportedOperationException.class, () -> this.newWith(3, 2, 1).detectIndex(each -> true));
+    }
 }
