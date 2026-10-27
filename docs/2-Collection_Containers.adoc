@@ -1138,7 +1138,7 @@ Primitive stack implementations are similar to JCF *ArrayStack* but optimized fo
 
 Primitive bag implementations are similar to JCF *HashBag*, but both _item_ and _count_ are primitives.
 
-=== Iteration Patterns
+==== Iteration Patterns
 
 [source,java]
 ----
