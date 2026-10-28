@@ -776,6 +776,21 @@ public class IntervalTest
     }
 
     @Test
+    public void iteratorOfSingleValueIntervalWithNegativeStep()
+    {
+        Interval forwardInterval = Interval.fromToBy(5, 5, 1);
+        assertEquals(Lists.mutable.with(5), Lists.mutable.withAll(forwardInterval));
+
+        Interval backwardInterval = Interval.fromToBy(5, 5, -1);
+        assertEquals(1, backwardInterval.size());
+        Iterator<Integer> iterator = backwardInterval.iterator();
+        assertTrue(iterator.hasNext());
+        assertEquals(Integer.valueOf(5), iterator.next());
+        assertFalse(iterator.hasNext());
+        assertThrows(NoSuchElementException.class, iterator::next);
+    }
+
+    @Test
     public void forEachWithIndex()
     {
         IntegerSum sum = new IntegerSum(0);

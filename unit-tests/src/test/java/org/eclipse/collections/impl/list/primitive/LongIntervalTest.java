@@ -10,7 +10,9 @@
 
 package org.eclipse.collections.impl.list.primitive;
 
+import java.util.Comparator;
 import java.util.NoSuchElementException;
+import java.util.Spliterator;
 import java.util.stream.Collectors;
 
 import org.eclipse.collections.api.LazyLongIterable;
@@ -459,6 +461,57 @@ public class LongIntervalTest
 
         assertThrows(IllegalArgumentException.class, () -> interval12.chunk(0));
         assertThrows(IllegalArgumentException.class, () -> interval12.chunk(-1));
+    }
+
+    @Test
+    public void chunkOnSingleValueInterval()
+    {
+        MutableList<LongIterable> expected = Lists.mutable.with(LongLists.mutable.with(1L));
+        assertEquals(expected, LongInterval.oneTo(1).chunk(1));
+        assertEquals(expected, LongInterval.oneTo(1).chunk(2));
+        assertEquals(expected, LongInterval.oneTo(1).chunk(Integer.MAX_VALUE));
+
+        assertEquals(Lists.mutable.with(LongLists.mutable.with(0L)), LongInterval.fromToBy(0, 4, 5).chunk(2));
+        assertEquals(Lists.mutable.with(LongLists.mutable.with(7L)), LongInterval.fromTo(7, 7).chunk(3));
+
+        assertEquals(LongLists.mutable.with(1L).chunk(2), LongInterval.oneTo(1).chunk(2));
+    }
+
+    @Test
+    public void longIteratorOnSingleValueIntervalWithNegativeStep()
+    {
+        LongInterval interval = LongInterval.fromToBy(5, 5, -1);
+        assertEquals(1, interval.size());
+
+        LongIterator iterator = interval.longIterator();
+        assertTrue(iterator.hasNext());
+        assertEquals(5L, iterator.next());
+        assertFalse(iterator.hasNext());
+
+        assertEquals(Lists.mutable.with(LongLists.mutable.with(5L)), interval.chunk(2));
+        assertEquals(LongLists.mutable.with(5L).chunk(2), interval.chunk(2));
+    }
+
+    @Test
+    public void spliteratorOfSingleValueIntervalWithNegativeStep()
+    {
+        LongInterval interval = LongInterval.fromToBy(5, 5, -1);
+        assertArrayEquals(new long[]{5}, take(interval.spliterator(), 4));
+        assertEquals(Comparator.reverseOrder(), interval.spliterator().getComparator());
+
+        assertArrayEquals(new long[]{5, 4, 3, 2, 1}, take(LongInterval.fromToBy(5, 1, -1).spliterator(), 10));
+        assertArrayEquals(new long[]{1, 4, 7, 10}, take(LongInterval.fromToBy(1, 10, 3).spliterator(), 10));
+    }
+
+    private static long[] take(Spliterator.OfLong spliterator, int limit)
+    {
+        MutableLongList values = LongLists.mutable.empty();
+        boolean advanced = true;
+        while (advanced && values.size() < limit)
+        {
+            advanced = spliterator.tryAdvance((long each) -> values.add(each));
+        }
+        return values.toArray();
     }
 
     @Test
