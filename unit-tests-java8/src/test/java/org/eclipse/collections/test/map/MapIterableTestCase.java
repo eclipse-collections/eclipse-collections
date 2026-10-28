@@ -307,6 +307,22 @@ public interface MapIterableTestCase extends RichIterableWithDuplicatesTestCase
     }
 
     @Test
+    default void MapIterable_keysView_valuesView_keyValuesView()
+    {
+        MapIterable<Integer, String> map = this.newWithKeysValues(3, "Three", 2, "Two", 1, "One");
+        assertEquals(Bags.immutable.with(3, 2, 1), map.keysView().toBag());
+        assertEquals(Bags.immutable.with("Three", "Two", "One"), map.valuesView().toBag());
+        assertEquals(
+                Bags.immutable.with(Tuples.pair(3, "Three"), Tuples.pair(2, "Two"), Tuples.pair(1, "One")),
+                map.keyValuesView().toBag());
+
+        MapIterable<Object, Object> empty = this.newWithKeysValues();
+        assertEquals(Bags.immutable.empty(), empty.keysView().toBag());
+        assertEquals(Bags.immutable.empty(), empty.valuesView().toBag());
+        assertEquals(Bags.immutable.empty(), empty.keyValuesView().toBag());
+    }
+
+    @Test
     default void MapIterable_injectIntoKeyValue()
     {
         MapIterable<Integer, Integer> map1 = this.newWithKeysValues(3, 3, 2, 2, 1, 1);

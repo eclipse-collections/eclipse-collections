@@ -105,11 +105,13 @@ public interface OrderedMapIterableTestCase extends MapIterableTestCase, Ordered
                 () -> this.newWithKeysValues(1, "2", 2, "2").flipUniqueValues());
     }
 
+    @Override
     @Test
     default void MapIterable_keysView_valuesView_keyValuesView()
     {
-        OrderedMap<String, Integer> map = this.newWithKeysValues("A", 1, "B", 2, "C", 3);
+        MapIterableTestCase.super.MapIterable_keysView_valuesView_keyValuesView();
 
+        OrderedMap<String, Integer> map = this.newWithKeysValues("A", 1, "B", 2, "C", 3);
         assertEquals(Lists.mutable.with("A", "B", "C"), map.keysView().toList());
         assertEquals(Lists.mutable.with(1, 2, 3), map.valuesView().toList());
         assertEquals(

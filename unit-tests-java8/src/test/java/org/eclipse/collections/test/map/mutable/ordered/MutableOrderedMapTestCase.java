@@ -614,45 +614,42 @@ public interface MutableOrderedMapTestCase extends OrderedMapIterableTestCase, M
         }
     }
 
+    @Override
     @Test
-    default void OrderedIterable_getFirst_getLast_afterMutableOrderedMapMutations()
+    default void RichIterable_getFirst()
     {
-        MutableOrderedMap<String, Integer> emptyMap = this.newWithKeysValues();
-        assertNull(emptyMap.getFirst());
-        assertNull(emptyMap.getLast());
+        OrderedMapIterableTestCase.super.RichIterable_getFirst();
 
-        MutableOrderedMap<String, Integer> map = this.newWithKeysValues("A", 1, "B", 2, "C", 3);
-        assertEquals(Integer.valueOf(1), map.getFirst());
-        assertEquals(Integer.valueOf(3), map.getLast());
+        if (this.allowsRemove())
+        {
+            // getFirst() skips the removed first entry, and re-putting an existing key keeps its position
+            MutableOrderedMap<String, Integer> map = this.newWithKeysValues("A", 1, "B", 2, "C", 3);
+            map.removeKey("A");
+            assertEquals(Integer.valueOf(2), map.getFirst());
 
-        map.removeKey("A");
-        assertEquals(Integer.valueOf(2), map.getFirst());
-
-        map.removeKey("C");
-        assertEquals(Integer.valueOf(2), map.getLast());
-
-        map.put("D", 4);
-        map.put("B", 99);
-        assertEquals(Integer.valueOf(99), map.getFirst());
-        assertEquals(Integer.valueOf(4), map.getLast());
+            map.put("D", 4);
+            map.put("B", 99);
+            assertEquals(Integer.valueOf(99), map.getFirst());
+        }
     }
 
     @Override
     @Test
-    default void MapIterable_forEachKeyValue()
+    default void RichIterable_getLast()
     {
-        MutableMapIterableTestCase.super.MapIterable_forEachKeyValue();
+        OrderedMapIterableTestCase.super.RichIterable_getLast();
 
-        MutableOrderedMap<String, Integer> map = this.newWithKeysValues("A", 1, "B", 2, "C", 3);
-        List<String> keys = new ArrayList<>();
-        List<Integer> values = new ArrayList<>();
-        map.forEachKeyValue((k, v) ->
+        if (this.allowsRemove())
         {
-            keys.add(k);
-            values.add(v);
-        });
-        assertEquals(List.of("A", "B", "C"), keys);
-        assertEquals(List.of(1, 2, 3), values);
+            // getLast() skips the removed last entry, and a newly put key becomes last
+            MutableOrderedMap<String, Integer> map = this.newWithKeysValues("A", 1, "B", 2, "C", 3);
+            map.removeKey("C");
+            assertEquals(Integer.valueOf(2), map.getLast());
+
+            map.put("D", 4);
+            map.put("B", 99);
+            assertEquals(Integer.valueOf(4), map.getLast());
+        }
     }
 
     @Override
@@ -679,25 +676,12 @@ public interface MutableOrderedMapTestCase extends OrderedMapIterableTestCase, M
         assertEquals(List.of(1, 2, 3), values);
     }
 
-    @Test
-    default void InternalIterable_forEachWithIndex()
-    {
-        MutableOrderedMap<String, Integer> map = this.newWithKeysValues("A", 1, "B", 2, "C", 3);
-        List<Integer> values = new ArrayList<>();
-        List<Integer> indices = new ArrayList<>();
-        map.forEachWithIndex((v, i) ->
-        {
-            values.add(v);
-            indices.add(i);
-        });
-        assertEquals(List.of(1, 2, 3), values);
-        assertEquals(List.of(0, 1, 2), indices);
-    }
-
     @Override
     @Test
     default void RichIterable_iterator_iterationOrder()
     {
+        OrderedMapIterableTestCase.super.RichIterable_iterator_iterationOrder();
+
         MutableOrderedMap<String, Integer> map = this.newWithKeysValues("A", 1, "B", 2, "C", 3);
         List<Integer> values = new ArrayList<>();
         for (Integer v : map)

@@ -79,6 +79,16 @@ public class UnifiedMapNoIteratorTest implements MutableMapTestCase, NoIteratorT
 
     @Override
     @Test
+    public void MapIterable_keysView_valuesView_keyValuesView()
+    {
+        // TODO: Optimize UnifiedMap.keysView(), valuesView(), and keyValuesView() to avoid delegating to iterator().
+        assertThrows(AssertionError.class, () -> this.<Integer, String>newWithKeysValues(3, "Three").keysView().toBag());
+        assertThrows(AssertionError.class, () -> this.<Integer, String>newWithKeysValues(3, "Three").valuesView().toBag());
+        assertThrows(AssertionError.class, () -> this.<Integer, String>newWithKeysValues(3, "Three").keyValuesView().toBag());
+    }
+
+    @Override
+    @Test
     public void Map_keySet_equals()
     {
         // UnifiedMap.keySet().equals() delegates to the other Map's entrySet()
