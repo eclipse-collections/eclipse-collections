@@ -74,6 +74,24 @@ public interface UnmodifiableMapTestCase extends MapTestCase
 
     @Override
     @Test
+    default void Map_keySet_remove()
+    {
+        Map<Object, String> map = this.newWith("Three", "Two", "One");
+        assertThrows(UnsupportedOperationException.class, () -> map.keySet().remove(2));
+        assertIterablesEqual(this.newWith("Three", "Two", "One"), map);
+    }
+
+    @Override
+    @Test
+    default void Map_values_remove()
+    {
+        Map<Object, String> map = this.newWith("Three", "Two", "One");
+        assertThrows(UnsupportedOperationException.class, () -> map.values().remove("Two"));
+        assertIterablesEqual(this.newWith("Three", "Two", "One"), map);
+    }
+
+    @Override
+    @Test
     default void Map_entrySet_remove()
     {
         Map<Object, Object> map = this.newWithKeysValues();
