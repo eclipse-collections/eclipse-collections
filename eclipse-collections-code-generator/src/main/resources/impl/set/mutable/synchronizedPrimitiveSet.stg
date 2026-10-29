@@ -18,6 +18,9 @@ package org.eclipse.collections.impl.set.mutable.primitive;
 
 import java.util.Collection;
 import java.util.Collections;
+<if(primitive.specializedStream)>
+import java.util.Spliterator;
+<endif>
 
 import org.eclipse.collections.api.<name>Iterable;
 import org.eclipse.collections.api.Lazy<name>Iterable;
@@ -238,6 +241,17 @@ public class Synchronized<name>Set
             return this.getMutable<name>Set().newEmpty();
         }
     }
+<if(primitive.specializedStream)>
+
+    /**
+     * This function needs to be synchronized manually
+     */
+    @Override
+    public Spliterator.Of<name> spliterator()
+    {
+        return this.getMutable<name>Set().spliterator();
+    }
+<endif>
 }
 
 >>
