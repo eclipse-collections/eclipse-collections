@@ -684,38 +684,15 @@ public final class LongInterval
             throw new IllegalArgumentException("Size for groups must be positive but was: " + size);
         }
         MutableList<LongIterable> result = Lists.mutable.empty();
-        if (this.notEmpty())
+        LongIterator iterator = this.longIterator();
+        while (iterator.hasNext())
         {
-            long innerFrom = this.from;
-            long lastUpdated = this.from;
-            if (this.from <= this.to)
+            MutableLongList batch = LongLists.mutable.empty();
+            for (int i = 0; i < size && iterator.hasNext(); i++)
             {
-                while ((lastUpdated + this.step) <= this.to)
-                {
-                    MutableLongList batch = LongLists.mutable.empty();
-                    for (long i = innerFrom; i <= this.to && batch.size() < size; i += this.step)
-                    {
-                        batch.add(i);
-                        lastUpdated = i;
-                    }
-                    result.add(batch);
-                    innerFrom = lastUpdated + this.step;
-                }
+                batch.add(iterator.next());
             }
-            else
-            {
-                while ((lastUpdated + this.step) >= this.to)
-                {
-                    MutableLongList batch = LongLists.mutable.empty();
-                    for (long i = innerFrom; i >= this.to && batch.size() < size; i += this.step)
-                    {
-                        batch.add(i);
-                        lastUpdated = i;
-                    }
-                    result.add(batch);
-                    innerFrom = lastUpdated + this.step;
-                }
-            }
+            result.add(batch);
         }
         return result;
     }
@@ -991,7 +968,7 @@ public final class LongInterval
         @Override
         public boolean hasNext()
         {
-            if (LongInterval.this.from <= LongInterval.this.to)
+            if (LongInterval.this.goForward())
             {
                 return this.current <= LongInterval.this.to;
             }
@@ -1023,7 +1000,7 @@ public final class LongInterval
             this.current = from;
             this.to = to;
             this.step = step;
-            this.isAscending = from <= to;
+            this.isAscending = step > 0;
         }
 
         @Override
