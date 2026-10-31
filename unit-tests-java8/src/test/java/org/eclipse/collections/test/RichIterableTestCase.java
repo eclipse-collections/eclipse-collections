@@ -823,6 +823,7 @@ public interface RichIterableTestCase extends IterableTestCase
     default void RichIterable_iterationOrder()
     {
         MutableCollection<Integer> expectedIterationOrder = this.expectedIterationOrder();
+        MutableCollection<Integer> expectedCollectIterationOrder = this.expectedCollectIterationOrder();
 
         Procedure<Object> noop = Procedures.noop();
 
@@ -868,40 +869,40 @@ public interface RichIterableTestCase extends IterableTestCase
 
         MutableCollection<Integer> collectIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().collect(collectIterationOrder::add).forEach(noop);
-        assertIterablesEqual(expectedIterationOrder, collectIterationOrder);
+        assertIterablesEqual(expectedCollectIterationOrder, collectIterationOrder);
 
         MutableCollection<Integer> collectTargetIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().collect(collectTargetIterationOrder::add, new HashBag<>());
-        assertIterablesEqual(expectedIterationOrder, collectTargetIterationOrder);
+        assertIterablesEqual(expectedCollectIterationOrder, collectTargetIterationOrder);
 
         MutableCollection<Integer> collectWithIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().collectWith((each, param) -> collectWithIterationOrder.add(each), null).forEach(noop);
-        assertIterablesEqual(expectedIterationOrder, collectWithIterationOrder);
+        assertIterablesEqual(expectedCollectIterationOrder, collectWithIterationOrder);
 
         MutableCollection<Integer> collectWithTargetIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().collectWith((each, param) -> collectWithTargetIterationOrder.add(each), null, new HashBag<>());
-        assertIterablesEqual(expectedIterationOrder, collectWithTargetIterationOrder);
+        assertIterablesEqual(expectedCollectIterationOrder, collectWithTargetIterationOrder);
 
         MutableCollection<Integer> collectIfPredicateIterationOrder = this.newMutableForFilter();
         MutableCollection<Integer> collectIfFunctionIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().collectIf(collectIfPredicateIterationOrder::add, collectIfFunctionIterationOrder::add).forEach(noop);
         assertIterablesEqual(expectedIterationOrder, collectIfPredicateIterationOrder);
-        assertIterablesEqual(expectedIterationOrder, collectIfFunctionIterationOrder);
+        assertIterablesEqual(expectedCollectIterationOrder, collectIfFunctionIterationOrder);
 
         MutableCollection<Integer> collectIfPredicateTargetIterationOrder = this.newMutableForFilter();
         MutableCollection<Integer> collectIfFunctionTargetIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().collectIf(collectIfPredicateTargetIterationOrder::add, collectIfFunctionTargetIterationOrder::add, new HashBag<>());
         assertIterablesEqual(expectedIterationOrder, collectIfPredicateTargetIterationOrder);
-        assertIterablesEqual(expectedIterationOrder, collectIfFunctionTargetIterationOrder);
+        assertIterablesEqual(expectedCollectIterationOrder, collectIfFunctionTargetIterationOrder);
 
         MutableCollection<Integer> collectBooleanIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().collectBoolean(collectBooleanIterationOrder::add).forEach(each -> {
         });
-        assertIterablesEqual(expectedIterationOrder, collectBooleanIterationOrder);
+        assertIterablesEqual(expectedCollectIterationOrder, collectBooleanIterationOrder);
 
         MutableCollection<Integer> collectBooleanTargetIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().collectBoolean(collectBooleanTargetIterationOrder::add, new BooleanHashBag());
-        assertIterablesEqual(expectedIterationOrder, collectBooleanTargetIterationOrder);
+        assertIterablesEqual(expectedCollectIterationOrder, collectBooleanTargetIterationOrder);
 
         MutableCollection<Integer> collectByteIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().collectByte((Integer each) ->
@@ -910,7 +911,7 @@ public interface RichIterableTestCase extends IterableTestCase
             return (byte) 0;
         }).forEach(each -> {
         });
-        assertIterablesEqual(expectedIterationOrder, collectByteIterationOrder);
+        assertIterablesEqual(expectedCollectIterationOrder, collectByteIterationOrder);
 
         MutableCollection<Integer> collectByteTargetIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().collectByte((Integer each) ->
@@ -918,7 +919,7 @@ public interface RichIterableTestCase extends IterableTestCase
             collectByteTargetIterationOrder.add(each);
             return (byte) 0;
         }, new ByteHashBag());
-        assertIterablesEqual(expectedIterationOrder, collectByteTargetIterationOrder);
+        assertIterablesEqual(expectedCollectIterationOrder, collectByteTargetIterationOrder);
 
         MutableCollection<Integer> collectCharIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().collectChar((Integer each) ->
@@ -927,7 +928,7 @@ public interface RichIterableTestCase extends IterableTestCase
             return ' ';
         }).forEach(each -> {
         });
-        assertIterablesEqual(expectedIterationOrder, collectCharIterationOrder);
+        assertIterablesEqual(expectedCollectIterationOrder, collectCharIterationOrder);
 
         MutableCollection<Integer> collectCharTargetIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().collectChar((Integer each) ->
@@ -935,7 +936,7 @@ public interface RichIterableTestCase extends IterableTestCase
             collectCharTargetIterationOrder.add(each);
             return ' ';
         }, new CharHashBag());
-        assertIterablesEqual(expectedIterationOrder, collectCharTargetIterationOrder);
+        assertIterablesEqual(expectedCollectIterationOrder, collectCharTargetIterationOrder);
 
         MutableCollection<Integer> collectDoubleIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().collectDouble((Integer each) ->
@@ -944,7 +945,7 @@ public interface RichIterableTestCase extends IterableTestCase
             return 0.0;
         }).forEach(each -> {
         });
-        assertIterablesEqual(expectedIterationOrder, collectDoubleIterationOrder);
+        assertIterablesEqual(expectedCollectIterationOrder, collectDoubleIterationOrder);
 
         MutableCollection<Integer> collectDoubleTargetIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().collectDouble((Integer each) ->
@@ -952,7 +953,7 @@ public interface RichIterableTestCase extends IterableTestCase
             collectDoubleTargetIterationOrder.add(each);
             return 0.0;
         }, new DoubleHashBag());
-        assertIterablesEqual(expectedIterationOrder, collectDoubleTargetIterationOrder);
+        assertIterablesEqual(expectedCollectIterationOrder, collectDoubleTargetIterationOrder);
 
         MutableCollection<Integer> collectFloatIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().collectFloat((Integer each) ->
@@ -961,7 +962,7 @@ public interface RichIterableTestCase extends IterableTestCase
             return 0.0f;
         }).forEach(each -> {
         });
-        assertIterablesEqual(expectedIterationOrder, collectFloatIterationOrder);
+        assertIterablesEqual(expectedCollectIterationOrder, collectFloatIterationOrder);
 
         MutableCollection<Integer> collectFloatTargetIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().collectFloat((Integer each) ->
@@ -969,7 +970,7 @@ public interface RichIterableTestCase extends IterableTestCase
             collectFloatTargetIterationOrder.add(each);
             return 0.0f;
         }, new FloatHashBag());
-        assertIterablesEqual(expectedIterationOrder, collectFloatTargetIterationOrder);
+        assertIterablesEqual(expectedCollectIterationOrder, collectFloatTargetIterationOrder);
 
         MutableCollection<Integer> collectIntIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().collectInt((Integer each) ->
@@ -978,7 +979,7 @@ public interface RichIterableTestCase extends IterableTestCase
             return 0;
         }).forEach(each -> {
         });
-        assertIterablesEqual(expectedIterationOrder, collectIntIterationOrder);
+        assertIterablesEqual(expectedCollectIterationOrder, collectIntIterationOrder);
 
         MutableCollection<Integer> collectIntTargetIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().collectInt((Integer each) ->
@@ -986,7 +987,7 @@ public interface RichIterableTestCase extends IterableTestCase
             collectIntTargetIterationOrder.add(each);
             return 0;
         }, new IntHashBag());
-        assertIterablesEqual(expectedIterationOrder, collectIntTargetIterationOrder);
+        assertIterablesEqual(expectedCollectIterationOrder, collectIntTargetIterationOrder);
 
         MutableCollection<Integer> collectLongIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().collectLong((Integer each) ->
@@ -995,7 +996,7 @@ public interface RichIterableTestCase extends IterableTestCase
             return 0L;
         }).forEach(each -> {
         });
-        assertIterablesEqual(expectedIterationOrder, collectLongIterationOrder);
+        assertIterablesEqual(expectedCollectIterationOrder, collectLongIterationOrder);
 
         MutableCollection<Integer> collectLongTargetIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().collectLong((Integer each) ->
@@ -1003,7 +1004,7 @@ public interface RichIterableTestCase extends IterableTestCase
             collectLongTargetIterationOrder.add(each);
             return 0L;
         }, new LongHashBag());
-        assertIterablesEqual(expectedIterationOrder, collectLongTargetIterationOrder);
+        assertIterablesEqual(expectedCollectIterationOrder, collectLongTargetIterationOrder);
 
         MutableCollection<Integer> collectShortIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().collectShort((ShortFunction<Integer>) each -> {
@@ -1011,22 +1012,22 @@ public interface RichIterableTestCase extends IterableTestCase
             return (short) 0;
         }).forEach(each -> {
         });
-        assertIterablesEqual(expectedIterationOrder, collectShortIterationOrder);
+        assertIterablesEqual(expectedCollectIterationOrder, collectShortIterationOrder);
 
         MutableCollection<Integer> collectShortTargetIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().collectShort((ShortFunction<Integer>) each -> {
             collectShortTargetIterationOrder.add(each);
             return (short) 0;
         }, new ShortHashBag());
-        assertIterablesEqual(expectedIterationOrder, collectShortTargetIterationOrder);
+        assertIterablesEqual(expectedCollectIterationOrder, collectShortTargetIterationOrder);
 
         MutableCollection<Integer> flatCollectIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().flatCollect(each -> Lists.immutable.with(flatCollectIterationOrder.add(each))).forEach(noop);
-        assertIterablesEqual(expectedIterationOrder, flatCollectIterationOrder);
+        assertIterablesEqual(expectedCollectIterationOrder, flatCollectIterationOrder);
 
         MutableCollection<Integer> flatCollectTargetIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().flatCollect(each -> Lists.immutable.with(flatCollectTargetIterationOrder.add(each)), new HashBag<>());
-        assertIterablesEqual(expectedIterationOrder, flatCollectTargetIterationOrder);
+        assertIterablesEqual(expectedCollectIterationOrder, flatCollectTargetIterationOrder);
 
         MutableCollection<Integer> countIterationOrder = this.newMutableForFilter();
         this.getInstanceUnderTest().count(countIterationOrder::add);
@@ -1339,6 +1340,16 @@ public interface RichIterableTestCase extends IterableTestCase
         MutableCollection<Integer> forEach = this.newMutableForFilter();
         this.getInstanceUnderTest().each(forEach::add);
         return forEach;
+    }
+
+    /**
+     * Calls recorded by the transforming function of {@code collect*} and {@code flatCollect*}.
+     * Bags override this to once per occurrence. {@code collectIf} predicates stay on
+     * {@link #expectedIterationOrder()}.
+     */
+    default MutableCollection<Integer> expectedCollectIterationOrder()
+    {
+        return this.expectedIterationOrder();
     }
 
     default RichIterable<Integer> getInstanceUnderTest()

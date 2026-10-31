@@ -29,14 +29,6 @@ import org.eclipse.collections.api.block.function.primitive.<name>ToFloatFunctio
 import org.eclipse.collections.api.block.function.primitive.<name>ToIntFunction;
 import org.eclipse.collections.api.block.function.primitive.<name>ToLongFunction;
 import org.eclipse.collections.api.block.function.primitive.<name>ToShortFunction;
-import org.eclipse.collections.api.bag.primitive.MutableBooleanBag;
-import org.eclipse.collections.api.bag.primitive.MutableByteBag;
-import org.eclipse.collections.api.bag.primitive.MutableCharBag;
-import org.eclipse.collections.api.bag.primitive.MutableDoubleBag;
-import org.eclipse.collections.api.bag.primitive.MutableFloatBag;
-import org.eclipse.collections.api.bag.primitive.MutableIntBag;
-import org.eclipse.collections.api.bag.primitive.MutableLongBag;
-import org.eclipse.collections.api.bag.primitive.MutableShortBag;
 import org.eclipse.collections.api.collection.primitive.MutableBooleanCollection;
 import org.eclipse.collections.api.collection.primitive.MutableByteCollection;
 import org.eclipse.collections.api.collection.primitive.MutableCharCollection;
