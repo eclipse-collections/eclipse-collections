@@ -3812,7 +3812,7 @@ public interface RichIterableTestCase extends IterableTestCase
 
     @Override
     @Test
-    default void Iterable_toString()
+    default void Object_toString()
     {
         RichIterable<Integer> iterable = this.newWith(3, 2, 1);
         assertThat(iterable.toString(), isOneOf(

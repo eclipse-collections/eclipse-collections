@@ -20,7 +20,7 @@ public interface OrderedIterableNoIteratorTest extends NoIteratorTestCase, Order
 {
     @Override
     @Test
-    default void Iterable_next()
+    default void Iterable_iterator_next()
     {
         assertThrows(AssertionError.class, () -> this.newWith(3, 2, 1).iterator());
     }

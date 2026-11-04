@@ -93,18 +93,18 @@ public class ImmutableOrderedMapTest
 
     @Override
     @Test
-    public void Iterable_toString()
+    public void Object_toString()
     {
-        OrderedMapIterableTestCase.super.Iterable_toString();
-        UnmodifiableMapTestCase.super.Iterable_toString();
+        OrderedMapIterableTestCase.super.Object_toString();
+        UnmodifiableMapTestCase.super.Object_toString();
     }
 
     @Override
     @Test
-    public void Object_equalsAndHashCode()
+    public void Object_equals_hashCode()
     {
-        OrderedMapIterableTestCase.super.Object_equalsAndHashCode();
-        UnmodifiableMapTestCase.super.Object_equalsAndHashCode();
+        OrderedMapIterableTestCase.super.Object_equals_hashCode();
+        UnmodifiableMapTestCase.super.Object_equals_hashCode();
     }
 
     @Override

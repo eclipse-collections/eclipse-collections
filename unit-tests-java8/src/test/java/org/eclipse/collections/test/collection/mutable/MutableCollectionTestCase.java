@@ -277,9 +277,9 @@ public interface MutableCollectionTestCase extends CollectionTestCase, RichItera
 
     @Override
     @Test
-    default void Object_equalsAndHashCode()
+    default void Object_equals_hashCode()
     {
-        CollectionTestCase.super.Object_equalsAndHashCode();
+        CollectionTestCase.super.Object_equals_hashCode();
 
         if (!this.allowsAdd() || !this.supportsNonComparableElements())
         {

@@ -139,7 +139,7 @@ public interface MapIterableTestCase extends RichIterableWithDuplicatesTestCase
 
     @Override
     @Test
-    default void Iterable_toString()
+    default void Object_toString()
     {
         MapIterable<String, Integer> map = this.newWithKeysValues("Two", 2, "One", 1);
         assertEquals("{Two=2, One=1}", map.toString());

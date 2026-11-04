@@ -51,9 +51,9 @@ public interface ListTestCase extends CollectionTestCase
 
     @Override
     @Test
-    default void Iterable_toString()
+    default void Object_toString()
     {
-        CollectionTestCase.super.Iterable_toString();
+        CollectionTestCase.super.Object_toString();
 
         Iterable<Integer> iterable = this.newWith(3, 3, 3, 2, 2, 1);
         assertEquals("[3, 3, 3, 2, 2, 1]", iterable.toString());

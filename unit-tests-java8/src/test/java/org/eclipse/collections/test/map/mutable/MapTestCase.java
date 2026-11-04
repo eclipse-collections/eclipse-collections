@@ -67,7 +67,7 @@ public interface MapTestCase
         return true;
     }
 
-    default void Iterable_toString()
+    default void Object_toString()
     {
         Map<String, Integer> map = this.newWithKeysValues("Two", 2, "One", 1);
         assertEquals("[Two, One]", map.keySet().toString());
@@ -106,7 +106,7 @@ public interface MapTestCase
     }
 
     @Test
-    default void Object_equalsAndHashCode()
+    default void Object_equals_hashCode()
     {
         Map<String, Integer> map1 = this.newWithKeysValues("A", 1, "B", 2);
         Map<String, Integer> map2 = this.newWithKeysValues("B", 2, "A", 1);

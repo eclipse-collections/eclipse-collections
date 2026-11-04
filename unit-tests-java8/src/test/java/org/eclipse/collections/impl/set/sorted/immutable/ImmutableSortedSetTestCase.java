@@ -73,9 +73,9 @@ public interface ImmutableSortedSetTestCase extends ImmutableSortedSetIterableTe
 
     @Override
     @Test
-    default void Iterable_toString()
+    default void Object_toString()
     {
-        NavigableSetTestCase.super.Iterable_toString();
-        ImmutableSortedSetIterableTestCase.super.Iterable_toString();
+        NavigableSetTestCase.super.Object_toString();
+        ImmutableSortedSetIterableTestCase.super.Object_toString();
     }
 }

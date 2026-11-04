@@ -32,9 +32,9 @@ public interface NoIteratorMapKeySetTestCase extends MapKeySetTestCase
     // TODO: Implement Set.equals on UnifiedMap.KeySet without delegating to iterator()
     @Override
     @Test
-    default void Object_equalsAndHashCode()
+    default void Object_equals_hashCode()
     {
-        MapKeySetTestCase.super.Object_equalsAndHashCode();
+        MapKeySetTestCase.super.Object_equals_hashCode();
 
         AssertionError error = assertThrows(
                 AssertionError.class,

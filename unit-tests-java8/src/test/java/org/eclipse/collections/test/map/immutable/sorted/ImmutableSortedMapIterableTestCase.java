@@ -145,18 +145,18 @@ public interface ImmutableSortedMapIterableTestCase extends SortedMapIterableTes
 
     @Override
     @Test
-    default void Object_equalsAndHashCode()
+    default void Object_equals_hashCode()
     {
-        SortedMapIterableTestCase.super.Object_equalsAndHashCode();
-        UnmodifiableMapTestCase.super.Object_equalsAndHashCode();
+        SortedMapIterableTestCase.super.Object_equals_hashCode();
+        UnmodifiableMapTestCase.super.Object_equals_hashCode();
     }
 
     @Override
     @Test
-    default void Iterable_toString()
+    default void Object_toString()
     {
-        // MapTestCase.Iterable_toString() assumes insertion order
-        SortedMapIterableTestCase.super.Iterable_toString();
+        // MapTestCase.Object_toString() assumes insertion order
+        SortedMapIterableTestCase.super.Object_toString();
     }
 
     @Override
