@@ -5,6 +5,7 @@
 
 ## Performance Improvements
 * `UnifiedMap` and `UnifiedMapWithHashingStrategy` now provide single-lookup overrides for `computeIfAbsent`, `computeIfPresent`, and `compute`, reducing hash lookups from 2–3 (Java default) to 1. ([#147](https://github.com/eclipse-collections/eclipse-collections/issues/147), [#500](https://github.com/eclipse-collections/eclipse-collections/issues/500))
+* The deprecated `compact()` methods on the mutable primitive hash maps no longer rehash when the table can neither shrink nor clear any removed sentinels, and shrink to the target capacity with a single rehash instead of growing mid-rehash. ([#1668](https://github.com/eclipse-collections/eclipse-collections/issues/1668))
 
 ## Documentation Changes
 * Improved Javadoc for 'Sets' factory class ([#782](https://github.com/eclipse-collections/eclipse-collections/issues/782))
