@@ -21,6 +21,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -59,5 +60,12 @@ public class ObjectBooleanHashMapKeysViewTest extends AbstractLazyIterableTestCa
 
         assertEquals(expected, actual);
         assertThrows(NoSuchElementException.class, iterator::next);
+    }
+
+    @Test
+    public void iteratorWithNullKey()
+    {
+        Iterator<String> iterator = ObjectBooleanHashMap.newWithKeysValues((String) null, false).keysView().iterator();
+        assertNull(iterator.next());
     }
 }

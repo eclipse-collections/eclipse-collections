@@ -1838,7 +1838,7 @@ public class ObjectBooleanHashMap<K> implements MutableObjectBooleanMap<K>, Exte
                 {
                     this.position++;
                 }
-                K result = (K) ObjectBooleanHashMap.this.keys[this.position];
+                K result = ObjectBooleanHashMap.this.toNonSentinel(keys[this.position]);
                 this.count++;
                 this.position++;
                 return result;
