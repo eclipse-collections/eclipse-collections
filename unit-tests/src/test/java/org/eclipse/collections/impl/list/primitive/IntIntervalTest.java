@@ -10,7 +10,9 @@
 
 package org.eclipse.collections.impl.list.primitive;
 
+import java.util.Comparator;
 import java.util.NoSuchElementException;
+import java.util.Spliterator;
 import java.util.stream.Collectors;
 
 import org.eclipse.collections.api.IntIterable;
@@ -336,6 +338,57 @@ public class IntIntervalTest
 
         assertThrows(IllegalArgumentException.class, () -> interval12.chunk(0));
         assertThrows(IllegalArgumentException.class, () -> interval12.chunk(-1));
+    }
+
+    @Test
+    public void chunkOnSingleValueInterval()
+    {
+        MutableList<IntIterable> expected = Lists.mutable.with(IntLists.mutable.with(1));
+        assertEquals(expected, IntInterval.oneTo(1).chunk(1));
+        assertEquals(expected, IntInterval.oneTo(1).chunk(2));
+        assertEquals(expected, IntInterval.oneTo(1).chunk(Integer.MAX_VALUE));
+
+        assertEquals(Lists.mutable.with(IntLists.mutable.with(0)), IntInterval.fromToBy(0, 4, 5).chunk(2));
+        assertEquals(Lists.mutable.with(IntLists.mutable.with(7)), IntInterval.fromTo(7, 7).chunk(3));
+
+        assertEquals(IntLists.mutable.with(1).chunk(2), IntInterval.oneTo(1).chunk(2));
+    }
+
+    @Test
+    public void spliteratorOfSingleValueIntervalWithNegativeStep()
+    {
+        IntInterval interval = IntInterval.fromToBy(5, 5, -1);
+        assertArrayEquals(new int[]{5}, take(interval.spliterator(), 4));
+        assertEquals(Comparator.reverseOrder(), interval.spliterator().getComparator());
+
+        assertArrayEquals(new int[]{5, 4, 3, 2, 1}, take(IntInterval.fromToBy(5, 1, -1).spliterator(), 10));
+        assertArrayEquals(new int[]{1, 4, 7, 10}, take(IntInterval.fromToBy(1, 10, 3).spliterator(), 10));
+    }
+
+    private static int[] take(Spliterator.OfInt spliterator, int limit)
+    {
+        MutableIntList values = IntLists.mutable.empty();
+        boolean advanced = true;
+        while (advanced && values.size() < limit)
+        {
+            advanced = spliterator.tryAdvance((int each) -> values.add(each));
+        }
+        return values.toArray();
+    }
+
+    @Test
+    public void intIteratorOnSingleValueIntervalWithNegativeStep()
+    {
+        IntInterval interval = IntInterval.fromToBy(5, 5, -1);
+        assertEquals(1, interval.size());
+
+        IntIterator iterator = interval.intIterator();
+        assertTrue(iterator.hasNext());
+        assertEquals(5, iterator.next());
+        assertFalse(iterator.hasNext());
+
+        assertEquals(Lists.mutable.with(IntLists.mutable.with(5)), interval.chunk(2));
+        assertEquals(IntLists.mutable.with(5).chunk(2), interval.chunk(2));
     }
 
     @Test

@@ -654,38 +654,15 @@ public final class IntInterval
             throw new IllegalArgumentException("Size for groups must be positive but was: " + size);
         }
         MutableList<IntIterable> result = Lists.mutable.empty();
-        if (this.notEmpty())
+        IntIterator iterator = this.intIterator();
+        while (iterator.hasNext())
         {
-            int innerFrom = this.from;
-            int lastUpdated = this.from;
-            if (this.from <= this.to)
+            MutableIntList batch = IntLists.mutable.empty();
+            for (int i = 0; i < size && iterator.hasNext(); i++)
             {
-                while ((lastUpdated + this.step) <= this.to)
-                {
-                    MutableIntList batch = IntLists.mutable.empty();
-                    for (long i = innerFrom; i <= this.to && batch.size() < size; i += this.step)
-                    {
-                        batch.add((int) i);
-                        lastUpdated = (int) i;
-                    }
-                    result.add(batch);
-                    innerFrom = lastUpdated + this.step;
-                }
+                batch.add(iterator.next());
             }
-            else
-            {
-                while ((lastUpdated + this.step) >= this.to)
-                {
-                    MutableIntList batch = IntLists.mutable.empty();
-                    for (long i = innerFrom; i >= this.to && batch.size() < size; i += this.step)
-                    {
-                        batch.add((int) i);
-                        lastUpdated = (int) i;
-                    }
-                    result.add(batch);
-                    innerFrom = lastUpdated + this.step;
-                }
-            }
+            result.add(batch);
         }
         return result;
     }
@@ -945,7 +922,7 @@ public final class IntInterval
         @Override
         public boolean hasNext()
         {
-            if (IntInterval.this.from <= IntInterval.this.to)
+            if (IntInterval.this.goForward())
             {
                 return this.current <= IntInterval.this.to;
             }
@@ -977,7 +954,7 @@ public final class IntInterval
             this.current = from;
             this.to = to;
             this.step = step;
-            this.isAscending = from <= to;
+            this.isAscending = step > 0;
         }
 
         @Override

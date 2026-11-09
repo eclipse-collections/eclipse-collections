@@ -2,6 +2,7 @@
 
 ## Bug Fixes
 * Fixed `SynchronizedMutableMap` (and `SynchronizedBiMap`, `SynchronizedSortedMap`) so that `computeIfAbsent`, `computeIfPresent`, `compute`, `replaceAll`, and `putIfAbsent` hold the lock across the entire operation. The Java default implementations were not atomic because they invoked `get()` and `put()` as two separate synchronized calls. ([#147](https://github.com/eclipse-collections/eclipse-collections/issues/147), [#500](https://github.com/eclipse-collections/eclipse-collections/issues/500))
+* Fixed `Interval`, `IntInterval` and `LongInterval` for single-value intervals with a negative step: `Interval.iterator()` never terminated, and `IntInterval.chunk(int)` and `LongInterval.chunk(int)` returned no chunks at all. Iteration direction is now derived from the step, which also corrects the primitive spliterators.
 
 ## Performance Improvements
 * `UnifiedMap` and `UnifiedMapWithHashingStrategy` now provide single-lookup overrides for `computeIfAbsent`, `computeIfPresent`, and `compute`, reducing hash lookups from 2–3 (Java default) to 1. ([#147](https://github.com/eclipse-collections/eclipse-collections/issues/147), [#500](https://github.com/eclipse-collections/eclipse-collections/issues/500))
