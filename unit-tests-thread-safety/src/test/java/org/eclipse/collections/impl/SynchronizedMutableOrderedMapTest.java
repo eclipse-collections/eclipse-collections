@@ -13,6 +13,7 @@ package org.eclipse.collections.impl;
 import org.eclipse.collections.api.map.MutableOrderedMap;
 import org.eclipse.collections.impl.list.mutable.FastList;
 import org.eclipse.collections.impl.map.ordered.mutable.OrderedHashMap;
+import org.eclipse.collections.impl.map.ordered.mutable.SynchronizedMutableOrderedMap;
 import org.junit.jupiter.api.Test;
 
 public class SynchronizedMutableOrderedMapTest
@@ -27,15 +28,45 @@ public class SynchronizedMutableOrderedMapTest
     }
 
     @Test
+    public void of_with_lock_synchronized()
+    {
+        MutableOrderedMap<String, String> map = SynchronizedMutableOrderedMap.of(OrderedHashMap.newMap(), this.getClassUnderTest());
+        this.assertSynchronized(map::size);
+    }
+
+    @Test
     public void collectWithIndex_synchronized()
     {
         this.assertSynchronized(() -> this.getClassUnderTest().collectWithIndex((value, index) -> value + index));
     }
 
     @Test
+    public void collectWithIndex_with_target_synchronized()
+    {
+        this.assertSynchronized(() -> this.getClassUnderTest().collectWithIndex((value, index) -> value + index, FastList.newList()));
+    }
+
+    @Test
+    public void selectWithIndex_synchronized()
+    {
+        this.assertSynchronized(() -> this.getClassUnderTest().selectWithIndex((value, index) -> true, FastList.newList()));
+    }
+
+    @Test
+    public void rejectWithIndex_synchronized()
+    {
+        this.assertSynchronized(() -> this.getClassUnderTest().rejectWithIndex((value, index) -> true, FastList.newList()));
+    }
+
+    @Test
     public void take_synchronized()
     {
         this.assertSynchronized(() -> this.getClassUnderTest().take(2));
+    }
+
+    @Test
+    public void takeWhile_synchronized()
+    {
         this.assertSynchronized(() -> this.getClassUnderTest().takeWhile(value -> true));
     }
 
@@ -43,6 +74,11 @@ public class SynchronizedMutableOrderedMapTest
     public void drop_synchronized()
     {
         this.assertSynchronized(() -> this.getClassUnderTest().drop(2));
+    }
+
+    @Test
+    public void dropWhile_synchronized()
+    {
         this.assertSynchronized(() -> this.getClassUnderTest().dropWhile(value -> true));
     }
 
@@ -68,6 +104,11 @@ public class SynchronizedMutableOrderedMapTest
     public void detectIndex_synchronized()
     {
         this.assertSynchronized(() -> this.getClassUnderTest().detectIndex(value -> false));
+    }
+
+    @Test
+    public void detectLastIndex_synchronized()
+    {
         this.assertSynchronized(() -> this.getClassUnderTest().detectLastIndex(value -> false));
     }
 
@@ -87,13 +128,23 @@ public class SynchronizedMutableOrderedMapTest
     public void reverseForEach_synchronized()
     {
         this.assertSynchronized(() -> this.getClassUnderTest().reverseForEach(value -> { }));
+    }
+
+    @Test
+    public void reverseForEachWithIndex_synchronized()
+    {
         this.assertSynchronized(() -> this.getClassUnderTest().reverseForEachWithIndex((value, index) -> { }));
     }
 
     @Test
-    public void forEachFromTo_synchronized()
+    public void forEach_with_from_to_synchronized()
     {
         this.assertSynchronized(() -> this.getClassUnderTest().forEach(0, 1, value -> { }));
+    }
+
+    @Test
+    public void forEachWithIndex_with_from_to_synchronized()
+    {
         this.assertSynchronized(() -> this.getClassUnderTest().forEachWithIndex(0, 1, (value, index) -> { }));
     }
 
@@ -101,6 +152,11 @@ public class SynchronizedMutableOrderedMapTest
     public void getFirstOptional_synchronized()
     {
         this.assertSynchronized(this.getClassUnderTest()::getFirstOptional);
+    }
+
+    @Test
+    public void getLastOptional_synchronized()
+    {
         this.assertSynchronized(this.getClassUnderTest()::getLastOptional);
     }
 
