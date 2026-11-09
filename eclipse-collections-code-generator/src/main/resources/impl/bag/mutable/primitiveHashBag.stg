@@ -669,7 +669,12 @@ public class <name>HashBag
     {
         MutableBag\<V> result = HashBag.newBag(this.items.size());
         this.forEachWithOccurrences((<type> each, int occurrences) ->
-                result.addOccurrences(function.valueOf(each), occurrences));
+        {
+            for (int i = 0; i \< occurrences; i++)
+            {
+                result.add(function.valueOf(each));
+            }
+        });
         return result;
     }
 

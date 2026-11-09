@@ -244,6 +244,55 @@ public abstract class MutableBagTestCase extends AbstractCollectionTestCase
                 bag2.collectWithOccurrences((each, index) -> each + index));
     }
 
+    @Test
+    public void collectEachOccurrences()
+    {
+        Bag<Integer> bag = this.newWith(1, 1, 1, 2, 2);
+        MutableBag<String> target = Bags.mutable.empty();
+        int[] calls = {0};
+        bag.collectEachOccurrences(each ->
+        {
+            calls[0]++;
+            return String.valueOf(each);
+        }, target);
+        assertEquals(2, calls[0]);
+        assertEquals(Bags.mutable.with("1", "1", "1", "2", "2"), target);
+        assertEquals(3, target.occurrencesOf("1"));
+        assertEquals(2, target.occurrencesOf("2"));
+    }
+
+    @Test
+    public void collect_appliesFunctionOncePerOccurrence()
+    {
+        Bag<Integer> bag = this.newWith(1, 1, 1);
+        int[] calls = {0};
+        MutableBag<String> target = Bags.mutable.empty();
+        bag.collect(each ->
+        {
+            calls[0]++;
+            return each + "-" + calls[0];
+        }, target);
+        assertEquals(3, calls[0]);
+        assertEquals(1, target.occurrencesOf("1-1"));
+        assertEquals(1, target.occurrencesOf("1-2"));
+        assertEquals(1, target.occurrencesOf("1-3"));
+    }
+
+    @Test
+    public void countBy_appliesFunctionOncePerDistinct()
+    {
+        Bag<Integer> bag = this.newWith(1, 1, 1, 2, 2);
+        int[] calls = {0};
+        Bag<Integer> counts = bag.countBy(each ->
+        {
+            calls[0]++;
+            return each % 2;
+        });
+        assertEquals(2, calls[0]);
+        assertEquals(3, counts.occurrencesOf(1));
+        assertEquals(2, counts.occurrencesOf(0));
+    }
+
     @Override
     @Test
     public void toImmutable()

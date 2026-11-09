@@ -46,6 +46,25 @@ public interface BagTestCase extends RichIterableWithDuplicatesTestCase
         return forEach;
     }
 
+    /**
+     * {@code collect*} applies the function once per occurrence. Distinct iteration stays on
+     * {@link #expectedIterationOrder()}.
+     */
+    @Override
+    default MutableCollection<Integer> expectedCollectIterationOrder()
+    {
+        MutableCollection<Integer> result = this.newMutableForFilter();
+        Bag<Integer> bag = this.newWith(4, 4, 4, 4, 3, 3, 3, 2, 2, 1);
+        bag.forEachWithOccurrences((each, occurrences) ->
+        {
+            for (int i = 0; i < occurrences; i++)
+            {
+                result.add(each);
+            }
+        });
+        return result;
+    }
+
     @Override
     @Test
     default void RichIterable_iterator_iterationOrder()
