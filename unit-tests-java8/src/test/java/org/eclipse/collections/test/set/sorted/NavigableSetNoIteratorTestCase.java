@@ -61,7 +61,7 @@ public interface NavigableSetNoIteratorTestCase extends NavigableSetTestCase
      */
     @Override
     @Test
-    default void Iterable_toString()
+    default void Object_toString()
     {
         assertThrows(AssertionError.class, () -> this.newWith(3, 2, 1).toString());
     }
@@ -72,7 +72,7 @@ public interface NavigableSetNoIteratorTestCase extends NavigableSetTestCase
      */
     @Override
     @Test
-    default void Object_equalsAndHashCode()
+    default void Object_equals_hashCode()
     {
         assertThrows(AssertionError.class, () -> this.newWith(3, 2, 1).hashCode());
         assertThrows(AssertionError.class, () -> this.newWith(3, 2, 1).equals(this.newWith(3, 2, 1)));

@@ -29,9 +29,9 @@ public interface MapKeySetTestCase extends SetTestCase
 
     @Override
     @Test
-    default void Object_equalsAndHashCode()
+    default void Object_equals_hashCode()
     {
-        SetTestCase.super.Object_equalsAndHashCode();
+        SetTestCase.super.Object_equals_hashCode();
 
         RecursiveComparableList recursiveList = new RecursiveComparableList();
         Set<RecursiveComparableList> set = this.newWith(recursiveList);

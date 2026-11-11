@@ -46,9 +46,9 @@ public interface SetTestCase extends CollectionTestCase
 
     @Override
     @Test
-    default void Iterable_next()
+    default void Iterable_iterator_next()
     {
-        CollectionTestCase.super.Iterable_next();
+        CollectionTestCase.super.Iterable_iterator_next();
 
         if (!this.allowsIterator())
         {
