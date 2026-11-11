@@ -2,6 +2,7 @@
 
 ## Bug Fixes
 * Fixed `SynchronizedMutableMap` (and `SynchronizedBiMap`, `SynchronizedSortedMap`) so that `computeIfAbsent`, `computeIfPresent`, `compute`, `replaceAll`, and `putIfAbsent` hold the lock across the entire operation. The Java default implementations were not atomic because they invoked `get()` and `put()` as two separate synchronized calls. ([#147](https://github.com/eclipse-collections/eclipse-collections/issues/147), [#500](https://github.com/eclipse-collections/eclipse-collections/issues/500))
+* Fixed `ObjectBooleanHashMap` and `ObjectBooleanHashMapWithHashingStrategy` so that their `keysView()` iterators return `null` instead of an internal sentinel object for a null key. ([#2001](https://github.com/eclipse-collections/eclipse-collections/pull/2001))
 
 ## Performance Improvements
 * `UnifiedMap` and `UnifiedMapWithHashingStrategy` now provide single-lookup overrides for `computeIfAbsent`, `computeIfPresent`, and `compute`, reducing hash lookups from 2–3 (Java default) to 1. ([#147](https://github.com/eclipse-collections/eclipse-collections/issues/147), [#500](https://github.com/eclipse-collections/eclipse-collections/issues/500))
