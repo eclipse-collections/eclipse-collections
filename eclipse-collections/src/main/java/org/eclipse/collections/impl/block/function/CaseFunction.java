@@ -17,6 +17,14 @@ import org.eclipse.collections.api.list.MutableList;
 import org.eclipse.collections.api.tuple.Pair;
 import org.eclipse.collections.impl.tuple.Tuples;
 
+/**
+ * CaseFunction consists of zero or more cases; each case contains a predicate and a function.
+ * Cases are evaluated in the order they were added. The function of the first case whose predicate
+ * accepts the argument is applied to the argument, and its result is returned.
+ * <p>
+ * If no case matches and a default function has been set, the default function is applied to the argument
+ * and its result is returned; otherwise, {@code null} is returned.
+ */
 public class CaseFunction<T extends Comparable<? super T>, V> implements Function<T, V>
 {
     private static final long serialVersionUID = 1L;
