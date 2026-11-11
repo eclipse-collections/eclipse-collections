@@ -2447,17 +2447,53 @@ Assert.assertEquals(2.0d, intList.summaryStatistics().getAverage(), 0.0);
 Primitive maps with numeric value types (not boolean or Object) have a method **addToValue** that adds the given amount to the value at the given key and returns the updated value.
 
 ```java
-MutableByteIntMap map =
-new ByteIntHashMap();
+MutableByteIntMap map = new ByteIntHashMap();
 Assert.assertEquals(1, map.addToValue((byte) 0, 1));
 Assert.assertEquals(ByteIntHashMap.newWithKeysValues((byte) 0, 1), map);
-Assert.assertEquals(11, map.addToValue((
-byte) 0, 10));
+Assert.assertEquals(11, map.addToValue((byte) 0, 10));
 Assert.assertEquals(ByteIntHashMap.newWithKeysValues((byte) 0, 11), map);
 ```
 
-All primitive collections have immutable counterparts, and unmodifiable and synchronized wrappers. See the [Protecting collections](#protective-wrappers) topic for more information.
+### Iteration Patterns for Primitive Collections
 
+Eclipse Collections provides various patterns for iterating over primitive collections:
+
+**1. Basic Iteration**
+```java
+IntList intList = IntLists.mutable.with(1, 2, 3, 4, 5);
+for (int i : intList) {
+    System.out.println(i);
+}
+```
+
+**2. Using `forEach` Method**
+```java
+IntList intList = IntLists.mutable.with(1, 2, 3, 4, 5);
+intList.forEach(value -> System.out.println(value));
+```
+
+**3. Transforming Elements**
+```java
+IntList intList = IntLists.mutable.with(1, 2, 3);
+IntList squaredList = intList.collect(value -> value * value);
+System.out.println(squaredList); // Output: [1, 4, 9]
+```
+
+**4. Filtering Elements**
+```java
+IntList intList = IntLists.mutable.with(1, 2, 3, 4, 5);
+IntList evenNumbers = intList.select(value -> value % 2 == 0);
+System.out.println(evenNumbers); // Output: [2, 4]
+```
+
+**5. Aggregating Values**
+```java
+IntList intList = IntLists.mutable.with(1, 2, 3, 4, 5);
+int sum = intList.injectInto(0, (acc, value) -> acc + value);
+System.out.println(sum); // Output: 15
+```
+
+All primitive collections have immutable counterparts, and unmodifiable and synchronized wrappers. See the [Protecting collections](#protective-wrappers) topic for more information.
 []() Immutable collections
 -------------------------
 
