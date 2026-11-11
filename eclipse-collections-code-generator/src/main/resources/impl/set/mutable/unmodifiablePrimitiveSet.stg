@@ -27,6 +27,9 @@ import org.eclipse.collections.impl.collection.mutable.primitive.AbstractUnmodif
 import org.eclipse.collections.api.LazyIterable;
 import org.eclipse.collections.api.tuple.primitive.<name><name>Pair;
 import org.eclipse.collections.impl.factory.primitive.<name>Sets;
+<if(primitive.specializedStream)>
+import java.util.Spliterator;
+<endif>
 
 /**
  * This file was automatically generated from template file unmodifiablePrimitiveSet.stg.
@@ -157,6 +160,14 @@ public class Unmodifiable<name>Set
     {
         return this.getMutable<name>Set().newEmpty();
     }
+<if(primitive.specializedStream)>
+
+    @Override
+    public Spliterator.Of<name> spliterator()
+    {
+        return this.getMutable<name>Set().spliterator();
+    }
+<endif>
 }
 
 >>
