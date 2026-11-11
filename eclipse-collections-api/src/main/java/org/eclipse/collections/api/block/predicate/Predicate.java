@@ -20,6 +20,12 @@ import java.io.Serializable;
 public interface Predicate<T>
         extends java.util.function.Predicate<T>, Serializable
 {
+    /**
+     * Evaluates this predicate against the given object.
+     *
+     * @param each the object to evaluate
+     * @return {@code true} if the object meets the criteria of this predicate, {@code false} otherwise
+     */
     boolean accept(T each);
 
     @Override
