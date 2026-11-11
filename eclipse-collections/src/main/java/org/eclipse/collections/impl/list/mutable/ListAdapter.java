@@ -42,14 +42,14 @@ import org.eclipse.collections.impl.utility.OrderedIterate;
  * <p>
  * To create a new wrapper around an existing List instance, use the {@link #adapt(List)} factory method.
  */
-public final class ListAdapter<T>
+public class ListAdapter<T>
         extends AbstractListAdapter<T>
         implements Serializable
 {
     private static final long serialVersionUID = 1L;
     private final List<T> delegate;
 
-    ListAdapter(List<T> newDelegate)
+    protected ListAdapter(List<T> newDelegate)
     {
         if (newDelegate == null)
         {

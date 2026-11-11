@@ -59,7 +59,7 @@ public class UnmodifiableMutableSet<T>
         extends AbstractUnmodifiableMutableCollection<T>
         implements MutableSet<T>, Serializable
 {
-    UnmodifiableMutableSet(MutableSet<? extends T> mutableSet)
+    protected UnmodifiableMutableSet(MutableSet<? extends T> mutableSet)
     {
         super(mutableSet);
     }
