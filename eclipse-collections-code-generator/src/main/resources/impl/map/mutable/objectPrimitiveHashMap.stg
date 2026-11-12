@@ -1259,7 +1259,11 @@ public class Object<name>HashMap\<K> implements MutableObject<name>Map\<K>, Exte
     @Deprecated
     public void compact()
     {
-        this.rehash(this.smallestPowerOfTwoGreaterThan(this.size()));
+        int newCapacity = this.smallestPowerOfTwoGreaterThan(this.size() \<\< 1);
+        if (this.keys.length != newCapacity || this.occupiedWithSentinels > 0)
+        {
+            this.rehash(newCapacity);
+        }
     }
 
     private void rehashAndGrow()

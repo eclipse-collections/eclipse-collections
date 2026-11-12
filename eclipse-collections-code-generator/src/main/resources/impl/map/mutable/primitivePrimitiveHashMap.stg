@@ -1011,7 +1011,12 @@ public class <name1><name2>HashMap extends AbstractMutable<name2>ValuesMap imple
     @Deprecated
     public void compact()
     {
-        this.rehash(this.smallestPowerOfTwoGreaterThan(this.size()));
+        int newCapacity = this.smallestPowerOfTwoGreaterThan(this.size() \<\< 1);
+        int currentCapacity = this.<keyArray>.length<if(sameTwoPrimitives)> \>> 1<endif>;
+        if (currentCapacity != newCapacity || this.occupiedWithSentinels > 0)
+        {
+            this.rehash(newCapacity);
+        }
     }
 
     private void rehashAndGrow()
