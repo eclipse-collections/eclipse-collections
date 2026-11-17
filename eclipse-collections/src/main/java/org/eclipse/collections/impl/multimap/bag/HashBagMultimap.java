@@ -40,6 +40,8 @@ public final class HashBagMultimap<K, V>
         this.putAll(multimap);
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public HashBagMultimap(Pair<K, V>... pairs)
     {
         super(pairs);
@@ -60,6 +62,8 @@ public final class HashBagMultimap<K, V>
         return new HashBagMultimap<>();
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <K, V> HashBagMultimap<K, V> newMultimap(Pair<K, V>... pairs)
     {
         return new HashBagMultimap<>(pairs);

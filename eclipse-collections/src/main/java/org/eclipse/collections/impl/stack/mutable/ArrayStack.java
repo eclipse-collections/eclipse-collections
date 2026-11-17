@@ -134,6 +134,8 @@ public class ArrayStack<T> implements MutableStack<T>, Externalizable
         this.delegate = FastList.newList(items);
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public ArrayStack(T... items)
     {
         this.delegate = FastList.wrapCopy(items);
@@ -149,11 +151,14 @@ public class ArrayStack<T> implements MutableStack<T>, Externalizable
         return new ArrayStack<>((Iterable<T>) items);
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <T> ArrayStack<T> newStackWith(T... items)
     {
         return new ArrayStack<>(items);
     }
 
+    @SafeVarargs
     public static <T> ArrayStack<T> newStackFromTopToBottom(T... items)
     {
         ArrayStack<T> stack = new ArrayStack<>(items.length);

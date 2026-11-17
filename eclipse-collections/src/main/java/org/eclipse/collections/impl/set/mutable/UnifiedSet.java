@@ -184,6 +184,8 @@ public class UnifiedSet<T>
         return new UnifiedSet<>(size, loadFactor);
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <K> UnifiedSet<K> newSetWith(K... elements)
     {
         return UnifiedSet.<K>newSet(elements.length).with(elements);

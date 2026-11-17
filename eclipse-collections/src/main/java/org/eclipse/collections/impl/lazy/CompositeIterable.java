@@ -39,6 +39,8 @@ public final class CompositeIterable<E>
         this(FastList.newList());
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <T> CompositeIterable<T> with(Iterable<T>... iterables)
     {
         return new CompositeIterable<>(FastList.newListWith(iterables));

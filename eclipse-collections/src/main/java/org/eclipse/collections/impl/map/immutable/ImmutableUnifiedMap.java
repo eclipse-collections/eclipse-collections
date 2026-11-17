@@ -42,6 +42,8 @@ public class ImmutableUnifiedMap<K, V>
         this.delegate = UnifiedMap.newMap(delegate);
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public ImmutableUnifiedMap(Pair<K, V>... pairs)
     {
         this(UnifiedMap.newMapWith(pairs));

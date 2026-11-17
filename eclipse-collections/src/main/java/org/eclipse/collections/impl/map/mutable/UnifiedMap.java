@@ -162,6 +162,8 @@ public class UnifiedMap<K, V> extends AbstractMutableMap<K, V>
         this.putAll(map);
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public UnifiedMap(Pair<K, V>... pairs)
     {
         this(Math.max(pairs.length, DEFAULT_INITIAL_CAPACITY), DEFAULT_LOAD_FACTOR);
@@ -191,6 +193,8 @@ public class UnifiedMap<K, V> extends AbstractMutableMap<K, V>
         return new UnifiedMap<>(map);
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <K, V> UnifiedMap<K, V> newMapWith(Pair<K, V>... pairs)
     {
         return new UnifiedMap<>(pairs);

@@ -121,6 +121,7 @@ public final class Comparators
     }
 
     @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <T> SerializableComparator<T> chain(Comparator<T>... comparators)
     {
         if (comparators.length == 0)

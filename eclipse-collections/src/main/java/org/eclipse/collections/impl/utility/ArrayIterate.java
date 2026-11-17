@@ -157,6 +157,8 @@ public final class ArrayIterate
     /**
      * @see Iterate#min(Iterable)
      */
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <T> T min(T... array)
     {
         return InternalArrayIterate.min(array, array.length);
@@ -165,6 +167,8 @@ public final class ArrayIterate
     /**
      * @see Iterate#max(Iterable)
      */
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <T> T max(T... array)
     {
         return InternalArrayIterate.max(array, array.length);
@@ -1516,6 +1520,8 @@ public final class ArrayIterate
     /**
      * @see Iterate#zipWithIndex(Iterable)
      */
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <T> MutableList<Pair<T, Integer>> zipWithIndex(T... array)
     {
         return ArrayIterate.zipWithIndex(array, FastList.newList());
@@ -1536,6 +1542,8 @@ public final class ArrayIterate
     /**
      * @see Iterate#makeString(Iterable)
      */
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <T> String makeString(T... array)
     {
         return ArrayIterate.makeString(array, ", ");

@@ -150,11 +150,15 @@ public class TreeSortedSet<T> extends AbstractMutableCollection<T>
         return new TreeSortedSet<>(comparator, iterable);
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <T> TreeSortedSet<T> newSetWith(T... elements)
     {
         return new TreeSortedSet<T>().with(elements);
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <T> TreeSortedSet<T> newSetWith(Comparator<? super T> comparator, T... elements)
     {
         return new TreeSortedSet<T>(comparator).with(elements);

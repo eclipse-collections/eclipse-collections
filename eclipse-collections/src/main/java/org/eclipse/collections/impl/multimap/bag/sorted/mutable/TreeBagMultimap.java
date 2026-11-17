@@ -64,6 +64,8 @@ public final class TreeBagMultimap<K, V>
         this.putAll(multimap);
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public TreeBagMultimap(Pair<K, V>... pairs)
     {
         super(pairs);
@@ -91,6 +93,8 @@ public final class TreeBagMultimap<K, V>
         return new TreeBagMultimap<>(comparator);
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <K, V> TreeBagMultimap<K, V> newMultimap(Pair<K, V>... pairs)
     {
         return new TreeBagMultimap<>(pairs);

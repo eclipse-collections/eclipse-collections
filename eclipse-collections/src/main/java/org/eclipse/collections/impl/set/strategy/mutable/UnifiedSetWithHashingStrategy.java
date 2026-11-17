@@ -206,6 +206,8 @@ public class UnifiedSetWithHashingStrategy<T>
         return new UnifiedSetWithHashingStrategy<>(hashingStrategy, size, loadFactor);
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <K> UnifiedSetWithHashingStrategy<K> newSetWith(HashingStrategy<? super K> hashingStrategy, K... elements)
     {
         UnifiedSetWithHashingStrategy<K> set = UnifiedSetWithHashingStrategy.newSet(hashingStrategy, elements.length);

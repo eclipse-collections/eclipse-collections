@@ -117,6 +117,8 @@ public final class MultiReaderUnifiedSet<T>
         return new MultiReaderUnifiedSet<>(UnifiedSet.newSet(iterable));
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <T> MultiReaderUnifiedSet<T> newSetWith(T... elements)
     {
         return new MultiReaderUnifiedSet<>(UnifiedSet.newSetWith(elements));

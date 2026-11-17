@@ -64,6 +64,8 @@ public final class HashBagMultimapWithHashingStrategy<K, V>
         this.putAll(multimap);
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public HashBagMultimapWithHashingStrategy(HashingStrategy<? super K> hashingStrategy, Pair<K, V>... pairs)
     {
         this(hashingStrategy);
@@ -95,6 +97,7 @@ public final class HashBagMultimapWithHashingStrategy<K, V>
     }
 
     @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <K, V> HashBagMultimapWithHashingStrategy<K, V> newMultimap(HashingStrategy<? super K> multimapHashingStrategy, Pair<K, V>... pairs)
     {
         return new HashBagMultimapWithHashingStrategy<>(multimapHashingStrategy, pairs);

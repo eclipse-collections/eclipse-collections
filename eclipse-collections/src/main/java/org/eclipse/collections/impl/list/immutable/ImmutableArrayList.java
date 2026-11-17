@@ -78,6 +78,8 @@ final class ImmutableArrayList<T>
         return new ImmutableArrayList<>((E[]) Iterate.toArray(iterable));
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <E> ImmutableArrayList<E> newListWith(E... elements)
     {
         return new ImmutableArrayList<>(elements.clone());

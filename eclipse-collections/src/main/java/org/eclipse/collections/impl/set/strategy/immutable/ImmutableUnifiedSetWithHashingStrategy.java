@@ -36,6 +36,8 @@ final class ImmutableUnifiedSetWithHashingStrategy<T>
         this.delegate = delegate;
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <T> ImmutableSet<T> newSetWith(HashingStrategy<? super T> hashingStrategy, T... elements)
     {
         return new ImmutableUnifiedSetWithHashingStrategy<>(UnifiedSetWithHashingStrategy.newSetWith(hashingStrategy, elements));

@@ -171,6 +171,8 @@ public final class Sets
      * @see #newSet(Set, Set)
      * @see #unionAllInto(Set, Set...)
      */
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <E> MutableSet<E> unionAll(Set<? extends E>... sets)
     {
         return unionAllInto(newSet(sets), sets);
@@ -254,6 +256,8 @@ public final class Sets
      * @see #newSet(Set, Set)
      * @see #intersectAllInto(Set, Set...)
      */
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <E> MutableSet<E> intersectAll(Set<? extends E>... sets)
     {
         return intersectAllInto(newSet(sets), sets);
@@ -338,6 +342,8 @@ public final class Sets
      * @see #newSet(Set, Set)
      * @see #differenceAllInto(Set, Set...)
      */
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <E> MutableSet<E> differenceAll(Set<? extends E>... sets)
     {
         return differenceAllInto(newSet(sets), sets);
@@ -450,6 +456,8 @@ public final class Sets
                 && candidateSuperset.containsAll(candidateSubset);
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     private static <E> MutableSet<E> newSet(Set<? extends E>... sets)
     {
         Comparator<? super E> comparator = extractComparator(sets);
@@ -461,6 +469,8 @@ public final class Sets
         return UnifiedSet.newSet();
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     private static <E> Comparator<? super E> extractComparator(Set<? extends E>... sets)
     {
         Collection<Set<? extends E>> sortedSetCollection = ArrayIterate.select(sets, INSTANCE_OF_SORTED_SET_PREDICATE);

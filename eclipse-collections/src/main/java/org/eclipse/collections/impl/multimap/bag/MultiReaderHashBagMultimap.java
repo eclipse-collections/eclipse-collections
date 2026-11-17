@@ -39,6 +39,8 @@ public final class MultiReaderHashBagMultimap<K, V>
         this.putAll(multimap);
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public MultiReaderHashBagMultimap(Pair<K, V>... pairs)
     {
         super(pairs);
@@ -59,6 +61,8 @@ public final class MultiReaderHashBagMultimap<K, V>
         return new MultiReaderHashBagMultimap<>(multimap);
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <K, V> MultiReaderHashBagMultimap<K, V> newMultimap(Pair<K, V>... pairs)
     {
         return new MultiReaderHashBagMultimap<>(pairs);

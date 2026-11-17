@@ -178,6 +178,8 @@ public final class LazyIterate
     /**
      * Combines iterables into a deferred composite iterable.
      */
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <T> LazyIterable<T> concatenate(Iterable<T>... iterables)
     {
         return CompositeIterable.with(iterables);

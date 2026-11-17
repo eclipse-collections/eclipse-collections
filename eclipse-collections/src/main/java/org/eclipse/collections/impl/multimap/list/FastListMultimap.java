@@ -61,6 +61,8 @@ public final class FastListMultimap<K, V>
         this.putAll(multimap);
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public FastListMultimap(Pair<K, V>... pairs)
     {
         super(pairs);
@@ -81,6 +83,8 @@ public final class FastListMultimap<K, V>
         return new FastListMultimap<>(multimap);
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <K, V> FastListMultimap<K, V> newMultimap(Pair<K, V>... pairs)
     {
         return new FastListMultimap<>(pairs);

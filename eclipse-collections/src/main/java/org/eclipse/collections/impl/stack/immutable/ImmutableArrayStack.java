@@ -146,6 +146,8 @@ final class ImmutableArrayStack<T> implements ImmutableStack<T>, Serializable
         return new ImmutableArrayStack<>((E[]) Iterate.toArray(iterable));
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <E> ImmutableArrayStack<E> newStackWith(E... elements)
     {
         return new ImmutableArrayStack<>(elements.clone());
@@ -156,6 +158,8 @@ final class ImmutableArrayStack<T> implements ImmutableStack<T>, Serializable
         return new ImmutableArrayStack<>(FastList.<T>newList(items).reverseThis());
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <T> ImmutableArrayStack<T> newStackFromTopToBottom(T... items)
     {
         return new ImmutableArrayStack<>(FastList.newListWith(items).reverseThis());

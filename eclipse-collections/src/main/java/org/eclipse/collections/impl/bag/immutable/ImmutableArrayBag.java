@@ -68,6 +68,8 @@ public class ImmutableArrayBag<T>
         }
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <T> ImmutableArrayBag<T> newBagWith(T... elements)
     {
         return ImmutableArrayBag.copyFrom(Bags.mutable.with(elements));

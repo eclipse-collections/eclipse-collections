@@ -57,6 +57,8 @@ public abstract class AbstractMutableMultimap<K, V, C extends MutableCollection<
      *
      * @param pairs the mappings to initialize the multimap.
      */
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     protected AbstractMutableMultimap(Pair<K, V>... pairs)
     {
         this(pairs.length);

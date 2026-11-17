@@ -52,6 +52,8 @@ public final class ArrayAdapter<T>
         super(newElements);
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <E> ArrayAdapter<E> adapt(E... array)
     {
         return new ArrayAdapter<>(array);
@@ -120,6 +122,8 @@ public final class ArrayAdapter<T>
         return new ArrayAdapter<>((E[]) new Object[]{one, two, three, four, five, six, seven});
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <E> ArrayAdapter<E> newArrayWith(E... elements)
     {
         return new ArrayAdapter<>(elements.clone());

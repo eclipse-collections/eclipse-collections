@@ -80,11 +80,15 @@ final class ImmutableTreeSet<T>
         this.comparator = comparator;
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <T> ImmutableSortedSet<T> newSetWith(T... elements)
     {
         return newSetWithComparator(null, elements.clone());
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <T> ImmutableSortedSet<T> newSetWith(Comparator<? super T> comparator, T... elements)
     {
         return newSetWithComparator(comparator, elements.clone());

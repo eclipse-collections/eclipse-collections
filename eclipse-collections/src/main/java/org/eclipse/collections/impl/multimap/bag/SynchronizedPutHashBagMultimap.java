@@ -53,6 +53,8 @@ public final class SynchronizedPutHashBagMultimap<K, V>
         this.putAll(multimap);
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public SynchronizedPutHashBagMultimap(Pair<K, V>... pairs)
     {
         ArrayIterate.forEach(pairs, pair -> this.put(pair.getOne(), pair.getTwo()));
@@ -78,6 +80,8 @@ public final class SynchronizedPutHashBagMultimap<K, V>
         return new SynchronizedPutHashBagMultimap<>(multimap);
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <K, V> SynchronizedPutHashBagMultimap<K, V> newMultimap(Pair<K, V>... pairs)
     {
         return new SynchronizedPutHashBagMultimap<>(pairs);

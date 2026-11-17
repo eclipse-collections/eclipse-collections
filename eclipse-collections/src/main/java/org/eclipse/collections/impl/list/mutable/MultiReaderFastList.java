@@ -129,6 +129,8 @@ public final class MultiReaderFastList<T>
         return new MultiReaderFastList<>(FastList.newList(iterable));
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <T> MultiReaderFastList<T> newListWith(T... elements)
     {
         return new MultiReaderFastList<>(FastList.newListWith(elements));

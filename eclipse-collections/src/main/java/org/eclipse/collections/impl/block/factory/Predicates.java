@@ -111,6 +111,8 @@ public abstract class Predicates<T>
         return new OrPredicate<>(predicate1, predicate2);
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <T> Predicates<T> or(Predicate<? super T>... predicates)
     {
         return new OrIterablePredicate<T>(Arrays.asList(predicates));
@@ -126,6 +128,8 @@ public abstract class Predicates<T>
         return new AndPredicate<>(predicate1, predicate2);
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <T> Predicates<T> and(Predicate<? super T>... predicates)
     {
         return new AndIterablePredicate<T>(Arrays.asList(predicates));
@@ -146,6 +150,8 @@ public abstract class Predicates<T>
         return new NeitherPredicate<>(operation1, operation2);
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <T> Predicates<T> noneOf(Predicate<? super T>... operations)
     {
         return new NoneOfIterablePredicate<T>(Arrays.asList(operations));

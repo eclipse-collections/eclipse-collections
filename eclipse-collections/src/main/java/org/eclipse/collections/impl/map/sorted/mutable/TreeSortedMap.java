@@ -70,6 +70,8 @@ public class TreeSortedMap<K, V>
         this.treeMap = new TreeMap<>(map);
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public TreeSortedMap(Pair<K, V>... pairs)
     {
         this.treeMap = new TreeMap<>();
@@ -103,11 +105,15 @@ public class TreeSortedMap<K, V>
         return new TreeSortedMap<>(comparator, map);
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <K, V> TreeSortedMap<K, V> newMapWith(Pair<K, V>... pairs)
     {
         return new TreeSortedMap<>(pairs);
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <K, V> TreeSortedMap<K, V> newMapWith(Comparator<? super K> comparator, Pair<K, V>... pairs)
     {
         return new TreeSortedMap<K, V>(comparator).with(pairs);

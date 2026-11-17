@@ -58,6 +58,8 @@ public final class MultiReaderFastListMultimap<K, V>
         this.putAll(multimap);
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public MultiReaderFastListMultimap(Pair<K, V>... pairs)
     {
         super(pairs);
@@ -78,6 +80,8 @@ public final class MultiReaderFastListMultimap<K, V>
         return new MultiReaderFastListMultimap<>(multimap);
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <K, V> MultiReaderFastListMultimap<K, V> newMultimap(Pair<K, V>... pairs)
     {
         return new MultiReaderFastListMultimap<>(pairs);

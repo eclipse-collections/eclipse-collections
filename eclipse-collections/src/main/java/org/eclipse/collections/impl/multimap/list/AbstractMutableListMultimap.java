@@ -29,6 +29,8 @@ public abstract class AbstractMutableListMultimap<K, V> extends AbstractMutableM
     {
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     protected AbstractMutableListMultimap(Pair<K, V>... pairs)
     {
         super(pairs);
