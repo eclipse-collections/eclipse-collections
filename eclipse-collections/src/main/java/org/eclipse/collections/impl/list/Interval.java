@@ -204,9 +204,14 @@ public final class Interval
 
     /**
      * Returns an Interval representing the even values from the value from to the value to.
+     * @throws IllegalArgumentException if the range contains no even values
      */
     public static Interval evensFromTo(int from, int to)
     {
+        if (from == to && from % 2 != 0)
+        {
+            throw new IllegalArgumentException("No even values in the range from " + from + " to " + to);
+        }
         if (from % 2 != 0)
         {
             if (from < to)
@@ -234,9 +239,14 @@ public final class Interval
 
     /**
      * Returns an Interval representing the odd values from the value from to the value to.
+     * @throws IllegalArgumentException if the range contains no odd values
      */
     public static Interval oddsFromTo(int from, int to)
     {
+        if (from == to && from % 2 == 0)
+        {
+            throw new IllegalArgumentException("No odd values in the range from " + from + " to " + to);
+        }
         if (from % 2 == 0)
         {
             if (from < to)

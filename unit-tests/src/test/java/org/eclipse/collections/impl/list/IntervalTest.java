@@ -521,6 +521,37 @@ public class IntervalTest
     }
 
     @Test
+    public void evensFromToOnSingletonRangeWithoutEvenValues()
+    {
+        assertThrows(IllegalArgumentException.class, () -> Interval.evensFromTo(1, 1));
+        assertThrows(IllegalArgumentException.class, () -> Interval.evensFromTo(-1, -1));
+    }
+
+    @Test
+    public void oddsFromToOnSingletonRangeWithoutOddValues()
+    {
+        assertThrows(IllegalArgumentException.class, () -> Interval.oddsFromTo(2, 2));
+        assertThrows(IllegalArgumentException.class, () -> Interval.oddsFromTo(0, 0));
+        assertThrows(IllegalArgumentException.class, () -> Interval.oddsFromTo(Integer.MIN_VALUE, Integer.MIN_VALUE));
+    }
+
+    @Test
+    public void evensAndOddsFromToOnSingletonRangesWithMatchingParity()
+    {
+        Interval evens = Interval.evensFromTo(2, 2);
+        Verify.assertSize(1, evens);
+        Verify.assertContains(2, evens.toList());
+
+        Interval negativeEvens = Interval.evensFromTo(-2, -2);
+        Verify.assertSize(1, negativeEvens);
+        Verify.assertContains(-2, negativeEvens.toList());
+
+        Interval odds = Interval.oddsFromTo(1, 1);
+        Verify.assertSize(1, odds);
+        Verify.assertContains(1, odds.toList());
+    }
+
+    @Test
     public void size()
     {
         Verify.assertSize(100, Interval.fromTo(1, 100));

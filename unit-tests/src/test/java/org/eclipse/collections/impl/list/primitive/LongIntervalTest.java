@@ -945,6 +945,37 @@ public class LongIntervalTest
     }
 
     @Test
+    public void evensFromToOnSingletonRangeWithoutEvenValues()
+    {
+        assertThrows(IllegalArgumentException.class, () -> LongInterval.evensFromTo(1, 1));
+        assertThrows(IllegalArgumentException.class, () -> LongInterval.evensFromTo(-1, -1));
+    }
+
+    @Test
+    public void oddsFromToOnSingletonRangeWithoutOddValues()
+    {
+        assertThrows(IllegalArgumentException.class, () -> LongInterval.oddsFromTo(2, 2));
+        assertThrows(IllegalArgumentException.class, () -> LongInterval.oddsFromTo(0, 0));
+        assertThrows(IllegalArgumentException.class, () -> LongInterval.oddsFromTo(Long.MIN_VALUE, Long.MIN_VALUE));
+    }
+
+    @Test
+    public void evensAndOddsFromToOnSingletonRangesWithMatchingParity()
+    {
+        LongInterval evens = LongInterval.evensFromTo(2, 2);
+        assertEquals(1, evens.size());
+        assertTrue(evens.contains(2));
+
+        LongInterval negativeEvens = LongInterval.evensFromTo(-2, -2);
+        assertEquals(1, negativeEvens.size());
+        assertTrue(negativeEvens.contains(-2));
+
+        LongInterval odds = LongInterval.oddsFromTo(1, 1);
+        assertEquals(1, odds.size());
+        assertTrue(odds.contains(1));
+    }
+
+    @Test
     public void intervalSize()
     {
         assertEquals(100, LongInterval.fromTo(1, 100).size());
