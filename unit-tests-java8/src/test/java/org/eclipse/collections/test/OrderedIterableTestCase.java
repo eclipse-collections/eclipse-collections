@@ -221,9 +221,9 @@ public interface OrderedIterableTestCase extends RichIterableTestCase
 
     @Override
     @Test
-    default void Iterable_next()
+    default void Iterable_iterator_next()
     {
-        RichIterableTestCase.super.Iterable_next();
+        RichIterableTestCase.super.Iterable_iterator_next();
 
         if (!this.allowsIterator())
         {

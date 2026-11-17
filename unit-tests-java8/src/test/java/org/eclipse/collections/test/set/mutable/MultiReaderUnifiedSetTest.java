@@ -44,9 +44,9 @@ public class MultiReaderUnifiedSetTest implements MutableSetTestCase, MultiReade
 
     @Override
     @Test
-    public void Iterable_next()
+    public void Iterable_iterator_next()
     {
-        MultiReaderMutableCollectionTestCase.super.Iterable_next();
+        MultiReaderMutableCollectionTestCase.super.Iterable_iterator_next();
     }
 
     @Override

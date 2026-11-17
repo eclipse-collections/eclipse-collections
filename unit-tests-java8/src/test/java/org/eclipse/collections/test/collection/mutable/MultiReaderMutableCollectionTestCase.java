@@ -35,14 +35,14 @@ public interface MultiReaderMutableCollectionTestCase extends MutableCollectionT
 
     @Override
     @Test
-    default void Iterable_next()
+    default void Iterable_iterator_next()
     {
         // Multi-reader collections don't support iterator()
     }
 
     @Override
     @Test
-    default void Iterable_hasNext()
+    default void Iterable_iterator_hasNext()
     {
         // Multi-reader collections don't support iterator()
     }

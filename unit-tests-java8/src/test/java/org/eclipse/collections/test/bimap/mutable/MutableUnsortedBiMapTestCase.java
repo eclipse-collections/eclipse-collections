@@ -28,9 +28,9 @@ public interface MutableUnsortedBiMapTestCase extends UnsortedBiMapTestCase, Mut
 
     @Override
     @Test
-    default void Iterable_toString()
+    default void Object_toString()
     {
-        UnsortedBiMapTestCase.super.Iterable_toString();
+        UnsortedBiMapTestCase.super.Object_toString();
 
         MutableBiMap<String, Integer> bimap = this.newWithKeysValues("Two", 2, "One", 1);
         assertThat(bimap.keySet().toString(), isOneOf("[One, Two]", "[Two, One]"));

@@ -36,9 +36,9 @@ public interface HashingStrategyMapTestCase extends MutableMapTestCase
      */
     @Override
     @Test
-    default void Object_equalsAndHashCode()
+    default void Object_equals_hashCode()
     {
-        MutableMapTestCase.super.Object_equalsAndHashCode();
+        MutableMapTestCase.super.Object_equals_hashCode();
 
         MutableMap<Integer, Integer> map = this.newMapWithConstantStrategy();
         map.put(3, 2);

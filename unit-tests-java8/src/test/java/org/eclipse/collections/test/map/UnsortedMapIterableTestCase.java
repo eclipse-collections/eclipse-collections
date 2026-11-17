@@ -53,7 +53,7 @@ public interface UnsortedMapIterableTestCase
 
     @Override
     @Test
-    default void Iterable_toString()
+    default void Object_toString()
     {
         MapIterable<String, Integer> map = this.newWithKeysValues("Two", 2, "One", 1);
 

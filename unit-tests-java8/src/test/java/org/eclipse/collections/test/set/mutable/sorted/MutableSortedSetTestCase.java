@@ -34,9 +34,9 @@ public interface MutableSortedSetTestCase extends SortedSetIterableTestCase, Mut
 
     @Override
     @Test
-    default void Iterable_toString()
+    default void Object_toString()
     {
-        NavigableSetTestCase.super.Iterable_toString();
+        NavigableSetTestCase.super.Object_toString();
     }
 
     @Override

@@ -50,9 +50,9 @@ public interface MutableListTestCase extends MutableCollectionTestCase, ListTest
 
     @Override
     @Test
-    default void Iterable_toString()
+    default void Object_toString()
     {
-        ListTestCase.super.Iterable_toString();
+        ListTestCase.super.Object_toString();
     }
 
     @Override

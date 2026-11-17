@@ -47,7 +47,7 @@ public interface UnsortedSetLikeTestTrait extends RichIterableUniqueTestCase, Un
 
     @Override
     @Test
-    default void Iterable_toString()
+    default void Object_toString()
     {
         assertThat(this.newWith(2, 1).toString(), isOneOf("[1, 2]", "[2, 1]"));
         assertThat(this.newWith(2, 1).asLazy().toString(), isOneOf("[1, 2]", "[2, 1]"));
@@ -55,7 +55,7 @@ public interface UnsortedSetLikeTestTrait extends RichIterableUniqueTestCase, Un
 
     @Override
     @Test
-    default void Iterable_next()
+    default void Iterable_iterator_next()
     {
         if (!this.allowsIterator())
         {

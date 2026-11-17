@@ -40,7 +40,7 @@ public interface UnsortedBiMapTestCase extends BiMapTestCase, TransformsToBagTra
 
     @Override
     @Test
-    default void Iterable_toString()
+    default void Object_toString()
     {
         BiMap<String, Integer> bimap = this.newWithKeysValues("Two", 2, "One", 1);
 

@@ -200,7 +200,7 @@ public interface SortedSetTestCase extends CollectionTestCase
 
     @Override
     @Test
-    default void Iterable_toString()
+    default void Object_toString()
     {
         SortedSet<Integer> set = this.newWith(3, 2, 1);
         Comparator<? super Integer> comparator = set.comparator();

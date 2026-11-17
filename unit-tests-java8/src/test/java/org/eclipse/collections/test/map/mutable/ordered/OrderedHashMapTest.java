@@ -563,9 +563,9 @@ public class OrderedHashMapTest implements MutableOrderedMapTestCase
 
     @Override
     @Test
-    public void Object_equalsAndHashCode()
+    public void Object_equals_hashCode()
     {
-        MutableOrderedMapTestCase.super.Object_equalsAndHashCode();
+        MutableOrderedMapTestCase.super.Object_equals_hashCode();
 
         // Serialization preserves insertion order, including for an empty map.
         OrderedHashMap<String, Integer> map = OrderedHashMap.newWithKeysValues("A", 1, "B", 2, "C", 3);

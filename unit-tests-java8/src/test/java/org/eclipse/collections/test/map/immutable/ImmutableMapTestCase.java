@@ -65,18 +65,18 @@ public interface ImmutableMapTestCase extends UnsortedMapIterableTestCase, Immut
 
     @Override
     @Test
-    default void Object_equalsAndHashCode()
+    default void Object_equals_hashCode()
     {
-        UnsortedMapIterableTestCase.super.Object_equalsAndHashCode();
-        UnmodifiableMapTestCase.super.Object_equalsAndHashCode();
+        UnsortedMapIterableTestCase.super.Object_equals_hashCode();
+        UnmodifiableMapTestCase.super.Object_equals_hashCode();
     }
 
     @Override
     @Test
-    default void Iterable_toString()
+    default void Object_toString()
     {
-        // MapTestCase.Iterable_toString() assumes insertion order
-        UnsortedMapIterableTestCase.super.Iterable_toString();
+        // MapTestCase.Object_toString() assumes insertion order
+        UnsortedMapIterableTestCase.super.Object_toString();
     }
 
     @Override

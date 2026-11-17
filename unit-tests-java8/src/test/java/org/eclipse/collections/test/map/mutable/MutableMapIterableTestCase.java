@@ -76,18 +76,18 @@ public interface MutableMapIterableTestCase extends MapIterableTestCase, MapTest
 
     @Override
     @Test
-    default void Iterable_toString()
+    default void Object_toString()
     {
-        MapTestCase.super.Iterable_toString();
-        MapIterableTestCase.super.Iterable_toString();
+        MapTestCase.super.Object_toString();
+        MapIterableTestCase.super.Object_toString();
     }
 
     @Override
     @Test
-    default void Object_equalsAndHashCode()
+    default void Object_equals_hashCode()
     {
-        MapIterableTestCase.super.Object_equalsAndHashCode();
-        MapTestCase.super.Object_equalsAndHashCode();
+        MapIterableTestCase.super.Object_equals_hashCode();
+        MapTestCase.super.Object_equals_hashCode();
     }
 
     @Override
