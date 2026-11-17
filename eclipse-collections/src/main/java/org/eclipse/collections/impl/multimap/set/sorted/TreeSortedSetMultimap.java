@@ -63,6 +63,8 @@ public final class TreeSortedSetMultimap<K, V>
         this.putAll(multimap);
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public TreeSortedSetMultimap(Pair<K, V>... pairs)
     {
         super(pairs);
@@ -90,6 +92,8 @@ public final class TreeSortedSetMultimap<K, V>
         return new TreeSortedSetMultimap<>(comparator);
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <K, V> TreeSortedSetMultimap<K, V> newMultimap(Pair<K, V>... pairs)
     {
         return new TreeSortedSetMultimap<>(pairs);

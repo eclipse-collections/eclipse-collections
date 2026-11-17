@@ -64,6 +64,8 @@ public final class SynchronizedPutTreeSortedSetMultimap<K, V>
         this.putAll(multimap);
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public SynchronizedPutTreeSortedSetMultimap(Pair<K, V>... pairs)
     {
         this();
@@ -111,6 +113,8 @@ public final class SynchronizedPutTreeSortedSetMultimap<K, V>
         return new SynchronizedPutTreeSortedSetMultimap<>(multimap);
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <K, V> SynchronizedPutTreeSortedSetMultimap<K, V> newMultimap(Pair<K, V>... pairs)
     {
         return new SynchronizedPutTreeSortedSetMultimap<>(pairs);

@@ -2003,6 +2003,8 @@ public final class Verify extends Assert
         Verify.assertItemAtIndex("array", expectedItem, index, array);
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <T> void assertStartsWith(T[] array, T... items)
     {
         Verify.assertNotEmpty("Expected items in assertion", items);
@@ -2014,11 +2016,15 @@ public final class Verify extends Assert
         }
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <T> void assertStartsWith(List<T> list, T... items)
     {
         Verify.assertStartsWith("list", list, items);
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <T> void assertStartsWith(String listName, List<T> list, T... items)
     {
         Verify.assertNotEmpty("Expected items in assertion", items);
@@ -2030,6 +2036,8 @@ public final class Verify extends Assert
         }
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <T> void assertEndsWith(List<T> list, T... items)
     {
         Verify.assertNotEmpty("Expected items in assertion", items);
@@ -2041,6 +2049,8 @@ public final class Verify extends Assert
         }
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <T> void assertEndsWith(T[] array, T... items)
     {
         Verify.assertNotEmpty("Expected items in assertion", items);

@@ -33,6 +33,8 @@ public abstract class AbstractMutableBagMultimap<K, V> extends AbstractMutableMu
     {
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     protected AbstractMutableBagMultimap(Pair<K, V>... pairs)
     {
         super(pairs);

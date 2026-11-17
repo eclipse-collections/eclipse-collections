@@ -117,12 +117,16 @@ public class TreeBag<T>
         return new TreeBag<>(comparator, iterable);
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <E> TreeBag<E> newBagWith(E... elements)
     {
         //noinspection SSBasedInspection
         return TreeBag.newBag(Arrays.asList(elements));
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <E> TreeBag<E> newBagWith(Comparator<? super E> comparator, E... elements)
     {
         //noinspection SSBasedInspection

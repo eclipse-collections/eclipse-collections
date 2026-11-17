@@ -117,6 +117,8 @@ public final class MultiReaderHashBag<T>
         return new MultiReaderHashBag<>(HashBag.newBag(iterable));
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <T> MultiReaderHashBag<T> newBagWith(T... elements)
     {
         return new MultiReaderHashBag<>(HashBag.newBagWith(elements));

@@ -462,6 +462,8 @@ public final class Functions
         return SQUARED_INTEGER;
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <T, V> Function<T, V> firstNotNullValue(Function<T, V>... functions)
     {
         return new FirstNotNullFunction<>(functions);
@@ -525,6 +527,8 @@ public final class Functions
 
         private final Function<T, V>[] functions;
 
+        @SafeVarargs
+        @SuppressWarnings("varargs")
         private FirstNotNullFunction(Function<T, V>... functions)
         {
             this.functions = functions;
@@ -551,6 +555,8 @@ public final class Functions
 
         private final Function<T, String>[] functions;
 
+        @SafeVarargs
+        @SuppressWarnings("varargs")
         private FirstNotEmptyStringFunction(Function<T, String>... functions)
         {
             this.functions = functions;

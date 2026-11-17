@@ -38,6 +38,8 @@ public final class MultiReaderUnifiedSetMultimap<K, V>
         this.putAll(multimap);
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public MultiReaderUnifiedSetMultimap(Pair<K, V>... pairs)
     {
         super(pairs);
@@ -58,6 +60,8 @@ public final class MultiReaderUnifiedSetMultimap<K, V>
         return new MultiReaderUnifiedSetMultimap<>(multimap);
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <K, V> MultiReaderUnifiedSetMultimap<K, V> newMultimap(Pair<K, V>... pairs)
     {
         return new MultiReaderUnifiedSetMultimap<>(pairs);

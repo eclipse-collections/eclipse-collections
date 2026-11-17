@@ -63,6 +63,8 @@ public final class UnifiedSetWithHashingStrategyMultimap<K, V>
         this.putAll(multimap);
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public UnifiedSetWithHashingStrategyMultimap(HashingStrategy<? super V> hashingStrategy, Pair<K, V>... pairs)
     {
         this.hashingStrategy = hashingStrategy;
@@ -95,6 +97,8 @@ public final class UnifiedSetWithHashingStrategyMultimap<K, V>
         return new UnifiedSetWithHashingStrategyMultimap<>(hashingStrategy);
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <K, V> UnifiedSetWithHashingStrategyMultimap<K, V> newMultimap(HashingStrategy<? super V> hashingStrategy, Pair<K, V>... pairs)
     {
         return new UnifiedSetWithHashingStrategyMultimap<>(hashingStrategy, pairs);

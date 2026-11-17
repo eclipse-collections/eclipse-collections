@@ -30,6 +30,8 @@ public abstract class AbstractMutableSetMultimap<K, V> extends AbstractMutableMu
     {
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     protected AbstractMutableSetMultimap(Pair<K, V>... pairs)
     {
         super(pairs);

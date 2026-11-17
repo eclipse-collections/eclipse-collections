@@ -39,6 +39,8 @@ public final class UnifiedSetMultimap<K, V>
         this.putAll(multimap);
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public UnifiedSetMultimap(Pair<K, V>... pairs)
     {
         super(pairs);
@@ -59,6 +61,8 @@ public final class UnifiedSetMultimap<K, V>
         return new UnifiedSetMultimap<>();
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <K, V> UnifiedSetMultimap<K, V> newMultimap(Pair<K, V>... pairs)
     {
         return new UnifiedSetMultimap<>(pairs);

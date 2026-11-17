@@ -58,6 +58,8 @@ public final class HashingStrategies
         return IDENTITY_HASHING_STRATEGY;
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <T> HashingStrategy<T> chain(HashingStrategy<T>... hashingStrategies)
     {
         if (hashingStrategies.length == 0)
@@ -430,6 +432,8 @@ public final class HashingStrategies
         private static final long serialVersionUID = 1L;
         private final HashingStrategy<T>[] hashingStrategies;
 
+        @SafeVarargs
+        @SuppressWarnings("varargs")
         private ChainedHashingStrategy(HashingStrategy<T>... hashingStrategies)
         {
             this.hashingStrategies = hashingStrategies;

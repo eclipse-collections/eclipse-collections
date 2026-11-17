@@ -37,6 +37,8 @@ public final class Iterables
         return Lists.mutable.empty();
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <T> MutableList<T> mList(T... elements)
     {
         return Lists.mutable.with(elements);
@@ -47,6 +49,8 @@ public final class Iterables
         return Sets.mutable.empty();
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <T> MutableSet<T> mSet(T... elements)
     {
         return Sets.mutable.with(elements);
@@ -57,6 +61,8 @@ public final class Iterables
         return Bags.mutable.empty();
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <T> MutableBag<T> mBag(T... elements)
     {
         return Bags.mutable.with(elements);
@@ -92,6 +98,8 @@ public final class Iterables
         return SortedSets.mutable.empty();
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <T> MutableSortedSet<T> mSortedSet(T... elements)
     {
         return SortedSets.mutable.with(elements);
@@ -102,6 +110,8 @@ public final class Iterables
         return SortedSets.mutable.with(comparator);
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <T> MutableSortedSet<T> mSortedSet(Comparator<? super T> comparator, T... elements)
     {
         return SortedSets.mutable.with(comparator, elements);
@@ -224,6 +234,8 @@ public final class Iterables
         return Lists.immutable.with(one, two, three, four, five, six, seven, eight, nine, ten);
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <T> ImmutableList<T> iList(T... elements)
     {
         return Lists.immutable.with(elements);
@@ -254,6 +266,8 @@ public final class Iterables
         return Sets.immutable.with(one, two, three, four);
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <T> ImmutableSet<T> iSet(T... elements)
     {
         return Sets.immutable.with(elements);
@@ -269,6 +283,8 @@ public final class Iterables
         return Bags.immutable.with(one);
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <T> ImmutableBag<T> iBag(T... elements)
     {
         return Bags.immutable.with(elements);
@@ -304,6 +320,8 @@ public final class Iterables
         return SortedSets.immutable.empty();
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <T> ImmutableSortedSet<T> iSortedSet(T... elements)
     {
         return SortedSets.immutable.with(elements);
@@ -314,6 +332,8 @@ public final class Iterables
         return SortedSets.immutable.with(comparator);
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <T> ImmutableSortedSet<T> iSortedSet(Comparator<? super T> comparator, T... elements)
     {
         return SortedSets.immutable.with(comparator, elements);

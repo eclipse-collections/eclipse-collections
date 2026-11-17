@@ -56,6 +56,8 @@ public final class SynchronizedPutFastListMultimap<K, V>
         this.putAll(multimap);
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public SynchronizedPutFastListMultimap(Pair<K, V>... pairs)
     {
         this();
@@ -83,6 +85,8 @@ public final class SynchronizedPutFastListMultimap<K, V>
         return new SynchronizedPutFastListMultimap<>(multimap);
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <K, V> SynchronizedPutFastListMultimap<K, V> newMultimap(Pair<K, V>... pairs)
     {
         return new SynchronizedPutFastListMultimap<>(pairs);

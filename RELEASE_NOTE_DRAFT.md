@@ -24,6 +24,7 @@
   * `ListIterable`
   * `MutableList`
   * `RichIterable`
+* Added `@SafeVarargs` to non-overridable varargs methods and constructors across the library, so user code calling them with non-reifiable arguments no longer produces "unchecked generics array creation" warnings. ([#798](https://github.com/eclipse-collections/eclipse-collections/issues/798))
 
 13.0.0
 ====================

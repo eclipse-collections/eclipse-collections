@@ -158,6 +158,8 @@ public class FastList<T>
         return new FastList<>();
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <E> FastList<E> wrapCopy(E... array)
     {
         E[] newArray = (E[]) new Object[array.length];
@@ -181,6 +183,8 @@ public class FastList<T>
      * !!! WARNING: This method uses the passed in array, so can be very unsafe if the original
      * array is held onto anywhere else. !!!
      */
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <E> FastList<E> newListWith(E... elements)
     {
         return new FastList<>(elements);

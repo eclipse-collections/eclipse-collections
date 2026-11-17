@@ -179,6 +179,8 @@ public class UnifiedMapWithHashingStrategy<K, V> extends AbstractMutableMap<K, V
         this.putAll(map);
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public UnifiedMapWithHashingStrategy(HashingStrategy<? super K> hashingStrategy, Pair<K, V>... pairs)
     {
         this(hashingStrategy, Math.max(pairs.length, DEFAULT_INITIAL_CAPACITY), DEFAULT_LOAD_FACTOR);

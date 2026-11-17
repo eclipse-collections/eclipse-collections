@@ -91,6 +91,8 @@ public class ImmutableHashBag<T>
         return new ImmutableHashBag<>(source);
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <T> ImmutableHashBag<T> newBagWith(T... elements)
     {
         return ImmutableHashBag.newBag(Arrays.asList(elements));

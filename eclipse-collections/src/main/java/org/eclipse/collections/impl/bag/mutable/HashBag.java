@@ -79,6 +79,8 @@ public class HashBag<T>
         return HashBag.newBagWith((E[]) Iterate.toArray(source));
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <E> HashBag<E> newBagWith(E... elements)
     {
         HashBag<E> result = HashBag.newBag();

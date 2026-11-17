@@ -55,6 +55,8 @@ public final class SynchronizedPutUnifiedSetMultimap<K, V>
         this.putAll(multimap);
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public SynchronizedPutUnifiedSetMultimap(Pair<K, V>... pairs)
     {
         this();
@@ -88,6 +90,8 @@ public final class SynchronizedPutUnifiedSetMultimap<K, V>
         return new SynchronizedPutUnifiedSetMultimap<>(multimap);
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <K, V> SynchronizedPutUnifiedSetMultimap<K, V> newMultimap(Pair<K, V>... pairs)
     {
         return new SynchronizedPutUnifiedSetMultimap<>(pairs);

@@ -84,6 +84,8 @@ public class HashBagWithHashingStrategy<T>
         return HashBagWithHashingStrategy.newBagWith(hashingStrategy, (E[]) Iterate.toArray(source));
     }
 
+    @SafeVarargs
+    @SuppressWarnings("varargs")
     public static <E> HashBagWithHashingStrategy<E> newBagWith(HashingStrategy<? super E> hashingStrategy, E... elements)
     {
         HashBagWithHashingStrategy<E> result = HashBagWithHashingStrategy.newBag(hashingStrategy);
