@@ -10,9 +10,11 @@
 
 package org.eclipse.collections.test.map.mutable;
 
+import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.factory.Sets;
 import org.eclipse.collections.api.map.MutableMapIterable;
 import org.eclipse.collections.impl.block.factory.Predicates2;
+import org.eclipse.collections.impl.tuple.Tuples;
 import org.eclipse.collections.test.FixedSizeIterableTestCase;
 import org.junit.jupiter.api.Test;
 
@@ -55,6 +57,51 @@ public interface UnmodifiableMutableMapIterableTestCase
 
         MutableMapIterable<Object, String> map2 = this.newWith("Three", "Two", "One");
         assertThrows(UnsupportedOperationException.class, () -> map2.removeIf(Predicates2.alwaysFalse()));
+    }
+
+    @Override
+    @Test
+    default void MutableMapIterable_withKeyValue()
+    {
+        MutableMapIterable<Integer, String> map = this.newWithKeysValues(3, "Three", 2, "Two");
+        assertThrows(UnsupportedOperationException.class, () -> map.withKeyValue(1, "One"));
+        assertIterablesEqual(this.newWithKeysValues(3, "Three", 2, "Two"), map);
+    }
+
+    @Override
+    @Test
+    default void MutableMapIterable_withoutKey()
+    {
+        MutableMapIterable<Integer, String> map = this.newWithKeysValues(3, "Three", 2, "Two");
+        assertThrows(UnsupportedOperationException.class, () -> map.withoutKey(2));
+        assertIterablesEqual(this.newWithKeysValues(3, "Three", 2, "Two"), map);
+    }
+
+    @Override
+    @Test
+    default void MutableMapIterable_withAllKeyValues()
+    {
+        MutableMapIterable<Integer, String> map = this.newWithKeysValues(3, "Three");
+        assertThrows(UnsupportedOperationException.class, () -> map.withAllKeyValues(Lists.mutable.with(Tuples.pair(2, "Two"))));
+        assertIterablesEqual(this.newWithKeysValues(3, "Three"), map);
+    }
+
+    @Override
+    @Test
+    default void MutableMapIterable_withAllKeyValueArguments()
+    {
+        MutableMapIterable<Integer, String> map = this.newWithKeysValues(3, "Three");
+        assertThrows(UnsupportedOperationException.class, () -> map.withAllKeyValueArguments(Tuples.pair(2, "Two")));
+        assertIterablesEqual(this.newWithKeysValues(3, "Three"), map);
+    }
+
+    @Override
+    @Test
+    default void MutableMapIterable_withoutAllKeys()
+    {
+        MutableMapIterable<Integer, String> map = this.newWithKeysValues(3, "Three", 2, "Two");
+        assertThrows(UnsupportedOperationException.class, () -> map.withoutAllKeys(Lists.mutable.with(2)));
+        assertIterablesEqual(this.newWithKeysValues(3, "Three", 2, "Two"), map);
     }
 
     @Override

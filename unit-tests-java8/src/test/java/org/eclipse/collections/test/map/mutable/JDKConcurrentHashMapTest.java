@@ -16,6 +16,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.eclipse.collections.test.IterableTestCase.OrderingType;
 import org.eclipse.collections.test.map.MapKeySetTestCase;
 import org.eclipse.collections.test.map.MapValuesCollectionTestCase;
 import org.junit.jupiter.api.Nested;
@@ -37,6 +38,12 @@ public class JDKConcurrentHashMapTest implements MapTestCase
             assertNull(result.put(random.nextDouble(), each));
         }
         return result;
+    }
+
+    @Override
+    public OrderingType getOrderingType()
+    {
+        return OrderingType.UNORDERED;
     }
 
     @Override

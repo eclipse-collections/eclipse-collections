@@ -10,6 +10,7 @@
 
 package org.eclipse.collections.test.map.mutable;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
@@ -17,9 +18,11 @@ import java.util.Optional;
 
 import org.eclipse.collections.api.block.function.Function2;
 import org.eclipse.collections.api.factory.Bags;
+import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.factory.Maps;
 import org.eclipse.collections.api.factory.Sets;
 import org.eclipse.collections.api.list.MutableList;
+import org.eclipse.collections.api.map.ImmutableMapIterable;
 import org.eclipse.collections.api.map.MutableMapIterable;
 import org.eclipse.collections.api.set.MutableSet;
 import org.eclipse.collections.impl.block.factory.Predicates2;
@@ -41,6 +44,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public interface MutableMapIterableTestCase extends MapIterableTestCase, MapTestCase
 {
@@ -126,6 +130,16 @@ public interface MutableMapIterableTestCase extends MapIterableTestCase, MapTest
             assertIterablesEqual(
                     this.newWithKeysValues(3, "Three", 1, "One"),
                     map2);
+        }
+
+        MutableMapIterable<String, Integer> map3 = this.newWithKeysValues("A", 1, "B", 2, "C", 3, "D", 4);
+        map3.removeKey("B");
+        switch (this.getOrderingType())
+        {
+            case UNORDERED -> assertEquals(Sets.immutable.with("A", "C", "D"), map3.keySet());
+            case INSERTION_ORDER, SORTED_NATURAL -> Verify.assertIterablesEqual(Lists.immutable.with("A", "C", "D"), map3.keySet());
+            case SORTED_REVERSE_NATURAL -> Verify.assertIterablesEqual(Lists.immutable.with("D", "C", "A"), map3.keySet());
+            default -> fail("Unexpected value: " + this.getOrderingType());
         }
     }
 
@@ -214,6 +228,196 @@ public interface MutableMapIterableTestCase extends MapIterableTestCase, MapTest
         assertSame(predicateException, actualException2);
         assertIterablesEqual(this.newWithKeysValues(1, "One", 2, "Two"), map8);
         assertEquals(2, map8.size());
+
+        MutableMapIterable<String, Integer> map = this.newWithKeysValues("A", 1, "B", 2, "C", 3, "D", 4, "E", 5);
+        map.removeIf((key, value) -> value % 2 == 0);
+        switch (this.getOrderingType())
+        {
+            case UNORDERED ->
+            {
+                assertEquals(Sets.immutable.with("A", "C", "E"), map.keySet());
+                assertEquals(Bags.immutable.with(1, 3, 5), Bags.immutable.withAll(map.values()));
+            }
+            case INSERTION_ORDER, SORTED_NATURAL ->
+            {
+                Verify.assertIterablesEqual(Lists.immutable.with("A", "C", "E"), map.keySet());
+                assertEquals(Lists.immutable.with(1, 3, 5), new ArrayList<>(map.values()));
+            }
+            case SORTED_REVERSE_NATURAL ->
+            {
+                Verify.assertIterablesEqual(Lists.immutable.with("E", "C", "A"), map.keySet());
+                assertEquals(Lists.immutable.with(5, 3, 1), new ArrayList<>(map.values()));
+            }
+            default -> fail("Unexpected value: " + this.getOrderingType());
+        }
+    }
+
+    @Test
+    default void MutableMapIterable_newEmpty()
+    {
+        MutableMapIterable<Integer, String> map = this.newWithKeysValues(3, "Three", 2, "Two");
+        MutableMapIterable<Integer, String> empty = map.newEmpty();
+        assertIterablesEqual(this.newWithKeysValues(), empty);
+        assertIterablesEqual(this.newWithKeysValues(3, "Three", 2, "Two"), map);
+
+        empty.put(1, "One");
+        assertIterablesEqual(this.newWithKeysValues(3, "Three", 2, "Two"), map);
+    }
+
+    @Test
+    default void MutableMapIterable_withKeyValue()
+    {
+        MutableMapIterable<Integer, String> map = this.newWithKeysValues(3, "Three", 2, "Two");
+        assertSame(map, map.withKeyValue(1, "One"));
+        assertIterablesEqual(this.newWithKeysValues(3, "Three", 2, "Two", 1, "One"), map);
+
+        assertSame(map, map.withKeyValue(2, "Two2"));
+        assertIterablesEqual(this.newWithKeysValues(3, "Three", 2, "Two2", 1, "One"), map);
+    }
+
+    @Test
+    default void MutableMapIterable_withoutKey()
+    {
+        MutableMapIterable<Integer, String> map = this.newWithKeysValues(3, "Three", 2, "Two", 1, "One");
+        assertSame(map, map.withoutKey(2));
+        assertIterablesEqual(this.newWithKeysValues(3, "Three", 1, "One"), map);
+
+        assertSame(map, map.withoutKey(4));
+        assertIterablesEqual(this.newWithKeysValues(3, "Three", 1, "One"), map);
+
+        MutableMapIterable<String, Integer> map2 = this.newWithKeysValues("A", 1, "B", 2, "C", 3, "D", 4);
+        map2.withoutKey("B");
+        switch (this.getOrderingType())
+        {
+            case UNORDERED -> assertEquals(Sets.immutable.with("A", "C", "D"), map2.keySet());
+            case INSERTION_ORDER, SORTED_NATURAL -> Verify.assertIterablesEqual(Lists.immutable.with("A", "C", "D"), map2.keySet());
+            case SORTED_REVERSE_NATURAL -> Verify.assertIterablesEqual(Lists.immutable.with("D", "C", "A"), map2.keySet());
+            default -> fail("Unexpected value: " + this.getOrderingType());
+        }
+    }
+
+    @Test
+    default void MutableMapIterable_withAllKeyValues()
+    {
+        MutableMapIterable<Integer, String> map = this.newWithKeysValues(3, "Three");
+        assertSame(map, map.withAllKeyValues(Lists.mutable.with(Tuples.pair(2, "Two"), Tuples.pair(1, "One"))));
+        assertIterablesEqual(this.newWithKeysValues(3, "Three", 2, "Two", 1, "One"), map);
+
+        assertSame(map, map.withAllKeyValues(Lists.mutable.with(Tuples.pair(2, "Two2"))));
+        assertIterablesEqual(this.newWithKeysValues(3, "Three", 2, "Two2", 1, "One"), map);
+
+        assertSame(map, map.withAllKeyValues(Lists.mutable.empty()));
+        assertIterablesEqual(this.newWithKeysValues(3, "Three", 2, "Two2", 1, "One"), map);
+    }
+
+    @Test
+    default void MutableMapIterable_withAllKeyValueArguments()
+    {
+        MutableMapIterable<Integer, String> map = this.newWithKeysValues(3, "Three");
+        assertSame(map, map.withAllKeyValueArguments(Tuples.pair(2, "Two"), Tuples.pair(1, "One")));
+        assertIterablesEqual(this.newWithKeysValues(3, "Three", 2, "Two", 1, "One"), map);
+
+        assertSame(map, map.withAllKeyValueArguments(Tuples.pair(2, "Two2")));
+        assertIterablesEqual(this.newWithKeysValues(3, "Three", 2, "Two2", 1, "One"), map);
+    }
+
+    @Test
+    default void MutableMapIterable_withoutAllKeys()
+    {
+        MutableMapIterable<Integer, String> map = this.newWithKeysValues(4, "Four", 3, "Three", 2, "Two", 1, "One");
+        assertSame(map, map.withoutAllKeys(Lists.mutable.with(3, 1, 5)));
+        assertIterablesEqual(this.newWithKeysValues(4, "Four", 2, "Two"), map);
+
+        assertSame(map, map.withoutAllKeys(Lists.mutable.empty()));
+        assertIterablesEqual(this.newWithKeysValues(4, "Four", 2, "Two"), map);
+
+        MutableMapIterable<String, Integer> map2 = this.newWithKeysValues("A", 1, "B", 2, "C", 3, "D", 4, "E", 5);
+        map2.withoutAllKeys(Lists.mutable.with("B", "D"));
+        switch (this.getOrderingType())
+        {
+            case UNORDERED ->
+            {
+                assertEquals(Sets.immutable.with("A", "C", "E"), map2.keySet());
+                assertEquals(Bags.immutable.with(1, 3, 5), Bags.immutable.withAll(map2.values()));
+            }
+            case INSERTION_ORDER, SORTED_NATURAL ->
+            {
+                Verify.assertIterablesEqual(Lists.immutable.with("A", "C", "E"), map2.keySet());
+                assertEquals(Lists.immutable.with(1, 3, 5), new ArrayList<>(map2.values()));
+            }
+            case SORTED_REVERSE_NATURAL ->
+            {
+                Verify.assertIterablesEqual(Lists.immutable.with("E", "C", "A"), map2.keySet());
+                assertEquals(Lists.immutable.with(5, 3, 1), new ArrayList<>(map2.values()));
+            }
+            default -> fail("Unexpected value: " + this.getOrderingType());
+        }
+    }
+
+    @Test
+    default void MutableMapIterable_asUnmodifiable()
+    {
+        MutableMapIterable<Integer, String> map = this.newWithKeysValues(3, "Three", 2, "Two");
+        MutableMapIterable<Integer, String> unmodifiable = map.asUnmodifiable();
+        assertIterablesEqual(this.newWithKeysValues(3, "Three", 2, "Two"), unmodifiable);
+        assertThrows(UnsupportedOperationException.class, () -> unmodifiable.put(1, "One"));
+        assertThrows(UnsupportedOperationException.class, () -> unmodifiable.removeKey(3));
+        assertThrows(UnsupportedOperationException.class, unmodifiable::clear);
+        assertIterablesEqual(this.newWithKeysValues(3, "Three", 2, "Two"), map);
+    }
+
+    @Test
+    default void MutableMapIterable_asSynchronized()
+    {
+        MutableMapIterable<Integer, String> map = this.newWithKeysValues(3, "Three", 2, "Two");
+        MutableMapIterable<Integer, String> synchronizedMap = map.asSynchronized();
+        assertIterablesEqual(this.newWithKeysValues(3, "Three", 2, "Two"), synchronizedMap);
+
+        if (!this.allowsPut())
+        {
+            assertThrows(UnsupportedOperationException.class, () -> synchronizedMap.put(1, "One"));
+            assertIterablesEqual(this.newWithKeysValues(3, "Three", 2, "Two"), map);
+            return;
+        }
+
+        // Writes through the synchronized view reach the map, and writes to the map show through the view
+        synchronizedMap.put(1, "One");
+        assertIterablesEqual(this.newWithKeysValues(3, "Three", 2, "Two", 1, "One"), map);
+        map.removeKey(3);
+        assertIterablesEqual(this.newWithKeysValues(2, "Two", 1, "One"), synchronizedMap);
+
+        switch (this.getOrderingType())
+        {
+            case UNORDERED -> assertEquals(Sets.immutable.with(2, 1), synchronizedMap.keySet());
+            case INSERTION_ORDER -> Verify.assertIterablesEqual(Lists.immutable.with(2, 1), synchronizedMap.keySet());
+            case SORTED_NATURAL -> Verify.assertIterablesEqual(Lists.immutable.with(1, 2), synchronizedMap.keySet());
+            case SORTED_REVERSE_NATURAL -> Verify.assertIterablesEqual(Lists.immutable.with(2, 1), synchronizedMap.keySet());
+            default -> fail("Unexpected value: " + this.getOrderingType());
+        }
+        synchronizedMap.put(4, "Four");
+        switch (this.getOrderingType())
+        {
+            case UNORDERED -> assertEquals(Sets.immutable.with(2, 1, 4), map.keySet());
+            case INSERTION_ORDER -> Verify.assertIterablesEqual(Lists.immutable.with(2, 1, 4), map.keySet());
+            case SORTED_NATURAL -> Verify.assertIterablesEqual(Lists.immutable.with(1, 2, 4), map.keySet());
+            case SORTED_REVERSE_NATURAL -> Verify.assertIterablesEqual(Lists.immutable.with(4, 2, 1), map.keySet());
+            default -> fail("Unexpected value: " + this.getOrderingType());
+        }
+    }
+
+    @Test
+    default void MutableMapIterable_toImmutable()
+    {
+        MutableMapIterable<Integer, String> map = this.newWithKeysValues(3, "Three", 2, "Two");
+        ImmutableMapIterable<Integer, String> immutable = map.toImmutable();
+        assertEquals(Maps.mutable.with(3, "Three", 2, "Two"), immutable);
+
+        if (this.allowsPut())
+        {
+            // The immutable copy does not see later changes to the source map
+            map.put(1, "One");
+            assertEquals(Maps.mutable.with(3, "Three", 2, "Two"), immutable);
+        }
     }
 
     @Test
@@ -351,6 +555,27 @@ public interface MutableMapIterableTestCase extends MapIterableTestCase, MapTest
         assertIterablesEqual(this.newWithKeysValues(1, 1, 2, 2, 3, 3), map6);
         assertEquals(Integer.valueOf(2), map6.get(2));
         assertEquals(3, map6.size());
+
+        MutableMapIterable<String, Integer> map7 = this.newWithKeysValues("A", 1, "B", 2);
+        map7.updateValue("B", () -> 0, value -> value + 10);
+        switch (this.getOrderingType())
+        {
+            case UNORDERED -> assertEquals(Sets.immutable.with("A", "B"), map7.keySet());
+            case INSERTION_ORDER, SORTED_NATURAL -> Verify.assertIterablesEqual(Lists.immutable.with("A", "B"), map7.keySet());
+            case SORTED_REVERSE_NATURAL -> Verify.assertIterablesEqual(Lists.immutable.with("B", "A"), map7.keySet());
+            default -> fail("Unexpected value: " + this.getOrderingType());
+        }
+        assertEquals(Integer.valueOf(12), map7.get("B"));
+
+        map7.updateValue("C", () -> 0, value -> value + 3);
+        switch (this.getOrderingType())
+        {
+            case UNORDERED -> assertEquals(Sets.immutable.with("A", "B", "C"), map7.keySet());
+            case INSERTION_ORDER, SORTED_NATURAL -> Verify.assertIterablesEqual(Lists.immutable.with("A", "B", "C"), map7.keySet());
+            case SORTED_REVERSE_NATURAL -> Verify.assertIterablesEqual(Lists.immutable.with("C", "B", "A"), map7.keySet());
+            default -> fail("Unexpected value: " + this.getOrderingType());
+        }
+        assertEquals(Integer.valueOf(3), map7.get("C"));
     }
 
     @Test
