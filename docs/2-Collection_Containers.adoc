@@ -1135,8 +1135,25 @@ MutableIntBag mutableIntBag = intHashSet.toBag();
 Primitive stack implementations are similar to JCF *ArrayStack* but optimized for primitives.
 
 === Primitive bags
+Primitive bag implementations are similar to Primitive lists, but allow duplicate values without preserving order.
 
-Primitive bag implementations are similar to JCF *HashBag*, but both _item_ and _count_ are primitives.
+.Primitive Bag Iteration Patterns
+[source,java]
+----
+// Idiomatic factory creation
+MutableIntBag intBag = IntBags.mutable.with(1, 2, 2, 3, 3, 3);
+
+// Filtering / selecting elements
+IntBag evens = intBag.select(each -> each % 2 == 0);
+
+// Bag-specific: Iterate through elements and their occurrences
+intBag.forEachWithOccurrences((value, count) -> {
+    // process value and count
+});
+
+// Bag-specific: Check occurrence count of a value
+int occurrences = intBag.occurrencesOf(3);
+----
 
 === Primitive Maps
 
