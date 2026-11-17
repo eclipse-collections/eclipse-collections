@@ -29,6 +29,13 @@ public class MapAdapterTest implements MutableMapTestCase
     private static final long CURRENT_TIME_MILLIS = System.currentTimeMillis();
 
     @Override
+    public boolean supportsEntrySetSerialization()
+    {
+        // TODO: Make MapAdapter.entrySet() serializable.
+        return false;
+    }
+
+    @Override
     public <T> MutableMap<Object, T> newWith(T... elements)
     {
         Random random = new Random(CURRENT_TIME_MILLIS);

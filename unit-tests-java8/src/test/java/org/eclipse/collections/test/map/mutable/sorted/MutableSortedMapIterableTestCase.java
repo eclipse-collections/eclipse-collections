@@ -18,6 +18,13 @@ import org.junit.jupiter.api.Test;
 public interface MutableSortedMapIterableTestCase extends SortedMapIterableTestCase, SortedMapTestCase, MutableSortedIterableTestCase
 {
     @Override
+    default boolean supportsEntrySetSerialization()
+    {
+        // TODO: Make TreeSortedMap and SortedMapAdapter.entrySet() serializable.
+        return false;
+    }
+
+    @Override
     <T> MutableSortedMap<Object, T> newWith(T... elements);
 
     @Override

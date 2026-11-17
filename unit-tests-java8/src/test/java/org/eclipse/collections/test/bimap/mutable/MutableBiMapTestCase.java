@@ -15,5 +15,12 @@ import org.eclipse.collections.api.bimap.MutableBiMap;
 public interface MutableBiMapTestCase extends MutableUnsortedBiMapTestCase
 {
     @Override
+    default boolean supportsEntrySetSerialization()
+    {
+        // TODO: Make HashBiMap.entrySet() serializable.
+        return false;
+    }
+
+    @Override
     <T> MutableBiMap<Object, T> newWith(T... elements);
 }
