@@ -20,6 +20,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.eclipse.collections.api.block.function.Function0;
 import org.eclipse.collections.api.block.function.Function2;
+import org.eclipse.collections.api.block.predicate.Predicate;
 import org.eclipse.collections.api.block.predicate.Predicate2;
 import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.factory.Sets;
@@ -1109,5 +1110,22 @@ public class MultiReaderFastListTest extends AbstractListTestCase
         MutableList<Integer> sortedList = this.newWith(7, 5, 4, 3, 2, 1);
         assertEquals(4, sortedList.binarySearch(2, Comparators.reverseNaturalOrder()));
         assertEquals(-2, sortedList.binarySearch(6, Comparators.reverseNaturalOrder()));
+    }
+
+    @Test
+    public void selectAndRejectReturnFastList()
+    {
+        MultiReaderFastList<Integer> list = MultiReaderFastList.newListWith(1, 2, 3, 4, 5);
+        Predicate<Integer> isEven = each -> each % 2 == 0;
+
+        MutableList<Integer> evens = list.select(isEven);
+        MutableList<Integer> odds = list.reject(isEven);
+
+        Verify.assertInstanceOf(FastList.class, evens);
+        Verify.assertInstanceOf(FastList.class, odds);
+        assertEquals(FastList.newListWith(2, 4), evens);
+        assertEquals(FastList.newListWith(1, 3, 5), odds);
+        Verify.assertInstanceOf(FastList.class, list.selectWith(Predicates2.equal(), 3));
+        Verify.assertInstanceOf(FastList.class, list.rejectWith(Predicates2.equal(), 3));
     }
 }
