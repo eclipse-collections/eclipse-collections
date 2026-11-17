@@ -97,6 +97,11 @@ final class ImmutableUnifiedSet<T>
         return new ImmutableUnifiedSet<>(UnifiedSet.newSet(iterable));
     }
 
+    static <T> ImmutableSet<T> newSetWithDelegate(UnifiedSet<T> delegate)
+    {
+        return new ImmutableUnifiedSet<>(delegate);
+    }
+
     @Override
     public void each(Procedure<? super T> procedure)
     {
