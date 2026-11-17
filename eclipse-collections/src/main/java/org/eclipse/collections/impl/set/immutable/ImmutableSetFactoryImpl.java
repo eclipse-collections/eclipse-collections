@@ -14,6 +14,7 @@ import java.util.Objects;
 
 import org.eclipse.collections.api.factory.set.ImmutableSetFactory;
 import org.eclipse.collections.api.set.ImmutableSet;
+import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import org.eclipse.collections.impl.utility.Iterate;
 
 @aQute.bnd.annotation.spi.ServiceProvider(ImmutableSetFactory.class)
@@ -173,6 +174,17 @@ public class ImmutableSetFactoryImpl implements ImmutableSetFactory
         {
             return (ImmutableSet<T>) items;
         }
-        return this.with((T[]) Iterate.toArray(items));
+        UnifiedSet<T> unifiedSet = UnifiedSet.newSet(items);
+        switch (unifiedSet.size())
+        {
+            case 1:
+                return this.of(unifiedSet.getOnly());
+            case 2:
+            case 3:
+            case 4:
+                return this.with((T[]) unifiedSet.toArray());
+            default:
+                return ImmutableUnifiedSet.newSetWithDelegate(unifiedSet);
+        }
     }
 }
