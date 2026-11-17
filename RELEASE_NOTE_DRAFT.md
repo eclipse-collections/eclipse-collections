@@ -15,6 +15,7 @@
   * `Iterate`
   * `ListIterable`
   * `MutableList`
+* Added class-level Javadoc for `CaseFunction` ([#1456](https://github.com/eclipse-collections/eclipse-collections/issues/1456))
 
 ## API Changes
 * Added category annotations package
