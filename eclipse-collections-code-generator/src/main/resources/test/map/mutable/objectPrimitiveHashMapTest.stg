@@ -20,7 +20,14 @@ body(type, name, wrapperName) ::= <<
 
 package org.eclipse.collections.impl.map.mutable.primitive;
 
+import java.lang.reflect.Field;
+
 import org.eclipse.collections.api.map.primitive.MutableObject<name>Map;
+
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 
 /**
  * JUnit test for {@link Object<name>HashMap}.
@@ -74,6 +81,66 @@ public class Object<name>HashMapTest extends Object<name>HashMapTestCase
     protected Class getTargetClass()
     {
         return Object<name>HashMap.class;
+    }
+
+    @Test
+    public void compactWithoutPossibleCompactionDoesNotRehash() throws Exception
+    {
+        Object<name>HashMap\<String> hashMap = new Object<name>HashMap\<>();
+        for (int i = 2; i \< 10; i++)
+        {
+            hashMap.put(String.valueOf(i), <(castFromInt.(type))("i")>);
+        }
+
+        Field keys = Object<name>HashMap.class.getDeclaredField("keys");
+        keys.setAccessible(true);
+        Object[] keysBefore = (Object[]) keys.get(hashMap);
+
+        // the map is already compact: rehashing would neither shrink the table nor clear any sentinels
+        hashMap.compact();
+        assertSame(keysBefore, keys.get(hashMap));
+        assertEquals(8, hashMap.size());
+    }
+
+    @Test
+    public void compactClearsSentinelsWhenTableCannotShrink() throws Exception
+    {
+        Object<name>HashMap\<String> hashMap = new Object<name>HashMap\<>();
+        for (int i = 2; i \< 10; i++)
+        {
+            hashMap.put(String.valueOf(i), <(castFromInt.(type))("i")>);
+        }
+        hashMap.remove("2");
+
+        Field keys = Object<name>HashMap.class.getDeclaredField("keys");
+        keys.setAccessible(true);
+        Object[] keysBefore = (Object[]) keys.get(hashMap);
+        Field occupiedWithSentinels = Object<name>HashMap.class.getDeclaredField("occupiedWithSentinels");
+        occupiedWithSentinels.setAccessible(true);
+        assertEquals(1, occupiedWithSentinels.get(hashMap));
+
+        // the table cannot shrink, but compact() must still clear the sentinel
+        hashMap.compact();
+        assertNotSame(keysBefore, keys.get(hashMap));
+        assertEquals(0, occupiedWithSentinels.get(hashMap));
+        assertEquals(7, hashMap.size());
+        assertEquals(16L, ((Object[]) keys.get(hashMap)).length);
+    }
+
+    @Test
+    public void compactShrinksTableWhenPossible() throws Exception
+    {
+        Object<name>HashMap\<String> hashMap = new Object<name>HashMap\<>();
+        for (int i = 2; i \< 6; i++)
+        {
+            hashMap.put(String.valueOf(i), <(castFromInt.(type))("i")>);
+        }
+
+        hashMap.compact();
+        Field keys = Object<name>HashMap.class.getDeclaredField("keys");
+        keys.setAccessible(true);
+        assertEquals(8L, ((Object[]) keys.get(hashMap)).length);
+        assertEquals(4, hashMap.size());
     }
 }
 
