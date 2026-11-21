@@ -68,7 +68,7 @@ public class UnmodifiableBag<T>
         extends AbstractUnmodifiableMutableCollection<T>
         implements MutableBag<T>, Serializable
 {
-    UnmodifiableBag(MutableBag<? extends T> mutableBag)
+    protected UnmodifiableBag(MutableBag<? extends T> mutableBag)
     {
         super(mutableBag);
     }

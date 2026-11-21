@@ -36,7 +36,7 @@ import org.eclipse.collections.impl.utility.Iterate;
 /**
  * A Multimap that is optimized for parallel writes, but is not protected for concurrent reads.
  */
-public final class SynchronizedPutFastListMultimap<K, V>
+public class SynchronizedPutFastListMultimap<K, V>
         extends AbstractSynchronizedPutMultimap<K, V, MutableList<V>>
         implements MutableListMultimap<K, V>, Externalizable
 {
