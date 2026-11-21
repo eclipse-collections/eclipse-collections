@@ -43,6 +43,10 @@ import org.eclipse.collections.api.tuple.primitive.<name><name>Pair;
 import org.eclipse.collections.impl.factory.primitive.<name>Sets;
 import org.eclipse.collections.impl.iterator.ImmutableEmpty<name>Iterator;
 import org.eclipse.collections.impl.lazy.primitive.Lazy<name>IterableAdapter;
+<if(primitive.specializedStream)>
+import java.util.Spliterator;
+import java.util.Spliterators;
+<endif>
 
 /**
  * Immutable<name>EmptySet is an optimization for {@link Immutable<name>Set} of size 0.
@@ -317,6 +321,14 @@ final class Immutable<name>EmptySet implements Immutable<name>Set, Serializable
     {
         return ImmutableEmpty<name>Iterator.INSTANCE;
     }
+<if(primitive.specializedStream)>
+
+    @Override
+    public Spliterator.Of<name> spliterator()
+    {
+        return Spliterators.spliterator(new <type>[0], Spliterator.DISTINCT | Spliterator.SIZED | Spliterator.IMMUTABLE);
+    }
+<endif>
 }
 
 >>
