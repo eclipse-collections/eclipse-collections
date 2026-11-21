@@ -12,6 +12,7 @@ package org.eclipse.collections.api.bag.sorted;
 
 import org.eclipse.collections.api.bag.ImmutableBag;
 import org.eclipse.collections.api.bag.ImmutableBagIterable;
+import org.eclipse.collections.api.bag.MutableBag;
 import org.eclipse.collections.api.block.function.Function;
 import org.eclipse.collections.api.block.function.Function2;
 import org.eclipse.collections.api.block.function.primitive.BooleanFunction;
@@ -27,6 +28,7 @@ import org.eclipse.collections.api.block.predicate.Predicate;
 import org.eclipse.collections.api.block.predicate.Predicate2;
 import org.eclipse.collections.api.block.predicate.primitive.IntPredicate;
 import org.eclipse.collections.api.block.procedure.Procedure;
+import org.eclipse.collections.api.factory.Bags;
 import org.eclipse.collections.api.factory.SortedSets;
 import org.eclipse.collections.api.list.ImmutableList;
 import org.eclipse.collections.api.list.primitive.ImmutableBooleanList;
@@ -192,7 +194,8 @@ public interface ImmutableSortedBag<T>
     @Override
     default <V> ImmutableBag<V> countBy(Function<? super T, ? extends V> function)
     {
-        return this.asLazy().<V>collect(function).toBag().toImmutable();
+        MutableBag<V> bag = this.collectEachOccurrences(function, Bags.mutable.empty());
+        return bag.toImmutable();
     }
 
     /**
@@ -201,7 +204,8 @@ public interface ImmutableSortedBag<T>
     @Override
     default <V, P> ImmutableBag<V> countByWith(Function2<? super T, ? super P, ? extends V> function, P parameter)
     {
-        return this.asLazy().<P, V>collectWith(function, parameter).toBag().toImmutable();
+        MutableBag<V> bag = this.collectWithEachOccurrences(function, parameter, Bags.mutable.empty());
+        return bag.toImmutable();
     }
 
     /**
